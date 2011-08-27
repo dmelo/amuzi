@@ -41,10 +41,12 @@ class ApiController extends Zend_Controller_Action
         // action body
 
         $q = $this->getRequest()->getParam('q');
-        var_dump($q);
         if ($q !== null) {
             $youtube = new Youtube();
-            $youtube->search($q);
+            $resultSet = $youtube->search($q);
+            foreach( $resultSet as $result )
+                echo $result->id . "###" . $result->title . "###" .
+                $result->content . "<br/>";
         }
     }
 
