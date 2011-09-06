@@ -18,7 +18,8 @@ class ApiController extends Zend_Controller_Action
      */
     public function init()
     {
-        /* Initialize action controller here */
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
     }
 
     /**
@@ -41,13 +42,32 @@ class ApiController extends Zend_Controller_Action
         // action body
 
         $q = $this->getRequest()->getParam('q');
+        $list = array();
         if ($q !== null) {
             $youtube = new Youtube();
             $resultSet = $youtube->search($q);
-            foreach( $resultSet as $result )
-                echo $result->id . "###" . $result->title . "###" .
-                $result->content . "<br/>";
+            $item = array();
+            foreach( $resultSet as $result ) {
+                $item['id'] = preg_replace('/http:\/\/gdata.youtube.com\/.*\//',
+                '', $result->id);
+                $item['title'] = $result->title;
+                $item['content'] = $result->content;
+                $item['you2better'] = Zend_Registry::get('domain');
+                $item['you2better'] .= '/api/' . $item['id'] . '/' .
+                    $item['title'] . '.mp3';
+
+            }
+            $list[] = $item;
+
+            $this->view->output = $list;
+            var_dump( $this->view->output );
         }
+    }
+
+    public function postDispatch()
+    {
+        if(isset( $this->view->output ))
+            echo Zend_Json::encode($this->view->output);
     }
 
 

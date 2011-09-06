@@ -1,1 +1,16 @@
-<?php echo $this->layout()->content; ?>
+<?= $this->doctype(); ?>
+<html>
+    <head>
+        <?= $this->headTitle(); ?>
+        <?= $this->headMeta(); ?>
+    </head>
+
+    <body>
+        <h1>You2Better</h1>
+
+        <?= $this->layout()->content; ?>
+
+        <?= $this->headScript(); ?>
+    </body>
+
+</html>
