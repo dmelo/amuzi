@@ -45,14 +45,8 @@ class ApiController extends Zend_Controller_Action
             $youtube = new Youtube();
             $resultSet = $youtube->search($q);
             $item = array();
-            foreach ($resultSet as $result) {
-                $item['id'] = $result->id;
-                $item['title'] = $result->title;
-                $item['content'] = $result->content;
-                $item['you2better'] = $result->you2better;
-                $item['pic'] = $result->pic;
-                $list[] = $item;
-            }
+            foreach ($resultSet as $result)
+                $list[] = $result->getArray();
 
             $this->view->output = $list;
         }
