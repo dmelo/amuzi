@@ -39,39 +39,33 @@ class ApiController extends Zend_Controller_Action
      */
     public function searchAction()
     {
-        // action body
-
         $q = $this->getRequest()->getParam('q');
         $list = array();
         if ($q !== null) {
             $youtube = new Youtube();
             $resultSet = $youtube->search($q);
             $item = array();
-            foreach( $resultSet as $result ) {
-                $item['id'] = preg_replace('/http:\/\/gdata.youtube.com\/.*\//',
-                '', $result->id);
+            foreach ($resultSet as $result) {
+                $item['id'] = $result->id;
                 $item['title'] = $result->title;
                 $item['content'] = $result->content;
-                $item['you2better'] = Zend_Registry::get('domain');
-                $item['you2better'] .= '/api/' . $item['id'] . '/' .
-                    $item['title'] . '.mp3';
-
+                $item['you2better'] = $result->you2better;
+                $item['pic'] = $result->pic;
+                $list[] = $item;
             }
-            $list[] = $item;
 
             $this->view->output = $list;
-            var_dump( $this->view->output );
         }
     }
 
+    /**
+     * postDispatch
+     *
+     * @return void
+     */
     public function postDispatch()
     {
         if(isset( $this->view->output ))
             echo Zend_Json::encode($this->view->output);
     }
-
-
 }
-
-
-

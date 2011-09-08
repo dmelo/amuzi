@@ -7,7 +7,7 @@ class YoutubeEntry
 
     public function __construct($entry = array( ) )
     {
-        $this->_fields = array('id', 'title', 'content');
+        $this->_fields = array('id', 'title', 'content', 'you2better', 'pic');
         $this->_data = array();
 
         foreach($entry as $key => $value)
@@ -25,9 +25,9 @@ class YoutubeEntry
     {
         if (in_array($key, $this->_fields)) {
             if ( 'id' === $key )
-                $value = str_replace('http://gdata.youtube.com/feeds/api/videos/' , '', $value);
+                $value = str_replace(
+                    'http://gdata.youtube.com/feeds/api/videos/' , '', $value);
             $this->_data[$key] = $value;
         }
     }
 }
-

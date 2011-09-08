@@ -37,6 +37,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $jqueryUrl = 'http://ajax.googleapis.com/';
         $jqueryUrl .= 'ajax/libs/jquery/1.6.2/jquery.min.js';
         $jqueryProgressBar = $domain . '/js/jquery.progressbar.js';
+        $jqueryForm = $domain . '/js/jquery.form.js';
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');
         $view = $layout->getView();
@@ -48,7 +49,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headTitle('You2Better');
         $view->lightningPackerScript()->appendFile($jqueryUrl);
         $view->lightningPackerScript()->appendFile($jqueryProgressBar);
+        $view->lightningPackerScript()->appendFile($jqueryForm);
         $view->lightningPackerScript()->appendFile($domain . '/js/default.js');
+
+        $view->lightningPackerLink( )->appendStylesheet($domain .
+            '/css/default.css');
     }
 
     /**
