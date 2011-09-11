@@ -37,6 +37,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $jqueryUrl = 'http://ajax.googleapis.com/';
         $jqueryUrl .= 'ajax/libs/jquery/1.6.2/jquery.min.js';
         $jqueryProgressBar = $domain . '/js/jquery.progressbar.js';
+        $jqueryUI = $domain . '/js/jquery-ui-1.8.16.custom.min.js';
         $jqueryForm = $domain . '/js/jquery.form.js';
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');
@@ -50,9 +51,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->lightningPackerScript()->appendFile($jqueryUrl);
         $view->lightningPackerScript()->appendFile($jqueryProgressBar);
         $view->lightningPackerScript()->appendFile($jqueryForm);
+        $view->lightningPackerScript()->appendFile($jqueryUI);
         $view->lightningPackerScript()->appendFile($domain . '/js/default.js');
 
-        $view->lightningPackerLink( )->appendStylesheet($domain .
+        $view->lightningPackerLink()->appendStylesheet($domain .
+            '/css/style.css');
+        $view->lightningPackerLink()->appendStylesheet($domain .
+            '/css/gallery.css');
+
+        $view->lightningPackerLink()->appendStylesheet($domain .
             '/css/default.css');
     }
 

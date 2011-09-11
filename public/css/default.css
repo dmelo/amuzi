@@ -1,3 +1,6 @@
 #play {
     border: 2px solid green;
+    background-color: white;
+    width: 300px;
+    min-height: 100px;
 }
