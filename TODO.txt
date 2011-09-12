@@ -2,17 +2,9 @@
 This document contains which tasks remains to be done.
 ====================
 
-1. Transform the list into a table with the following fields:
-    image
-    title
-    duration (this is just desirable)
-    the embedded youtube video
-    listen option
-    download mp3 option
+1. Improve performance: cache search results.
+2. Improve playlist usability.
 
-2. Improve layout: Get something good looking. I don't want to spend much time
-which this, it must be just a matter of browse around some template and
-implement it.
 
 
 ..

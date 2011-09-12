@@ -9,19 +9,23 @@ function cleanTable() {
 }
 
 function appendTable(img, title, url) {
-    img = '<img src="' + img + '" alt="' + title + '"/>';
-    title = '<p>' + title + '</p>';
-    options = '<a href="' + url + '" class="addplaylist">&nbsp;</a>';
-    options += '<a href="' + url + '" class="download">&nbsp;</a>';
-    tr = '<tr><td>' + img + '</td><td>' + title + '</td><td>' + options + '</td><td>' + '</tr>';
+    img = '<img class="cover" src="' + img + '" alt="' + title + '"/>';
+    options = '<a href="' + url + '" class="addplaylist" title="' + title + '"><img alt="playlist" src="/img/playlist.gif"/></a>';
+    options += '<a href="' + url + '" class="download" title="' + title + '" target="_blank"><img alt="download" src="/img/download.gif"/></a>';
+    tr = '<tr><td>' + img + '</td><td><p>' + title + '</p></td><td>' + options + '</td><td>' + '</tr>';
+    $('#result table tbody').append(tr);
 }
+
 
 $(document).ready(function() {
     $('#search').ajaxForm({dataType: 'json', success: function (data) {
-        $('#result').html(' ');
+        cleanTable();
         for(i = 0; i < data.length; i++)
+            appendTable(data[i].pic, data[i].title, data[i].you2better);
+    /*
             $('#result').append('<img src="' + data[i].pic + '"/><a title="' + data[i].title + '" class="audio" href="' + data[i].you2better + '">' +
                 data[i].title + '</a><br/>');
+                */
     }});
 
     $('.audio').live('click', function(e) {
@@ -31,7 +35,9 @@ $(document).ready(function() {
 
     $('.addplaylist').live('click', function(e) {
         e.preventDefault();
+        $('#play').dmplaylist.addToPlaylist($(this).attr('href'), $(this).attr('title'));
     });
 
     $('#play').draggable();
+    $('#play').dmplaylist();
 });

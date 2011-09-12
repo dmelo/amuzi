@@ -147,44 +147,11 @@ a:hover {
 #menu a:hover, #menu .active a {
 	background: #F40C42 url(/img/img02.jpg) repeat-x left bottom;
 	color: #FFFFFF;
-}
 
-/* Search */
-
-#search {
-	padding: 0px 0px 40px 0px;
-}
-
-#search form {
-	margin: 0;
-	padding: 0;
-}
-
-#search fieldset {
-	margin: 0;
-	padding: 0;
-	border: none;
-}
-
-#search input {
-	float: left;
-	font: 11px Tahoma, Geneva, sans-serif;
-	padding: 2px 2px;
-}
-
-#search-text {
-	width: 100px;
-	border: 1px solid #000000;
-	color: #000000;
-}
-
-#search-submit {
-	height: 21px;
-	margin-left: 10px;
-	padding: 0px 2px;
-	border: none;
-	background: #E71810;
-	color: #FFFFFF;
+    -webkit-transition: background 300ms ease-in 0ms;
+    -moz-transition: background 300ms ease-in 0ms;
+    -o-transition: background 300ms ease-in 0ms;
+    transition: background 300ms ease-in 0ms;
 }
 
 /* Page */
@@ -240,25 +207,6 @@ a:hover {
 .post .meta {
 }
 
-input[type=button], input[type=submit] {
-	display: block;
-	width: 115px;
-    height: 40px;
-	background: url(/img/img12.jpg) no-repeat left top;
-    background-color: white;
-    border: 0px;
-	text-align: center;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-family: Tahoma, Geneva, sans-serif;
-	font-size: 11px;
-	font-weight: normal;
-	color: #FFFFFF;
-}
-
-input[type=button]:hover, input[type=submit]:hover {
-    cursor: pointer;
-}
 
 .post .byline {
 	font-size: 11px;

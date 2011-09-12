@@ -39,6 +39,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $jqueryProgressBar = $domain . '/js/jquery.progressbar.js';
         $jqueryUI = $domain . '/js/jquery-ui-1.8.16.custom.min.js';
         $jqueryForm = $domain . '/js/jquery.form.js';
+        $jqueryDMPlaylist = $domain . '/js/jquery.dmplaylist.js';
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');
         $view = $layout->getView();
@@ -52,6 +53,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->lightningPackerScript()->appendFile($jqueryProgressBar);
         $view->lightningPackerScript()->appendFile($jqueryForm);
         $view->lightningPackerScript()->appendFile($jqueryUI);
+        $view->lightningPackerScript()->appendFile($jqueryDMPlaylist);
         $view->lightningPackerScript()->appendFile($domain . '/js/default.js');
 
         $view->lightningPackerLink()->appendStylesheet($domain .
