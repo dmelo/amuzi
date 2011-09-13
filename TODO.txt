@@ -4,6 +4,13 @@ This document contains which tasks remains to be done.
 
 1. Improve performance: cache search results.
 2. Improve playlist usability.
+3. Check if the playlist standalone is in fact a standalone jquery plugin.
+4. When adding the first song to a playlist and the player is not playing
+anything, then it starts playing the added song.
+5. get good icons for "add to playlist" and "download".
+6. add caches
+    cache search results for 2 days
+    cache mp3, up to a size limit.
 
 
 
