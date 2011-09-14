@@ -77,5 +77,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $domain;
     }
 
+    public function _initCache()
+    {
+        $frontend= array(
+            'lifetime' => 2 * 24 * 60 * 60,
+            'automatic_serialization' => true
+        );
+
+        $backend = array(
+            'cache_dir' => 'tmp/'
+        );
+
+        $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);
+
+        Zend_Registry::set('cache', $cache);
+    }
 }
 

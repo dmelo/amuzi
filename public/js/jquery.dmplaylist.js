@@ -25,6 +25,9 @@ $.fn.dmplaylist = function(options) {
 
 $.fn.dmplaylist.addToPlaylist = function(src, title) {
     $(this).find('#playlist ol').append('<li><a class="playlist-item" href="' + src + '">' + title + '</a> <a href="#" class="playlist-remove">X</a></li>');
+    var a = document.getElementsByTagName('audio')[0];
+    if(a.ended || a.paused)
+        $(this).find('a.playlist-item').last().trigger('click');
 }
 
 $.fn.dmplaylist.play = function(aElement) {
