@@ -41,12 +41,17 @@ class ApiController extends Zend_Controller_Action
     {
         $q = $this->getRequest()->getParam('q');
         $list = array();
-        if ($q !== null) {
-            $youtube = new Youtube();
-            $resultSet = $youtube->search($q);
-            $item = array();
-            foreach ($resultSet as $result)
-                $list[] = $result->getArray();
+        if (null !== $q) {
+            $key = '1';
+            $cache = Zend_Registry::get('cache');
+            if(($list = $cache->load(sha1($q))) === false) {
+                $youtube = new Youtube();
+                $resultSet = $youtube->search($q);
+                $item = array();
+                foreach ($resultSet as $result)
+                    $list[] = $result->getArray();
+                $cache->save($list, sha1($q));
+            }
 
             $this->view->output = $list;
         }
