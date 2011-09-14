@@ -4,3 +4,6 @@
 [submodule "public/api"]
 	path = public/api
 	url = https://github.com/dmelo/you2better.git
+[submodule "library/LightningPackerHelper"]
+	path = library/LightningPackerHelper
+	url = git@github.com:dmelo/LightningPackerHelper.git
