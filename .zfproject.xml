@@ -13,6 +13,7 @@
           <actionMethod actionName="search"/>
           <actionMethod actionName="api"/>
           <actionMethod actionName="about"/>
+          <actionMethod actionName="incboard"/>
         </controllerFile>
         <controllerFile controllerName="Error"/>
         <controllerFile controllerName="Search">
@@ -21,6 +22,7 @@
         <controllerFile controllerName="Api">
           <actionMethod actionName="index"/>
           <actionMethod actionName="search"/>
+          <actionMethod actionName="autocomplete"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory>
@@ -30,6 +32,9 @@
       <modelsDirectory>
         <modelFile modelName="Youtube"/>
         <modelFile modelName="YoutubeEntry"/>
+        <modelFile modelName="Lastfm"/>
+        <modelFile modelName="LastfmEntry"/>
+        <modelFile modelName="AbstractEntry"/>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <viewsDirectory>
@@ -57,6 +62,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Index">
             <viewScriptFile forActionName="about"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="incboard"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Api">
+            <viewScriptFile forActionName="autocomplete"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>

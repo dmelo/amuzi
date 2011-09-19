@@ -1,4 +1,4 @@
-<?php
+<?
 
 /**
  * ApiController
@@ -7,6 +7,18 @@
  * @copyright Copyright (C) 2011 Diogo Oliveira de Melo. All rights reserved.
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL
+ *
+ */
+
+
+/**
+ * ApiController
+ *
+ * @version 1.0
+ * @copyright Copyright (C) 2011 Diogo Oliveira de Melo. All rights reserved.
+ * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
+ * @license GPL
+ *
  */
 class ApiController extends Zend_Controller_Action
 {
@@ -15,6 +27,7 @@ class ApiController extends Zend_Controller_Action
      * init
      *
      * @return void
+     *
      */
     public function init()
     {
@@ -26,6 +39,7 @@ class ApiController extends Zend_Controller_Action
      * indexAction
      *
      * @return void
+     *
      */
     public function indexAction()
     {
@@ -33,9 +47,10 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * searchAction
+     * searchAction API search call.
      *
      * @return void
+     *
      */
     public function searchAction()
     {
@@ -61,10 +76,25 @@ class ApiController extends Zend_Controller_Action
      * postDispatch
      *
      * @return void
+     *
      */
     public function postDispatch()
     {
-        if(isset( $this->view->output ))
+        if (isset( $this->view->output ))
             echo Zend_Json::encode($this->view->output);
+    }
+
+    public function autocompleteAction()
+    {
+        $q = $this->getRequest()->getParam('q');
+        $list = array();
+        if (null !== $q) {
+            $lastfm = new Lastfm();
+            $resultSet = $lastfm->search($q);
+            foreach ($resultSet as $result)
+                $list[] = $result->getArray();
+        }
+
+        $this->view->output = $list;
     }
 }
