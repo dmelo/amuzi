@@ -9,7 +9,9 @@
  * @license GPL version 3
  *
  *
+ *
  */
+
 
 
 /**
@@ -22,6 +24,7 @@
  * @license GPL version 3
  *
  *
+ *
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -30,6 +33,7 @@ class IndexController extends Zend_Controller_Action
      * init
      *
      * @return void
+     *
      *
      *
      */
@@ -44,6 +48,7 @@ class IndexController extends Zend_Controller_Action
      * @return void
      *
      *
+     *
      */
     public function indexAction()
     {
@@ -56,6 +61,7 @@ class IndexController extends Zend_Controller_Action
      * @return void
      *
      *
+     *
      */
     public function searchAction()
     {
@@ -66,6 +72,7 @@ class IndexController extends Zend_Controller_Action
      * apiAction
      *
      * @return void
+     *
      */
     public function apiAction()
     {
@@ -76,9 +83,24 @@ class IndexController extends Zend_Controller_Action
      * aboutAction
      *
      * @return void
+     *
      */
     public function aboutAction()
     {
         // action body
     }
+
+    /**
+     * incboardAction IncBoard technique.
+     *
+     * @return void
+     */
+    public function incboardAction()
+    {
+        $this->view->form = new Application_Form_Search();
+    }
+
+
 }
+
+

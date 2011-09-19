@@ -16,17 +16,33 @@ function appendTable(img, title, url) {
     $('#result table tbody').append(tr);
 }
 
+function message(text) {
+    $('.message div').html(text);
+    $('.message').css('opacity', '1');
+}
+
+function messageOff() {
+    $('.message').css('opacity', '0');
+}
+
 
 $(document).ready(function() {
-    $('#search').ajaxForm({dataType: 'json', success: function (data) {
-        cleanTable();
-        for(i = 0; i < data.length; i++)
-            appendTable(data[i].pic, data[i].title, data[i].you2better);
-    /*
-            $('#result').append('<img src="' + data[i].pic + '"/><a title="' + data[i].title + '" class="audio" href="' + data[i].you2better + '">' +
-                data[i].title + '</a><br/>');
-                */
-    }});
+    $('#search').ajaxForm({
+        dataType: 'json', 
+        success: function (data) {
+            messageOff();
+            cleanTable();
+            for(i = 0; i < data.length; i++)
+                appendTable(data[i].pic, data[i].title, data[i].you2better);
+        /*
+                $('#result').append('<img src="' + data[i].pic + '"/><a title="' + data[i].title + '" class="audio" href="' + data[i].you2better + '">' +
+                    data[i].title + '</a><br/>');
+                    */
+        },
+        beforeSubmit: function() {
+            message('Loading...');
+        }
+    });
 
     $('.audio').live('click', function(e) {
         e.preventDefault();
@@ -40,4 +56,26 @@ $(document).ready(function() {
 
     $('#play').draggable();
     $('#play').dmplaylist();
+
+    $('#q').autocomplete('/api/autocomplete', {
+        dateType: 'json',
+        parse: function(data) {
+            data = $.parseJSON(data);
+            return $.map(data, function(row) {
+                return {
+                    data: row,
+                    value: '<img src="' + row.pic + '"/> <span>' + row.name + '</span>',
+                    result: row.name
+                }
+            });
+
+        },
+        formatItem: function(row, i, n) {
+            return '<img src="' + row.pic + '"/> <span>' + row.name + '</span>';
+        }
+    });
+
+    $('#q').change(function() {
+        $('#search').submit();
+    });
 });
