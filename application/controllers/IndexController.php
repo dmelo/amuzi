@@ -10,7 +10,9 @@
  *
  *
  *
+ *
  */
+
 
 
 
@@ -25,6 +27,7 @@
  *
  *
  *
+ *
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -33,6 +36,7 @@ class IndexController extends Zend_Controller_Action
      * init
      *
      * @return void
+     *
      *
      *
      *
@@ -49,6 +53,7 @@ class IndexController extends Zend_Controller_Action
      *
      *
      *
+     *
      */
     public function indexAction()
     {
@@ -59,6 +64,7 @@ class IndexController extends Zend_Controller_Action
      * searchAction
      *
      * @return void
+     *
      *
      *
      *
@@ -73,6 +79,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      *
+     *
      */
     public function apiAction()
     {
@@ -84,6 +91,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      *
+     *
      */
     public function aboutAction()
     {
@@ -94,13 +102,21 @@ class IndexController extends Zend_Controller_Action
      * incboardAction IncBoard technique.
      *
      * @return void
+     *
      */
     public function incboardAction()
     {
         $this->view->form = new Application_Form_Search();
     }
 
+    public function testAction()
+    {
+        // action body
+    }
+
 
 }
+
+
 
 

@@ -1,7 +1,42 @@
 <?= $this->form; ?>
 
+<div id="jquery_jplayer"></div>
+
+
+
 <div id="play">
-</div>
+    <div id="player_container">
+        <ul id="player_controls">
+            <li id="player_play">play</li>
+            <li id="player_pause">pause</li>
+            <li id="player_stop">stop</li>
+            <li id="player_volume_min">min volume</li>
+            <li id="player_volume_max">max volume</li>
+            <li id="ctrl_prev">previous</li>
+            <li id="ctrl_next">next</li>
+        </ul>
+        <div id="player_volume_bar">
+            <div id="player_volume_bar_value"></div>
+        </div>
+        <div id="play_time"></div>
+        <div id="total_time"></div>
+        <div id="player_progress">
+            <div id="player_progress_load_bar">
+                <div id="player_progress_play_bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="playlist_list">
+        <ul>
+            <!-- The function displayPlayList() uses this unordered list -->
+        </ul>
+    </div>
+</div> <!-- #play -->
+
+
+
+
 
 <div id="result">
 </div>

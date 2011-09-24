@@ -33,14 +33,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initView()
     {
         $this->bootstrap('domain');
-        $domain = $this->getResource('domain');
-        $jqueryUrl = 'http://ajax.googleapis.com/';
-        $jqueryUrl .= 'ajax/libs/jquery/1.6.2/jquery.min.js';
-        $jqueryProgressBar = $domain . '/js/jquery.progressbar.js';
-        $jqueryUI = $domain . '/js/jquery-ui-1.8.16.custom.min.js';
-        $jqueryForm = $domain . '/js/jquery.form.js';
-        $jqueryAuto = $domain . '/js/jquery.autocomplete.js';
-        $jqueryDMPlaylist = $domain . '/js/jquery.dmplaylist.js';
+        $domainJs = $this->getResource('domain') . '/js/';
+        $domainCss = $this->getResource('domain') . '/css/';
+        $js = array();
+        $js[] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js';
+        $js[] = $domainJs . 'jquery.progressbar.js';
+        $js[] = $domainJs . 'jquery-ui-1.8.16.custom.min.js';
+        $js[] = $domainJs . 'jquery.form.js';
+        $js[] = $domainJs . 'jquery.autocomplete.js';
+        $js[] = $domainJs . 'jquery.jplayer.js';
+        $js[] = $domainJs . 'default.js';
+
+        $css = array();
+        $css[] = $domainCss . 'style.css';
+        $css[] = $domainCss . 'gallery.css';
+        $css[] = $domainCss . 'miniplayer.css';
+        $css[] = $domainCss . 'default.css';
+
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');
         $view = $layout->getView();
@@ -50,21 +59,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('HTML5');
         $view->headMeta()->setCharset('UTF-8');
         $view->headTitle('You2Better');
-        $view->lightningPackerScript()->appendFile($jqueryUrl);
-        $view->lightningPackerScript()->appendFile($jqueryProgressBar);
-        $view->lightningPackerScript()->appendFile($jqueryForm);
-        $view->lightningPackerScript()->appendFile($jqueryAuto);
-        $view->lightningPackerScript()->appendFile($jqueryUI);
-        $view->lightningPackerScript()->appendFile($jqueryDMPlaylist);
-        $view->lightningPackerScript()->appendFile($domain . '/js/default.js');
 
-        $view->lightningPackerLink()->appendStylesheet($domain .
-            '/css/style.css');
-        $view->lightningPackerLink()->appendStylesheet($domain .
-            '/css/gallery.css');
+        foreach($js as $item)
+            $view->lightningPackerScript()->appendFile($item);
 
-        $view->lightningPackerLink()->appendStylesheet($domain .
-            '/css/default.css');
+        foreach($css as $item)
+            $view->lightningPackerLink()->appendStylesheet($item);
     }
 
     /**
