@@ -89,10 +89,6 @@ $(document).ready(function() {
 
     ];
 
-
-
-
-
     $("#jquery_jplayer").jPlayer({
 
         ready: function() {
@@ -105,25 +101,15 @@ $(document).ready(function() {
         oggSupport: false
 
     })
-
     .jPlayerId("play", "player_play")
-
     .jPlayerId("pause", "player_pause")
-
     .jPlayerId("stop", "player_stop")
-
     .jPlayerId("loadBar", "player_progress_load_bar")
-
     .jPlayerId("playBar", "player_progress_play_bar")
-
     .jPlayerId("volumeMin", "player_volume_min")
-
     .jPlayerId("volumeMax", "player_volume_max")
-
     .jPlayerId("volumeBar", "player_volume_bar")
-
     .jPlayerId("volumeBarValue", "player_volume_bar_value")
-
     .onProgressChange( function(loadPercent, playedPercentRelative, playedPercentAbsolute, playedTime, totalTime) {
 
         var myPlayedTime = new Date(playedTime);
