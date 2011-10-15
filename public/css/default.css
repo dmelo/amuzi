@@ -34,8 +34,7 @@ input[type=text] {
     border-radius: 5px;
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
-
-
+    background-color: #d8d8d8;
 }
 
 #result img.cover {
@@ -423,13 +422,9 @@ position: relative;
 }
 
 #player_volume_bar_value {
-
     background: url("/img/volume_bar_value.gif") repeat-x top left;
-
     width:0px;
-
     height:5px;
-
 }
 
 
