@@ -18,18 +18,23 @@
         status:true, xfbml:true 
      });
 
-    FB.api('/me', function(user) {
-       if(user != null && user.id != null) {
-          var image = document.getElementById('image');
-          image.src = 'http://graph.facebook.com/' + user.id + '/picture';
-          var name = document.getElementById('name');
-          name.innerHTML = user.name;
-          document.getElementsByTagName('fb:login-button')[0].style.visibility = 'hidden';
-       }
-       else {
-           document.getElementById('user').style.visibility = 'hidden';
-       }
-     });
+    function processLogin() {
+        FB.api('/me', function(user) {
+            if(user != null && user.id != null) {
+                var image = document.getElementById('image');
+                image.src = 'http://graph.facebook.com/' + user.id + '/picture';
+                var name = document.getElementById('name');
+                name.innerHTML = user.name;
+                document.getElementsByTagName('fb:login-button')[0].style.visibility = 'hidden';
+            }
+            else {
+                document.getElementById('user').style.visibility = 'hidden';
+            }
+        });
+    }
+
+    processLogin();
+
 
 </script>
 
@@ -60,7 +65,7 @@
 	<!-- end div#menu -->
 </div>
 
-      <fb:login-button perms="email,user_checkins" style="visibility: visible">
+      <fb:login-button perms="email,user_checkins" style="visibility: visible" OnLogin="processLogin();">
          Login with Facebook
       </fb:login-button>
 
