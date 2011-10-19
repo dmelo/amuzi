@@ -19,7 +19,7 @@
      });
 
     FB.api('/me', function(user) {
-       if(user != null) {
+       if(user != null && user.id != null) {
           var image = document.getElementById('image');
           image.src = 'http://graph.facebook.com/' + user.id + '/picture';
           var name = document.getElementById('name');
