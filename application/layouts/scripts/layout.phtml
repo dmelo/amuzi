@@ -9,6 +9,15 @@
     </head>
 
     <body>
+<div id="fb-root"></div>
+<script src="http://connect.facebook.net/en_US/all.js">
+</script>
+<script>
+         FB.init({ 
+            appId:'209056955830996', cookie:true, 
+            status:true, xfbml:true 
+         });
+</script>
 
 <div id="wrapper">
 <div id="header">
@@ -31,6 +40,9 @@
 	</div>
 	<!-- end div#menu -->
 </div>
+      <fb:login-button perms="email,user_checkins">
+         Login with Facebook
+      </fb:login-button>
 
 
 <div>

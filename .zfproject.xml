@@ -37,7 +37,21 @@
         <modelFile modelName="LastfmEntry"/>
         <modelFile modelName="AbstractEntry"/>
       </modelsDirectory>
-      <modulesDirectory enabled="false"/>
+      <modulesDirectory>
+        <moduleDirectory moduleName="user">
+          <apisDirectory enabled="false"/>
+          <configsDirectory enabled="false"/>
+          <controllersDirectory/>
+          <formsDirectory enabled="false"/>
+          <layoutsDirectory enabled="false"/>
+          <modelsDirectory/>
+          <viewsDirectory>
+            <viewScriptsDirectory/>
+            <viewHelpersDirectory/>
+            <viewFiltersDirectory/>
+          </viewsDirectory>
+        </moduleDirectory>
+      </modulesDirectory>
       <viewsDirectory>
         <viewScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Index">
