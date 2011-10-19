@@ -13,10 +13,20 @@
 <script src="http://connect.facebook.net/en_US/all.js">
 </script>
 <script>
-         FB.init({ 
-            appId:'209056955830996', cookie:true, 
-            status:true, xfbml:true 
-         });
+     FB.init({ 
+        appId:'209056955830996', cookie:true, 
+        status:true, xfbml:true 
+     });
+
+    FB.api('/me', function(user) {
+       if(user != null) {
+          var image = document.getElementById('image');
+          image.src = 'http://graph.facebook.com/' + user.id + '/picture';
+          var name = document.getElementById('name');
+          name.innerHTML = user.name
+       }
+     });
+
 </script>
 
 <div id="wrapper">
@@ -40,6 +50,11 @@
 	</div>
 	<!-- end div#menu -->
 </div>
+<div align="center">
+           <img id="image"/>
+           <div id="name"></div>
+           </div>
+
       <fb:login-button perms="email,user_checkins">
          Login with Facebook
       </fb:login-button>
