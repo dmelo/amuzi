@@ -1,0 +1,7 @@
+Compatibility with most browsers - including mobile
+Facebook App - 
+    like music
+    share album
+    share wich music a user is litening to
+browser all the system without interrupt the music
+

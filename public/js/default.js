@@ -21,13 +21,15 @@ function appendTable(img, title, url) {
 function message(text) {
     $('.message div').html(text);
     $('.message').css('opacity', '1');
+    $('.message').css('filter', 'alpha(opacity=100)');
 }
 
 function messageOff() {
     $('.message').css('opacity', '0');
+    $('.message').css('filter', 'alpha(opacity=0)');
 }
 
-
+var myPlayList;
 
 $(document).ready(function() {
     $('#search').ajaxForm({
@@ -50,12 +52,14 @@ $(document).ready(function() {
 
     $('.addplaylist').live('click', function(e) {
         e.preventDefault();
-        //$('#play').dmplaylist.addToPlaylist($(this).attr('href'), $(this).attr('title'));
-        myPlayList[myPlayList.length] = {name: $(this).attr('title'), mp3: $(this).attr('href')};
-        displayPlayList();
+         myPlaylist.add({
+          title:$(this).attr('title'),
+          mp3:$(this).attr('href')
+        });
+        //myPlayList[myPlayList.length] = {name: $(this).attr('title'), mp3: $(this).attr('href')};
     });
 
-    $('#play').draggable();
+    $('#jp_container_1').draggable();
 
     $('#q').autocomplete('/api/autocomplete', {
         dateType: 'json',
@@ -84,11 +88,25 @@ $(document).ready(function() {
 
 
 
+/*
     myPlayList = [
 
 
     ];
+*/
 
+    myPlaylist = new jPlayerPlaylist({
+        jPlayer: "#jquery_jplayer_1",
+        cssSelectorAncestor: "#jp_container_1"
+    }, [], {supplied: 'mp3', swfPath: "/obj/"});
+    myPlaylist.add({
+      title:"Tempered Song",
+      mp3:"http://www.jplayer.org/audio/mp3/Miaow-01-Tempered-song.mp3"
+    });
+    $("#jplayer_inspector_1").jPlayerInspector({jPlayer:$("#jp_container_1")});
+
+
+    /*
     $("#jquery_jplayer").jPlayer({
 
         ready: function() {
@@ -111,32 +129,20 @@ $(document).ready(function() {
     .jPlayerId("volumeBar", "player_volume_bar")
     .jPlayerId("volumeBarValue", "player_volume_bar_value")
     .onProgressChange( function(loadPercent, playedPercentRelative, playedPercentAbsolute, playedTime, totalTime) {
-
         var myPlayedTime = new Date(playedTime);
-
         var ptMin = (myPlayedTime.getUTCMinutes() < 10) ? "0" + myPlayedTime.getUTCMinutes() : myPlayedTime.getUTCMinutes();
-
         var ptSec = (myPlayedTime.getUTCSeconds() < 10) ? "0" + myPlayedTime.getUTCSeconds() : myPlayedTime.getUTCSeconds();
-
         $("#play_time").text(ptMin+":"+ptSec);
 
-
-
         var myTotalTime = new Date(totalTime);
-
         var ttMin = (myTotalTime.getUTCMinutes() < 10) ? "0" + myTotalTime.getUTCMinutes() : myTotalTime.getUTCMinutes();
-
         var ttSec = (myTotalTime.getUTCSeconds() < 10) ? "0" + myTotalTime.getUTCSeconds() : myTotalTime.getUTCSeconds();
-
         $("#total_time").text(ttMin+":"+ttSec);
-
     })
-
     .onSoundComplete( function() {
-
         playListNext();
-
     });
+    */
 
 
 

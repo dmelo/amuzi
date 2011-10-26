@@ -20,19 +20,21 @@
 
     function processLogin() {
         FB.api('/me', function(user) {
-            var userDiv = document.getElementById('user');
-            var loginDiv = document.getElementsByTagName('fb:login-button')[0];
+            var userDiv = $('#user');
+            var loginDiv = $('fb:login-button')[0];
             if(user != null && user.id != null) {
                 var image = document.getElementById('image');
                 image.src = 'http://graph.facebook.com/' + user.id + '/picture';
                 var name = document.getElementById('name');
                 name.innerHTML = user.name;
-                userDiv.style.visibility = 'visible';
-                loginDiv.style.visibility = 'hidden';
+                userDiv.css('visibility', 'visible');
+                if(loginDiv)
+                    loginDiv.css('visibility', 'hidden');
             }
             else {
-                userDiv.style.visibility = 'hidden';
-                loginDiv.style.visibility = 'visible';
+                userDiv.css('visibility', 'hidden');
+                if(loginDiv)
+                    loginDiv.css('visibility', 'visible');
             }
         });
     }
@@ -69,7 +71,7 @@
 	<!-- end div#menu -->
 </div>
 
-      <fb:login-button perms="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();">
+      <fb:login-button perms="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
          Login with Facebook
       </fb:login-button>
 
