@@ -21,10 +21,12 @@ function appendTable(img, title, url) {
 function message(text) {
     $('.message div').html(text);
     $('.message').css('opacity', '1');
+    $('.message').css('filter', 'alpha(opacity=100)');
 }
 
 function messageOff() {
     $('.message').css('opacity', '0');
+    $('.message').css('filter', 'alpha(opacity=0)');
 }
 
 var myPlayList;
