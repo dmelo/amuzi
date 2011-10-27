@@ -15,6 +15,9 @@ class Youtube
         $xml = file_get_contents($this->_baseUrl . implode('&', $args));
         $xml = str_replace(array('<media:', '</media:'),
             array('<mediaa', '</mediaa'), $xml);
+        $fd = fopen('/tmp/a.txt', 'w');
+        fprintf($fd, $xml);
+        fclose($fd);
         $xmlDoc = new DOMDocument();
         $xmlDoc->loadXML($xml);
         foreach ($xmlDoc->getElementsByTagName('entry') as $node) {
@@ -29,10 +32,13 @@ class Youtube
             foreach ($node->getElementsByTagName('mediaathumbnail') as $pic) {
                 $entry['pic'] = $pic->getAttribute('url');
             }
+            foreach ($node->getElementsByTagName('mediaacontent') as $mediaContent) {
+                $entry['duration'] = $mediaContent->getAttribute('duration');
+            }
 
             $entry['you2better'] = Zend_Registry::get('domain');
-            $entry['you2better'] .= '/api/' . $entry['id'] . '/' .
-                $entry['title'] . '.mp3';
+            $entry['you2better'] .= '/api/' . $entry['duration'] . '/' .
+                $entry['id'] . '/' . $entry['title'] . '.mp3';
 
             $resultSet[] = new YoutubeEntry($entry);
         }

@@ -19,7 +19,7 @@ class YoutubeEntry extends AbstractEntry
      */
     public function __construct($entry = array( ) )
     {
-        $this->_fields = array('id', 'title', 'content', 'you2better', 'pic');
+        $this->_fields = array('id', 'title', 'content', 'you2better', 'pic', 'duration');
         $this->_data = array();
 
         foreach($entry as $key => $value)
@@ -50,6 +50,7 @@ class YoutubeEntry extends AbstractEntry
         $item['content'] = $this->content;
         $item['you2better'] = $this->you2better;
         $item['pic'] = $this->pic;
+        $item['duration'] = $this->duration;
 
         return $item;
     }
