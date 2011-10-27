@@ -42,6 +42,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.inspector.js';
         $js[] = 'http://jplayer.org/js/themeswitcher.js';
         $js[] = $domainJs . 'jquery.progressbar.js';
+        $js[] = $domainJs . 'jquery.placeholder.min.js';
         $js[] = $domainJs . 'jquery-ui-1.8.16.custom.min.js';
         $js[] = $domainJs . 'jquery.form.js';
         $js[] = $domainJs . 'jquery.autocomplete.js';

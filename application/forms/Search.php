@@ -7,6 +7,7 @@ class Application_Form_Search extends Zend_Form
     {
         $element = new Zend_Form_Element_Text('q');
         $element->setRequired();
+        $element->setAttrib('placeholder', 'E.g.: Rolling Stones ...');
         $this->addElement($element);
 
         $element = new Zend_Form_Element_Submit('submit');
