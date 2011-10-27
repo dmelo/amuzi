@@ -1,7 +1,7 @@
 var myPlayList;
 
 function cleanTable() {
-    thead = '<thead><tr class="topic"><th>Cover</th><th>Title</th><th>Options</th></tr></thead>';
+    thead = '<thead><tr class="topic"><th>Cover</th><th>Title</th><th>Duration></th><th>Options</th></tr></thead>';
     tbody = '<tbody></tbody>';
     $('#result').html('<table>' + thead + tbody + '</table>');
 }
@@ -77,5 +77,5 @@ $(document).ready(function() {
     myPlaylist = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
         cssSelectorAncestor: "#jp_container_1"
-    }, [], {supplied: 'mp3', swfPath: "/obj/"});
+    }, [], {supplied: 'mp3', swfPath: "/obj/", free: true});
 });
