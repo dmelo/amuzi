@@ -1,16 +1,46 @@
 var myPlayList;
 
+function twoDigit(num) {
+    var str = '';
+    if(num < 10)
+        str += '0';
+
+    return str + num;
+}
+
+function secondsToHMS(time) {
+    var h = 0;
+    var m = 0;
+    var s = 0;
+
+    h = Math.floor(time / 3600);
+    time -= 3600 * h;
+    m = Math.floor(time / 60);
+    time -= 60 * m;
+    s = time;
+
+    var str = '';
+
+    if(h > 0)
+        str = twoDigit(h);
+
+    str += twoDigit(m) + ':';
+    str += twoDigit(s);
+
+    return str;
+}
+
 function cleanTable() {
-    thead = '<thead><tr class="topic"><th>Cover</th><th>Title</th><th>Duration></th><th>Options</th></tr></thead>';
+    thead = '<thead><tr class="topic"><th>Cover</th><th>Duration</th><th>Title</th><th>Options</th></tr></thead>';
     tbody = '<tbody></tbody>';
     $('#result').html('<table>' + thead + tbody + '</table>');
 }
 
-function appendTable(img, title, url) {
+function appendTable(img, title, url, duration) {
     img = '<img class="cover" src="' + img + '" alt="' + title + '"/>';
     options = '<a href="' + url + '" class="addplaylist" title="' + title + '"><img alt="playlist" src="/img/playlist.gif"/></a>';
     options += '<a href="' + url + '" class="download" title="' + title + '" target="_blank"><img alt="download" src="/img/download.gif"/></a>';
-    tr = '<tr><td>' + img + '</td><td><p>' + title + '</p></td><td>' + options + '</td><td>' + '</tr>';
+    tr = '<tr><td>' + img + '</td><td>' + secondsToHMS(duration) + '</td><td><p>' + title + '</p></td><td>' + options + '</td><td>' + '</tr>';
     $('#result table tbody').append(tr);
 }
 
@@ -25,16 +55,17 @@ function messageOff() {
     $('.message').css('filter', 'alpha(opacity=0)');
 }
 
+
 var myPlayList;
 
 $(document).ready(function() {
     $('#search').ajaxForm({
-        dataType: 'json', 
+        dataType: 'json',
         success: function (data) {
             messageOff();
             cleanTable();
             for(i = 0; i < data.length; i++)
-                appendTable(data[i].pic, data[i].title, data[i].you2better);
+                appendTable(data[i].pic, data[i].title, data[i].you2better, data[i].duration);
         },
         beforeSubmit: function() {
             message('Loading...');
