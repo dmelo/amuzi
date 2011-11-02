@@ -13,28 +13,26 @@
 <script src="http://connect.facebook.net/en_US/all.js">
 </script>
 <script>
-     FB.init({ 
-        appId:'209056955830996', cookie:true, 
-        status:true, xfbml:true 
+     FB.init({
+        appId:'209056955830996', cookie:true,
+        status:true, xfbml:true
      });
 
     function processLogin() {
         FB.api('/me', function(user) {
             var userDiv = $('#user');
-            var loginDiv = $('fb:login-button')[0];
+            var loginDiv = $('#login-button');
             if(user != null && user.id != null) {
                 var image = document.getElementById('image');
                 image.src = 'http://graph.facebook.com/' + user.id + '/picture';
                 var name = document.getElementById('name');
                 name.innerHTML = user.name;
                 userDiv.css('visibility', 'visible');
-                if(loginDiv)
-                    loginDiv.css('visibility', 'hidden');
+                loginDiv.css('visibility', 'hidden');
             }
             else {
                 userDiv.css('visibility', 'hidden');
-                if(loginDiv)
-                    loginDiv.css('visibility', 'visible');
+                loginDiv.css('visibility', 'visible');
             }
         });
     }
@@ -71,7 +69,7 @@
 	<!-- end div#menu -->
 </div>
 
-      <fb:login-button perms="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
+      <fb:login-button id="login-button" perms="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
          Login with Facebook
       </fb:login-button>
 
