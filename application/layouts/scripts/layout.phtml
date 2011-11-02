@@ -18,6 +18,17 @@
         status:true, xfbml:true
      });
 
+    function login(facebookId, name, email, url) {
+        $.get('/user/login', {
+            facebookId: facebookId,
+            name: name,
+            email: email,
+            url: url
+        }, function(data) {
+            alert('ok');
+        });
+    }
+
     function processLogin() {
         FB.api('/me', function(user) {
             var userDiv = $('#user');
@@ -29,6 +40,8 @@
                 name.innerHTML = user.name;
                 userDiv.css('visibility', 'visible');
                 loginDiv.css('visibility', 'hidden');
+
+                login(user.id, user.first_name + " " + user.last_name, user.email, user.link);
             }
             else {
                 userDiv.css('visibility', 'hidden');

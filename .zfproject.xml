@@ -36,6 +36,10 @@
         <modelFile modelName="Lastfm"/>
         <modelFile modelName="LastfmEntry"/>
         <modelFile modelName="AbstractEntry"/>
+        <modelFile modelName="User"/>
+        <dbTableDirectory>
+          <dbTableFile dbTableName="User"/>
+        </dbTableDirectory>
       </modelsDirectory>
       <modulesDirectory>
         <moduleDirectory moduleName="user">
@@ -55,6 +59,19 @@
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
+            <viewHelpersDirectory/>
+            <viewFiltersDirectory/>
+          </viewsDirectory>
+        </moduleDirectory>
+        <moduleDirectory moduleName="User">
+          <apisDirectory enabled="false"/>
+          <configsDirectory enabled="false"/>
+          <controllersDirectory/>
+          <formsDirectory enabled="false"/>
+          <layoutsDirectory enabled="false"/>
+          <modelsDirectory/>
+          <viewsDirectory>
+            <viewScriptsDirectory/>
             <viewHelpersDirectory/>
             <viewFiltersDirectory/>
           </viewsDirectory>
