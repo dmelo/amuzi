@@ -452,11 +452,12 @@
         scan: function() {
             var self = this;
 
-            replace = new Array();
+            var replace = [];
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
                 replace[index] = self.original[$(value).attr('name')];
-                if(self.current == $(value).attr('name'))
+                if(self.current === parseInt($(value).attr('name'), 10)) {
                     self.current = index;
+                }
                 $(value).attr('name', index);
             });
             this.original = replace;
