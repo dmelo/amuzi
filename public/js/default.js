@@ -78,7 +78,6 @@
         $.post('/playlist/save', {
             playlist: myPlaylist.original
         }, function(data) {
-            message('Playlist saved');
         });
     }
 
