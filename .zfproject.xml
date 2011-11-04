@@ -25,6 +25,9 @@
           <actionMethod actionName="search"/>
           <actionMethod actionName="autocomplete"/>
         </controllerFile>
+        <controllerFile controllerName="Playlist">
+          <actionMethod actionName="index"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory>
         <formFile formName="Search"/>
@@ -40,6 +43,7 @@
         <dbTableDirectory>
           <dbTableFile dbTableName="User"/>
         </dbTableDirectory>
+        <modelFile modelName="Playlist"/>
       </modelsDirectory>
       <modulesDirectory>
         <moduleDirectory moduleName="user">
@@ -111,6 +115,12 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Index">
             <viewScriptFile forActionName="test"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Playlist">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Playlist">
+            <viewScriptFile forActionName="save"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
