@@ -38,12 +38,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $js = array();
         $js[] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js';
         $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.min.js';
-        $js[] = 'http://jplayer.org/latest/js/jplayer.playlist.min.js';
+        $js[] = $domainJs . 'jplayer.playlist.js';
+        //$js[] = 'http://jplayer.org/latest/js/jplayer.playlist.min.js';
         $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.inspector.js';
         $js[] = 'http://jplayer.org/js/themeswitcher.js';
+        $js[] = $domainJs . 'jquery-ui-1.8.16.custom.min.js';
         $js[] = $domainJs . 'jquery.progressbar.js';
         $js[] = $domainJs . 'jquery.placeholder.min.js';
-        $js[] = $domainJs . 'jquery-ui-1.8.16.custom.min.js';
         $js[] = $domainJs . 'jquery.form.js';
         $js[] = $domainJs . 'jquery.autocomplete.js';
         $js[] = $domainJs . 'default.js';

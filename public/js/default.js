@@ -1,5 +1,11 @@
 var myPlayList;
 
+/**
+ * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
+ *
+ * @param num Number to be transformed.
+ * @return Returns the two digit leading 0 number.
+ */
 function twoDigit(num) {
     var str = '';
     if(num < 10)
@@ -8,6 +14,12 @@ function twoDigit(num) {
     return str + num;
 }
 
+/**
+ * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
+ *
+ * @param time Time, in seconds.
+ * @return Returns a string represening time in HH:MM:SS or MM:SS format.
+ */
 function secondsToHMS(time) {
     var h = 0;
     var m = 0;
@@ -59,6 +71,7 @@ function messageOff() {
 var myPlayList;
 
 $(document).ready(function() {
+    // query youtube for videos and fill the result table.
     $('#search').ajaxForm({
         dataType: 'json',
         success: function (data) {
@@ -72,6 +85,7 @@ $(document).ready(function() {
         }
     });
 
+    // add track into the playlist.
     $('.addplaylist').live('click', function(e) {
         e.preventDefault();
          myPlaylist.add({
@@ -80,9 +94,9 @@ $(document).ready(function() {
         });
     });
 
-    $('#jp_container_1').draggable();
-
+    // placeholder on the search input.
     $('#q').placeholder();
+    // autocomplete the search input from last.fm.
     $('#q').autocomplete('/api/autocomplete', {
         dateType: 'json',
         parse: function(data) {
@@ -101,12 +115,21 @@ $(document).ready(function() {
         }
     });
 
+    // submit a query to youtube after change the value of the search input.
     $('#q').change(function() {
         $('#search').submit();
     });
 
+    // start the jplayer.
+    var jplayerCss = "#jp_container_1";
     myPlaylist = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
-        cssSelectorAncestor: "#jp_container_1"
+        cssSelectorAncestor: jplayerCss
     }, [], {supplied: 'mp3', swfPath: "/obj/", free: true});
+
+    $(jplayerCss + ' ul:last').sortable({
+        update: function() {
+            myPlaylist.scan();
+        }
+    });
 });
