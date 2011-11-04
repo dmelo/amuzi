@@ -4,11 +4,10 @@ class DbTable_User extends Diogo_Model_DbTable
 {
     protected $_name = 'user';
     protected $_rowClass = 'DbTable_UserRow';
-    protected $_primary = 'id';
 
     public function findByFacebookId($facebookId)
     {
-        $where = $this->_adapter->quoteInto('facebookId = ?', $facebookId);
+        $where = $this->getAdapter()->quoteInto('facebookId = ?', $facebookId);
         return $this->fetchRow($where);
     }
 

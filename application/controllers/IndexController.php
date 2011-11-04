@@ -12,23 +12,8 @@
  *
  *
  */
-class IndexController extends Zend_Controller_Action
+class IndexController extends Diogo_Controller_Action
 {
-
-    /**
-     * init
-     *
-     * @return void
-     *
-     *
-     *
-     *
-     */
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
-
     /**
      * indexAction
      *

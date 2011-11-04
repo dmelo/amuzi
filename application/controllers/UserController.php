@@ -1,11 +1,7 @@
 <?php
 
-class UserController extends Zend_Controller_Action
+class UserController extends Diogo_Controller_Action
 {
-    public function init()
-    {
-    }
-
     public function loginAction()
     {
         $request = $this->getRequest();
@@ -13,7 +9,7 @@ class UserController extends Zend_Controller_Action
             $params = $this->getRequest()->getParams();
             $user = new User();
             $user->login($params);
-            $session = new Zend_Session_Default('session');
+            $session = new Zend_Session_Namespace('session');
             $session->user = $user;
         }
     }
