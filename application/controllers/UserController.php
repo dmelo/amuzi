@@ -13,7 +13,8 @@ class UserController extends Zend_Controller_Action
             $params = $this->getRequest()->getParams();
             $user = new User();
             $user->login($params);
-            Zend_Registry::set('user', $user);
+            $session = new Zend_Session_Default('session');
+            $session->user = $user;
         }
     }
 
