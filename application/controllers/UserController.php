@@ -10,7 +10,7 @@ class UserController extends Diogo_Controller_Action
             $user = new User();
             $user->login($params);
             $session = new Zend_Session_Namespace('session');
-            $session->user = $user;
+            $session->user = $user->findByFacebookId($request->getParam('facebookId'));
         }
     }
 

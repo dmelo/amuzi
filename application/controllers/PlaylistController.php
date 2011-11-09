@@ -14,6 +14,10 @@ class PlaylistController extends Diogo_Controller_Action
         if($request->isPost()) {
             $session = new Zend_Session_Namespace('session');
             $session->playlist = $request->getPost('playlist');
+            if(isset($session->user)) {
+                $playlistModel = new Playlist();
+                $playlistModel->import($session->playlist, 'default');
+            }
         }
     }
 
