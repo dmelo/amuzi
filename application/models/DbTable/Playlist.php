@@ -8,7 +8,9 @@ class DbTable_Playlist extends Diogo_Model_DbTable
 
     public function findByUserIdAndName($userId, $name)
     {
-        return $this->fetchRow($this->getAdapter()->quoteInto('user_id = ? AND name = ?', $userId, $name));
+        $db = $this->getAdapter();
+        $where = $db->quoteInto('user_id = ? AND ', $userId) . $db->quoteInto('name = ?', $name);
+        return $this->fetchRow($where);
     }
 
     public function create($userId, $name)
