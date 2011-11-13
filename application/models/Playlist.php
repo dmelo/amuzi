@@ -34,6 +34,12 @@ class Playlist
     public function import($playlist, $name)
     {
         $playlistRow = $this->create($name);
-        //$playlistRow->setTrack($trackInfo, $order);
+        $sort = 0;
+        foreach($playlist as $track) {
+            var_dump($track);
+            $playlistRow->setTrack($track, $sort);
+            $sort++;
+        }
+        $playlistRow->deleteSortGreaterThan($sort - 1);
     }
 }

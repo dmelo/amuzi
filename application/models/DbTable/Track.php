@@ -14,6 +14,11 @@ class DbTable_Track extends Diogo_Model_DbTable
 
     public function insert($data)
     {
+        if(array_key_exists('mp3', $data)) {
+            $data['url'] = $data['mp3'];
+            unset($data['mp3']);
+        }
+
         $trackRow = $this->findByUrl($data['url']);
         if(!$trackRow) {
             parent::insert($data);
@@ -23,4 +28,3 @@ class DbTable_Track extends Diogo_Model_DbTable
         return $trackRow;
     }
 }
-

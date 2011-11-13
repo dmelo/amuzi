@@ -117,7 +117,7 @@
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
-            setTimeout('savePlaylist();', 1500);
+            setTimeout('savePlaylist();', 200);
         });
 
         // placeholder on the search input.
@@ -160,7 +160,7 @@
             }
         });
 
-        // For some reason, i can call loadPlaylist right the way, it must wait for some initialization stuff.
+        // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);
     });
 //})(jQuery);
