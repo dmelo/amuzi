@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * PlaylistController Actions regarding playlist management and viewing.
+ *
+ * @package 
+ * @version 1.0
+ * @copyright Copyright (C) 2010 Diogo Oliveira de Melo. All rights reserved.
+ * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
+ * @license GPL version 3
+ */
 class PlaylistController extends Diogo_Controller_Action
 {
     public function indexAction()

@@ -31,7 +31,14 @@ class Playlist
         return $ret;
     }
 
-    public function import($playlist, $name)
+    /**
+     * import Import playlist from jPlayer.playlist format to database.
+     *
+     * @param mixed $playlist Playlist on jplaylist's format.
+     * @param mixed $name Playlist's name.
+     * @return void
+     */
+    public function import($playlist, $name = 'default')
     {
         $playlistRow = $this->create($name);
         $sort = 0;
@@ -43,6 +50,12 @@ class Playlist
         $playlistRow->deleteSortGreaterThan($sort - 1);
     }
 
+    /**
+     * export Exports the playlist from the database to the jplaylist's format.
+     *
+     * @param mixed $name Playlist's name.
+     * @return array List of tracks on jplaylist's format.
+     */
     public function export($name)
     {
         $playlistDb = new DbTable_Playlist();
