@@ -18,6 +18,9 @@
         status:true, xfbml:true
      });
 
+    // Call this from firebug:
+    // login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 
+    // 'kljkjkj');
     function login(facebookId, name, email, url) {
         $.get('/user/login', {
             facebookId: facebookId,

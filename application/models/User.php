@@ -24,8 +24,14 @@ class User
             }
         }
 
-        $userModel = new DbTable_User();
-        $userModel->register($data);
+        $userDb = new DbTable_User();
+        $userDb->register($data);
+    }
+
+    public function findByFacebookId($facebookId)
+    {
+        $userDb = new DbTable_User();
+        return $userDb->findByFacebookId($facebookId);
     }
 }
 

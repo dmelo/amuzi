@@ -1,11 +1,7 @@
 <?php
 
-class UserController extends Zend_Controller_Action
+class UserController extends Diogo_Controller_Action
 {
-    public function init()
-    {
-    }
-
     public function loginAction()
     {
         $request = $this->getRequest();
@@ -13,7 +9,8 @@ class UserController extends Zend_Controller_Action
             $params = $this->getRequest()->getParams();
             $user = new User();
             $user->login($params);
-            Zend_Registry::set('user', $user);
+            $session = new Zend_Session_Namespace('session');
+            $session->user = $user->findByFacebookId($request->getParam('facebookId'));
         }
     }
 

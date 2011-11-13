@@ -1,8 +1,3 @@
-drop table `playlist_has_track`;
-drop table `playlist`;
-drop table `track`;
-drop table `user`;
-
 CREATE TABLE `user` (
     `id` int(11) NOT NULL auto_increment,
     `facebookId` varchar(63) collate utf8_swedish_ci default NULL,
@@ -33,12 +28,11 @@ CREATE TABLE `playlist` (
 
 CREATE TABLE `playlist_has_track` (
     `id` int(11) NOT NULL auto_increment,
-    `sort` int(11) NOT NULL,
     `playlist_id` int(11) NOT NULL,
     `track_id` int(11) NOT NULL,
+    `sort` int(11) NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE(`playlist_id`, `sort`),
-    UNIQUE(`playlist_id`, `track_id`),
     CONSTRAINT `has_playlist_id_ibfk_1` FOREIGN KEY (`playlist_id`) REFERENCES `playlist`(`id`),
     CONSTRAINT `has_track_id_ibfk_1` FOREIGN KEY (`track_id`) REFERENCES `track`(`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;

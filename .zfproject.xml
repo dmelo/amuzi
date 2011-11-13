@@ -42,8 +42,11 @@
         <modelFile modelName="User"/>
         <dbTableDirectory>
           <dbTableFile dbTableName="User"/>
+          <dbTableFile dbTableName="Track"/>
+          <dbTableFile dbTableName="PlaylistHasTrack"/>
         </dbTableDirectory>
         <modelFile modelName="Playlist"/>
+        <modelFile modelName="Track"/>
       </modelsDirectory>
       <modulesDirectory>
         <moduleDirectory moduleName="user">
