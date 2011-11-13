@@ -13,6 +13,15 @@ class DbTable_Playlist extends Diogo_Model_DbTable
         return $this->fetchRow($where);
     }
 
+    public function findByName($name)
+    {
+        $session = new Zend_Session_Namespace('session');
+        $user = $session->user;
+        $db = $this->getAdapter();
+        $where = $db->quoteInto('user_id = ? AND ', $user->id) . $db->quoteInto('name = ?', $name);
+        return $this->fetchRow($where);
+    }
+
     public function create($userId, $name)
     {
         $data = array(

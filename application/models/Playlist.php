@@ -42,4 +42,18 @@ class Playlist
         }
         $playlistRow->deleteSortGreaterThan($sort - 1);
     }
+
+    public function export($name)
+    {
+        $playlistDb = new DbTable_Playlist();
+        $playlistRow = $playlistDb->findByName($name);
+        $trackList = $playlistRow->getTrackList();
+        $ret = array();
+        foreach($trackList as $track) {
+            $ret[] = array('title' => $track->title,
+                'mp3' => $track->url);
+        }
+
+        return $ret;
+    }
 }

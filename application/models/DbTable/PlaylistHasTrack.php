@@ -13,6 +13,13 @@ class DbTable_PlaylistHasTrack extends Zend_Db_Table_Abstract
         return $this->fetchRow($where);
     }
 
+    public function findByPlaylist($playlistId)
+    {
+        $db = $this->getAdapter();
+        $where = $db->quoteInto("playlist_id = ?", $playlistId);
+        return $this->fetchAll($where, 'sort');
+    }
+
     public function insert($data)
     {
         $row = $this->findByPlaylistAndSort($data['playlist_id'], $data['sort']);

@@ -23,4 +23,17 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
         $playlistHasTrackDb = new DbTable_PlaylistHasTrack();
         $playlistHasTrackDb->deleteByPlaylistSortGreaterThan($this->id, $sort);
     }
+
+    public function getTrackList()
+    {
+        $playlistHasTrackDb = new DbTable_PlaylistHasTrack();
+        $trackDb = new DbTable_Track();
+        $list = $playlistHasTrackDb->findByPlaylist($this->id);
+        $ret = array();
+        foreach($list as $item) {
+            $ret[] = $trackDb->findById($item->track_id);
+        }
+
+        return $ret;
+    }
 }

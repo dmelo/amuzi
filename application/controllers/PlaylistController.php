@@ -24,6 +24,13 @@ class PlaylistController extends Diogo_Controller_Action
     public function loadAction()
     {
         $session = new Zend_Session_Namespace('session');
-        $this->view->playlist = isset($session->playlist) ? $session->playlist : null;
+        if(isset($session->user)) {
+            $playlistModel = new Playlist();
+            $this->view->playlist = $playlistModel->export('default');
+        }
+        elseif(isset($session->playlist))
+            $this->view->playlist = $session->playlist;
+        else
+            $this->view->playlist = null;
     }
 }
