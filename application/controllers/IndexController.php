@@ -14,10 +14,6 @@ class IndexController extends Diogo_Controller_Action
      * indexAction
      *
      * @return void
-     *
-     *
-     *
-     *
      */
     public function indexAction()
     {
@@ -28,10 +24,6 @@ class IndexController extends Diogo_Controller_Action
      * searchAction
      *
      * @return void
-     *
-     *
-     *
-     *
      */
     public function searchAction()
     {
@@ -42,8 +34,6 @@ class IndexController extends Diogo_Controller_Action
      * apiAction
      *
      * @return void
-     *
-     *
      */
     public function apiAction()
     {
@@ -54,8 +44,6 @@ class IndexController extends Diogo_Controller_Action
      * aboutAction
      *
      * @return void
-     *
-     *
      */
     public function aboutAction()
     {
@@ -66,7 +54,6 @@ class IndexController extends Diogo_Controller_Action
      * incboardAction IncBoard technique.
      *
      * @return void
-     *
      */
     public function incboardAction()
     {
@@ -77,8 +64,6 @@ class IndexController extends Diogo_Controller_Action
     {
         // action body
     }
-
-
 }
 
 

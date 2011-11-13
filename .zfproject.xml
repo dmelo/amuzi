@@ -46,6 +46,7 @@
           <dbTableFile dbTableName="PlaylistHasTrack"/>
         </dbTableDirectory>
         <modelFile modelName="Playlist"/>
+        <modelFile modelName="Track"/>
       </modelsDirectory>
       <modulesDirectory>
         <moduleDirectory moduleName="user">
