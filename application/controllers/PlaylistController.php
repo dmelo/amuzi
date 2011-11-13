@@ -7,6 +7,12 @@ class PlaylistController extends Diogo_Controller_Action
         // action body
     }
 
+    /**
+     * saveAction Save the playlist and link it to the user currently logged 
+     * in.
+     *
+     * @return void
+     */
     public function saveAction()
     {
         $request = $this->getRequest();
@@ -21,6 +27,11 @@ class PlaylistController extends Diogo_Controller_Action
         }
     }
 
+    /**
+     * loadAction Loads the user's playlist.
+     *
+     * @return void
+     */
     public function loadAction()
     {
         $session = new Zend_Session_Namespace('session');
