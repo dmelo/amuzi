@@ -82,6 +82,7 @@
     }
 
     function loadPlaylist() {
+        myPlaylist.removeAll();
         $.post('/playlist/load', {}, function(data) {
             $.each(data, function(i, v) {
                 myPlaylist.add({title: v.title, mp3: v.mp3});
