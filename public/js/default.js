@@ -4,6 +4,7 @@
 //    'use strict';
 
     var myPlaylist;
+    var jplayerCss;
 
     /**
      * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
@@ -74,19 +75,39 @@
         $('.message').css('filter', 'alpha(opacity=0)');
     }
 
-    function savePlaylist() {
+    function savePlaylist(name) {
+        name = name || 'default';
         $.post('/playlist/save', {
-            playlist: myPlaylist.original
+            playlist: myPlaylist.original,
+            name: name
         }, function(data) {
         });
     }
 
-    function loadPlaylist() {
-        $.post('/playlist/load', {}, function(data) {
-            $.each(data, function(i, v) {
+    function loadPlaylist(name) {
+        name = name || 'default';
+        myPlaylist.removeAll();
+        $.post('/playlist/load', {
+            name: name
+        }, function(data) {
+            $.each(data[0], function(i, v) {
                 myPlaylist.add({title: v.title, mp3: v.mp3});
             });
+            alert('playlist name: ' + data[1]);
         }, 'json');
+    }
+
+    /**
+     * When the playlist have more than 8 items it retracts on mouseleave and
+     * restore on mouseover.
+     */
+    function retractablePlaylist() {
+        $(jplayerCss).mouseover(function(e) {
+            $('.jp-playlist').fadeIn();
+        }).mouseleave(function(e) {
+            if($('.jp-playlist li').length > 8)
+                $('.jp-playlist').fadeOut();
+        });
     }
 
     $(document).ready(function() {
@@ -147,7 +168,7 @@
         });
 
         // start the jplayer.
-        var jplayerCss = "#jp_container_1";
+        jplayerCss = "#jp_container_1";
         myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: jplayerCss
@@ -159,6 +180,8 @@
                 savePlaylist();
             }
         });
+
+        retractablePlaylist();
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);

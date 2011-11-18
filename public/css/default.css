@@ -63,11 +63,6 @@ dd {
     position: absolute;
     right: 1px;
     top: 0px;
-    opacity: 0.3;
-}
-
-#jp_container_1:hover {
-    opacity: 1.0;
 }
 
 .ac_results li.ac_even {

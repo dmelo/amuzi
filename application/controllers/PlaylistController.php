@@ -28,7 +28,7 @@ class PlaylistController extends Diogo_Controller_Action
 
         if($request->isPost()) {
             $session = new Zend_Session_Namespace('session');
-            $session->playlist = $request->getPost('playlist');
+            $session->playlist = array($request->getPost('playlist'), $request->getPost('name'));
             if(isset($session->user)) {
                 $playlistModel = new Playlist();
                 $playlistModel->import($session->playlist, 'default');
@@ -44,13 +44,18 @@ class PlaylistController extends Diogo_Controller_Action
     public function loadAction()
     {
         $session = new Zend_Session_Namespace('session');
-        if(isset($session->user)) {
-            $playlistModel = new Playlist();
-            $this->view->playlist = $playlistModel->export('default');
+        $request = $this->getRequest();
+
+        if($request->isPost()) {
+            if(isset($session->user)) {
+                $playlistModel = new Playlist();
+                $name = $request->getPost('name');
+                $this->view->playlist = array($playlistModel->export($name), $name);
+            }
+            elseif(isset($session->playlist))
+                $this->view->playlist = $session->playlist;
+            else
+                $this->view->playlist = null;
         }
-        elseif(isset($session->playlist))
-            $this->view->playlist = $session->playlist;
-        else
-            $this->view->playlist = null;
     }
 }
