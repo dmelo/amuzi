@@ -90,6 +90,19 @@
         }, 'json');
     }
 
+    /**
+     * When the playlist have more than 8 items it retracts on mouseleave and
+     * restore on mouseover.
+     */
+    function retractablePlaylist() {
+        $(jplayerCss).mouseover(function(e) {
+            $('.jp-playlist').fadeIn();
+        }).mouseleave(function(e) {
+            if($('.jp-playlist li').length > 8)
+                $('.jp-playlist').fadeOut();
+        });
+    }
+
     $(document).ready(function() {
         // query youtube for videos and fill the result table.
         $('#search').ajaxForm({
@@ -160,6 +173,8 @@
                 savePlaylist();
             }
         });
+
+        retractablePlaylist();
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);
