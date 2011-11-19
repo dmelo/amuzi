@@ -47,14 +47,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.placeholder.min.js';
         $js[] = $domainJs . 'jquery.form.js';
         $js[] = $domainJs . 'jquery.autocomplete.js';
+        $js[] = $domainJs . 'resultset.js';
         $js[] = $domainJs . 'default.js';
 
         $css = array();
         $css[] = 'http://jplayer.org/js/prettify/prettify-jPlayer.css';
         $css[] = 'http://jplayer.org/latest/skin/pink.flag/jplayer.pink.flag.css';
+        $css[] = $domainCss . 'player.css';
         $css[] = $domainCss . 'style.css';
         $css[] = $domainCss . 'gallery.css';
         $css[] = $domainCss . 'miniplayer.css';
+        $css[] = $domainCss . 'resultset.css';
         $css[] = $domainCss . 'default.css';
 
         $this->bootstrap('layout');

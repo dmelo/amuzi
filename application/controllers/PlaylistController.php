@@ -31,7 +31,7 @@ class PlaylistController extends Diogo_Controller_Action
             $session->playlist = array($request->getPost('playlist'), $request->getPost('name'));
             if(isset($session->user)) {
                 $playlistModel = new Playlist();
-                $playlistModel->import($session->playlist, 'default');
+                $playlistModel->import($session->playlist[0], $session->playlist[1]);
             }
         }
     }
