@@ -21,48 +21,7 @@
         return str + num;
     }
 
-    /**
-     * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
-     *
-     * @param time Time, in seconds.
-     * @return Returns a string represening time in HH:MM:SS or MM:SS format.
-     */
-    function secondsToHMS(time) {
-        var h = 0;
-        var m = 0;
-        var s = 0;
 
-        h = Math.floor(time / 3600);
-        time -= 3600 * h;
-        m = Math.floor(time / 60);
-        time -= 60 * m;
-        s = time;
-
-        var str = '';
-
-        if(h > 0) {
-            str = twoDigit(h);
-        }
-
-        str += twoDigit(m) + ':';
-        str += twoDigit(s);
-
-        return str;
-    }
-
-    function cleanTable() {
-        var thead = '<thead><tr class="topic"><th>Cover</th><th>Duration</th><th>Title</th><th>Options</th></tr></thead>';
-        var tbody = '<tbody></tbody>';
-        $('#result').html('<table>' + thead + tbody + '</table>');
-    }
-
-    function appendTable(img, title, url, duration) {
-        img = '<img class="cover" src="' + img + '" alt="' + title + '"/>';
-        var options = '<a href="' + url + '" class="addplaylist" title="' + title + '"><img alt="playlist" src="/img/playlist.gif"/></a>';
-        options += '<a href="' + url + '" class="download" title="' + title + '" target="_blank"><img alt="download" src="/img/download.gif"/></a>';
-        var tr = '<tr><td>' + img + '</td><td>' + secondsToHMS(duration) + '</td><td><p>' + title + '</p></td><td>' + options + '</td><td>' + '</tr>';
-        $('#result table tbody').append(tr);
-    }
 
     function message(text) {
         $('.message div').html(text);
@@ -93,7 +52,6 @@
             $.each(data[0], function(i, v) {
                 myPlaylist.add({title: v.title, mp3: v.mp3});
             });
-            alert('playlist name: ' + data[1]);
         }, 'json');
     }
 

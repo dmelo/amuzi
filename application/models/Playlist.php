@@ -43,7 +43,6 @@ class Playlist
         $playlistRow = $this->create($name);
         $sort = 0;
         foreach($playlist as $track) {
-            var_dump($track);
             $playlistRow->setTrack($track, $sort);
             $sort++;
         }
