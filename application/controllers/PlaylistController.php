@@ -3,7 +3,7 @@
 /**
  * PlaylistController Actions regarding playlist management and viewing.
  *
- * @package 
+ * @package
  * @version 1.0
  * @copyright Copyright (C) 2010 Diogo Oliveira de Melo. All rights reserved.
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
@@ -17,7 +17,7 @@ class PlaylistController extends Diogo_Controller_Action
     }
 
     /**
-     * saveAction Save the playlist and link it to the user currently logged 
+     * saveAction Save the playlist and link it to the user currently logged
      * in.
      *
      * @return void
