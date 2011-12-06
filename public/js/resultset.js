@@ -1,3 +1,7 @@
+/**
+ * Set of functions to manage the list of results.
+ */
+
     /**
      * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
      *
