@@ -16,10 +16,11 @@ class Youtube
         $xml = str_replace(array('<media:', '</media:'),
             array('<mediaa', '</mediaa'), $xml);
         $fd = fopen('/tmp/a.txt', 'w');
-        fprintf($fd, $xml);
+        fwrite($fd, $xml);
         fclose($fd);
         $xmlDoc = new DOMDocument();
         $xmlDoc->loadXML($xml);
+        $resultSet = array();
         foreach ($xmlDoc->getElementsByTagName('entry') as $node) {
             $filter = '/http:\/\/gdata.youtube.com\/.*\//';
             foreach ($node->getElementsByTagName('id') as $id)
