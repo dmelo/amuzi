@@ -68,7 +68,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->doctype('HTML5');
         $view->headMeta()->setCharset('UTF-8');
-        $view->headTitle('You2Better');
+        $view->headTitle('AMUZI');
 
         foreach($js as $item)
             $view->lightningPackerScript()->appendFile($item);
