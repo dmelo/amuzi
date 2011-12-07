@@ -6,4 +6,4 @@
 	url = https://github.com/dmelo/you2better.git
 [submodule "library/LightningPackerHelper"]
 	path = library/LightningPackerHelper
-	url = git@github.com:dmelo/LightningPackerHelper.git
+	url = https://dmelo@github.com/dmelo/LightningPackerHelper.git
