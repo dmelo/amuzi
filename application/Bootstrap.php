@@ -65,6 +65,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $layout->getView();
         $view->addHelperPath('../library/LightningPackerHelper/',
             'Zend_View_Helper');
+        $view->addHelperPath('../application/views/helpers', 'View_Helper');
 
         $view->doctype('HTML5');
         $view->headMeta()->setCharset('UTF-8');
@@ -75,6 +76,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         foreach($css as $item)
             $view->lightningPackerLink()->appendStylesheet($item);
+
+        $this->bootstrap('translate');
+        $translate = Zend_Registry::get('translate');
+        $view->translate = $translate;
     }
 
     /**
@@ -103,6 +108,36 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);
 
         Zend_Registry::set('cache', $cache);
+    }
+
+    public function _initLocale()
+    {
+        try {
+            $locale = Zend_Registry::get('locale');
+        } catch(Zend_Exception $e) {
+            try {
+                $locale = new Zend_Locale('auto');
+            } catch(Zend_Locale_Exception $e) {
+                $locale = new Zend_Locale('en_US');
+            }
+            Zend_Registry::set('locale', $locale);
+        }
+
+    }
+
+    public function _initTranslate()
+    {
+        $this->bootstrap('locale');
+        $locale = Zend_Registry::get('locale');
+
+        try {
+            $translate = Zend_Registry::get('translate');
+        } catch(Zend_Exception $e) {
+            $translate = new Zend_Translate(array('adapter' => 'array',
+                'content' => "../locale/${locale}.php",
+                'locale' => $locale));
+            Zend_Registry::set('translate', $translate);
+        }
     }
 }
 

@@ -96,7 +96,7 @@
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
-            setTimeout('savePlaylist();', 200);
+            setTimeout('savePlaylist();', 500);
         });
 
         // placeholder on the search input.
