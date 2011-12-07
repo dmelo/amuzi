@@ -1,3 +1,7 @@
 #jp_container_1 {
     z-index: 2;
 }
+
+.jp-playlist {
+    overflow: auto;
+}

@@ -5,6 +5,7 @@
 
     var myPlaylist;
     var jplayerCss;
+    var jPlaylistTop = null;
 
     /**
      * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
@@ -66,6 +67,13 @@
             if($('.jp-playlist li').length > 8)
                 $('.jp-playlist').fadeOut();
         });
+    }
+
+    function applyOverPlaylist() {
+        if(!jPlaylistTop)
+            jPlaylistTop = $('.jp-playlist').first().offset().top;
+        maxHeight = $(window).height() - jPlaylistTop - 2;
+        $('.jp-playlist').css('max-height', maxHeight);
     }
 
     $(document).ready(function() {
@@ -140,6 +148,10 @@
         });
 
         retractablePlaylist();
+        applyOverPlaylist();
+        $(window).resize(function(e) {
+            applyOverPlaylist();
+        });
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);
