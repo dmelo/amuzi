@@ -50,9 +50,11 @@
         $.post('/playlist/load', {
             name: name
         }, function(data) {
-            $.each(data[0], function(i, v) {
-                myPlaylist.add({title: v.title, mp3: v.mp3});
-            });
+            if(data != null) {
+                $.each(data[0], function(i, v) {
+                    myPlaylist.add({title: v.title, mp3: v.mp3});
+                });
+            }
         }, 'json');
     }
 
