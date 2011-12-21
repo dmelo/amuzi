@@ -35,6 +35,7 @@
         $('.message').css('filter', 'alpha(opacity=0)');
     }
 
+    // Soon to be deprecated.
     function savePlaylist(name) {
         name = name || 'default';
         $.post('/playlist/save', {
@@ -42,6 +43,28 @@
             name: name
         }, function(data) {
         });
+    }
+
+    function addTrack(trackTitle, trackLink, playlistName) {
+        playlistName = playlistName || 'default';
+        $.post('/playlist/addtrack', {
+            playlist: playlistName,
+            trackTitle: trackTitle,
+            trackLink: trackLink
+        }, function(data) {
+            if(false == data) {
+                message('Error adding track ' + trackTitle);
+            }
+        }, 'json');
+    }
+
+    function rmTrack(trackLink, playlistName) {
+        playlistName = playlistName || 'default';
+        $.post('/playlist/rmtrack', {
+            playlistName: playlistName,
+            trackLink: trackLink
+        }, function(data) {
+        }, 'json');
     }
 
     function loadPlaylist(name) {
