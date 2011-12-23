@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_PlaylistHasTrack extends Zend_Db_Table_Abstract
+class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
 {
     protected $_name = 'playlist_has_track';
     protected $_primary = 'id';
@@ -8,15 +8,13 @@ class DbTable_PlaylistHasTrack extends Zend_Db_Table_Abstract
 
     public function findByPlaylistAndSort($playlistId, $sort)
     {
-        $db = $this->getAdapter();
-        $where = $db->quoteInto("playlist_id = ? AND ", $playlistId) . $db->quoteInto("sort = ?", $sort);
+        $where = $this->_db->quoteInto("playlist_id = ? AND ", $playlistId) . $this->_db->quoteInto("sort = ?", $sort);
         return $this->fetchRow($where);
     }
 
     public function findByPlaylist($playlistId)
     {
-        $db = $this->getAdapter();
-        $where = $db->quoteInto("playlist_id = ?", $playlistId);
+        $where = $this->_db->quoteInto("playlist_id = ?", $playlistId);
         return $this->fetchAll($where, 'sort');
     }
 
@@ -37,8 +35,21 @@ class DbTable_PlaylistHasTrack extends Zend_Db_Table_Abstract
 
     public function deleteByPlaylistSortGreaterThan($playlistId, $sort)
     {
-        $db = $this->getAdapter();
-        $where = $db->quoteInto("playlist_id = ? AND ", $playlistId) . $db->quoteInto("sort > ?", $sort);
+        $where = $this->_db->quoteInto("playlist_id = ? AND ", $playlistId) . $this->_db->quoteInto("sort > ?", $sort);
         $this->delete($where);
+    }
+
+    /**
+     * getMaxSort Get the highiest sort on a playlist.
+     *
+     * @param mixed $playlistId Playlist ID;
+     * @return int the max sort.
+     */
+    public function getMaxSort($playlistId)
+    {
+        $select = new Zend_Db_Select($this->_db);
+        $select->from('playlist_has_track', array('max' => Zend_Db_Expr('max(sort)')))->where($this->_db->quoteInto('playlist_id = ?', $playlistId));
+
+        return $this->fetchRow($select)->max;
     }
 }

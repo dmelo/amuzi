@@ -7,7 +7,7 @@ class DbTable_User extends Diogo_Model_DbTable
 
     public function findByFacebookId($facebookId)
     {
-        $where = $this->getAdapter()->quoteInto('facebookId = ?', $facebookId);
+        $where = $this->_db->quoteInto('facebookId = ?', $facebookId);
         return $this->fetchRow($where);
     }
 
@@ -27,7 +27,7 @@ class DbTable_User extends Diogo_Model_DbTable
         } catch(Zend_Db_Statement_Exception $e) {
             // In case the user is already registered, just update his info.
 
-            $where = $this->getAdapter()->quoteInto('facebookId = ?', $data['facebookId']);
+            $where = $this->_db->quoteInto('facebookId = ?', $data['facebookId']);
             $this->update($data, $where);
             $ret = $this->findByFacebookId($data['facebookId']);
         }

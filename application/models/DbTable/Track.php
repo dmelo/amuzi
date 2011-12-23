@@ -8,7 +8,7 @@ class DbTable_Track extends Diogo_Model_DbTable
 
     public function findByUrl($url)
     {
-        $where = $this->getAdapter()->quoteInto('url = ?', $url);
+        $where = $this->_db->quoteInto('url = ?', $url);
         return $this->fetchRow($where);
     }
 
