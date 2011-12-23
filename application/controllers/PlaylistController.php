@@ -11,15 +11,15 @@
  */
 class PlaylistController extends Diogo_Controller_Action
 {
-    protected $session;
-    protected $request;
-    protected $playlistModel;
+    protected $_session;
+    protected $_request;
+    protected $_playlistModel;
 
     public function init()
     {
-        $this->session = new Zend_Session_Namespace('session');
-        $this->request = $this->getRequest();
-        $this->playlistModel = new Playlist();
+        $this->_session = new Zend_Session_Namespace('session');
+        $this->_request = $this->getRequest();
+        $this->_playlistModel = new Playlist();
     }
 
     public function indexAction()
@@ -35,16 +35,16 @@ class PlaylistController extends Diogo_Controller_Action
      */
     public function saveAction()
     {
-        if($this->request->isPost()) {
-            $this->session->playlist = array($this->request->getPost('playlist'), $this->request->getPost('name'));
-            if(isset($this->session->user))
-                $playlistModel->import($this->session->playlist[0], $this->session->playlist[1]);
+        if($this->_request->isPost()) {
+            $this->_session->playlist = array($this->_request->getPost('playlist'), $this->_request->getPost('name'));
+            if(isset($this->_session->user))
+                $playlistModel->import($this->_session->playlist[0], $this->_session->playlist[1]);
         }
     }
 
     public function addAction()
     {
-        if($this->request->isPost()) {
+        if($this->_request->isPost()) {
         }
     }
 
@@ -55,17 +55,14 @@ class PlaylistController extends Diogo_Controller_Action
      */
     public function loadAction()
     {
-        $session = new Zend_Session_Namespace('session');
-        $request = $this->getRequest();
-
-        if($request->isPost()) {
-            if(isset($session->user)) {
+        if($this->_request->isPost()) {
+            if(isset($this->_session->user)) {
                 $playlistModel = new Playlist();
-                $name = $request->getPost('name');
+                $name = $this->_request->getPost('name');
                 $this->view->playlist = array($playlistModel->export($name), $name);
             }
-            elseif(isset($session->playlist))
-                $this->view->playlist = $session->playlist;
+            elseif(isset($this->_session->playlist))
+                $this->view->playlist = $this->_session->playlist;
             else
                 $this->view->playlist = null;
         }

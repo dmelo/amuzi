@@ -2,6 +2,15 @@
 
 class DbTable_PlaylistRow extends Zend_Db_Table_Row
 {
+    protected $_playlistHasTrackDb;
+    protected $_trackDb;
+
+    public function __construct(array $config = array())
+    {
+        parent::__construct($config);
+        $this->playlistHasTrackDb = new DbTable_PlaylistHasTrack();
+        $this->trackDb = new DbTable_Track();
+    }
     public function setTrack($trackInfo, $sort)
     {
         // Make sure trackInfo is on the database and retrieve it's row.
@@ -16,6 +25,10 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
             'sort' => $sort);
 
         $playlistHasTrackDb->insert($data);
+    }
+
+    public function addTrack($trackInfo)
+    {
     }
 
     public function deleteSortGreaterThan($sort)
