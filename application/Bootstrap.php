@@ -78,8 +78,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $view->lightningPackerLink()->appendStylesheet($item);
 
         $this->bootstrap('translate');
-        $translate = Zend_Registry::get('translate');
-        $view->translate = $translate;
+        $session = new Zend_Session_Namespace('session');
+        $view->translate = $session->translate;
     }
 
     /**
@@ -112,32 +112,38 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     public function _initLocale()
     {
-        try {
-            $locale = Zend_Registry::get('locale');
-        } catch(Zend_Exception $e) {
+        $session = new Zend_Session_Namespace('session');
+        if(!isset($session->locale)) {
             try {
                 $locale = new Zend_Locale('auto');
             } catch(Zend_Locale_Exception $e) {
                 $locale = new Zend_Locale('en_US');
             }
-            Zend_Registry::set('locale', $locale);
+            $session->locale = $locale;
         }
+    }
 
+    public function getTranslate($locale)
+    {
+        return new Zend_Translate(array('adapter' => 'array',
+            'content' => "../locale/${locale}.php",
+            'locale' => $locale));
     }
 
     public function _initTranslate()
     {
         $this->bootstrap('locale');
-        $locale = Zend_Registry::get('locale');
+        $session = new Zend_Session_Namespace('session');
+        if(!isset($session->translate)) {
+            $locale = $session->locale;
 
-        try {
-            $translate = Zend_Registry::get('translate');
-        } catch(Zend_Exception $e) {
-            $translate = new Zend_Translate(array('adapter' => 'array',
-                'content' => "../locale/${locale}.php",
-                'locale' => $locale));
-            Zend_Registry::set('translate', $translate);
+            try {
+                $translate = $this->getTranslate($locale);
+            } catch(Zend_Translate_Exception $e) {
+                $translate = $this->getTranslate('en_US');
+            }
+
+            $session->translate = $translate;
         }
     }
 }
-
