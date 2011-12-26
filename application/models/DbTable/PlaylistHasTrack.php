@@ -18,6 +18,12 @@ class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
         return $this->fetchAll($where, 'sort');
     }
 
+    public function findByPlaylistAndTrack($playlistId, $trackId)
+    {
+        $where = $this->_db->quoteInto('playlist_id = ?', $playlistId) . $this->_db->quoteInto(' AND track_id = ?', $trackId);
+        return $this->fetchRow($where);
+    }
+
     public function insert($data)
     {
         $row = $this->findByPlaylistAndSort($data['playlist_id'], $data['sort']);
@@ -39,6 +45,21 @@ class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
         $this->delete($where);
     }
 
+    public function deleteByPlaylistAndSort($playlistId, $sort)
+    {
+        $where = $this->_db->quoteInto('playlist_id = ?', $playlistId) . $this->_db->quoteInto(' AND sort = ?', $sort);
+        $this->delete($where);
+
+        // TODO: try to optimize this to something like update set sort = sort
+        // - 1 where sort > $sort. It works on the mysql console but not on
+        // Zend.
+        for($i = $sort + 1; $i <= $this->getMaxSort($playlistId); $i++) {
+            $set = array('sort' => $i - 1);
+            $where = $this->_db->quoteInto('playlist_id = ?', $playlistId) . $this->_db->quoteInto(' AND sort = ?', $i);
+            $this->update($set, $where);
+        }
+    }
+
     /**
      * getMaxSort Get the highiest sort on a playlist.
      *
@@ -47,8 +68,7 @@ class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
      */
     public function getMaxSort($playlistId)
     {
-        $select = new Zend_Db_Select($this->_db);
-        $select->from('playlist_has_track', array('max' => Zend_Db_Expr('max(sort)')))->where($this->_db->quoteInto('playlist_id = ?', $playlistId));
+        $select = $this->select()->from('playlist_has_track', array('max(sort) as max'))->where($this->_db->quoteInto('playlist_id = ?', $playlistId));
 
         return $this->fetchRow($select)->max;
     }

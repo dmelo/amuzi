@@ -36,6 +36,11 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
         $this->_playlistHasTrackDb->insert($data);
     }
 
+    public function rmTrack($sort)
+    {
+        $this->_playlistHasTrackDb->deleteByPlaylistAndSort($this->id, $sort);
+    }
+
     public function deleteSortGreaterThan($sort)
     {
         $playlistHasTrackDb = new DbTable_PlaylistHasTrack();

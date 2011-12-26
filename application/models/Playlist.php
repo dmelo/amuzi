@@ -15,7 +15,7 @@ class Playlist
      * create Verify if a playlist doesn't exist and creates it.
      *
      * @param string $name Playlist's name.
-     * @return DbTable_Playlist_Row Returns the playlist owned by the logged 
+     * @return DbTable_Playlist_Row Returns the playlist owned by the logged.
      * user which name maches the playlist's, or null if no user is logged.
      */
     public function create($name)
@@ -67,5 +67,31 @@ class Playlist
         }
 
         return $ret;
+    }
+
+    /**
+     * addTrack Add a track into the playlist
+     *
+     * @param array $trackInfo Track information
+     * @param string $name Playlist's name
+     * @return void
+     */
+    public function addTrack(array $trackInfo, $name = 'default')
+    {
+        $playlistRow = $this->create($name);
+        $playlistRow->addTrack($trackInfo);
+    }
+
+    /**
+     * rmTrack Remove a track from a playlist.
+     *
+     * @param int $url
+     * @param string $name
+     * @return void
+     */
+    public function rmTrack($sort, $name = 'default')
+    {
+        $playlistRow = $this->create($name);
+        $playlistRow->rmTrack($sort);
     }
 }

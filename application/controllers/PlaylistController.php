@@ -20,6 +20,7 @@ class PlaylistController extends Diogo_Controller_Action
         $this->_session = new Zend_Session_Namespace('session');
         $this->_request = $this->getRequest();
         $this->_playlistModel = new Playlist();
+        $this->_helper->layout->disableLayout();
     }
 
     public function indexAction()
@@ -38,14 +39,45 @@ class PlaylistController extends Diogo_Controller_Action
         if($this->_request->isPost()) {
             $this->_session->playlist = array($this->_request->getPost('playlist'), $this->_request->getPost('name'));
             if(isset($this->_session->user))
-                $playlistModel->import($this->_session->playlist[0], $this->_session->playlist[1]);
+                $this->_playlistModel->import($this->_session->playlist[0], $this->_session->playlist[1]);
         }
     }
 
-    public function addAction()
+    public function addtrackAction()
     {
+        $message = null;
+
         if($this->_request->isPost()) {
+            $trackInfo = array('title' => $this->_request->getPost('title'),
+                'mp3' => $this->_request->getPost('mp3'));
+            try {
+                $this->_playlistModel->addTrack($trackInfo, $this->_request->getPost('playlist'));
+                $message = array($this->view->t('Track added'), true);
+            } catch(Zend_Exception $e) {
+                $message = array($this->view->t('Problems adding the track: ') . $e->getMessage(), false);
+            }
         }
+
+        $this->view->message = $message;
+    }
+
+    public function rmtrackAction()
+    {
+        $message = null;
+
+        if($this->_request->isPost()) {
+            $sort = $this->_request->getPost('sort');
+            $playlist = $this->_request->getPost('playlist');
+            try {
+                $this->_playlistModel->rmTrack((int) $sort, $playlist);
+                $message = array($this->view->t('Track removed'), true);
+            } catch(Zend_Exception $e) {
+                $message = array($this->view->t('Problems removing the track: ') . $e->getMessage(), false);
+            }
+
+        }
+
+        $this->view->message = $message;
     }
 
     /**

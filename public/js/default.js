@@ -23,7 +23,6 @@
     }
 
 
-
     function message(text) {
         $('.message div').html(text);
         $('.message').css('opacity', '1');
@@ -33,6 +32,11 @@
     function messageOff() {
         $('.message').css('opacity', '0');
         $('.message').css('filter', 'alpha(opacity=0)');
+    }
+
+    function messageAuto(text) {
+        message(text);
+        setTimeout(messageOff, 5000);
     }
 
     // Soon to be deprecated.
@@ -49,21 +53,24 @@
         playlistName = playlistName || 'default';
         $.post('/playlist/addtrack', {
             playlist: playlistName,
-            trackTitle: trackTitle,
-            trackLink: trackLink
+            title: trackTitle,
+            mp3: trackLink
         }, function(data) {
-            if(false == data) {
-                message('Error adding track ' + trackTitle);
-            }
+            messageAuto(data[0], data[1]);
+            if(false == data[1])
+                loadPlaylist(playlistName);
         }, 'json');
     }
 
-    function rmTrack(trackLink, playlistName) {
+    function rmTrack(sort, playlistName) {
         playlistName = playlistName || 'default';
         $.post('/playlist/rmtrack', {
-            playlistName: playlistName,
-            trackLink: trackLink
+            playlist: playlistName,
+            sort: sort
         }, function(data) {
+            messageAuto(data[0], data[1]);
+            if(false == data[1])
+                loadPlaylist(playlistName);
         }, 'json');
     }
 
@@ -120,16 +127,19 @@
         // add track into the playlist.
         $('.addplaylist').live('click', function(e) {
             e.preventDefault();
+            title = $(this).attr('title');
+            mp3 = $(this).attr('href');
             myPlaylist.add({
-                title: $(this).attr('title'),
-                mp3: $(this).attr('href')
+                title: title,
+                mp3: mp3
             });
 
-            savePlaylist();
+            addTrack(title, mp3, 'default');
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
-            setTimeout('savePlaylist();', 500);
+            sort = $(this).parent().parent().attr('name');
+            rmTrack(sort, 'default');
         });
 
         // placeholder on the search input.
