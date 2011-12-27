@@ -6,30 +6,12 @@ class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
     protected $_primary = 'id';
     protected $_rowClass = 'DbTable_PlaylistHasTrackRow';
 
-    public function findByPlaylistAndSort($playlistId, $sort)
-    {
-        $where = $this->_db->quoteInto("playlist_id = ? AND ", $playlistId) . $this->_db->quoteInto("sort = ?", $sort);
-        return $this->fetchRow($where);
-    }
-
-    public function findByPlaylist($playlistId)
-    {
-        $where = $this->_db->quoteInto("playlist_id = ?", $playlistId);
-        return $this->fetchAll($where, 'sort');
-    }
-
-    public function findByPlaylistAndTrack($playlistId, $trackId)
-    {
-        $where = $this->_db->quoteInto('playlist_id = ?', $playlistId) . $this->_db->quoteInto(' AND track_id = ?', $trackId);
-        return $this->fetchRow($where);
-    }
-
     public function insert($data)
     {
-        $row = $this->findByPlaylistAndSort($data['playlist_id'], $data['sort']);
+        $row = $this->findRowByPlaylistIdAndSort($data['playlist_id'], $data['sort']);
         if(!$row) {
             parent::insert($data);
-            $row = $this->findByPlaylistAndSort($data['playlist_id'], $data['sort']);
+            $row = $this->findRowByPlaylistIdAndSort($data['playlist_id'], $data['sort']);
         }
         elseif($row->track_id != $data['track_id']) {
             $row->track_id = $data['track_id'];

@@ -6,12 +6,6 @@ class DbTable_Track extends Diogo_Model_DbTable
     protected $_primary = 'id';
     protected $_rowClass = 'DbTable_TrackRow';
 
-    public function findByUrl($url)
-    {
-        $where = $this->_db->quoteInto('url = ?', $url);
-        return $this->fetchRow($where);
-    }
-
     public function insert($data)
     {
         if(array_key_exists('mp3', $data)) {
@@ -19,10 +13,10 @@ class DbTable_Track extends Diogo_Model_DbTable
             unset($data['mp3']);
         }
 
-        $trackRow = $this->findByUrl($data['url']);
+        $trackRow = $this->findRowByUrl($data['url']);
         if(!$trackRow) {
             parent::insert($data);
-            $trackRow = $this->findByUrl($data['url']);
+            $trackRow = $this->findRowByUrl($data['url']);
         }
 
         return $trackRow;

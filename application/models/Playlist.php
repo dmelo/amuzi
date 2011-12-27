@@ -22,7 +22,7 @@ class Playlist
     {
         $ret = null;
         if(isset($this->_session->user)) {
-            $ret = $this->_playlistDb->findByUserIdAndName($this->_session->user->id, $name);
+            $ret = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
             if(!$ret) {
                 $this->_playlistDb->create($this->_session->user->id, $name);
             }
@@ -58,7 +58,9 @@ class Playlist
     public function export($name)
     {
         $playlistDb = new DbTable_Playlist();
-        $playlistRow = $playlistDb->findByName($name);
+        $session = new Zend_Session_Namespace('session');
+        $user = $session->user;
+        $playlistRow = $playlistDb->findRowByUserIdAndName($user->id, $name);
         $trackList = $playlistRow->getTrackList();
         $ret = array();
         foreach($trackList as $track) {

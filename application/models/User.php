@@ -28,10 +28,10 @@ class User
         $userDb->register($data);
     }
 
-    public function findByFacebookId($facebookId)
+    public function findRowByFacebookId($facebookId)
     {
         $userDb = new DbTable_User();
-        return $userDb->findByFacebookId($facebookId);
+        return $userDb->findRowByFacebookId($facebookId);
     }
 }
 
