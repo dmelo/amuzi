@@ -33,7 +33,7 @@ class Diogo_Model_DbTable extends Zend_Db_Table_Abstract
 
     protected function _funcToQuery($funcName, $args)
     {
-        $funcName = preg_replace('^find(|Row)By', '', $funcName);
+        $funcName = preg_replace('/^find(|Row)By/', '', $funcName);
         $items = explode('And', $funcName);
         $items = $this->_transform($items);
         $where = '';
@@ -48,11 +48,10 @@ class Diogo_Model_DbTable extends Zend_Db_Table_Abstract
 
     public function __call($funcName, $args)
     {
+        $where = $this->_funcToQuery($funcName, $args);
         if(preg_match('/^findBy.*/', $funcName)) {
-            $where = $this->_funcToQuery($funcName, $args);
             return $this->fetchAll($where);
         } elseif(preg_match('/^findRowBy.*/', $funcName)) {
-            $where = $this->_funcNameToQuery($funcName);
             return $this->fetchRow($where);
         }
     }

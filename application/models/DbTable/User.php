@@ -21,9 +21,9 @@ class DbTable_User extends Diogo_Model_DbTable
         } catch(Zend_Db_Statement_Exception $e) {
             // In case the user is already registered, just update his info.
 
-            $where = $this->_db->quoteInto('facebookId = ?', $data['facebookId']);
+            $where = $this->_db->quoteInto('facebook_id = ?', $data['facebook_id']);
             $this->update($data, $where);
-            $ret = $this->findRowByFacebookId($data['facebookId']);
+            $ret = $this->findRowByFacebookId($data['facebook_id']);
         }
 
         return $ret;

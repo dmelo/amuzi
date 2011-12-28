@@ -62,11 +62,12 @@
         }, 'json');
     }
 
-    function rmTrack(sort, playlistName) {
+    function rmTrack(url, playlistName) {
+        alert(url);
         playlistName = playlistName || 'default';
         $.post('/playlist/rmtrack', {
             playlist: playlistName,
-            sort: sort
+            url: url
         }, function(data) {
             messageAuto(data[0], data[1]);
             if(false == data[1])
@@ -82,7 +83,7 @@
         }, function(data) {
             if(data != null) {
                 $.each(data[0], function(i, v) {
-                    myPlaylist.add({title: v.title, mp3: v.mp3});
+                    myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
                 });
             }
         }, 'json');
@@ -131,15 +132,16 @@
             mp3 = $(this).attr('href');
             myPlaylist.add({
                 title: title,
-                mp3: mp3
+                mp3: mp3,
+                free: true
             });
 
             addTrack(title, mp3, 'default');
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
-            sort = $(this).parent().parent().attr('name');
-            rmTrack(sort, 'default');
+            url = $(this).parent().parent().find('.jp-playlist-item-free').attr('href');
+            rmTrack(url, 'default');
         });
 
         // placeholder on the search input.

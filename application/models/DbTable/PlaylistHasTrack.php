@@ -27,10 +27,11 @@ class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
         $this->delete($where);
     }
 
-    public function deleteByPlaylistAndSort($playlistId, $sort)
+    public function deleteByPlaylistIdAndTrackId($playlistId, $trackId)
     {
-        $where = $this->_db->quoteInto('playlist_id = ?', $playlistId) . $this->_db->quoteInto(' AND sort = ?', $sort);
-        $this->delete($where);
+        $row = $this->findRowByPlaylistIdAndTrackId($playlistId, $trackId);
+        $sort = $row->sort;
+        $row->delete();
 
         // TODO: try to optimize this to something like update set sort = sort
         // - 1 where sort > $sort. It works on the mysql console but not on
@@ -50,8 +51,11 @@ class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
      */
     public function getMaxSort($playlistId)
     {
-        $select = $this->select()->from('playlist_has_track', array('max(sort) as max'))->where($this->_db->quoteInto('playlist_id = ?', $playlistId));
-
-        return $this->fetchRow($select)->max;
+        $select = $this->select()->from('playlist_has_track', array('max(sort) as max', 'count(*) as count'))->where($this->_db->quoteInto('playlist_id = ?', $playlistId));
+        $row = $this->fetchRow($select);
+        if($row->count)
+            return $row->max;
+        else
+            return -1;
     }
 }

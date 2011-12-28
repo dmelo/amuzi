@@ -87,13 +87,13 @@ class Playlist
     /**
      * rmTrack Remove a track from a playlist.
      *
-     * @param int $url
+     * @param $url Track's url
      * @param string $name
      * @return void
      */
-    public function rmTrack($sort, $name = 'default')
+    public function rmTrack($url, $name = 'default')
     {
         $playlistRow = $this->create($name);
-        $playlistRow->rmTrack($sort);
+        $playlistRow->rmTrack($url);
     }
 }

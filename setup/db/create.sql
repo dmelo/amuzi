@@ -1,6 +1,6 @@
 CREATE TABLE `user` (
     `id` int(11) NOT NULL auto_increment,
-    `facebookId` varchar(63) collate utf8_swedish_ci default NULL,
+    `facebook_id` varchar(63) collate utf8_swedish_ci default NULL,
     `name` varchar(31) collate utf8_swedish_ci default NULL,
     `email` varchar(2047) collate utf8_swedish_ci default NULL,
     `url` varchar(2047) collate utf8_swedish_ci default NULL,

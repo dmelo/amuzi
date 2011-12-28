@@ -66,10 +66,10 @@ class PlaylistController extends Diogo_Controller_Action
         $message = null;
 
         if($this->_request->isPost()) {
-            $sort = $this->_request->getPost('sort');
+            $url = $this->_request->getPost('url');
             $playlist = $this->_request->getPost('playlist');
             try {
-                $this->_playlistModel->rmTrack((int) $sort, $playlist);
+                $this->_playlistModel->rmTrack($url, $playlist);
                 $message = array($this->view->t('Track removed'), true);
             } catch(Zend_Exception $e) {
                 $message = array($this->view->t('Problems removing the track: ') . $e->getMessage(), false);

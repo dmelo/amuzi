@@ -11,7 +11,7 @@ class User
 
     public function __construct()
     {
-        $this->_loginArgs = array('facebookId', 'name', 'email', 'url');
+        $this->_loginArgs = array('facebook_id', 'name', 'email', 'url');
     }
 
     public function login($params)

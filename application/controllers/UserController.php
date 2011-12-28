@@ -10,12 +10,12 @@ class UserController extends Diogo_Controller_Action
     public function loginAction()
     {
         $request = $this->getRequest();
-        if($request->getParam('facebookId') != null) {
+        if($request->getParam('facebook_id') != null) {
             $params = $this->getRequest()->getParams();
             $user = new User();
             $user->login($params);
             $session = new Zend_Session_Namespace('session');
-            $session->user = $user->findRowByFacebookId($request->getParam('facebookId'));
+            $session->user = $user->findRowByFacebookId($request->getParam('facebook_id'));
         }
     }
 
