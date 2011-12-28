@@ -33,8 +33,7 @@ class Diogo_Model_DbTable extends Zend_Db_Table_Abstract
 
     protected function _funcToQuery($funcName, $args)
     {
-        $funcName = str_replace('findBy', '', $funcName);
-        $funcName = str_replace('findRowBy', '', $funcName);
+        $funcName = preg_replace('^find(|Row)By', '', $funcName);
         $items = explode('And', $funcName);
         $items = $this->_transform($items);
         $where = '';
