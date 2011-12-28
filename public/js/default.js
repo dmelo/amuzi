@@ -63,7 +63,6 @@
     }
 
     function rmTrack(url, playlistName) {
-        alert(url);
         playlistName = playlistName || 'default';
         $.post('/playlist/rmtrack', {
             playlist: playlistName,
