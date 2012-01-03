@@ -54,7 +54,7 @@ class PlaylistController extends Diogo_Controller_Action
                 $this->_playlistModel->addTrack($trackInfo, $this->_request->getPost('playlist'));
                 $message = array($this->view->t('Track added'), true);
             } catch(Zend_Exception $e) {
-                $message = array($this->view->t('Problems adding the track: ') . $e->getMessage(), false);
+                $message = array($this->view->t('Problems adding the track: ') + $e->getMessage(), false);
             }
         }
 
@@ -72,7 +72,7 @@ class PlaylistController extends Diogo_Controller_Action
                 $this->_playlistModel->rmTrack($url, $playlist);
                 $message = array($this->view->t('Track removed'), true);
             } catch(Zend_Exception $e) {
-                $message = array($this->view->t('Problems removing the track: ') . $e->getMessage(), false);
+                $message = array($this->view->t('Problems removing the track: ') + $e->getMessage(), false);
             }
 
         }
@@ -91,12 +91,36 @@ class PlaylistController extends Diogo_Controller_Action
             if(isset($this->_session->user)) {
                 $playlistModel = new Playlist();
                 $name = $this->_request->getPost('name');
-                $this->view->playlist = array($playlistModel->export($name), $name);
+                $this->view->playlist = $playlistModel->export($name);
             }
             elseif(isset($this->_session->playlist))
                 $this->view->playlist = $this->_session->playlist;
             else
                 $this->view->playlist = null;
         }
+    }
+
+    public function setrepeatAction()
+    {
+        $message = null;
+        if($this->_request->isPost()) {
+            if($this->_playlistModel->setRepeat($this->_request->getPost('repeat')))
+                $message = array($this->view->t('Setting saved'), true);
+            else
+                $message = array($this->view->t('Failed saving setting'), false);
+        }
+        $this->view->message = $message;
+    }
+
+    public function setshuffleAction()
+    {
+        $message = null;
+        if($this->_request->isPost()) {
+            if($this->_playlistModel->setShuffle($this->_request->getPost('shuffle')))
+                $message = array($this->view->t('Setting saved'), true);
+            else
+                $message = array($this->view->t('Failed saving setting'), false);
+        }
+        $this->view->message = $message;
     }
 }

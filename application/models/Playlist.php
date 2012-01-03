@@ -57,10 +57,8 @@ class Playlist
      */
     public function export($name)
     {
-        $playlistDb = new DbTable_Playlist();
-        $session = new Zend_Session_Namespace('session');
-        $user = $session->user;
-        $playlistRow = $playlistDb->findRowByUserIdAndName($user->id, $name);
+        $user = $this->_session->user;
+        $playlistRow = $this->_playlistDb->findRowByUserIdAndName($user->id, $name);
         $trackList = $playlistRow->getTrackList();
         $ret = array();
         foreach($trackList as $track) {
@@ -68,7 +66,23 @@ class Playlist
                 'mp3' => $track->url);
         }
 
+        $ret = array($ret, $name, $playlistRow->repeat, $playlistRow->shuffle);
+
         return $ret;
+    }
+
+    public function setRepeat($name, $repeat)
+    {
+        $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+        $playlistRow->repeat = $repeat;
+        $playlistRow->save();
+    }
+
+    public function setShuffle($name, $shuffle)
+    {
+        $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+        $playlistRow->shuffle = $shuffle;
+        $playlistRow->save();
     }
 
     /**

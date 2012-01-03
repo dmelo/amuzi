@@ -58,62 +58,56 @@
 
 </script>
 
-<div id="wrapper">
-<div id="header">
+<div class="topbar">
+    <div class="topbar-inner">
+        <div class="container">
+            <a class="brand" href="#">Amuzi</a>
+            <ul class="nav">
+                <li><a href="#playlist"><?= $this->t('Playlist'); ?></a></li>
+                <li><a href="#settings"><?= $this->t('Settings'); ?></a></li>
+                <li><a href="#about"><?= $this->t('About'); ?></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div id="wrapper" class="container">
+
+    <div id="logo">
+        <h1><a href="#">amuzi</a></h1>
+        <h2><a href="#"><?= $this->t('amazingly free'); ?></a></h2>
+    </div>
+
     <div class="message">
         <img src="/img/loading.gif"/>
         <div></div>
     </div>
 
-	<div id="logo">
-		<h1><a href="#">amuzi</a></h1>
-        <h2><a href="#"><?= $this->t('amazingly free'); ?></a></h2>
-	</div>
-	<!-- end div#logo -->
-	<div id="menu">
-		<ul>
-        <li class="active"><a class="menu" href="/"><?= $this->t('Search'); ?></a></li>
-			<li><a class="menu" href="/playlist"><?= $this->t('Playlist'); ?></a></li>
-			<li><a class="menu" href="/index/about"><?= $this->t('About'); ?></a></li>
-		</ul>
-        <div id="user" style="visibility: hidden">
-            <img id="image"/>
-            <div id="name"></div>
-        </div>
+    <div id="user" style="visibility: hidden">
+        <img id="image"/>
+        <div id="name"></div>
+    </div>
 
-	</div>
-	<!-- end div#menu -->
+
+
+
+  <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
+    <?= $this->t('Login with Facebook'); ?>
+  </fb:login-button>
+
+
+    <section id="content">
+        <?= $this->layout()->content; ?>
+    </section>
+
 </div>
 
-      <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
-        <?= $this->t('Login with Facebook'); ?>
-      </fb:login-button>
-
-
-<div>
-	<div id="page">
-		<div id="page-bgtop">
-			<div id="content">
-				<div class="post">
-					<div class="post-bgtop">
-						<div class="post-bgbtm">
-                            <?= $this->layout()->content; ?>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- end div#content -->
-			<div style="clear: both; height: 1px"></div>
-		</div>
-	</div>
-	<!-- end div#page -->
-</div>
-<!-- end div#wrapper -->
-<div id="footer-wrapper">
-	<div id="footer">
-		<p id="legal">Copyright &copy; 2011 <a href="http://diogomelo.net">Diogo Oliveira de Melo</a> . Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
-	</div>
-</div>
+<footer class="footer">
+    <div class="container">
+        <p id="legal">Copyright &copy; 2011 <a href="http://diogomelo.net">Diogo Oliveira de Melo</a> . Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
+    </div>
+</footer>
 <!-- end div#footer -->
 
         <?= $this->headScript(); ?>

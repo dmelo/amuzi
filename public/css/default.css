@@ -1,5 +1,5 @@
 input[type=button], input[type=submit] {
-    height: 34px;
+    height: 36px;
 	text-transform: uppercase;
 	text-decoration: none;
 	font-family: Tahoma, Geneva, sans-serif;
@@ -62,7 +62,7 @@ dd {
 #jp_container_1 {
     position: absolute;
     right: 1px;
-    top: 0px;
+    top: 40px;
 }
 
 .ac_results li.ac_even {
@@ -118,4 +118,17 @@ form#search {
 
 .jp-playlist-item-remove {
     display: block !important;
+}
+
+dd#submit-element {
+    margin-left: -2px;
+}
+
+.footer {
+    background: #eee;
+    border-top: #e5e5e5;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
 }

@@ -37,7 +37,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $domainCss = $this->getResource('domain') . '/css/';
         $js = array();
         $js[] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js';
-        $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.min.js';
+        $js[] = $domainJs . 'jquery.jplayer.js';
         $js[] = $domainJs . 'jplayer.playlist.js';
         //$js[] = 'http://jplayer.org/latest/js/jplayer.playlist.min.js';
         $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.inspector.js';
@@ -54,10 +54,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $css[] = 'http://jplayer.org/js/prettify/prettify-jPlayer.css';
         $css[] = 'http://jplayer.org/latest/skin/pink.flag/jplayer.pink.flag.css';
         $css[] = $domainCss . 'player.css';
-        $css[] = $domainCss . 'style.css';
         $css[] = $domainCss . 'gallery.css';
         $css[] = $domainCss . 'miniplayer.css';
         $css[] = $domainCss . 'resultset.css';
+        $css[] = $domainCss . 'bootstrap.css';
         $css[] = $domainCss . 'default.css';
 
         $this->bootstrap('layout');

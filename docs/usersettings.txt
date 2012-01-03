@@ -1,0 +1,14 @@
+====== User Settings
+
+==== User General settings
+
+Name
+Email
+Playlists public/private by default
+
+
+==== Playlist settings
+
+Repeat
+Shuffle
+Private/Public

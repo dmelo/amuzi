@@ -85,7 +85,13 @@
                     myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
                 });
             }
+            alert(data[1]);
         }, 'json');
+    }
+
+    function setPlaylistRepeat(name, repeat) {
+        name = name || 'default';
+
     }
 
     /**
