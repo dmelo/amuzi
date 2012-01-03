@@ -23,6 +23,7 @@ CREATE TABLE `playlist` (
     `name` varchar(63) collate utf8_swedish_ci default NULL,
     `repeat` int(1) NOT NULL default 0,
     `shuffle` int(1) NOT NULL default 0,
+    `current_track` int(11) NOT NULL default 0,
     PRIMARY KEY(`id`),
     UNIQUE(`user_id`, `name`),
     CONSTRAINT `playlist_user_id_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
