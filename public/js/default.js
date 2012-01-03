@@ -6,6 +6,10 @@
     var myPlaylist;
     var jplayerCss;
     var jPlaylistTop = null;
+    var MESSAGE_WARNING = 'warining';
+    var MESSAGE_ERROR = 'error';
+    var MESSAGE_SUCCESS = 'success';
+    var MESSAGE_INFO = 'info';
 
     /**
      * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
@@ -23,19 +27,24 @@
     }
 
 
-    function message(text) {
-        $('.message div').html(text);
-        $('.message').css('opacity', '1');
-        $('.message').css('filter', 'alpha(opacity=100)');
+    function message(text, messageCode) {
+        messageCode = typeof(messageCode) == 'undefined' ? MESSAGE_INFO : messageCode;
+        $('div.alert-message').removeClass(MESSAGE_WARNING)
+            .removeClass(MESSAGE_ERROR)
+            .removeClass(MESSAGE_SUCCESS)
+            .removeClass(MESSAGE_INFO);
+        $('div.alert-message').addClass(messageCode);
+
+        $('div.alert-message p').html(text);
+        $('div.alert-message').fadeTo('fast', 1.0);
     }
 
     function messageOff() {
-        $('.message').css('opacity', '0');
-        $('.message').css('filter', 'alpha(opacity=0)');
+        $('div.alert-message').fadeTo('slow', 0.0);
     }
 
-    function messageAuto(text) {
-        message(text);
+    function messageAuto(text, messageCode) {
+        message(text, messageCode);
         setTimeout(messageOff, 5000);
     }
 
@@ -85,7 +94,6 @@
                     myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
                 });
             }
-            alert(data[1]);
         }, 'json');
     }
 
