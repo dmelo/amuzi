@@ -67,6 +67,12 @@
                 <li><a href="#settings"><?= $this->t('Settings'); ?></a></li>
                 <li><a href="#about"><?= $this->t('About'); ?></a></li>
             </ul>
+            <div class="pull-right">
+                <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
+                    <?= $this->t('Login with Facebook'); ?>
+                </fb:login-button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -79,9 +85,9 @@
         <h2><a href="#"><?= $this->t('amazingly free'); ?></a></h2>
     </div>
 
-    <div class="message">
-        <img src="/img/loading.gif"/>
-        <div></div>
+    <div class="alert-message">
+        <a href="#" class="close">x</a>
+        <p>AA</p>
     </div>
 
     <div id="user" style="visibility: hidden">
@@ -92,9 +98,6 @@
 
 
 
-  <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
-    <?= $this->t('Login with Facebook'); ?>
-  </fb:login-button>
 
 
     <section id="content">
@@ -105,7 +108,7 @@
 
 <footer class="footer">
     <div class="container">
-        <p id="legal">Copyright &copy; 2011 <a href="http://diogomelo.net">Diogo Oliveira de Melo</a> . Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
+        <p id="legal">Copyright &copy; 2011 <a href="http://diogomelo.net">Diogo Oliveira de Melo</a>.</p>;
     </div>
 </footer>
 <!-- end div#footer -->

@@ -48,6 +48,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.form.js';
         $js[] = $domainJs . 'jquery.autocomplete.js';
         $js[] = $domainJs . 'resultset.js';
+        $js[] = $domainJs . 'bootstrap-alerts.js';
         $js[] = $domainJs . 'default.js';
 
         $css = array();
