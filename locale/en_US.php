@@ -17,5 +17,13 @@ return array(
 
     // Controller Playlist, Action rmtrack
     'Track removed' => 'Track removed',
-    'Problems removing the track: ' => 'Problems removing the track: '
+    'Problems removing the track: ' => 'Problems removing the track: ',
+
+    // Forms
+    'Name' => 'Name',
+    'Email' => 'Email',
+    'Playlist\'s default privacy policy' => 'Playlist\'s default privacy policy',
+    'Private' => 'Private',
+    'Public' => 'Public',
+    'Save' => 'Save'
 );

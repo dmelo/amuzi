@@ -25,7 +25,8 @@ class User
         }
 
         $userDb = new DbTable_User();
-        $userDb->register($data);
+        $row = $userDb->register($data);
+        return $row->id;
     }
 
     public function findRowByFacebookId($facebookId)

@@ -17,10 +17,8 @@ class PlaylistController extends Diogo_Controller_Action
 
     public function init()
     {
-        $this->_session = new Zend_Session_Namespace('session');
-        $this->_request = $this->getRequest();
+        parent::init();
         $this->_playlistModel = new Playlist();
-        $this->_helper->layout->disableLayout();
     }
 
     public function indexAction()

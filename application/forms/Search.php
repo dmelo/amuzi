@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_Search extends Zend_Form
+class Application_Form_Search extends Diogo_Form
 {
 
     public function init()

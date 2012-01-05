@@ -9,32 +9,8 @@
  * @license GPL
  *
  */
-
-
-/**
- * ApiController
- *
- * @version 1.0
- * @copyright Copyright (C) 2011 Diogo Oliveira de Melo. All rights reserved.
- * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
- * @license GPL
- *
- */
-class ApiController extends Zend_Controller_Action
+class ApiController extends Diogo_Controller_Action
 {
-
-    /**
-     * init
-     *
-     * @return void
-     *
-     */
-    public function init()
-    {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
-
     /**
      * indexAction
      *

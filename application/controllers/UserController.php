@@ -9,13 +9,11 @@ class UserController extends Diogo_Controller_Action
      */
     public function loginAction()
     {
-        $request = $this->getRequest();
-        if($request->getParam('facebook_id') != null) {
-            $params = $this->getRequest()->getParams();
+        if($this->_request->getParam('facebook_id') != null) {
+            $params = $this->_request->getParams();
             $user = new User();
-            $user->login($params);
-            $session = new Zend_Session_Namespace('session');
-            $session->user = $user->findRowByFacebookId($request->getParam('facebook_id'));
+            $this->view->message = $user->login($params);
+            $this->_session->user = $user->findRowByFacebookId($this->_request->getParam('facebook_id'));
         }
     }
 
@@ -26,11 +24,11 @@ class UserController extends Diogo_Controller_Action
      */
     public function logoutAction()
     {
-        $session = new Zend_Session_Namespace('session');
-        unset($session->user);
+        unset($this->_session->user);
     }
 
     public function indexAction()
     {
+        $this->view->form = 0;
     }
 }
