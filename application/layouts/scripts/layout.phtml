@@ -63,9 +63,9 @@
         <div class="container">
             <a class="brand" href="#">Amuzi</a>
             <ul class="nav">
-                <li><a href="#playlist"><?= $this->t('Playlist'); ?></a></li>
-                <li><a href="#settings"><?= $this->t('Settings'); ?></a></li>
-                <li><a href="#about"><?= $this->t('About'); ?></a></li>
+                <li><a href="#playlist" class="loadModal" title="Playlist Manager" id="/playlist"><?= $this->t('Playlist'); ?></a></li>
+                <li><a href="#settings" class="loadModal" title="User Settings" id="/user"><?= $this->t('Settings'); ?></a></li>
+                <li><a href="#about" class="loadModal" title="About Amuzi" id="/index/about"><?= $this->t('About'); ?></a></li>
             </ul>
             <div class="pull-right">
                 <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">

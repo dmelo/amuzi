@@ -4,7 +4,7 @@ class Diogo_Form extends Zend_Form
 {
     protected $_translate;
 
-    protected function t($arg)
+    protected function _t($arg)
     {
         return $this->_translate->_($arg);
     }

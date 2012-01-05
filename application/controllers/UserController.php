@@ -29,6 +29,6 @@ class UserController extends Diogo_Controller_Action
 
     public function indexAction()
     {
-        $this->view->form = 0;
+        $this->view->form = new Application_Form_UserSettings();
     }
 }

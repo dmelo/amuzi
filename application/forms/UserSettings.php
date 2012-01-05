@@ -6,26 +6,26 @@ class Application_Form_UserSettings extends Diogo_Form
     {
         $element = new Zend_Form_Element_Text('Name');
         $element->setRequired();
-        $element->setLabel(t('Name'));
+        $element->setLabel($this->_t('Name'));
         $this->addElement($element);
 
         $element = new Zend_Form_Element_Text('Email');
-        $element->setLabel(t('Email'));
+        $element->setLabel($this->_t('Email'));
         $this->addElement($element);
 
-        $this->addElement('ComboBox',
+        $this->addElement('Radio',
             'Privacy',
             array(
-                'label' => t('Playlist\'s default privacy policy'),
+                'label' => $this->_t('Playlist\'s default privacy policy'),
                 'multiOptions' => array(
-                    'private' => t('Private'),
-                    'public' => t('Public')
+                    'private' => $this->_t('Private'),
+                    'public' => $this->_t('Public')
                     )
                 )
             );
 
         $element = new Zend_Form_Element_Submit('submit');
-        $element->setLabel(t('Save'));
+        $element->setLabel($this->_t('Save'));
         $this->addElement($element);
 
         $this->setAction('/user/index');

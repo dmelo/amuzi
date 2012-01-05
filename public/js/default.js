@@ -203,6 +203,8 @@
             applyOverPlaylist();
         });
 
+        $('.loadModal').loadModal();
+
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);
     });
