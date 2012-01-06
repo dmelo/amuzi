@@ -1,4 +1,4 @@
-input[type=button], input[type=submit] {
+input[type=button].search, input[type=submit].search {
     height: 36px;
 	text-transform: uppercase;
 	text-decoration: none;
@@ -25,7 +25,7 @@ input[type=button]:hover, input[type=submit]:hover {
     cursor: pointer;
 }
 
-input[type=text] {
+input[type=text].search {
     width: 300px;
     border: 0px;
     padding: 7px 7px 9px 7px !important;

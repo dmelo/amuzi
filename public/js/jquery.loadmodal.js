@@ -8,7 +8,7 @@
             $(this).click(function(e) {
                 e.preventDefault();
                 var title = $(this).attr('title');
-                $.post($(this).attr('id'), {
+                $.post($(this).attr('href'), {
                 }, function(data) {
                     $('#load-modal-wrapper .modal-body').html(data);
                     $('#load-modal-wrapper h3').html(title);

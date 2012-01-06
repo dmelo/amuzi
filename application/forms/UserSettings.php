@@ -28,7 +28,12 @@ class Application_Form_UserSettings extends Diogo_Form
         $element->setLabel($this->_t('Save'));
         $this->addElement($element);
 
+        $element = new Zend_Form_Element_Button('cancel');
+        $element->setLabel($this->_t('Cancel'));
+        $this->addElement($element);
+
         $this->setAction('/user/index');
         $this->setAttrib('id', 'usersettings');
+
     }
 }
