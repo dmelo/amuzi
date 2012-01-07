@@ -1,7 +1,7 @@
 (function($, undefined) {
     $.fn.extend({
         loadModal: function(func) {
-            $('body').append('<div id="load-modal-wrapper" class="modal hide fade"><div class="modal-header"><h3></h3><a href="#" class="close">&times;</a></div><div class="modal-body"></div></div>');
+            $('body').append('<div id="load-modal-wrapper" class="modal hide fade"><div class="modal-header"><a href="#" class="close">&times;</a><h3></h3></div><div class="modal-body"></div></div>');
             $('#load-modal-wrapper').modal({
                 backdrop: true,
                 keyboard: true,});

@@ -469,6 +469,10 @@
             });
             this.original = replace;
             this._originalPlaylist();
+        },
+        setCurrent: function(current) {
+            this.current = current;
+            this.select(this.current);
         }
 	};
 })(jQuery);
