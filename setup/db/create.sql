@@ -4,6 +4,7 @@ CREATE TABLE `user` (
     `name` varchar(31) collate utf8_swedish_ci default NULL,
     `email` varchar(2047) collate utf8_swedish_ci default NULL,
     `url` varchar(2047) collate utf8_swedish_ci default NULL,
+    `privacy` enum('public', 'private') NOT NULL default 'public',
     PRIMARY KEY(`id`),
     UNIQUE(`facebookId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;

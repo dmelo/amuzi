@@ -4,22 +4,22 @@ class Application_Form_UserSettings extends Diogo_Form
 {
     public function init()
     {
-        $element = new Zend_Form_Element_Text('Name');
+        $element = new Zend_Form_Element_Text('name');
         $element->setRequired();
         $element->setLabel($this->_t('Name'));
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Text('Email');
+        $element = new Zend_Form_Element_Text('email');
         $element->setLabel($this->_t('Email'));
         $this->addElement($element);
 
         $this->addElement('Radio',
-            'Privacy',
+            'privacy',
             array(
                 'label' => $this->_t('Playlist\'s default privacy policy'),
                 'multiOptions' => array(
-                    'private' => $this->_t('Private'),
-                    'public' => $this->_t('Public')
+                    'public' => $this->_t('Public'),
+                    'private' => $this->_t('Private')
                     )
                 )
             );

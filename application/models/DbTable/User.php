@@ -28,5 +28,9 @@ class DbTable_User extends Diogo_Model_DbTable
 
         return $ret;
     }
-}
 
+    public function findCurrent()
+    {
+        return $this->_session->user;
+    }
+}

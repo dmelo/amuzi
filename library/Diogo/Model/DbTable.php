@@ -9,7 +9,7 @@ class Diogo_Model_DbTable extends Zend_Db_Table_Abstract
     {
         parent::__construct($config);
         $this->_db = $this->getAdapter();
-        $this->_session = new Zend_Session_Namespace('session');
+        $this->_session = Diogo_Session_Namespace::get('session');
     }
 
     protected function _transform($items)

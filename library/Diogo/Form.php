@@ -13,8 +13,9 @@ class Diogo_Form extends EasyBib_Form
     public function __construct($options = null)
     {
         $this->_useBootstrap = true;
-        $session = new Zend_Session_Namespace('session', true);
+        $session = Diogo_Session_Namespace::get('session');
         $this->_translate = isset($session->translate) ? $session->translate : null;
+        $this->setMethod('get');
         parent::__construct($options);
         if($this->_useBootstrap)
             EasyBib_Form_Decorator::setFormDecorator($this, EasyBib_Form_Decorator::BOOTSTRAP, 'submit', 'cancel');

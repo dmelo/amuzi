@@ -81,7 +81,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $view->lightningPackerLink()->appendStylesheet($item);
 
         $this->bootstrap('translate');
-        $session = new Zend_Session_Namespace('session');
+        $session = Diogo_Session_Namespace::get('session');
         $view->translate = $session->translate;
     }
 
@@ -115,7 +115,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     public function _initLocale()
     {
-        $session = new Zend_Session_Namespace('session');
+        $session = Diogo_Session_Namespace::get('session');
         if(!isset($session->locale)) {
             try {
                 $locale = new Zend_Locale('auto');
@@ -136,7 +136,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     public function _initTranslate()
     {
         $this->bootstrap('locale');
-        $session = new Zend_Session_Namespace('session');
+        $session = Diogo_Session_Namespace::get('session');
         if(!isset($session->translate)) {
             $locale = $session->locale;
 

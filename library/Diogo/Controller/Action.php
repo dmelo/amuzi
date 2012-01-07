@@ -10,12 +10,7 @@ class Diogo_Controller_Action extends Zend_Controller_Action
         if($this->getRequest()->isXmlHttpRequest())
             $this->_helper->layout->disableLayout();
 
-        try {
-            $this->_session = new Zend_Session_Namespace('session');
-        } catch(Zend_Session_Exception $e) {
-            $this->_session = null;
-        }
-
+        $this->_session = Diogo_Session_Namespace::get('session');
         $this->_request = $this->getRequest();
     }
 }
