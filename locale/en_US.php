@@ -25,5 +25,8 @@ return array(
     'Playlist\'s default privacy policy' => 'Playlist\'s default privacy policy',
     'Private' => 'Private',
     'Public' => 'Public',
-    'Save' => 'Save'
+    'Save' => 'Save',
+
+    'Something went wrong: ' => 'Something went wrong: ',
+    'Success' => 'Success'
 );

@@ -66,7 +66,7 @@ class Playlist
                 'mp3' => $track->url);
         }
 
-        $ret = array($ret, $name, $playlistRow->repeat, $playlistRow->shuffle);
+        $ret = array($ret, $name, $playlistRow->repeat, $playlistRow->shuffle, $playlistRow->current_track);
 
         return $ret;
     }
@@ -109,5 +109,12 @@ class Playlist
     {
         $playlistRow = $this->create($name);
         $playlistRow->rmTrack($url);
+    }
+
+    public function setCurrentTrack($name, $current)
+    {
+        $row = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+        $row->current_track = $current;
+        $row->save();
     }
 }

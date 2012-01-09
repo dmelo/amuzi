@@ -87,9 +87,8 @@ class PlaylistController extends Diogo_Controller_Action
     {
         if($this->_request->isPost()) {
             if(isset($this->_session->user)) {
-                $playlistModel = new Playlist();
                 $name = $this->_request->getPost('name');
-                $this->view->playlist = $playlistModel->export($name);
+                $this->view->playlist = $this->_playlistModel->export($name);
             }
             elseif(isset($this->_session->playlist))
                 $this->view->playlist = $this->_session->playlist;
@@ -118,6 +117,20 @@ class PlaylistController extends Diogo_Controller_Action
                 $message = array($this->view->t('Setting saved'), true);
             else
                 $message = array($this->view->t('Failed saving setting'), false);
+        }
+        $this->view->message = $message;
+    }
+
+    public function setcurrentAction()
+    {
+        $message = null;
+        if($this->_request->isPost()) {
+            try {
+                $this->_playlistModel->setCurrentTrack($this->_request->getPost('name'), $this->_request->getPost('current'));
+                $message = array($this->view->t('Success'), true);
+            } catch(Zend_Exception $e) {
+                $message = array($this->view->t('Something went wrong: ') . $e->getMessage(), false);
+            }
         }
         $this->view->message = $message;
     }

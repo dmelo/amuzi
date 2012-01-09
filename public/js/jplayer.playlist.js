@@ -130,7 +130,8 @@
 				freeGroupClass: "jp-free-media",
 				freeItemClass: "jp-playlist-item-free",
 				removeItemClass: "jp-playlist-item-remove"
-			}
+			},
+            callbackPlay: function() {}
 		},
 		option: function(option, value) { // For changing playlist options only
 			if(value === undefined) {
@@ -388,6 +389,7 @@
 		},
 		play: function(index) {
 			index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
+            this.options.callbackPlay(index);
 			if(0 <= index && index < this.playlist.length) {
 				if(this.playlist.length) {
 					this.select(index);

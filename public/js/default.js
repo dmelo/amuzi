@@ -93,6 +93,7 @@
                 $.each(data[0], function(i, v) {
                     myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
                 });
+                myPlaylist.setCurrent(parseInt(data[4]));
             }
         }, 'json');
     }
@@ -113,6 +114,16 @@
             if($('.jp-playlist li').length > 8)
                 $('.jp-playlist').fadeOut();
         });
+    }
+
+    function callbackPlay(current) {
+        $.post('/playlist/setcurrent', {
+            name: 'default',
+            current: current
+        }, function(data) {
+            if(false == data[1])
+                messageAuto(data[0], 'error');
+        }, 'json');
     }
 
     function applyOverPlaylist() {
@@ -188,7 +199,7 @@
         myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: jplayerCss
-        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true});
+        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
 
         $(jplayerCss + ' ul:last').sortable({
             update: function() {
