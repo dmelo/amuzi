@@ -73,16 +73,27 @@ class Playlist
 
     public function setRepeat($name, $repeat)
     {
-        $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
-        $playlistRow->repeat = $repeat;
-        $playlistRow->save();
+        var_dump($repeat);
+        try {
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+            $playlistRow->repeat = "true" == $repeat ? 1 : 0;
+            $playlistRow->save();
+            return true;
+        } catch(Zend_Exception $e) {
+            return false;
+        }
     }
 
     public function setShuffle($name, $shuffle)
     {
-        $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
-        $playlistRow->shuffle = $shuffle;
-        $playlistRow->save();
+        try {
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+            $playlistRow->shuffle = "true" == $shuffle ? 1 : 0;
+            $playlistRow->save();
+            return true;
+        } catch(Zend_Exception $e) {
+            return false;
+        }
     }
 
     /**

@@ -36,10 +36,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $domainJs = $this->getResource('domain') . '/js/';
         $domainCss = $this->getResource('domain') . '/css/';
         $js = array();
-        $js[] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js';
+        $js[] = $domainJs . 'jquery.js';
         $js[] = $domainJs . 'jquery.jplayer.js';
         $js[] = $domainJs . 'jplayer.playlist.js';
-        //$js[] = 'http://jplayer.org/latest/js/jplayer.playlist.min.js';
         $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.inspector.js';
         $js[] = 'http://jplayer.org/js/themeswitcher.js';
         $js[] = $domainJs . 'jquery-ui-1.8.16.custom.min.js';

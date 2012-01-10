@@ -101,7 +101,7 @@ class PlaylistController extends Diogo_Controller_Action
     {
         $message = null;
         if($this->_request->isPost()) {
-            if($this->_playlistModel->setRepeat($this->_request->getPost('repeat')))
+            if($this->_playlistModel->setRepeat($this->_request->getPost('name'), $this->_request->getPost('repeat')))
                 $message = array($this->view->t('Setting saved'), true);
             else
                 $message = array($this->view->t('Failed saving setting'), false);
@@ -113,7 +113,7 @@ class PlaylistController extends Diogo_Controller_Action
     {
         $message = null;
         if($this->_request->isPost()) {
-            if($this->_playlistModel->setShuffle($this->_request->getPost('shuffle')))
+            if($this->_playlistModel->setShuffle($this->_request->getPost('name'), $this->_request->getPost('shuffle')))
                 $message = array($this->view->t('Setting saved'), true);
             else
                 $message = array($this->view->t('Failed saving setting'), false);

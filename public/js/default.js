@@ -6,6 +6,8 @@
     var myPlaylist;
     var jplayerCss;
     var jPlaylistTop = null;
+    var repeat;
+    var current;
     var MESSAGE_WARNING = 'warining';
     var MESSAGE_ERROR = 'error';
     var MESSAGE_SUCCESS = 'success';
@@ -93,9 +95,16 @@
                 $.each(data[0], function(i, v) {
                     myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
                 });
-                myPlaylist.setCurrent(parseInt(data[4]));
+                setRepeatAndCurrent(parseInt(data[2]), parseInt(data[4]));
+                setInterfaceShuffle(parseInt(data[3]));
+                setTimeout(callbackShuffle, 1500);
             }
         }, 'json');
+    }
+
+    function setRepeatAndCurrent(repeat, current) {
+        this.repeat = repeat;
+        this.current = current;
     }
 
     function setPlaylistRepeat(name, repeat) {
@@ -126,11 +135,70 @@
         }, 'json');
     }
 
+    function callbackShuffle() {
+        myPlaylist.setCurrent(this.current);
+        setInterfaceRepeat(this.repeat);
+    }
+
     function applyOverPlaylist() {
         if(!jPlaylistTop)
             jPlaylistTop = $('.jp-playlist').first().offset().top;
         maxHeight = $(window).height() - jPlaylistTop - 2;
         $('.jp-playlist').css('max-height', maxHeight);
+    }
+
+    // Repeat
+    function setRepeat(repeat) {
+        $.post('/playlist/setrepeat', {
+            name: 'default',
+            repeat: repeat
+        }, function(data) {
+            if(false == data[1])
+                messageAuto(data[0], 'error');
+        }, 'json');
+    }
+
+    function setInterfaceRepeat(repeat) {
+        $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
+        $('.jp-repeat').css('display', repeat ? 'none' : 'block');
+    }
+
+
+    function applyRepeatTriggers() {
+        $('.jp-repeat').click(function(e) {
+            setRepeat(true);
+        });
+
+        $('.jp-repeat-off').click(function(e) {
+            setRepeat(false);
+        });
+    }
+
+    // Shuffle
+    function setShuffle(shuffle) {
+        $.post('/playlist/setshuffle', {
+            name: 'default',
+            shuffle: shuffle
+        }, function(data) {
+            if(false == data[1])
+                messageAuto(data[0], 'error');
+        }, 'json');
+    }
+
+    function setInterfaceShuffle(shuffle) {
+        myPlaylist.shuffle(shuffle);
+        $('.jp-shuffle-off').css('display', shuffle ? 'block' : 'none');
+        $('.jp-shuffle').css('display', shuffle ? 'none' : 'block');
+    }
+
+    function applyShuffleTriggers() {
+        $('.jp-shuffle').click(function(e) {
+            setShuffle(true);
+        });
+
+        $('.jp-shuffle-off').click(function(e) {
+            setShuffle(false);
+        });
     }
 
     $(document).ready(function() {
@@ -199,7 +267,7 @@
         myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: jplayerCss
-        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
+        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true, callbackPlay: callbackPlay, callbackShuffle: callbackShuffle});
 
         $(jplayerCss + ' ul:last').sortable({
             update: function() {
@@ -210,6 +278,8 @@
 
         retractablePlaylist();
         applyOverPlaylist();
+        applyRepeatTriggers();
+        applyShuffleTriggers();
         $(window).resize(function(e) {
             applyOverPlaylist();
         });
