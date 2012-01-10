@@ -18,6 +18,10 @@ class DbTable_User extends Diogo_Model_DbTable
             // Register the user.
             $id = $this->insert($data);
             $ret = $this->findRowById($id);
+            $playlistDb = new DbTable_Playlist();
+            $playlistRow = $playlistDb->create($ret->id, 'default');
+            $ret->current_playlist_id = $playlistRow->id;
+            $ret->save();
         } catch(Zend_Db_Statement_Exception $e) {
             // In case the user is already registered, just update his info.
 
@@ -28,6 +32,7 @@ class DbTable_User extends Diogo_Model_DbTable
 
         return $ret;
     }
+
 
     public function findCurrent()
     {

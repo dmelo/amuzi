@@ -5,14 +5,15 @@ CREATE TABLE `user` (
     `email` varchar(2047) collate utf8_swedish_ci default NULL,
     `url` varchar(2047) collate utf8_swedish_ci default NULL,
     `privacy` enum('public', 'private') NOT NULL default 'public',
+    `current_playlist_id` int(11),
     PRIMARY KEY(`id`),
-    UNIQUE(`facebookId`)
+    UNIQUE(`facebook_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 CREATE TABLE `track` (
     `id` int(11) NOT NULL auto_increment,
     `title` varchar(63) collate utf8_swedish_ci default NULL,
-    `url` varchar(2047) collate utf8_swedish_ci default NULL, -- Must be cheched on PHP that url is unique.
+    `url` varchar(2047) collate utf8_swedish_ci default NULL, -- Must be checked on PHP that url is unique.
     `cover` varchar(2047) collate utf8_swedish_ci default NULL,
     `duration` int(11) NOT NULL default 0,
     PRIMARY KEY(`id`)
@@ -29,6 +30,8 @@ CREATE TABLE `playlist` (
     UNIQUE(`user_id`, `name`),
     CONSTRAINT `playlist_user_id_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+
+ALTER TABLE `user` ADD CONSTRAINT `user_playlist_id_ibfk_1` FOREIGN KEY (`current_playlist_id`) REFERENCES `playlist`(`id`);
 
 CREATE TABLE `playlist_has_track` (
     `id` int(11) NOT NULL auto_increment,

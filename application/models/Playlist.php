@@ -58,7 +58,12 @@ class Playlist
     public function export($name)
     {
         $user = $this->_session->user;
-        $playlistRow = $this->_playlistDb->findRowByUserIdAndName($user->id, $name);
+        if('' === $name)
+            $playlistRow = $this->_playlistDb->findRowById($user->current_playlist_id);
+        else
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName($user->id, $name);
+        $user->current_playlist_id = $playlistRow->id;
+        $user->save();
         $trackList = $playlistRow->getTrackList();
         $ret = array();
         foreach($trackList as $track) {
@@ -66,14 +71,13 @@ class Playlist
                 'mp3' => $track->url);
         }
 
-        $ret = array($ret, $name, $playlistRow->repeat, $playlistRow->shuffle, $playlistRow->current_track);
+        $ret = array($ret, $playlistRow->name, $playlistRow->repeat, $playlistRow->shuffle, $playlistRow->current_track);
 
         return $ret;
     }
 
     public function setRepeat($name, $repeat)
     {
-        var_dump($repeat);
         try {
             $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
             $playlistRow->repeat = "true" == $repeat ? 1 : 0;

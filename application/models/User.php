@@ -52,7 +52,6 @@ class User
         $user->name = $params['name'];
         $user->email = $params['email'];
         $user->privacy = $params['privacy'];
-        $user->setTable(new DbTable_User());
         $user->save();
     }
 }

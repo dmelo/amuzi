@@ -86,7 +86,7 @@
     }
 
     function loadPlaylist(name) {
-        name = name || 'default';
+        name = name || '';
         myPlaylist.removeAll();
         $.post('/playlist/load', {
             name: name
@@ -95,6 +95,7 @@
                 $.each(data[0], function(i, v) {
                     myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
                 });
+                myPlaylist.name = data[1];
                 setRepeatAndCurrent(parseInt(data[2]), parseInt(data[4]));
                 setInterfaceShuffle(parseInt(data[3]));
                 setTimeout(callbackShuffle, 1500);
@@ -103,8 +104,8 @@
     }
 
     function setRepeatAndCurrent(repeat, current) {
-        this.repeat = repeat;
-        this.current = current;
+        myPlaylist.loop = repeat;
+        myPlaylist.newCurrent = current;
     }
 
     function setPlaylistRepeat(name, repeat) {
@@ -127,7 +128,7 @@
 
     function callbackPlay(current) {
         $.post('/playlist/setcurrent', {
-            name: 'default',
+            name: myPlaylist.name,
             current: current
         }, function(data) {
             if(false == data[1])
@@ -136,8 +137,8 @@
     }
 
     function callbackShuffle() {
-        myPlaylist.setCurrent(this.current);
-        setInterfaceRepeat(this.repeat);
+        myPlaylist.setCurrent(myPlaylist.newCurrent);
+        setInterfaceRepeat(myPlaylist.loop);
     }
 
     function applyOverPlaylist() {
@@ -149,8 +150,9 @@
 
     // Repeat
     function setRepeat(repeat) {
+        setInterfaceRepeat(repeat);
         $.post('/playlist/setrepeat', {
-            name: 'default',
+            name: myPlaylist.name,
             repeat: repeat
         }, function(data) {
             if(false == data[1])
@@ -177,7 +179,7 @@
     // Shuffle
     function setShuffle(shuffle) {
         $.post('/playlist/setshuffle', {
-            name: 'default',
+            name: myPlaylist.name,
             shuffle: shuffle
         }, function(data) {
             if(false == data[1])
@@ -228,12 +230,12 @@
                 free: true
             });
 
-            addTrack(title, mp3, 'default');
+            addTrack(title, mp3, myPlaylist.name);
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
             url = $(this).parent().parent().find('.jp-playlist-item-free').attr('href');
-            rmTrack(url, 'default');
+            rmTrack(url, myPlaylist.name);
         });
 
         // placeholder on the search input.

@@ -1,0 +1,5 @@
+1. manage multiple playlists
+    1.1 implement the user.current_playlist_id [ OK ]
+    1.2 implement the playlist/index to switch playlists
+2. make it shareble
+3. auto-import albuns from last.fm as playlists
