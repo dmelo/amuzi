@@ -60,12 +60,13 @@
         });
     }
 
-    function addTrack(trackTitle, trackLink, playlistName) {
+    function addTrack(trackTitle, trackLink, trackCover, playlistName) {
         playlistName = playlistName || 'default';
         $.post('/playlist/addtrack', {
             playlist: playlistName,
             title: trackTitle,
-            mp3: trackLink
+            mp3: trackLink,
+            cover: trackCover
         }, function(data) {
             messageAuto(data[0], data[1]);
             if(false == data[1])
@@ -224,13 +225,15 @@
             e.preventDefault();
             title = $(this).attr('title');
             mp3 = $(this).attr('href');
+            pic = $(this).parent().parent().find('.image img').attr('src');
+            alert(pic);
             myPlaylist.add({
                 title: title,
                 mp3: mp3,
                 free: true
             });
 
-            addTrack(title, mp3, myPlaylist.name);
+            addTrack(title, mp3, pic, myPlaylist.name);
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
@@ -269,7 +272,7 @@
         myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: jplayerCss
-        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true, callbackPlay: callbackPlay, callbackShuffle: callbackShuffle});
+        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
 
         $(jplayerCss + ' ul:last').sortable({
             update: function() {

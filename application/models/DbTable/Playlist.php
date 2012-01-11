@@ -12,6 +12,12 @@ class DbTable_Playlist extends Diogo_Model_DbTable
         return $this->findRowByUserIdAndName($user->id, $name);
     }
 
+    public function search($q, $limit = 10, $offset = 0)
+    {
+        $where = $this->_db->quoteInto('name like ?', '%' . $q . '%') . $this->_db->quoteInto(' AND user_id = ?', $this->_session->user->id);
+        return $this->fetchAll($this->select()->where($where)->limit($limit, $offset));
+    }
+
     public function create($userId, $name)
     {
         $data = array(

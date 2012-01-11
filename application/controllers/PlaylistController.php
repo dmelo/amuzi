@@ -23,7 +23,14 @@ class PlaylistController extends Diogo_Controller_Action
 
     public function indexAction()
     {
-        // action body
+        $this->view->form = new Application_Form_PlaylistSettings();
+    }
+
+    public function searchAction()
+    {
+        if($this->_request->isPost()) {
+            $this->view->resultSet = $this->_playlistModel->search($this->_request->getPost('q'));
+        }
     }
 
     /**
@@ -47,7 +54,7 @@ class PlaylistController extends Diogo_Controller_Action
 
         if($this->_request->isPost()) {
             $trackInfo = array('title' => $this->_request->getPost('title'),
-                'mp3' => $this->_request->getPost('mp3'));
+                'mp3' => $this->_request->getPost('mp3'), 'cover' => $this->_request->getPost('cover'));
             try {
                 $this->_playlistModel->addTrack($trackInfo, $this->_request->getPost('playlist'));
                 $message = array($this->view->t('Track added'), true);

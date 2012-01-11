@@ -2,12 +2,13 @@
 
 class Application_Form_Search extends Diogo_Form
 {
+    protected $_placeholder = 'E.g.: Rolling Stones ...';
 
     public function init()
     {
         $element = new Zend_Form_Element_Text('q');
         $element->setRequired();
-        $element->setAttrib('placeholder', $this->_t('E.g.: Rolling Stones ...'));
+        $element->setAttrib('placeholder', $this->_t($this->_placeholder));
         $element->setAttrib('class', 'search');
         $this->addElement($element);
 

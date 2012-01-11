@@ -18,7 +18,7 @@
                     $('#load-modal-wrapper .modal-body').html(data);
                     $('#load-modal-wrapper h3').html(title);
                     $('#load-modal-wrapper').modal('show');
-                    $('form').ajaxForm({
+                    $('#load-modal-wrapper form').ajaxForm({
                         dataType: 'json',
                         success: function (data) {
                             messageAuto('Saved');
