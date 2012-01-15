@@ -9,22 +9,8 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+class Bootstrap extends Diogo_Application_Bootstrap_Bootstrap
 {
-    /**
-     * _initPath
-     *
-     * @return void
-     */
-    protected function _initPath()
-    {
-        set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR .
-            get_include_path());
-        require_once 'Zend/Loader/Autoloader.php';
-        $zendAutoloader = Zend_Loader_Autoloader::getInstance();
-        $zendAutoloader->setFallbackAutoloader(true);
-    }
-
     /**
      * _initView
      *
@@ -82,18 +68,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('translate');
         $session = Diogo_Session_Namespace::get('session');
         $view->translate = $session->translate;
-    }
-
-    /**
-     * _initDomain
-     *
-     * @return void
-     */
-    protected function _initDomain()
-    {
-        $domain = 'http://' . $_SERVER['HTTP_HOST'];
-        Zend_Registry::set('domain', $domain);
-        return $domain;
     }
 
     public function _initCache()

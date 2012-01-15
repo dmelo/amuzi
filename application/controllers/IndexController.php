@@ -17,7 +17,7 @@ class IndexController extends Diogo_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->form = new Application_Form_Search();
+        $this->view->form = new Form_Search();
     }
 
     /**
@@ -57,7 +57,7 @@ class IndexController extends Diogo_Controller_Action
      */
     public function incboardAction()
     {
-        $this->view->form = new Application_Form_Search();
+        $this->view->form = new Form_Search();
     }
 
     public function testAction()

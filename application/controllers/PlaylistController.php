@@ -23,7 +23,7 @@ class PlaylistController extends Diogo_Controller_Action
 
     public function indexAction()
     {
-        $this->view->form = new Application_Form_PlaylistSettings();
+        $this->view->form = new Form_PlaylistSettings();
     }
 
     public function searchAction()

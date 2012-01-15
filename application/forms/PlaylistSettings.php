@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_PlaylistSettings extends Application_Form_Search
+class Form_PlaylistSettings extends Form_Search
 {
     public function init()
     {

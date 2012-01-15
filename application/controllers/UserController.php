@@ -29,7 +29,7 @@ class UserController extends Diogo_Controller_Action
 
     public function indexAction()
     {
-        $form = new Application_Form_UserSettings();
+        $form = new Form_UserSettings();
         $userModel = new User();
 
         if($this->_request->isGet() && $form->isValid($this->_request->getParams())) {

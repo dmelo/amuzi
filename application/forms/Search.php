@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_Search extends Diogo_Form
+class Form_Search extends Diogo_Form
 {
     protected $_placeholder = 'E.g.: Rolling Stones ...';
 
