@@ -1,6 +1,3 @@
-;[submodule "library/Zend"]
-;	path = library/Zend
-;	url = https://github.com/dmelo/Zend-1.11.git
 [submodule "public/api"]
 	path = public/api
 	url = https://github.com/dmelo/you2better.git
