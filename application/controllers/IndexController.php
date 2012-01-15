@@ -8,7 +8,7 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
-class IndexController extends Diogo_Controller_Action
+class IndexController extends DZend_Controller_Action
 {
     /**
      * indexAction

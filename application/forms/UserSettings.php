@@ -1,6 +1,6 @@
 <?php
 
-class Form_UserSettings extends Diogo_Form
+class Form_UserSettings extends DZend_Form
 {
     public function init()
     {

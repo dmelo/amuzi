@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_User extends Diogo_Model_DbTable
+class DbTable_User extends DZend_Model_DbTable
 {
     protected $_name = 'user';
     protected $_rowClass = 'DbTable_UserRow';

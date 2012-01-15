@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_PlaylistHasTrack extends Diogo_Model_DbTable
+class DbTable_PlaylistHasTrack extends DZend_Model_DbTable
 {
     protected $_name = 'playlist_has_track';
     protected $_primary = 'id';

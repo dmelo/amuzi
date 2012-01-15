@@ -1,6 +1,6 @@
 <?php
 
-class SearchController extends Diogo_Controller_Action
+class SearchController extends DZend_Controller_Action
 {
     public function indexAction()
     {

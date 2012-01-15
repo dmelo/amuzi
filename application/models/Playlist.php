@@ -8,7 +8,7 @@ class Playlist
     public function __construct()
     {
         $this->_playlistDb = new DbTable_Playlist();
-        $this->_session = Diogo_Session_Namespace::get('session');
+        $this->_session = DZend_Session_Namespace::get('session');
     }
 
     /**

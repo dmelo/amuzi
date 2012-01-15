@@ -9,7 +9,7 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
-class Bootstrap extends Diogo_Application_Bootstrap_Bootstrap
+class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 {
     /**
      * _initView
@@ -66,7 +66,7 @@ class Bootstrap extends Diogo_Application_Bootstrap_Bootstrap
             $view->lightningPackerLink()->appendStylesheet($item);
 
         $this->bootstrap('translate');
-        $session = Diogo_Session_Namespace::get('session');
+        $session = DZend_Session_Namespace::get('session');
         $view->translate = $session->translate;
     }
 
@@ -88,7 +88,7 @@ class Bootstrap extends Diogo_Application_Bootstrap_Bootstrap
 
     public function _initLocale()
     {
-        $session = Diogo_Session_Namespace::get('session');
+        $session = DZend_Session_Namespace::get('session');
         if(!isset($session->locale)) {
             try {
                 $locale = new Zend_Locale('auto');
@@ -109,7 +109,7 @@ class Bootstrap extends Diogo_Application_Bootstrap_Bootstrap
     public function _initTranslate()
     {
         $this->bootstrap('locale');
-        $session = Diogo_Session_Namespace::get('session');
+        $session = DZend_Session_Namespace::get('session');
         if(!isset($session->translate)) {
             $locale = $session->locale;
 

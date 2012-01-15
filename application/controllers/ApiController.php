@@ -9,7 +9,7 @@
  * @license GPL
  *
  */
-class ApiController extends Diogo_Controller_Action
+class ApiController extends DZend_Controller_Action
 {
     /**
      * indexAction

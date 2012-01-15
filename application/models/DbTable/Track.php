@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_Track extends Diogo_Model_DbTable
+class DbTable_Track extends DZend_Model_DbTable
 {
     protected $_name = 'track';
     protected $_primary = 'id';

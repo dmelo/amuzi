@@ -9,7 +9,7 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
-class PlaylistController extends Diogo_Controller_Action
+class PlaylistController extends DZend_Controller_Action
 {
     protected $_session;
     protected $_request;
