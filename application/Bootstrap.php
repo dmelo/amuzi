@@ -9,6 +9,11 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
+
+require_once 'Zend/Loader/Autoloader.php';
+$zendAutoloader = Zend_Loader_Autoloader::getInstance();
+$zendAutoloader->setFallbackAutoloader(true);
+
 class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 {
     /**
