@@ -11,14 +11,13 @@
  */
 class PlaylistController extends DZend_Controller_Action
 {
-    protected $_session;
-    protected $_request;
     protected $_playlistModel;
 
     public function init()
     {
         parent::init();
         $this->_playlistModel = new Playlist();
+        $this->_loginRequired = true;
     }
 
     public function indexAction()

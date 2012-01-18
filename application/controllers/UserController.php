@@ -2,6 +2,13 @@
 
 class UserController extends DZend_Controller_Action
 {
+    public function init()
+    {
+        parent::init();
+        if('index' == $this->_request->getActionName())
+            $this->_loginRequired = true;
+    }
+
     /**
      * loginAction Logs the user in and save it on Zend_Session.
      *
