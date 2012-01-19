@@ -11,6 +11,10 @@
             });
 
             $(this).click(function(e) {
+                var noForm = false;
+                var id = $(this).attr('id');
+                if($(this).hasClass('noForm'))
+                    noForm = true;
                 e.preventDefault();
                 var title = $(this).attr('title');
                 $.post($(this).attr('href'), {
@@ -18,19 +22,26 @@
                     $('#load-modal-wrapper .modal-body').html(data);
                     $('#load-modal-wrapper h3').html(title);
                     $('#load-modal-wrapper').modal('show');
-                    $('#load-modal-wrapper form').ajaxForm({
-                        dataType: 'json',
-                        success: function (data) {
-                            messageAuto('Saved');
-                        },
-                        error: function(data) {
-                            messageAuto('Error saving. Something went wrong', 'error');
-                        },
-                        beforeSubmit: function() {
-                            $('#load-modal-wrapper').modal('hide');
-                           message('Saving...');
-                        }
-                    });
+                    if(!noForm) {
+                        $('#load-modal-wrapper form').ajaxForm({
+                            dataType: 'json',
+                            success: function (data) {
+                                messageAuto('Saved');
+                            },
+                            error: function(data) {
+                                messageAuto('Error saving. Something went wrong', 'error');
+                            },
+                            beforeSubmit: function() {
+                                $('#load-modal-wrapper').modal('hide');
+                               message('Saving...');
+                            }
+                        });
+                    }
+                    func = id + 'Callback';
+                    alert(func);
+                    func();
+                    if(typeof eval("window." + func) == 'function')
+                        alert(id);
                 });
             });
         }

@@ -62,12 +62,11 @@
 
 <div id="jplayer_inspector_1"></div>
 
-
-
-
-
-
-
-
 <div id="result">
 </div>
+
+<? if(isset($this->userId)): ?>
+<div class="invisible" id="userId">
+    <?= $this->userId; ?>
+</div>
+<? endif; ?>

@@ -117,3 +117,7 @@ dd#submit-element {
 .loginRequired {
     opacity: 0;
 }
+
+.invisible {
+    display: none;
+}

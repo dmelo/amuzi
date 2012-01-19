@@ -26,7 +26,7 @@
             email: email,
             url: url
         }, function(data) {
-            callbackLogin();
+            callbackLogin(data);
         });
     }
 
@@ -61,7 +61,7 @@
         <div class="container">
             <a class="brand" href="#">Amuzi</a>
             <ul class="nav">
-                <li><a href="/playlist" class="loadModal loginRequired" title="Playlist Manager"><?= $this->t('Playlist'); ?></a></li>
+                <li><a href="/playlist" class="loadModal loginRequired noForm" id="playlist" title="Playlist Manager"><?= $this->t('Playlist'); ?></a></li>
                 <li><a href="/user" class="loadModal loginRequired" title="User Settings"><?= $this->t('Settings'); ?></a></li>
                 <li><a href="/index/about" class="loadModal" title="About Amuzi"><?= $this->t('About'); ?></a></li>
             </ul>
@@ -70,7 +70,6 @@
                     <?= $this->t('Login with Facebook'); ?>
                 </fb:login-button>
             </div>
-
         </div>
     </div>
 </div>

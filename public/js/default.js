@@ -28,9 +28,11 @@
         return str + num;
     }
 
-    function callbackLogin() {
+    function callbackLogin(userId) {
         loadPlaylist();
         $('.loginRequired').fadeTo('slow', 1.0);
+        $('body').append('<div class="invisible" id="userId">' + userId + '</div>');
+        alert('aaa');
     }
 
 
@@ -209,6 +211,28 @@
         });
     }
 
+    function applyPlaylistSettings() {
+        $('.playlistsettings').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                alert(data);
+            },
+            beforeSubmit: function() {
+                alert('kkkkk');
+            }
+        });
+    }
+
+    function isLoggedIn() {
+        if($('#userId').length)
+            return $('#userId').html();
+        return false;
+    }
+
+    function playlistCallback() {
+        alert('bbb');
+    }
+
     $(document).ready(function() {
         // query youtube for videos and fill the result table.
         $('#search').ajaxForm({
@@ -290,6 +314,7 @@
         applyOverPlaylist();
         applyRepeatTriggers();
         applyShuffleTriggers();
+        applyPlaylistSettings();
         $(window).resize(function(e) {
             applyOverPlaylist();
         });
@@ -298,5 +323,8 @@
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);
+
+        if(isLoggedIn())
+            $('.loginRequired').fadeTo('slow', 1.0);
     });
 //})(jQuery);
