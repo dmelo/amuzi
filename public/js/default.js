@@ -28,6 +28,11 @@
         return str + num;
     }
 
+    function callbackLogin() {
+        loadPlaylist();
+        $('.loginRequired').fadeTo('slow', 1.0);
+    }
+
 
     function message(text, messageCode) {
         messageCode = typeof(messageCode) == 'undefined' ? MESSAGE_INFO : messageCode;

@@ -93,6 +93,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
     public function _initLocale()
     {
+        $this->bootstrap('path');
         $session = DZend_Session_Namespace::get('session');
         if(!isset($session->locale)) {
             try {

@@ -113,3 +113,7 @@ dd#submit-element {
     max-width: 600px;
     opacity: 0;
 }
+
+.loginRequired {
+    opacity: 0;
+}
