@@ -2,12 +2,14 @@
 
 class DbTable_PlaylistRow extends Zend_Db_Table_Row
 {
+    protected $_playlistDb;
     protected $_playlistHasTrackDb;
     protected $_trackDb;
 
     public function __construct(array $config = array())
     {
         parent::__construct($config);
+        $this->_playlistDb = new DbTable_Playlist();
         $this->_playlistHasTrackDb = new DbTable_PlaylistHasTrack();
         $this->_trackDb = new DbTable_Track();
     }
@@ -70,7 +72,7 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
             ->where('p.id = pht.playlist_id AND pht.track_id = t.id AND t.cover is not NULL and p.id = ?',
             $this->id)->order('pht.sort');
 
-        $row = $this->fetchRow($select);
+        $row = $this->_playlistDb->fetchRow($select);
         if($row)
             return $row->cover;
         else

@@ -13,7 +13,6 @@
         loadPlaylist();
         $('.loginRequired').fadeTo('slow', 1.0);
         $('body').append('<div class="invisible" id="userId">' + userId + '</div>');
-        alert('aaa');
     }
 
 
@@ -190,7 +189,15 @@
     }
 
     function playlistCallback() {
-        alert('bbb');
+        // TODO: associate the right treatment to the form.
+        $('#playlistsettings').ajaxForm({
+            success: function(data) {
+                $('#playlistsettings-result tbody').html(data);
+            },
+            error: function(data) {
+                $.bootstrapMessageAuto(data, 'error');
+            }
+        });
     }
 
     $(document).ready(function() {

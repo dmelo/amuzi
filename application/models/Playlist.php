@@ -135,12 +135,6 @@ class Playlist
 
     public function search($q)
     {
-        $playlistSet = $this->_playlistDb->search($q);
-        $ret = array();
-        foreach($playlistSet as $row) {
-            $ret[] = array('id' => $row->id, 'name' => $row->name, 'n_tracks' => $row->countTracks());
-        }
-
-        return $ret;
+        return $this->_playlistDb->search($q);
     }
 }
