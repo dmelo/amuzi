@@ -53,11 +53,9 @@
                             }
                         });
                     }
-                    func = id + 'Callback';
-                    alert(func);
-                    func();
-                    if(typeof eval("window." + func) == 'function')
-                        alert(id);
+                    func = "window." + id + 'Callback';
+                    if(typeof eval(func) == 'function')
+                        eval(func)();
                 });
             });
         }
