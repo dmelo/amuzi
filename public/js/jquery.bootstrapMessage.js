@@ -1,6 +1,19 @@
 /**
  * A thin layer to better control bootstrap-alerts.js
+ *
+ * The "messageCode" can assume one of the following values:
+ *      "warning"
+ *      "error"
+ *      "success"
+ *      "info"
  */
+
+
+    var MESSAGE_WARNING = 'warining';
+    var MESSAGE_ERROR = 'error';
+    var MESSAGE_SUCCESS = 'success';
+    var MESSAGE_INFO = 'info';
+
 
 (function($) {
     $.bootstrapMessage = function(text, messageCode) {

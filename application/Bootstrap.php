@@ -41,7 +41,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'bootstrap-alerts.js';
         $js[] = $domainJs . 'jquery.bootstrapMessage.js';
         $js[] = $domainJs . 'bootstrap-modal.js';
-        $js[] = $domainJs . 'jquery.loadmodal.js';
+        $js[] = $domainJs . 'jquery.bootstrapLoadModal.js';
         $js[] = $domainJs . 'default.js';
 
         $css = array();
