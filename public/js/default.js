@@ -8,25 +8,6 @@
     var jPlaylistTop = null;
     var repeat;
     var current;
-    var MESSAGE_WARNING = 'warining';
-    var MESSAGE_ERROR = 'error';
-    var MESSAGE_SUCCESS = 'success';
-    var MESSAGE_INFO = 'info';
-
-    /**
-     * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
-     *
-     * @param num Number to be transformed.
-     * @return Returns the two digit leading 0 number.
-     */
-    function twoDigit(num) {
-        var str = '';
-        if(num < 10) {
-            str += '0';
-        }
-
-        return str + num;
-    }
 
     function callbackLogin(userId) {
         loadPlaylist();

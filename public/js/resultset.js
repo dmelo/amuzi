@@ -3,6 +3,21 @@
  */
 
     /**
+     * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
+     *
+     * @param num Number to be transformed.
+     * @return Returns the two digit leading 0 number.
+     */
+    function twoDigit(num) {
+        var str = '';
+        if(num < 10) {
+            str += '0';
+        }
+
+        return str + num;
+    }
+
+    /**
      * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
      *
      * @param time Time, in seconds.
