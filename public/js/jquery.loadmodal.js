@@ -1,29 +1,45 @@
+/**
+ * Usage: $('a.identifier').loadModal();
+ *
+ * When an element is clicked, a modal is loaded with the content taken from
+ * href. After loading the modal, the function callback#ID# (where #ID# is the
+ * id of the DOM element) is called (if the function exists).
+ *
+ * If the element have the class "noForm" then the ajaxForm is not instantiated
+ * for it.
+ *
+ * Author: Diogo Oliveira de Melo
+ */
+
 (function($, undefined) {
     $.fn.extend({
-        loadModal: function(func) {
+        bootstrapLoadModal: function() {
+            var modalWrapper = '#load-modal-wrapper';
+
             $('body').append('<div id="load-modal-wrapper" class="modal hide fade"><div class="modal-header"><a href="#" class="close">&times;</a><h3></h3></div><div class="modal-body"></div></div>');
-            $('#load-modal-wrapper').modal({
+
+            $(modalWrapper).modal({
                 backdrop: true,
                 keyboard: true,});
 
             $('#cancel').live('click', function(e) {
-                $('#load-modal-wrapper').modal('hide');
+                $(modalWrapper).modal('hide');
             });
 
             $(this).click(function(e) {
+                e.preventDefault();
                 var noForm = false;
                 var id = $(this).attr('id');
                 if($(this).hasClass('noForm'))
                     noForm = true;
-                e.preventDefault();
                 var title = $(this).attr('title');
                 $.post($(this).attr('href'), {
                 }, function(data) {
-                    $('#load-modal-wrapper .modal-body').html(data);
-                    $('#load-modal-wrapper h3').html(title);
-                    $('#load-modal-wrapper').modal('show');
+                    $(modalWrapper + ' .modal-body').html(data);
+                    $(modalWrapper + ' h3').html(title);
+                    $(modalWrapper).modal('show');
                     if(!noForm) {
-                        $('#load-modal-wrapper form').ajaxForm({
+                        $(modalWrapper + ' form').ajaxForm({
                             dataType: 'json',
                             success: function (data) {
                                 messageAuto('Saved');
@@ -32,7 +48,7 @@
                                 messageAuto('Error saving. Something went wrong', 'error');
                             },
                             beforeSubmit: function() {
-                                $('#load-modal-wrapper').modal('hide');
+                                $(modalWrapper).modal('hide');
                                message('Saving...');
                             }
                         });

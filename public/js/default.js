@@ -36,27 +36,6 @@
     }
 
 
-    function message(text, messageCode) {
-        messageCode = typeof(messageCode) == 'undefined' ? MESSAGE_INFO : messageCode;
-        $('div.alert-message').removeClass(MESSAGE_WARNING)
-            .removeClass(MESSAGE_ERROR)
-            .removeClass(MESSAGE_SUCCESS)
-            .removeClass(MESSAGE_INFO);
-        $('div.alert-message').addClass(messageCode);
-
-        $('div.alert-message p').html(text);
-        $('div.alert-message').fadeTo('fast', 1.0);
-    }
-
-    function messageOff() {
-        $('div.alert-message').fadeTo('slow', 0.0);
-    }
-
-    function messageAuto(text, messageCode) {
-        message(text, messageCode);
-        setTimeout(messageOff, 5000);
-    }
-
     // Soon to be deprecated.
     function savePlaylist(name) {
         name = name || 'default';
@@ -75,7 +54,7 @@
             mp3: trackLink,
             cover: trackCover
         }, function(data) {
-            messageAuto(data[0], data[1]);
+            $.bootstrapMessageAuto(data[0], data[1]);
             if(false == data[1])
                 loadPlaylist(playlistName);
         }, 'json');
@@ -87,7 +66,7 @@
             playlist: playlistName,
             url: url
         }, function(data) {
-            messageAuto(data[0], data[1]);
+            $.bootstrapMessageAuto(data[0], data[1]);
             if(false == data[1])
                 loadPlaylist(playlistName);
         }, 'json');
@@ -140,7 +119,7 @@
             current: current
         }, function(data) {
             if(false == data[1])
-                messageAuto(data[0], 'error');
+                $.bootstrapMessageAuto(data[0], 'error');
         }, 'json');
     }
 
@@ -164,7 +143,7 @@
             repeat: repeat
         }, function(data) {
             if(false == data[1])
-                messageAuto(data[0], 'error');
+                $.bootstrapMessageAuto(data[0], 'error');
         }, 'json');
     }
 
@@ -191,7 +170,7 @@
             shuffle: shuffle
         }, function(data) {
             if(false == data[1])
-                messageAuto(data[0], 'error');
+                $.bootstrapMessageAuto(data[0], 'error');
         }, 'json');
     }
 
@@ -238,14 +217,14 @@
         $('#search').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                messageOff();
+                $.bootstrapMessageOff();
                 cleanTable();
                 $.each(data, function(i, v) {
                     appendTable(v.pic, v.title, v.you2better, v.duration);
                 });
             },
             beforeSubmit: function() {
-                message('Loading...');
+                $.boostrapMessage('Loading...');
             }
         });
 
@@ -319,7 +298,7 @@
             applyOverPlaylist();
         });
 
-        $('.loadModal').loadModal();
+        $('.loadModal').bootstrapLoadModal();
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('loadPlaylist();', 1500);
