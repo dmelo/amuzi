@@ -29,7 +29,7 @@
             $(this).click(function(e) {
                 e.preventDefault();
                 var noForm = false;
-                var id = $(this).attr('id');
+                var name = $(this).attr('name');
                 if($(this).hasClass('noForm'))
                     noForm = true;
                 var title = $(this).attr('title');
@@ -53,7 +53,7 @@
                             }
                         });
                     }
-                    func = "window." + id + 'Callback';
+                    func = "window." + name + 'Callback';
                     if(typeof eval(func) == 'function')
                         eval(func)();
                 });

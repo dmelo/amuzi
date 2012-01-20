@@ -201,6 +201,8 @@
     }
 
     $(document).ready(function() {
+        // topbar menu
+        $('.topbar').dropdown();
         // query youtube for videos and fill the result table.
         $('#search').ajaxForm({
             dataType: 'json',
