@@ -1,7 +1,7 @@
 <? foreach($this->resultSet as $row): ?>
 <tr>
     <td><img alt="Cover image" alt="<?= $row->name; ?>" src="<?= $row->getCover(); ?>"/></td>
-    <td><?= $row->name; ?></td>
+    <td class="name"><?= $row->name; ?></td>
     <td><?= $row->countTracks(); ?></td>
 </tr>
 <? endforeach; ?>

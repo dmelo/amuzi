@@ -121,3 +121,26 @@ dd#submit-element {
 .invisible {
     display: none;
 }
+
+#playlistsettings-result img {
+    height: 64px;
+}
+
+#playlistsettings-result tbody tr {
+    -webkit-transition: background 300ms ease-in 0ms;
+    -moz-transition: background 300ms ease-in 0ms;
+    -o-transition: background 300ms ease-in 0ms;
+    transition: background 300ms ease-in 0ms;
+}
+
+#playlistsettings-result tbody tr:hover {
+    background-color: #f40c42;
+    cursor: pointer;
+    color: white;
+}
+
+
+#load-modal-wrapper {
+    max-height: 600px;
+    overflow: auto;
+}

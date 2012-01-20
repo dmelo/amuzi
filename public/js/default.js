@@ -189,7 +189,6 @@
     }
 
     function playlistCallback() {
-        // TODO: associate the right treatment to the form.
         $('#playlistsettings').ajaxForm({
             success: function(data) {
                 $('#playlistsettings-result tbody').html(data);
@@ -197,6 +196,11 @@
             error: function(data) {
                 $.bootstrapMessageAuto(data, 'error');
             }
+        });
+
+        $('#playlistsettings-result tbody tr').live('click', function(e) {
+            loadPlaylist($(this).find('.name').html());
+            $('#load-modal-wrapper').modal('hide');
         });
     }
 
@@ -212,7 +216,7 @@
                 });
             },
             beforeSubmit: function() {
-                $.boostrapMessage('Loading...');
+                $.bootstrapMessage('Loading...');
             }
         });
 

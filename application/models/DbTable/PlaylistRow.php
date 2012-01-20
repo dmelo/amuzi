@@ -68,14 +68,12 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
 
     public function getCover()
     {
-        $select = $this->_trackDb->select()->from(array('playlist' => 'p', 'playlist_has_track' => 'pht', 'track' => 't'), array('t.cover'))
-            ->where('p.id = pht.playlist_id AND pht.track_id = t.id AND t.cover is not NULL and p.id = ?',
-            $this->id)->order('pht.sort');
+        $select = $this->_trackDb->select()->from(array('p' => 'playlist'), array())
+                    ->join(array('pht' => 'playlist_has_track'), 'p.id = pht.playlist_id', array())
+                    ->join(array('t' => 'track'), 't.id = pht.track_id', array('cover'))
+                    ->where($this->_playlistDb->getAdapter()->quoteInto('t.cover is not null and p.id = ?', $this->id));
 
         $row = $this->_playlistDb->fetchRow($select);
-        if($row)
-            return $row->cover;
-        else
-            return null;
+        return $row ? $row->cover : '/img/playlist64.png';
     }
 }
