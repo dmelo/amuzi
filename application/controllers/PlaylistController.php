@@ -141,4 +141,13 @@ class PlaylistController extends DZend_Controller_Action
         }
         $this->view->message = $message;
     }
+
+    public function newAction()
+    {
+        $this->view->form = new Form_CreatePlaylist();
+        if(!$this->_request->isPost() && ($name = $this->_request->getParam('name')) != null) {
+            $row = $this->_playlistModel->create($name);
+            $this->view->message = $row ? array($this->view->t('Playlist created'), 'success') : array($this->view->t('Error creating playlist'), 'error');
+        }
+    }
 }

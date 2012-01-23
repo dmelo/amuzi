@@ -23,46 +23,11 @@ class IndexController extends DZend_Controller_Action
     }
 
     /**
-     * searchAction
-     *
-     * @return void
-     */
-    public function searchAction()
-    {
-        // action body
-    }
-
-    /**
-     * apiAction
-     *
-     * @return void
-     */
-    public function apiAction()
-    {
-        // action body
-    }
-
-    /**
      * aboutAction
      *
      * @return void
      */
     public function aboutAction()
-    {
-        // action body
-    }
-
-    /**
-     * incboardAction IncBoard technique.
-     *
-     * @return void
-     */
-    public function incboardAction()
-    {
-        $this->view->form = new Form_Search();
-    }
-
-    public function testAction()
     {
         // action body
     }

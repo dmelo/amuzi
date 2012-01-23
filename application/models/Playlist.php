@@ -24,7 +24,7 @@ class Playlist
         if(isset($this->_session->user)) {
             $ret = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
             if(!$ret) {
-                $this->_playlistDb->create($this->_session->user->id, $name);
+                $ret = $this->_playlistDb->create($this->_session->user->id, $name);
             }
         }
 

@@ -462,6 +462,7 @@
 
             var replace = [];
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
+                alert($(value).attr('name'));
                 replace[index] = self.original[$(value).attr('name')];
                 if(!isAdjusted && self.current === parseInt($(value).attr('name'), 10)) {
                     self.current = index;

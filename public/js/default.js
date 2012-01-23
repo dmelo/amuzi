@@ -17,11 +17,10 @@
 
 
     // Soon to be deprecated.
-    function savePlaylist(name) {
-        name = name || 'default';
+    function savePlaylist() {
         $.post('/playlist/save', {
             playlist: myPlaylist.original,
-            name: name
+            name: myPlaylist.name
         }, function(data) {
         });
     }
@@ -34,7 +33,7 @@
             mp3: trackLink,
             cover: trackCover
         }, function(data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
+            $.bootstrapMessageAuto(data[0], data[1] ? 'success': 'error');
             if(false == data[1])
                 loadPlaylist(playlistName);
         }, 'json');
@@ -197,7 +196,21 @@
                 $.bootstrapMessageAuto(data, 'error');
             }
         });
+    }
 
+    function newPlaylistCallback() {
+        $('form#newPlaylist').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                loadPlaylist($('input[name=name]').val());
+                $.bootstrapMessageAuto(data[0], data[1]);
+                $(modalWrapper).modal('hide');
+            },
+            error: function(data) {
+                $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
+                $('#load-modal-wrapper').modal('hide');
+            }
+        });
     }
 
     $(document).ready(function() {

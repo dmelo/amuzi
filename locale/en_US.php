@@ -1,6 +1,7 @@
 <?php
 
 return array(
+    'New' => 'Criar',
     'Search' => 'Search',
     'Playlist' => 'Playlist',
     'About' => 'About',

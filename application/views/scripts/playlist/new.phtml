@@ -1,0 +1,6 @@
+<?
+if(isset($this->message))
+    echo Zend_Json::encode($this->message); 
+else
+    echo $this->form;
+?>

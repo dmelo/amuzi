@@ -42,14 +42,14 @@
                         $(modalWrapper + ' form').ajaxForm({
                             dataType: 'json',
                             success: function (data) {
-                                messageAuto('Saved');
+                                $.bootstrapMessageAuto('Saved');
                             },
                             error: function(data) {
-                                messageAuto('Error saving. Something went wrong', 'error');
+                                $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
                             },
                             beforeSubmit: function() {
                                 $(modalWrapper).modal('hide');
-                               message('Saving...');
+                               $.bootstrapMessage('Saving...');
                             }
                         });
                     }
