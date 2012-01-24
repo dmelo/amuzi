@@ -31,6 +31,17 @@ class IndexController extends DZend_Controller_Action
     {
         // action body
     }
+
+    /**
+     * errorAction
+     *
+     * @return void
+     */
+    public function errorAction()
+    {
+        // action body
+    }
+
 }
 
 

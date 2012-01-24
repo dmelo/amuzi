@@ -54,5 +54,14 @@ class User
         $user->privacy = $params['privacy'];
         $user->save();
     }
+
+    public static function loginDummy()
+    {
+        $user = new User();
+        $userRow = $user->findRowByFacebookId('1625795908');
+        $session = DZend_Session_Namespace::get('session');
+        $session->user = $userRow;
+    }
+
 }
 
