@@ -4,7 +4,7 @@ class Youtube
 {
     private $_baseUrl = 'https://gdata.youtube.com/feeds/api/videos?';
 
-    public function search($q, $limit = 10, $offset = 1)
+    public function search($q, $limit = 9, $offset = 1)
     {
         $args = array(
                 'q=' . urlencode($q),

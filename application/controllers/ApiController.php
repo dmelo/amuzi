@@ -12,17 +12,6 @@
 class ApiController extends DZend_Controller_Action
 {
     /**
-     * indexAction
-     *
-     * @return void
-     *
-     */
-    public function indexAction()
-    {
-        // action body
-    }
-
-    /**
      * searchAction API search call.
      *
      * @return void
@@ -33,7 +22,6 @@ class ApiController extends DZend_Controller_Action
         $q = $this->getRequest()->getParam('q');
         $list = array();
         if (null !== $q) {
-            $key = '1';
             $cache = Zend_Registry::get('cache');
             if(($list = $cache->load(sha1($q))) === false) {
                 $youtube = new Youtube();
@@ -48,18 +36,6 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
-    /**
-     * postDispatch
-     *
-     * @return void
-     *
-     */
-    public function postDispatch()
-    {
-        if (isset( $this->view->output ))
-            echo Zend_Json::encode($this->view->output);
-    }
-
     public function autocompleteAction()
     {
         $q = $this->getRequest()->getParam('q');
@@ -72,5 +48,17 @@ class ApiController extends DZend_Controller_Action
         }
 
         $this->view->output = $list;
+    }
+
+    /**
+     * postDispatch Facilitates output using Json
+     *
+     * @return void
+     *
+     */
+    public function postDispatch()
+    {
+        if (isset( $this->view->output ))
+            echo Zend_Json::encode($this->view->output);
     }
 }
