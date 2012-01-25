@@ -1,3 +1,4 @@
 *.swp
 public/api/*
 docs/api
+tests/tmp

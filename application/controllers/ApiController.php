@@ -45,9 +45,11 @@ class ApiController extends DZend_Controller_Action
             $resultSet = $lastfm->search($q);
             foreach ($resultSet as $result)
                 $list[] = $result->getArray();
+            $this->view->output = $list;
         }
-
-        $this->view->output = $list;
+        else {
+            $this->view->output = array('error' => 'Parameter "q" must be specified');
+        }
     }
 
     /**

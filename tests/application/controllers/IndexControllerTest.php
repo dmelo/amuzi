@@ -12,7 +12,7 @@ class IndexControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     public function testIndexAction()
     {
         $this->dispatch('/');
-        $this->assertBasics('index', 'index', 'default');
+        $this->assertBasics('index', 'index');
         $this->assertQuery('form#search');
         $this->assertQuery('form#search input#q');
         $this->assertQuery('form#search input#submit');
