@@ -46,8 +46,9 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'default.js';
 
         $css = array();
-        $css[] = 'http://jplayer.org/js/prettify/prettify-jPlayer.css';
-        $css[] = 'http://jplayer.org/latest/skin/pink.flag/jplayer.pink.flag.css';
+        $jpSite = 'http://jplayer.org/';
+        $css[] = $jpSite . 'js/prettify/prettify-jPlayer.css';
+        $css[] = $jpSite . 'latest/skin/pink.flag/jplayer.pink.flag.css';
         $css[] = $domainCss . 'player.css';
         $css[] = $domainCss . 'gallery.css';
         $css[] = $domainCss . 'miniplayer.css';
@@ -58,8 +59,10 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');
         $view = $layout->getView();
-        $view->addHelperPath('../library/LightningPackerHelper/',
-            'Zend_View_Helper');
+        $view->addHelperPath(
+            '../library/LightningPackerHelper/',
+            'Zend_View_Helper'
+        );
         $view->addHelperPath('../application/views/helpers', 'View_Helper');
 
         $view->doctype('HTML5');
@@ -97,7 +100,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
     {
         $this->bootstrap('path');
         $session = DZend_Session_Namespace::get('session');
-        if(!isset($session->locale)) {
+        if (!isset($session->locale)) {
             try {
                 $locale = new Zend_Locale('auto');
             } catch(Zend_Locale_Exception $e) {
@@ -109,16 +112,18 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
     public function getTranslate($locale)
     {
-        return new Zend_Translate(array('adapter' => 'array',
-            'content' => "../locale/${locale}.php",
-            'locale' => $locale));
+        return new Zend_Translate(
+            array('adapter' => 'array',
+                'content' => "../locale/${locale}.php",
+                'locale' => $locale)
+        );
     }
 
     public function _initTranslate()
     {
         $this->bootstrap('locale');
         $session = DZend_Session_Namespace::get('session');
-        if(!isset($session->translate)) {
+        if (!isset($session->translate)) {
             $locale = $session->locale;
 
             try {

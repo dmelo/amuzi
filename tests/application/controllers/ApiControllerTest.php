@@ -4,16 +4,14 @@ require_once 'bootstrap.php';
 
 class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 {
-    public function testSearchAction()
+    public function assertValidSearch()
     {
-        $this->request->setMethod('GET');
-        $this->setAjaxHeader();
-        $this->request->setParams(array('q' => 'Coldplay'));
         $this->dispatch('/api/search');
+        $this->assertResponseCode(200);
         $obj = Zend_Json::decode($this->getResponse()->getBody());
         $this->assertInternalType('array', $obj);
         $this->assertEquals(count($obj), 9);
-        foreach($obj as $key => $value) {
+        foreach ($obj as $key => $value) {
             $this->assertInternalType('int', $key);
             $this->assertInternalType('array', $value);
             $this->assertTrue(array_key_exists('id', $value));
@@ -25,6 +23,36 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         }
     }
 
+    public function testSearch1Action()
+    {
+        $this->request->setMethod('GET');
+        $this->setAjaxHeader();
+        $this->request->setParams(array('q' => 'Coldplay'));
+        $this->assertValidSearch();
+    }
+
+    public function testSearch2Action()
+    {
+        $this->request->setMethod('POST');
+        $this->setAjaxHeader();
+        $this->request->setParams(array('q' => 'Rolling Stones'));
+        $this->assertResponseCode(200);
+    }
+
+    public function testSearch3Action()
+    {
+        $this->request->setMethod('POST');
+        $this->setAjaxHeader();
+        $this->request->setParams(array('qq' => 'Rolling Stones'));
+        $this->dispatch('/api/search');
+        $this->assertResponseCode(200);
+        $obj = Zend_Json::decode($this->getResponse()->getBody());
+        $this->assertInternalType('array', $obj);
+        $this->assertTrue(array_key_exists('error', $obj));
+        $this->assertInternalType('string', $obj['error']);
+    }
+
+
     public function assertValidAutocomplete()
     {
         $this->dispatch('/api/autocomplete');
@@ -32,7 +60,7 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $obj = Zend_Json::decode($this->getResponse()->getBody());
         $this->assertInternalType('array', $obj);
         $this->assertTrue(count($obj) >= 10);
-        foreach($obj as $key => $value) {
+        foreach ($obj as $key => $value) {
             $this->assertInternalType('int', $key);
             $this->assertInternalType('array', $value);
             $this->assertTrue(array_key_exists('name', $value));

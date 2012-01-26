@@ -5,7 +5,7 @@ class UserController extends DZend_Controller_Action
     public function init()
     {
         parent::init();
-        if('index' == $this->_request->getActionName())
+        if ('index' == $this->_request->getActionName())
             $this->_loginRequired = true;
     }
 
@@ -16,11 +16,13 @@ class UserController extends DZend_Controller_Action
      */
     public function loginAction()
     {
-        if($this->_request->getParam('facebook_id') != null) {
+        if ($this->_request->getParam('facebook_id') != null) {
             $params = $this->_request->getParams();
             $user = new User();
             $this->view->message = $user->login($params);
-            $this->_session->user = $user->findRowByFacebookId($this->_request->getParam('facebook_id'));
+            $this->_session->user = $user->findRowByFacebookId(
+                $this->_request->getParam('facebook_id')
+            );
         }
     }
 
@@ -39,7 +41,8 @@ class UserController extends DZend_Controller_Action
         $form = new Form_UserSettings();
         $userModel = new User();
 
-        if($this->_request->isGet() && $form->isValid($this->_request->getParams())) {
+        $params = $this->_request->getParams();
+        if ($this->_request->isGet() && $form->isValid($params)) {
             $userModel->setSettings($this->_request->getParams());
             $this->view->message = true;
         } else {

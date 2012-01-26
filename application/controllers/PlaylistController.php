@@ -12,12 +12,17 @@
 class PlaylistController extends DZend_Controller_Action
 {
     protected $_playlistModel;
+    protected $_messageFail;
 
     public function init()
     {
         parent::init();
         $this->_playlistModel = new Playlist();
         $this->_loginRequired = true;
+        $this->_messageFail = array(
+            $this->view->t('Failed saving setting'),
+            false
+        );
     }
 
     public function indexAction()
@@ -28,8 +33,10 @@ class PlaylistController extends DZend_Controller_Action
 
     public function searchAction()
     {
-        if($this->_request->isPost()) {
-            $this->view->resultSet = $this->_playlistModel->search($this->_request->getPost('q'));
+        if ($this->_request->isPost()) {
+            $this->view->resultSet = $this->_playlistModel->search(
+                $this->_request->getPost('q')
+            );
         }
     }
 
@@ -41,10 +48,16 @@ class PlaylistController extends DZend_Controller_Action
      */
     public function saveAction()
     {
-        if($this->_request->isPost()) {
-            $this->_session->playlist = array($this->_request->getPost('playlist'), $this->_request->getPost('name'));
-            if(isset($this->_session->user))
-                $this->_playlistModel->import($this->_session->playlist[0], $this->_session->playlist[1]);
+        if ($this->_request->isPost()) {
+            $this->_session->playlist = array(
+                $this->_request->getPost('playlist'),
+                $this->_request->getPost('name')
+            );
+            if (isset($this->_session->user))
+                $this->_playlistModel->import(
+                    $this->_session->playlist[0],
+                    $this->_session->playlist[1]
+                );
         }
     }
 
@@ -52,14 +65,22 @@ class PlaylistController extends DZend_Controller_Action
     {
         $message = null;
 
-        if($this->_request->isPost()) {
+        if ($this->_request->isPost()) {
             $trackInfo = array('title' => $this->_request->getPost('title'),
-                'mp3' => $this->_request->getPost('mp3'), 'cover' => $this->_request->getPost('cover'));
+                'mp3' => $this->_request->getPost('mp3'),
+                'cover' => $this->_request->getPost('cover'));
             try {
-                $this->_playlistModel->addTrack($trackInfo, $this->_request->getPost('playlist'));
+                $this->_playlistModel->addTrack(
+                    $trackInfo,
+                    $this->_request->getPost('playlist')
+                );
                 $message = array($this->view->t('Track added'), true);
             } catch(Zend_Exception $e) {
-                $message = array($this->view->t('Problems adding the track: ') + $e->getMessage(), false);
+                $message = array(
+                    $this->view->t('Problems adding the track: ') +
+                        $e->getMessage(),
+                    false
+                );
             }
         }
 
@@ -70,14 +91,18 @@ class PlaylistController extends DZend_Controller_Action
     {
         $message = null;
 
-        if($this->_request->isPost()) {
+        if ($this->_request->isPost()) {
             $url = $this->_request->getPost('url');
             $playlist = $this->_request->getPost('playlist');
             try {
                 $this->_playlistModel->rmTrack($url, $playlist);
                 $message = array($this->view->t('Track removed'), true);
             } catch(Zend_Exception $e) {
-                $message = array($this->view->t('Problems removing the track: ') + $e->getMessage(), false);
+                $message = array(
+                    $this->view->t('Problems removing the track: ') +
+                        $e->getMessage(),
+                     false
+                 );
             }
 
         }
@@ -92,12 +117,12 @@ class PlaylistController extends DZend_Controller_Action
      */
     public function loadAction()
     {
-        if($this->_request->isPost()) {
-            if(isset($this->_session->user)) {
+        if ($this->_request->isPost()) {
+            if (isset($this->_session->user)) {
                 $name = $this->_request->getPost('name');
                 $this->view->playlist = $this->_playlistModel->export($name);
             }
-            elseif(isset($this->_session->playlist))
+            elseif (isset($this->_session->playlist))
                 $this->view->playlist = $this->_session->playlist;
             else
                 $this->view->playlist = null;
@@ -107,11 +132,15 @@ class PlaylistController extends DZend_Controller_Action
     public function setrepeatAction()
     {
         $message = null;
-        if($this->_request->isPost()) {
-            if($this->_playlistModel->setRepeat($this->_request->getPost('name'), $this->_request->getPost('repeat')))
+        if ($this->_request->isPost()) {
+            $repeat = $this->_playlistModel->setRepeat(
+                $this->_request->getPost('name'),
+                $this->_request->getPost('repeat')
+            );
+            if ($repeat)
                 $message = array($this->view->t('Setting saved'), true);
             else
-                $message = array($this->view->t('Failed saving setting'), false);
+                $message = $this->_messageFail;
         }
         $this->view->message = $message;
     }
@@ -119,11 +148,15 @@ class PlaylistController extends DZend_Controller_Action
     public function setshuffleAction()
     {
         $message = null;
-        if($this->_request->isPost()) {
-            if($this->_playlistModel->setShuffle($this->_request->getPost('name'), $this->_request->getPost('shuffle')))
+        if ($this->_request->isPost()) {
+            $shuffle = $this->_playlistModel->setShuffle(
+                $this->_request->getPost('name'),
+                $this->_request->getPost('shuffle')
+            );
+            if ($shuffle)
                 $message = array($this->view->t('Setting saved'), true);
             else
-                $message = array($this->view->t('Failed saving setting'), false);
+                $message = $this->_messageFail;
         }
         $this->view->message = $message;
     }
@@ -131,12 +164,18 @@ class PlaylistController extends DZend_Controller_Action
     public function setcurrentAction()
     {
         $message = null;
-        if($this->_request->isPost()) {
+        if ($this->_request->isPost()) {
             try {
-                $this->_playlistModel->setCurrentTrack($this->_request->getPost('name'), $this->_request->getPost('current'));
+                $this->_playlistModel->setCurrentTrack(
+                    $this->_request->getPost('name'),
+                    $this->_request->getPost('current')
+                );
                 $message = array($this->view->t('Success'), true);
             } catch(Zend_Exception $e) {
-                $message = array($this->view->t('Something went wrong: ') . $e->getMessage(), false);
+                $message = array(
+                    $this->view->t('Something went wrong: ') . $e->getMessage(),
+                    false
+                );
             }
         }
         $this->view->message = $message;
@@ -145,9 +184,18 @@ class PlaylistController extends DZend_Controller_Action
     public function newAction()
     {
         $this->view->form = new Form_CreatePlaylist();
-        if(!$this->_request->isPost() && ($name = $this->_request->getParam('name')) != null) {
+        $name = $this->_request->getParam('name');
+        if (!$this->_request->isPost() && $name != null) {
             $row = $this->_playlistModel->create($name);
-            $this->view->message = $row ? array($this->view->t('Playlist created'), 'success') : array($this->view->t('Error creating playlist'), 'error');
+            if($row)
+                $this->view->message = array($this->view->t('Playlist created'),
+                    'success'
+                );
+            else
+                $this->view->message = array(
+                    $this->view->t('Error creating playlist'),
+                    'error'
+                );
         }
     }
 }

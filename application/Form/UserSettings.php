@@ -13,7 +13,8 @@ class Form_UserSettings extends DZend_Form
         $element->setLabel($this->_t('Email'));
         $this->addElement($element);
 
-        $this->addElement('Radio',
+        $this->addElement(
+            'Radio',
             'privacy',
             array(
                 'label' => $this->_t('Playlist\'s default privacy policy'),
@@ -21,8 +22,8 @@ class Form_UserSettings extends DZend_Form
                     'public' => $this->_t('Public'),
                     'private' => $this->_t('Private')
                     )
-                )
-            );
+            )
+        );
 
         $element = new Zend_Form_Element_Submit('submit');
         $element->setLabel($this->_t('Save'));

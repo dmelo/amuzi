@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * ApiController
@@ -11,6 +11,8 @@
  */
 class ApiController extends DZend_Controller_Action
 {
+    protected $_error = array(
+            'error' => 'Parameter "q" must be specified');
     /**
      * searchAction API search call.
      *
@@ -23,7 +25,7 @@ class ApiController extends DZend_Controller_Action
         $list = array();
         if (null !== $q) {
             $cache = Zend_Registry::get('cache');
-            if(($list = $cache->load(sha1($q))) === false) {
+            if (($list = $cache->load(sha1($q))) === false) {
                 $youtube = new Youtube();
                 $resultSet = $youtube->search($q);
                 $item = array();
@@ -34,6 +36,8 @@ class ApiController extends DZend_Controller_Action
 
             $this->view->output = $list;
         }
+        else
+            $this->view->output = $this->_error;
     }
 
     public function autocompleteAction()
@@ -47,9 +51,8 @@ class ApiController extends DZend_Controller_Action
                 $list[] = $result->getArray();
             $this->view->output = $list;
         }
-        else {
-            $this->view->output = array('error' => 'Parameter "q" must be specified');
-        }
+        else
+            $this->view->output = $this->_error;
     }
 
     /**
