@@ -13,16 +13,18 @@ class Youtube
                 );
 
         $xml = file_get_contents($this->_baseUrl . implode('&', $args));
-        $xml = str_replace(array('<media:', '</media:'),
-            array('<mediaa', '</mediaa'), $xml);
+        $xml = str_replace(
+            array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
+        );
         $xmlDoc = new DOMDocument();
         $xmlDoc->loadXML($xml);
         $resultSet = array();
         foreach ($xmlDoc->getElementsByTagName('entry') as $node) {
             $filter = '/http:\/\/gdata.youtube.com\/.*\//';
             foreach ($node->getElementsByTagName('id') as $id)
-                $entry['id'] =preg_replace($filter, '',
-                    $id->nodeValue);
+                $entry['id'] = preg_replace(
+                    $filter, '', $id->nodeValue
+                );
             foreach ($node->getElementsByTagName('title') as $title)
                 $entry['title'] = $title->nodeValue;
             foreach ($node->getElementsByTagName('content') as $content)
@@ -30,7 +32,8 @@ class Youtube
             foreach ($node->getElementsByTagName('mediaathumbnail') as $pic) {
                 $entry['pic'] = $pic->getAttribute('url');
             }
-            foreach ($node->getElementsByTagName('mediaacontent') as $mediaContent) {
+            $mediaContentList = $node->getElementsByTagName('mediaacontent');
+            foreach ($mediaContentList as $mediaContent) {
                 $entry['duration'] = $mediaContent->getAttribute('duration');
             }
 

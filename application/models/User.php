@@ -19,8 +19,8 @@ class User
     public function login($params)
     {
         $data = array();
-        foreach($this->_loginArgs as $arg) {
-            if(array_key_exists($arg, $params)) {
+        foreach ($this->_loginArgs as $arg) {
+            if (array_key_exists($arg, $params)) {
                 $this->{'_' . $arg} = $params[$arg];
                 $data[$arg] = $params[$arg];
             }

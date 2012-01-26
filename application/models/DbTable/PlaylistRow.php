@@ -41,12 +41,18 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
     public function rmTrack($url)
     {
         $trackRow = $this->_trackDb->findRowByUrl($url);
-        $this->_playlistHasTrackDb->deleteByPlaylistIdAndTrackId($this->id, $trackRow->id);
+        $this->_playlistHasTrackDb->deleteByPlaylistIdAndTrackId(
+            $this->id,
+            $trackRow->id
+        );
     }
 
     public function deleteSortGreaterThan($sort)
     {
-        $this->_playlistHasTrackDb->deleteByPlaylistSortGreaterThan($this->id, $sort);
+        $this->_playlistHasTrackDb->deleteByPlaylistSortGreaterThan(
+            $this->id,
+            $sort
+        );
     }
 
     public function getTrackList()
@@ -54,7 +60,7 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
         $trackDb = new DbTable_Track();
         $list = $this->_playlistHasTrackDb->findByPlaylistId($this->id);
         $ret = array();
-        foreach($list as $item) {
+        foreach ($list as $item) {
             $ret[] = $trackDb->findRowById($item->track_id);
         }
 
@@ -68,10 +74,23 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
 
     public function getCover()
     {
-        $select = $this->_trackDb->select()->from(array('p' => 'playlist'), array())
-                    ->join(array('pht' => 'playlist_has_track'), 'p.id = pht.playlist_id', array())
-                    ->join(array('t' => 'track'), 't.id = pht.track_id', array('cover'))
-                    ->where($this->_playlistDb->getAdapter()->quoteInto('t.cover is not null and p.id = ?', $this->id));
+        $select = $this->_trackDb->select()->from(
+            array('p' => 'playlist'), array()
+        );
+        $select->join(
+            array('pht' => 'playlist_has_track'),
+            'p.id = pht.playlist_id',
+            array()
+        );
+        $select->join(
+            array('t' => 'track'), 't.id = pht.track_id', array('cover')
+        );
+        $select->where(
+            $this->_playlistDb->getAdapter()->quoteInto(
+                't.cover is not null and p.id = ?',
+                $this->id
+            )
+        );
 
         $row = $this->_playlistDb->fetchRow($select);
         return $row ? $row->cover : '/img/playlist64.png';

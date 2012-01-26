@@ -19,7 +19,9 @@ class YoutubeEntry extends AbstractEntry
      */
     public function __construct($entry = array( ) )
     {
-        $this->_fields = array('id', 'title', 'content', 'you2better', 'pic', 'duration');
+        $this->_fields = array(
+            'id', 'title', 'content', 'you2better', 'pic', 'duration'
+        );
         $this->_data = array();
 
         foreach($entry as $key => $value)
@@ -32,7 +34,8 @@ class YoutubeEntry extends AbstractEntry
         parent::__set($key, $value);
         if ('id' === $key)
             $value = str_replace(
-                'http://gdata.youtube.com/feeds/api/videos/' , '', $value);
+                'http://gdata.youtube.com/feeds/api/videos/', '', $value
+            );
         $this->_data[$key] = $value;
     }
 

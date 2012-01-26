@@ -21,10 +21,15 @@ class Playlist
     public function create($name)
     {
         $ret = null;
-        if(isset($this->_session->user)) {
-            $ret = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
-            if(!$ret) {
-                $ret = $this->_playlistDb->create($this->_session->user->id, $name);
+        if (isset($this->_session->user)) {
+            $ret = $this->_playlistDb->findRowByUserIdAndName(
+                $this->_session->user->id,
+                $name
+            );
+            if (!$ret) {
+                $ret = $this->_playlistDb->create(
+                    $this->_session->user->id, $name
+                );
             }
         }
 
@@ -42,7 +47,7 @@ class Playlist
     {
         $playlistRow = $this->create($name);
         $sort = 0;
-        foreach($playlist as $track) {
+        foreach ($playlist as $track) {
             $playlistRow->setTrack($track, $sort);
             $sort++;
         }
@@ -58,20 +63,30 @@ class Playlist
     public function export($name)
     {
         $user = $this->_session->user;
-        if('' === $name)
-            $playlistRow = $this->_playlistDb->findRowById($user->current_playlist_id);
+        if ('' === $name)
+            $playlistRow = $this->_playlistDb->findRowById(
+                $user->current_playlist_id
+            );
         else
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName($user->id, $name);
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                $user->id, $name
+            );
         $user->current_playlist_id = $playlistRow->id;
         $user->save();
         $trackList = $playlistRow->getTrackList();
         $ret = array();
-        foreach($trackList as $track) {
+        foreach ($trackList as $track) {
             $ret[] = array('title' => $track->title,
                 'mp3' => $track->url);
         }
 
-        $ret = array($ret, $playlistRow->name, $playlistRow->repeat, $playlistRow->shuffle, $playlistRow->current_track);
+        $ret = array(
+            $ret,
+            $playlistRow->name,
+            $playlistRow->repeat,
+            $playlistRow->shuffle,
+            $playlistRow->current_track
+        );
 
         return $ret;
     }
@@ -79,7 +94,9 @@ class Playlist
     public function setRepeat($name, $repeat)
     {
         try {
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                $this->_session->user->id, $name
+            );
             $playlistRow->repeat = "true" == $repeat ? 1 : 0;
             $playlistRow->save();
             return true;
@@ -91,7 +108,9 @@ class Playlist
     public function setShuffle($name, $shuffle)
     {
         try {
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                $this->_session->user->id, $name
+            );
             $playlistRow->shuffle = "true" == $shuffle ? 1 : 0;
             $playlistRow->save();
             return true;
@@ -128,7 +147,9 @@ class Playlist
 
     public function setCurrentTrack($name, $current)
     {
-        $row = $this->_playlistDb->findRowByUserIdAndName($this->_session->user->id, $name);
+        $row = $this->_playlistDb->findRowByUserIdAndName(
+            $this->_session->user->id, $name
+        );
         $row->current_track = $current;
         $row->save();
     }
