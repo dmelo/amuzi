@@ -6,8 +6,7 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 {
     public function assertValidSearch()
     {
-        $this->dispatch('/api/search');
-        $this->assertResponseCode(200);
+        $this->assertAjaxWorks('/api/search');
         $obj = Zend_Json::decode($this->getResponse()->getBody());
         $this->assertInternalType('array', $obj);
         $this->assertEquals(count($obj), 9);
@@ -26,7 +25,6 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     public function testSearch1Action()
     {
         $this->request->setMethod('GET');
-        $this->setAjaxHeader();
         $this->request->setParams(array('q' => 'Coldplay'));
         $this->assertValidSearch();
     }
@@ -34,18 +32,15 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     public function testSearch2Action()
     {
         $this->request->setMethod('POST');
-        $this->setAjaxHeader();
         $this->request->setParams(array('q' => 'Rolling Stones'));
-        $this->assertResponseCode(200);
+        $this->assertValidSearch();
     }
 
     public function testSearch3Action()
     {
         $this->request->setMethod('POST');
-        $this->setAjaxHeader();
         $this->request->setParams(array('qq' => 'Rolling Stones'));
-        $this->dispatch('/api/search');
-        $this->assertResponseCode(200);
+        $this->assertAjaxWorks('/api/search');
         $obj = Zend_Json::decode($this->getResponse()->getBody());
         $this->assertInternalType('array', $obj);
         $this->assertTrue(array_key_exists('error', $obj));
@@ -55,8 +50,7 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function assertValidAutocomplete()
     {
-        $this->dispatch('/api/autocomplete');
-        $this->assertResponseCode(200);
+        $this->assertAjaxWorks('/api/autocomplete');
         $obj = Zend_Json::decode($this->getResponse()->getBody());
         $this->assertInternalType('array', $obj);
         $this->assertTrue(count($obj) >= 10);
@@ -71,7 +65,6 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     public function testAutocompleteAction()
     {
         $this->request->setMethod('GET');
-        $this->setAjaxHeader();
         $this->request->setParams(array('q' => 'Coldplay'));
         $this->assertValidAutocomplete();
     }
@@ -79,7 +72,6 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     public function testAutocomplete2Action()
     {
         $this->request->setMethod('POST');
-        $this->setAjaxHeader();
         $this->request->setParams(array('q' => 'Rolling Stones'));
         $this->assertValidAutocomplete();
     }
