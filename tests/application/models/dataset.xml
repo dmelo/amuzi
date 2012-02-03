@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<dataset>
+    <!-- User -->
+    <user id="2" facebook_id="1625795908" name="Diogo Melo" email="melo@vonbraunlabs.com.br" url="kljkjkj" privacy="public"/>
+
+    <!-- Playlist -->
+    <playlist id="2" user_id="2" name="default" repeat="1" shuffle="1" current_track="2"/>
+    <playlist id="3" user_id="2" name="newOne" repeat="0" shuffle="0" current_track="1"/>
+    <playlist id="4" user_id="2" name="newTwo" repeat="0" shuffle="0" current_track="1"/>
+
+    <!-- Track -->
+    <track id="1" title="Rolling Stones - Sympathy for The Devil ( Live 1969 Altamont" url="http://amuzi.localhost/api/523/Dt0ipUCfdlU/Rolling Stones - Sympathy for The Devil ( Live 1969 Altamont.mp3" cover="null" duration="0"/>
+    <track id="2"  title="Eurythmics Sweet Dreams" url="http://amuzi.localhost/api/292/rJE_Sc1Wags/Eurythmics Sweet Dreams.mp3" cover="null" duration="0"/>
+    <track id="3"  title="Coldplay - Yellow" url="http://amuzi.localhost/api/271/1MwjX4dG72s/Coldplay - Yellow.mp3" cover="null" duration="0"/>
+    <track id="4"  title="we will rock you by QUEEN with lyrics" url="http://amuzi.localhost/api/125/qGaOlfmX8rQ/we will rock you by QUEEN with lyrics.mp3" cover="null" duration="0"/>
+    <track id="5"  title="Queen - We Will Rock You and We Are The Champion (Live)" url="http://amuzi.localhost/api/291/zBUJztI884M/Queen - We Will Rock You and We Are The Champion (Live).mp3" cover="null" duration="0"/>
+    <track id="6"  title="Queen - 'We Will Rock You'" url="http://amuzi.localhost/api/135/-tJYN-eG1zk/Queen - 'We Will Rock You'.mp3" cover="null" duration="0"/>
+    <track id="7"  title="Angie - The Rolling Stones" url="http://amuzi.localhost/api/277/JMkFjYRWM4M/Angie - The Rolling Stones.mp3" cover="null" duration="0"/>
+    <track id="8"  title="The Rolling Stones- Paint it Black" url="http://amuzi.localhost/api/255/Q9DDpmyPZZA/The Rolling Stones- Paint it Black.mp3" cover="null" duration="0"/>
+    <track id="9"  title="Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction" url="Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction" cover="http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg" duration="0"/>
+    <track id="10" title="System Of A Down - Chop Suey!" url="http://amuzi.localhost/api/207/CSvFpBOe8eY/System Of A Down - Chop Suey!.mp3" cover="http://i.ytimg.com/vi/CSvFpBOe8eY/3.jpg" duration="0"/>
+    <track id="11" title="System Of A Down - Toxicity" url="http://amuzi.localhost/api/223/IJmt3dr9XYQ/System Of A Down - Toxicity.mp3" cover="http://i.ytimg.com/vi/IJmt3dr9XYQ/3.jpg" duration="0"/>
+
+    <!-- PlaylistHasTrack -->
+</dataset>
