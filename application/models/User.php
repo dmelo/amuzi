@@ -59,9 +59,12 @@ class User
     {
         $user = new User();
         $userRow = $user->findRowByFacebookId('1625795908');
-        $session = DZend_Session_Namespace::get('session');
-        $session->user = $userRow;
+        if ($userRow) {
+            $session = DZend_Session_Namespace::get('session');
+            $session->user = $userRow;
+        } else {
+            throw new Zend_Exception("Dummy login user does not exists");
+        }
     }
-
 }
 

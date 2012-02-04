@@ -78,4 +78,10 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertQuery('form#playlistsettings input#q');
         $this->assertQuery('form#playlistsettings input#submit');
     }
+
+    public function testSearchAction()
+    {
+        User::loginDummy();
+        //$this->assertAjaxWorks('/playlist/search');
+    }
 }

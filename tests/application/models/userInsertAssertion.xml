@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<dataset>
+    <user id="2" facebook_id="1625795908" name="Diogo Melo" email="melo@vonbraunlabs.com.br" url="kljkjkj" privacy="public"/>
+    <user id="3" facebook_id="blablabla" name="Test Test" email="test@test.com" url="http://example.com" privacy="public" current_playlist_id="5"/>
+</dataset>
