@@ -1,7 +1,11 @@
-<? foreach($this->resultSet as $row): ?>
-<tr>
-    <td><img alt="Cover image" alt="<?= $row->name; ?>" src="<?= $row->getCover(); ?>"/></td>
-    <td class="name"><?= $row->name; ?></td>
-    <td><?= $row->countTracks(); ?></td>
-</tr>
-<? endforeach; ?>
+<? if(isset($this->resultSet)): ?>
+    <? foreach($this->resultSet as $row): ?>
+    <tr>
+        <td><img alt="Cover image" alt="<?= $row->name; ?>" src="<?= $row->getCover(); ?>"/></td>
+        <td class="name"><?= $row->name; ?></td>
+        <td><?= $row->countTracks(); ?></td>
+    </tr>
+    <? endforeach; ?>
+<? else: ?>
+<?= $this->error(); ?>
+<? endif; ?>
