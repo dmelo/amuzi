@@ -30,5 +30,8 @@ return array(
     'Save' => 'Save',
 
     'Something went wrong: ' => 'Something went wrong: ',
-    'Success' => 'Success'
+    'Success' => 'Success',
+
+    'Error:' => 'Error:',
+    'Invalid request' => 'Invalid request',
 );

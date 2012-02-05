@@ -38,6 +38,8 @@ class PlaylistController extends DZend_Controller_Action
                 $this->_request->getPost('q')
             );
         }
+        else
+            $this->getResponse()->setHttpResponseCode(500);
     }
 
     /**

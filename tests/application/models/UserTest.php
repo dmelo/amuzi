@@ -1,38 +1,27 @@
 <?php
 
 require_once 'bootstrap.php';
-class UserTest extends Zend_Test_PHPUnit_DatabaseTestCase
+class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
 {
-    private $_connectionMock;
-
-    protected function getConnection()
+    public function testInsertUser()
     {
-        $config = new Zend_Config_Ini(
-            APPLICATION_PATH . '/configs/application.ini',
-            'testing'
-        );
-        $connection = Zend_Db::factory(
-            $config->resources->db->adapter,
-            $config->resources->db->params
+        $data = array(
+            'facebook_id' => 'blablabla',
+            'name' => 'Test Test',
+            'email' => 'test@test.com',
+            'url' => 'http://example.com',
+            'privacy' => 'public'
         );
 
-        $this->_connectionMock = $this->createZendDbConnection(
-            $connection, 'zfunittests'
+        $userDb = new DbTable_User();
+        $userDb->register($data);
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
         );
-        Zend_Db_Table_Abstract::setDefaultAdapter($connection);
-
-        return $this->_connectionMock;
-    }
-
-    protected function getDataSet()
-    {
-        return $this->createFlatXmlDataSet(
-            dirname(__FILE__) . '/dataset.xml'
+        $ds->addTable('user', 'SELECT * FROM user');
+        $this->assertDataSetsEqual($this->createFlatXmlDataSet(
+            dirname(__FILE__) . '/userInsertAssertion.xml'
+        ), $ds
         );
-    }
-
-    public function testSanity()
-    {
-        $this->assertTrue(true);
     }
 }
