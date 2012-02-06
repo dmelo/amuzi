@@ -4,6 +4,19 @@ require_once 'bootstrap.php';
 
 class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 {
+    private $_postAddtrack = array(
+        'title' => 'Test Music',
+        'mp3' => 'http://example.com/a.mp3',
+        'cover' => 'http://example.com/a.jpg',
+        'playlist' => 'default'
+    );
+
+    private $_postRmtrack = array(
+        'url' =>
+            'http://amuzi.localhost/api/271/1MwjX4dG72s/Coldplay - Yellow.mp3',
+        'playlist' => 'default'
+    );
+
     /**
      * testLoggedOutIndex
      *
@@ -115,21 +128,31 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     {
         User::loginDummy();
         $this->request->setMethod('POST');
-        $this->request->setPost(array(
-            'title' => 'Test Music',
-            'mp3' => 'http://example.com/a.mp3',
-            'cover' => 'http://example.com/a.jpg',
-            'playlist' => 'default'
-        ));
+        $this->request->setPost($this->_postAddtrack);
 
         $this->assertAjaxWorks('/playlist/addtrack');
-        $resp = Zend_Json::decode($this->response->getBody());
-        $this->assertInternalType('array', $resp);
-        $this->assertTrue(array_key_exists(0, $resp));
-        $this->assertTrue(array_key_exists(1, $resp));
-        $this->assertInternalType('string', $resp[0]);
-        $this->assertInternalType('bool', $resp[1]);
-        $this->assertEquals('Track added', $resp[0]);
-        $this->assertEquals(true, $resp[1]);
+        $this->assertJsonMessage(array('Track added', true));
+    }
+
+    public function testAddtrackAction2()
+    {
+        User::loginDummy();
+        $this->request->setMethod('GET');
+        $this->request->setParams($this->_postAddtrack);
+
+        $this->assertAjaxWorks('/playlist/addtrack');
+        $this->assertJsonMessage(
+            array('Problems adding track: Invalid request', false)
+        );
+    }
+
+    public function testRmtrackAction()
+    {
+        User::loginDummy();
+        $this->request->setMethod('POST');
+        $this->request->setPost($this->_postRmtrack);
+
+        $this->assertAjaxWorks('/playlist/rmtrack');
+        $this->assertJsonMessage(array('Track removed', true));
     }
 }

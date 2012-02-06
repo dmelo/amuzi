@@ -23,4 +23,8 @@
     <track id="11" title="System Of A Down - Toxicity" url="http://amuzi.localhost/api/223/IJmt3dr9XYQ/System Of A Down - Toxicity.mp3" cover="http://i.ytimg.com/vi/IJmt3dr9XYQ/3.jpg" duration="0"/>
 
     <!-- PlaylistHasTrack -->
+    <playlist_has_track id="1" playlist_id="2" track_id="1" sort="0"/>
+    <playlist_has_track id="2" playlist_id="2" track_id="2" sort="1"/>
+    <playlist_has_track id="3" playlist_id="2" track_id="3" sort="2"/>
+    <playlist_has_track id="4" playlist_id="2" track_id="4" sort="3"/>
 </dataset>
