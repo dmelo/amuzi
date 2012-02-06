@@ -63,6 +63,13 @@ class PlaylistController extends DZend_Controller_Action
         }
     }
 
+    /**
+     * addtrackAction Receives a post request informing the title, mp3 and
+     * cover of the track to be added into the playlist, the playlist's name is
+     * also passed by post parameter.
+     *
+     * @return void
+     */
     public function addtrackAction()
     {
         $message = null;
@@ -79,11 +86,17 @@ class PlaylistController extends DZend_Controller_Action
                 $message = array($this->view->t('Track added'), true);
             } catch(Zend_Exception $e) {
                 $message = array(
-                    $this->view->t('Problems adding the track: ') +
+                    $this->view->t('Problems adding the track') . ': ' .
                         $e->getMessage(),
                     false
                 );
             }
+        } else {
+            $message = array(
+                $this->view->t('Problems adding track') . ': ' .
+                $this->view->t('Invalid request'),
+                false
+            );
         }
 
         $this->view->message = $message;

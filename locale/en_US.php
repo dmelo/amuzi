@@ -15,7 +15,7 @@ return array(
 
     // Controller Playlist, Action addtrack
     'Track added' => 'Track added',
-    'Problems adding the track: ' => 'Problems adding the track: ',
+    'Problems adding the track' => 'Problems adding the track',
 
     // Controller Playlist, Action rmtrack
     'Track removed' => 'Track removed',

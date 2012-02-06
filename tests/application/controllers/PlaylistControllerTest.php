@@ -110,4 +110,26 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
             $this->response->getBody(), "<span>Error: Invalid request</span>"
         );
     }
+
+    public function testAddtrackAction()
+    {
+        User::loginDummy();
+        $this->request->setMethod('POST');
+        $this->request->setPost(array(
+            'title' => 'Test Music',
+            'mp3' => 'http://example.com/a.mp3',
+            'cover' => 'http://example.com/a.jpg',
+            'playlist' => 'default'
+        ));
+
+        $this->assertAjaxWorks('/playlist/addtrack');
+        $resp = Zend_Json::decode($this->response->getBody());
+        $this->assertInternalType('array', $resp);
+        $this->assertTrue(array_key_exists(0, $resp));
+        $this->assertTrue(array_key_exists(1, $resp));
+        $this->assertInternalType('string', $resp[0]);
+        $this->assertInternalType('bool', $resp[1]);
+        $this->assertEquals('Track added', $resp[0]);
+        $this->assertEquals(true, $resp[1]);
+    }
 }
