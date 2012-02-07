@@ -26,10 +26,9 @@
         });
     }
 
-    function addTrack(trackTitle, trackLink, trackCover, playlistName) {
-        playlistName = playlistName || 'default';
+    function addTrack(trackTitle, trackLink, trackCover) {
         $.post('/playlist/addtrack', {
-            playlist: playlistName,
+            playlist: myPlaylist.name,
             title: trackTitle,
             mp3: trackLink,
             cover: trackCover
@@ -230,7 +229,19 @@
         var commandName = command.split("$$::$$")[0];
         var commandParams = command.split("$$::$$")[1].split(":::");
 
+        // addTrack$$::$$title:::mp3:::pic
         if("addTrack" == commandName) {
+            if(3 == commandParams.length) {
+                myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true});
+                addTrack(commandParams[0], commandParams[1], commandParams[2]);
+                myPlaylist.play(0);
+
+            }
+            else
+                $.bootstrapMessageAuto("Invalid parameters for addTrack", "error");
+        }
+        else {
+            $.bootstrapMessageAuto("Command not found", "error");
         }
     }
 
@@ -266,7 +277,7 @@
                 free: true
             });
 
-            addTrack(title, mp3, pic, myPlaylist.name);
+            addTrack(title, mp3, pic);
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
