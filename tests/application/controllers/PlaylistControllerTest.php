@@ -17,6 +17,11 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         'playlist' => 'default'
     );
 
+    public function __construct()
+    {
+        $this->_databaseUsage = true;
+    }
+
     /**
      * testLoggedOutIndex
      *
@@ -84,6 +89,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
      */
     public function testIndexAction()
     {
+        $this->_databaseUsage = true;
         User::loginDummy();
         $this->assertAjaxWorks('/playlist');
         $this->assertBasics('index', 'playlist');
@@ -94,6 +100,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testSearchAction()
     {
+        $this->_databaseUsage = true;
         User::loginDummy();
         $this->request->setMethod('POST');
         $this->assertAjaxWorks('/playlist/search');
@@ -104,6 +111,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testSearchAction2()
     {
+        $this->_databaseUsage = true;
         User::loginDummy();
         $this->request->setMethod('POST');
         $this->request->setPost(array('q' => 'newOne'));
