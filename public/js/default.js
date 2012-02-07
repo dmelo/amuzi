@@ -9,6 +9,7 @@
     var repeat;
     var current;
     var modalWrapper = "#load-modal-wrapper";
+    var isRunCommand = false;
 
     function callbackLogin(userId) {
         loadPlaylist();
@@ -66,13 +67,15 @@
                 setInterfaceShuffle(parseInt(data[3]));
                 setTimeout(callbackShuffle, 1500);
             }
-        }, 'json');
+        }, 'json').complete(function() {
+            if(isRunCommand)
+                setTimeout('runCommands()', 1500);
+        });
     }
 
     function initAmuzi() {
+        isRunCommand = true;
         loadPlaylist();
-        url = $.url(window.location.href);
-        runCommands(url.attr('fragment'));
     }
 
     function setRepeatAndCurrent(repeat, current) {
@@ -219,7 +222,11 @@
 
     // Interpret and run commands
     // The separator for the commands is "&&::&&"
-    function runCommands(commands) {
+    function runCommands() {
+        isRunCommand = false;
+        url = $.url(window.location.href);
+        commands = url.attr('fragment');
+
         commandArray = commands.split("&&::&&");
         for(var i = 0; i < commandArray.length; i++)
             runCommand(commandArray[i]);
@@ -232,10 +239,8 @@
         // addTrack$$::$$title:::mp3:::pic
         if("addTrack" == commandName) {
             if(3 == commandParams.length) {
-                myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true});
+                myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
                 addTrack(commandParams[0], commandParams[1], commandParams[2]);
-                myPlaylist.play(0);
-
             }
             else
                 $.bootstrapMessageAuto("Invalid parameters for addTrack", "error");
