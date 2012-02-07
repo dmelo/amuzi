@@ -8,6 +8,7 @@
     var jPlaylistTop = null;
     var repeat;
     var current;
+    var modalWrapper = "#load-modal-wrapper";
 
     function callbackLogin(userId) {
         loadPlaylist();
@@ -173,10 +174,8 @@
         $('.playlistsettings').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                alert(data);
             },
             beforeSubmit: function() {
-                alert('kkkkk');
             }
         });
     }
@@ -237,7 +236,6 @@
             title = $(this).attr('title');
             mp3 = $(this).attr('href');
             pic = $(this).parent().parent().find('.image img').attr('src');
-            alert(pic);
             myPlaylist.add({
                 title: title,
                 mp3: mp3,
