@@ -60,10 +60,14 @@
 }
 
 .music-large .play {
-    width: 24px;
+    width: 50px;
     height: 24px;
     position: absolute;
-    left: 226px;
+    left: 200px;
     top: 36px;
     display: none;
+}
+
+.music-large .play .download {
+    padding-right: 2px;
 }

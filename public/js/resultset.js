@@ -53,7 +53,9 @@
 
     function getMusicLarge(img, title, url, duration) {
         duration = secondsToHMS(duration);
-        return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play"><a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a></div>';
+        var aDownload = '<a target="_blank" href="' + url + '"title="download ' + title + '" class="download"><img src="/img/download_icon.png"/></a>';
+        var aPlay = '<a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+        return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aDownload + aPlay + '</div>';
     }
 
     function appendTable(img, title, url, duration) {
