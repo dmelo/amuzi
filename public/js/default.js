@@ -70,6 +70,12 @@
         }, 'json');
     }
 
+    function initAmuzi() {
+        loadPlaylist();
+        url = $.url(window.location.href);
+        runCommands(url.attr('fragment'));
+    }
+
     function setRepeatAndCurrent(repeat, current) {
         myPlaylist.loop = repeat;
         myPlaylist.newCurrent = current;
@@ -212,6 +218,24 @@
         });
     }
 
+    // Interpret and run commands
+    // The separator for the commands is "&&::&&"
+    function runCommands(commands) {
+        commandArray = commands.split("&&::&&");
+        for(var i = 0; i < commandArray.length; i++)
+            runCommand(commandArray[i]);
+    }
+
+    function runCommand(command) {
+        var commandName = command.split("$$::$$")[0];
+        var commandParams = command.split("$$::$$")[1].split(":::");
+
+        if("addTrack" == commandName) {
+        }
+    }
+
+
+
     $(document).ready(function() {
         // topbar menu
         $('.topbar').dropdown();
@@ -302,7 +326,7 @@
         $('.loadModal').bootstrapLoadModal();
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
-        setTimeout('loadPlaylist();', 1500);
+        setTimeout('initAmuzi();', 1500);
 
         if(isLoggedIn())
             $('.loginRequired').fadeTo('slow', 1.0);
@@ -312,6 +336,5 @@
             loadPlaylist($(this).find('.name').html());
             $('#load-modal-wrapper').modal('hide');
         });
-
     });
 //})(jQuery);
