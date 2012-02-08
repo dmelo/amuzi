@@ -12,7 +12,9 @@
  */
 
 (function($, undefined) {
+    var lock = 0;
     $.fn.extend({
+        bootstrapLoadModalLock: 0,
         bootstrapLoadModal: function() {
             var modalWrapper = '#load-modal-wrapper';
 
@@ -28,35 +30,39 @@
 
             $(this).click(function(e) {
                 e.preventDefault();
-                var noForm = false;
-                var name = $(this).attr('name');
-                if($(this).hasClass('noForm'))
-                    noForm = true;
-                var title = $(this).attr('title');
-                $.post($(this).attr('href'), {
-                }, function(data) {
-                    $(modalWrapper + ' .modal-body').html(data);
-                    $(modalWrapper + ' h3').html(title);
-                    $(modalWrapper).modal('show');
-                    if(!noForm) {
-                        $(modalWrapper + ' form').ajaxForm({
-                            dataType: 'json',
-                            success: function (data) {
-                                $.bootstrapMessageAuto('Saved');
-                            },
-                            error: function(data) {
-                                $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
-                            },
-                            beforeSubmit: function() {
-                                $(modalWrapper).modal('hide');
-                               $.bootstrapMessage('Saving...');
-                            }
-                        });
-                    }
-                    func = "window." + name + 'Callback';
-                    if(typeof eval(func) == 'function')
-                        eval(func)();
-                });
+                if(0 == lock) {
+                    lock++;
+                    var noForm = false;
+                    var name = $(this).attr('name');
+                    if($(this).hasClass('noForm'))
+                        noForm = true;
+                    var title = $(this).attr('title');
+                    $.post($(this).attr('href'), {
+                    }, function(data) {
+                        $(modalWrapper + ' .modal-body').html(data);
+                        $(modalWrapper + ' h3').html(title);
+                        $(modalWrapper).modal('show');
+                        if(!noForm) {
+                            $(modalWrapper + ' form').ajaxForm({
+                                dataType: 'json',
+                                success: function (data) {
+                                    $.bootstrapMessageAuto('Saved');
+                                },
+                                error: function(data) {
+                                    $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
+                                },
+                                beforeSubmit: function() {
+                                    $(modalWrapper).modal('hide');
+                                   $.bootstrapMessage('Saving...');
+                                }
+                            });
+                        }
+                        func = "window." + name + 'Callback';
+                        if(typeof eval(func) == 'function')
+                            eval(func)();
+                        lock--;
+                    });
+                }
             });
         }
     });

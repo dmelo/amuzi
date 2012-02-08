@@ -227,26 +227,30 @@
         url = $.url(window.location.href);
         commands = url.attr('fragment');
 
-        commandArray = commands.split("&&::&&");
-        for(var i = 0; i < commandArray.length; i++)
-            runCommand(commandArray[i]);
+        if('string' == typeof(commands)) {
+            commandArray = commands.split("&&::&&");
+            for(var i = 0; i < commandArray.length; i++)
+                runCommand(commandArray[i]);
+        }
     }
 
     function runCommand(command) {
-        var commandName = command.split("$$::$$")[0];
-        var commandParams = command.split("$$::$$")[1].split(":::");
+        if(2 == command.split("$$::$$").length) {
+            var commandName = command.split("$$::$$")[0];
+            var commandParams = command.split("$$::$$")[1].split(":::");
 
-        // addTrack$$::$$title:::mp3:::pic
-        if("addTrack" == commandName) {
-            if(3 == commandParams.length) {
-                myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
-                addTrack(commandParams[0], commandParams[1], commandParams[2]);
+            // addTrack$$::$$title:::mp3:::pic
+            if("addTrack" == commandName) {
+                if(3 == commandParams.length) {
+                    myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
+                    addTrack(commandParams[0], commandParams[1], commandParams[2]);
+                }
+                else
+                    $.bootstrapMessageAuto("Invalid parameters for addTrack", "error");
             }
-            else
-                $.bootstrapMessageAuto("Invalid parameters for addTrack", "error");
-        }
-        else {
-            $.bootstrapMessageAuto("Command not found", "error");
+            else {
+                $.bootstrapMessageAuto("Command not found", "error");
+            }
         }
     }
 
