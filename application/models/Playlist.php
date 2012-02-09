@@ -3,11 +3,13 @@
 class Playlist
 {
     protected $_playlistDb;
+    protected $_playlistHasTrackDb;
     protected $_session;
 
     public function __construct()
     {
         $this->_playlistDb = new DbTable_Playlist();
+        $this->_playlistHasTrackDb = new DbTable_PlaylistHasTrack();
         $this->_session = DZend_Session_Namespace::get('session');
     }
 
@@ -157,5 +159,52 @@ class Playlist
     public function search($q)
     {
         return $this->_playlistDb->search($q);
+    }
+
+    /**
+     * remove Remove a user's playlist with all the playlist_has_track records.
+     *
+     * @param mixed $name Playlis's name.
+     * @return bool Returns true if the playlist was successfully deleted,
+     * the error string otherwise.
+     */
+    public function remove($name)
+    {
+        try {
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                $this->_session->user->id, $name
+            );
+
+            if (null !== $playlistRow) {
+                // If it going to delete the current playlist, then it must
+                // first be removed from user->current_playlist_id
+                if ($this->_session->user->current_playlist_id === $playlistRow->id) {
+                    $this->_session->user->current_playlist_id = null;
+                    $this->_session->user->save();
+                }
+
+                $this->_playlistHasTrackDb->deleteByPlaylistId(
+                    $playlistRow->id
+                );
+                $playlistRow->delete();
+
+                // If the default playlist is deleted, then choose another one
+                // to be the current_playlist_id.
+                if (null === $this->_session->user->current_playlist_id) {
+                    $newPlaylistRow = $this->_playlistDb->findRowByUserId(
+                        $this->_session->user->id
+                    );
+                    $this->_session->user->current_playlist_id =
+                        $newPlaylistRow->id;
+                    $this->_session->user->save();
+                }
+                return true;
+            } else {
+                return "Playlist not found";
+            }
+
+        } catch(Zend_Exception $e) {
+            return $e->getMessage();
+        }
     }
 }

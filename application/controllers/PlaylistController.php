@@ -213,4 +213,22 @@ class PlaylistController extends DZend_Controller_Action
                 );
         }
     }
+
+    public function removeAction()
+    {
+        $message = array();
+
+        if ($this->_request->isPost() &&
+            ($name = $this->_request->getPost('name')) !== null) {
+            if (($msg = $this->_playlistModel->remove($name)) === true)
+                $message = array($this->view->t('Playlist removed'), 'success');
+            else
+                $message = array(
+                    $this->view->t('Could not remove') . ': ' . $msg, 'error'
+                );
+        } else
+            $message = array($this->view->t('Invalid request'), 'error');
+
+        $this->view->message = $message;
+    }
 }

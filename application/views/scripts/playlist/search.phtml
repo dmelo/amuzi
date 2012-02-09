@@ -4,6 +4,7 @@
         <td><img alt="Cover image" alt="<?= $row->name; ?>" src="<?= $row->getCover(); ?>"/></td>
         <td class="name"><?= $row->name; ?></td>
         <td><?= $row->countTracks(); ?></td>
+        <td><img src="/img/remove.png" alt="Remove playlist" class="remove"/></td>
     </tr>
     <? endforeach; ?>
 <? else: ?>

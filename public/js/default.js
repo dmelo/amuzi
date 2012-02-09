@@ -40,6 +40,7 @@
         }, 'json');
     }
 
+    // TODO: take away the playlistName
     function rmTrack(url, playlistName) {
         playlistName = playlistName || 'default';
         $.post('/playlist/rmtrack', {
@@ -52,6 +53,14 @@
         }, 'json');
     }
 
+    /**
+     * Load the user's specific playlist or the default if an empty string is
+     * especified.
+     *
+     * @param name Playlist's name, or an empty string to get the default
+     * playlist.
+     * @return void
+     */
     function loadPlaylist(name) {
         name = name || '';
         myPlaylist.removeAll();
@@ -71,6 +80,14 @@
             if(isRunCommand)
                 setTimeout('runCommands()', 1500);
         });
+    }
+
+    function rmPlaylist(name) {
+        $.post('/playlist/remove', {
+            name: name
+        }, function(data) {
+            $.bootstrapMessageAuto(data[0], data[1]);
+        }, 'json');
     }
 
     function initAmuzi() {
@@ -355,6 +372,17 @@
         $('#playlistsettings-result tbody tr').live('click', function(e) {
             loadPlaylist($(this).find('.name').html());
             $('#load-modal-wrapper').modal('hide');
+        });
+
+        $('#playlistsettings-result tbody tr .remove').live('click', function(e) {
+            e.stopPropagation();
+            if(confirm('Are you sure?')) {
+                var name = $(this).parent().parent().find('.name').html();
+                rmPlaylist(name);
+                if(name == myPlaylist.name)
+                    loadPlaylist('');
+                $('#load-modal-wrapper').modal('hide');
+            }
         });
     });
 //})(jQuery);
