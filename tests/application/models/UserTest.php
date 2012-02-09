@@ -19,9 +19,10 @@ class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
             $this->getConnection()
         );
         $ds->addTable('user', 'SELECT * FROM user');
-        $this->assertDataSetsEqual($this->createFlatXmlDataSet(
-            dirname(__FILE__) . '/userInsertAssertion.xml'
-        ), $ds
+        $this->assertDataSetsEqual(
+            $this->createFlatXmlDataSet(
+                dirname(__FILE__) . '/userInsertAssertion.xml'
+            ), $ds
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_UserRow extends Zend_Db_Table_Row_Abstract
+class DbTable_UserRow extends DZend_Model_DbTableRow
 {
     public function save()
     {

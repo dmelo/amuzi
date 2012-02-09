@@ -67,13 +67,13 @@ class Playlist
         $user = $this->_session->user;
         if ('' === $name)
             $playlistRow = $this->_playlistDb->findRowById(
-                $user->current_playlist_id
+                $user->currentPlaylistId
             );
         else
             $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
                 $user->id, $name
             );
-        $user->current_playlist_id = $playlistRow->id;
+        $user->currentPlaylistId = $playlistRow->id;
         $user->save();
         $trackList = $playlistRow->getTrackList();
         $ret = array();
@@ -87,7 +87,7 @@ class Playlist
             $playlistRow->name,
             $playlistRow->repeat,
             $playlistRow->shuffle,
-            $playlistRow->current_track
+            $playlistRow->currentTrack
         );
 
         return $ret;
@@ -152,7 +152,7 @@ class Playlist
         $row = $this->_playlistDb->findRowByUserIdAndName(
             $this->_session->user->id, $name
         );
-        $row->current_track = $current;
+        $row->currentTrack = $current;
         $row->save();
     }
 
@@ -178,8 +178,9 @@ class Playlist
             if (null !== $playlistRow) {
                 // If it going to delete the current playlist, then it must
                 // first be removed from user->current_playlist_id
-                if ($this->_session->user->current_playlist_id === $playlistRow->id) {
-                    $this->_session->user->current_playlist_id = null;
+                if ($this->_session->user->currentPlaylistId ===
+                        $playlistRow->id) {
+                    $this->_session->user->currentPlaylistId = null;
                     $this->_session->user->save();
                 }
 

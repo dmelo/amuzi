@@ -1,3 +1,3 @@
 #!/bin/bash
 
-phpcs --standard=Zend `find application/ library/DZend/ library/LightningPackerHelper/ | grep "\.php"` | less
+phpcs --standard=Zend `find application/ locale/ tests/ library/DZend/ library/LightningPackerHelper/ | grep "\.php"` | less

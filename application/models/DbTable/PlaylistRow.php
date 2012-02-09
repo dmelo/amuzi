@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_PlaylistRow extends Zend_Db_Table_Row
+class DbTable_PlaylistRow extends DZend_Model_DbTableRow
 {
     protected $_playlistDb;
     protected $_playlistHasTrackDb;
@@ -61,7 +61,7 @@ class DbTable_PlaylistRow extends Zend_Db_Table_Row
         $list = $this->_playlistHasTrackDb->findByPlaylistId($this->id);
         $ret = array();
         foreach ($list as $item) {
-            $ret[] = $trackDb->findRowById($item->track_id);
+            $ret[] = $trackDb->findRowById($item->trackId);
         }
 
         return $ret;

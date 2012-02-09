@@ -18,8 +18,8 @@ class DbTable_PlaylistHasTrack extends DZend_Model_DbTable
                 $data['playlist_id'],
                 $data['sort']
             );
-        } elseif ($row->track_id != $data['track_id']) {
-            $row->track_id = $data['track_id'];
+        } elseif ($row->trackId != $data['track_id']) {
+            $row->trackId = $data['track_id'];
             $row->save();
         }
 

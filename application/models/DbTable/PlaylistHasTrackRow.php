@@ -1,5 +1,5 @@
 <?php
 
-class DbTable_PlaylistHasTrackRow extends Zend_Db_Table_Row
+class DbTable_PlaylistHasTrackRow extends DZend_Model_DbTableRow
 {
 }

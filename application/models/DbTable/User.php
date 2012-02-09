@@ -20,7 +20,7 @@ class DbTable_User extends DZend_Model_DbTable
             $ret = $this->findRowById($id);
             $playlistDb = new DbTable_Playlist();
             $playlistRow = $playlistDb->create($ret->id, 'default');
-            $ret->current_playlist_id = $playlistRow->id;
+            $ret->currentPlaylistId = $playlistRow->id;
             $ret->save();
         } catch(Zend_Db_Statement_Exception $e) {
             // In case the user is already registered, just update his info.

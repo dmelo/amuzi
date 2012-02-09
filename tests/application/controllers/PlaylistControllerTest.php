@@ -105,8 +105,8 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setMethod('POST');
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 3);
-        $this->assertQueryCount('tr td img', 3);
-        $this->assertQueryCount('tr td', 9);
+        $this->assertQueryCount('tr td img', 6);
+        $this->assertQueryCount('tr td', 12);
     }
 
     public function testSearchAction2()
@@ -117,8 +117,8 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setPost(array('q' => 'newOne'));
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 1);
-        $this->assertQueryCount('tr td img', 1);
-        $this->assertQueryCount('tr td', 3);
+        $this->assertQueryCount('tr td img', 2);
+        $this->assertQueryCount('tr td', 4);
     }
 
     public function testSearchAction3()

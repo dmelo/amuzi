@@ -24,7 +24,8 @@ return array(
     // Forms
     'Name' => 'Name',
     'Email' => 'Email',
-    'Playlist\'s default privacy policy' => 'Playlist\'s default privacy policy',
+    'Playlist\'s default privacy policy' =>
+        'Playlist\'s default privacy policy',
     'Private' => 'Private',
     'Public' => 'Public',
     'Save' => 'Save',
