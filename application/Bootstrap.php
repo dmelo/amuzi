@@ -48,8 +48,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         $css = array();
         $jpSite = 'http://jplayer.org/';
-        $css[] = $jpSite . 'js/prettify/prettify-jPlayer.css';
-        $css[] = $jpSite . 'latest/skin/pink.flag/jplayer.pink.flag.css';
+        $css[] = $domainCss . 'prettify-jPlayer.css';
+        $css[] = $domainCss . 'jplayer.pink.flag.css';
         $css[] = $domainCss . 'player.css';
         $css[] = $domainCss . 'gallery.css';
         $css[] = $domainCss . 'miniplayer.css';
