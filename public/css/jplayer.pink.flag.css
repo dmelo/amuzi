@@ -593,11 +593,11 @@ a.jp-video-play-icon {
 	left:50%;
 	top:50%;
 
-	background: url("jplayer.pink.flag.video.play.png") 0 0 no-repeat;
+	background: url("/img/jplayer-theme/jplayer.pink.flag.video.play.png") 0 0 no-repeat;
 	text-indent:-9999px;
 }
 div.jp-video-play:hover a.jp-video-play-icon {
-	background: url("jplayer.pink.flag.video.play.png") 0 -100px no-repeat;
+	background: url("/img/jplayer-theme/jplayer.pink.flag.video.play.png") 0 -100px no-repeat;
 }
 
 
