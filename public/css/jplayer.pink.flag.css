@@ -496,6 +496,14 @@ div.jp-video .jp-volume-bar {
 	padding:0;
 	text-align:center;
 }
+
+.jp-title {
+    display: block !important;
+}
+
+.jp-toggles .jp-full-screen, .jp-tooggles .jp-restore-screen {
+    display: none !important;
+}
 
 /* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
 
