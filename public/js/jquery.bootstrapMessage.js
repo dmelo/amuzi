@@ -36,4 +36,13 @@
         $.bootstrapMessage(text, messageCode);
         setTimeout($.bootstrapMessageOff, 5000);
     }
+
+    $('.close-lightly').live('click', function(e) {
+        $(this).parent().fadeTo('slow', 0.0);
+    });
+
+    $('.close').live('click', function(e) {
+        e.preventDefault();
+    });
+
 })(jQuery);

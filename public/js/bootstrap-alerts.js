@@ -71,9 +71,13 @@
         $element.remove()
       }
 
-      $.support.transition && $element.hasClass('fade') ?
-        $element.bind(transitionEnd, removeElement) :
-        removeElement()
+      if($element.hasClass('visibility'))
+        $element.fadeTo('fast', 0.0);
+      else if($.support.transition && $element.hasClass('fade'))
+        $element.bind(transitionEnd, removeElement);
+      else
+        removeElement();
+
     }
 
   }
