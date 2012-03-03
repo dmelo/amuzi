@@ -56,13 +56,13 @@
 
 </script>
 
-<div class="topbar">
-    <div class="topbar-inner">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="#">Amuzi</a>
-            <ul class="nav">
+            <ul class="nav">;
                 <li class="dropdown">
-                    <a href="#" class="loginRequired dropdown-toggle" title="Playlist Manager"><?= $this->t('Playlist'); ?></a>
+                    <a href="#" class="loginRequired dropdown-toggle" data-toggle="dropdown" title="Playlist Manager"><?= $this->t('Playlist'); ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="/playlist/new" class="loadModal loginRequired noForm" name="newPlaylist" title="<?= $this->t('New Playlist'); ?>"><?= $this->t('New'); ?></a></li>
                         <li><a href="/playlist" class="loadModal loginRequired noForm" name="playlist" title="<?= $this->t('Search Playlist'); ?>"><?= $this->t('Search'); ?></a></li>

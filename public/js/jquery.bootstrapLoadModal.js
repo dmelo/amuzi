@@ -18,11 +18,12 @@
         bootstrapLoadModal: function() {
             var modalWrapper = '#load-modal-wrapper';
 
-            $('body').append('<div id="load-modal-wrapper" class="modal hide fade"><div class="modal-header"><a href="#" class="close">&times;</a><h3></h3></div><div class="modal-body"></div></div>');
+            $('body').append('<div id="load-modal-wrapper" class="modal hide fade"><div class="modal-header"><a href="#" class="close" data-dismiss="modal">&times;</a><h3></h3></div><div class="modal-body"></div></div>');
 
             $(modalWrapper).modal({
                 backdrop: true,
-                keyboard: true,});
+                keyboard: true,
+                show: false});
 
             $('#cancel').live('click', function(e) {
                 $(modalWrapper).modal('hide');
