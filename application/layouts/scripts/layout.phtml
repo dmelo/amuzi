@@ -69,7 +69,7 @@
                     </ul>
                 </li>
                 <li><a href="/user" class="loadModal loginRequired" title="User Settings"><?= $this->t('Settings'); ?></a></li>
-                <li><a href="/index/about" class="loadModal" title="About Amuzi"><?= $this->t('About'); ?></a></li>
+                <li style="margin-top: -18px"><a href="/index/about" class="loadModal" title="About Amuzi"><?= $this->t('About'); ?></a></li> <!-- the style here is a dirty fix... TODO: find the real solution -->
             </ul>
             <div class="pull-right">
                 <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">

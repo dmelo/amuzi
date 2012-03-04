@@ -144,3 +144,7 @@ dd#submit-element {
     max-height: 600px;
     overflow: auto;
 }
+
+#playlistsettings-result {
+    width: 100%;
+}
