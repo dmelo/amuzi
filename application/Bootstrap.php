@@ -55,6 +55,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $css[] = $domainCss . 'miniplayer.css';
         $css[] = $domainCss . 'resultset.css';
         $css[] = $domainCss . 'bootstrap.css';
+        $css[] = $domainCss . 'github-badge.css';
         $css[] = $domainCss . 'default.css';
 
         $this->bootstrap('layout');
