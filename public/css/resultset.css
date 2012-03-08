@@ -1,7 +1,3 @@
-#result {
-    overflow: auto;
-}
-
 .music-large {
     float: left;
     width: 250px;
@@ -70,4 +66,9 @@
 
 .music-large .play .download {
     padding-right: 2px;
+}
+
+#more-results {
+    width: 812px;
+    opacity: 0.0;
 }

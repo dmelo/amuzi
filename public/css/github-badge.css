@@ -2,7 +2,7 @@
     background-color: #a00;
     overflow: hidden;
     /* top left corner */
-    position: absolute;
+    position: fixed;
     left: -3em;
     bottom: 4.4em;
     /* 45 deg ccw rotation */

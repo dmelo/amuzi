@@ -2,73 +2,128 @@
  * Set of functions to manage the list of results.
  */
 
-    /**
-     * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
-     *
-     * @param num Number to be transformed.
-     * @return Returns the two digit leading 0 number.
-     */
-    function twoDigit(num) {
-        var str = '';
-        if(num < 10) {
-            str += '0';
-        }
+var resultSet = new ResultSet();
 
-        return str + num;
+
+function ResultSet() {
+    this.searchString = "";
+    this.searchPage = 1;
+}
+
+
+/**
+ * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
+ *
+ * @param num Number to be transformed.
+ * @return Returns the two digit leading 0 number.
+ */
+ResultSet.prototype.twoDigit = function(num) {
+    var str = '';
+    if(num < 10) {
+        str += '0';
     }
 
-    /**
-     * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
-     *
-     * @param time Time, in seconds.
-     * @return Returns a string represening time in HH:MM:SS or MM:SS format.
-     */
-    function secondsToHMS(time) {
-        var h = 0;
-        var m = 0;
-        var s = 0;
+    return str + num;
+}
 
-        h = Math.floor(time / 3600);
-        time -= 3600 * h;
-        m = Math.floor(time / 60);
-        time -= 60 * m;
-        s = time;
+/**
+ * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
+ *
+ * @param time Time, in seconds.
+ * @return Returns a string represening time in HH:MM:SS or MM:SS format.
+ */
+ResultSet.prototype.secondsToHMS = function(time) {
+    var h = 0;
+    var m = 0;
+    var s = 0;
 
-        var str = '';
+    h = Math.floor(time / 3600);
+    time -= 3600 * h;
+    m = Math.floor(time / 60);
+    time -= 60 * m;
+    s = time;
 
-        if(h > 0) {
-            str = twoDigit(h);
-        }
+    var str = '';
 
-        str += twoDigit(m) + ':';
-        str += twoDigit(s);
-
-        return str;
+    if(h > 0) {
+        str = this.twoDigit(h);
     }
 
+    str += this.twoDigit(m) + ':';
+    str += this.twoDigit(s);
 
-    function cleanTable() {
-        $('#result').html(' ');
-    }
+    return str;
+}
 
-    function getMusicLarge(img, title, url, duration) {
-        duration = secondsToHMS(duration);
-        var aDownload = '<a target="_blank" href="' + url + '"title="download ' + title + '" class="download"><img src="/img/download_icon.png"/></a>';
-        var aPlay = '<a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
-        return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aDownload + aPlay + '</div>';
-    }
+/**
+ * Cleans the table of results and let it ready to a search.
+ */
+ResultSet.prototype.cleanTable = function() {
+    $('#result .music-large').remove();
+    $('#more-results').css('opacity', '0.0');
+}
 
-    function appendTable(img, title, url, duration) {
-        $('#result').append(getMusicLarge(img, title, url, duration));
-    }
+ResultSet.prototype.getMusicLarge = function(img, title, url, duration) {
+    duration = this.secondsToHMS(duration);
+    var aDownload = '<a target="_blank" href="' + url + '"title="download ' + title + '" class="download"><img src="/img/download_icon.png"/></a>';
+    var aPlay = '<a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+    return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aDownload + aPlay + '</div>';
+}
 
+ResultSet.prototype.appendTable = function(img, title, url, duration) {
+    $('#result').append(this.getMusicLarge(img, title, url, duration));
+    $('#more-results').css('opacity', '1.0');
+}
 
-    $(document).ready(function() {
-        $('.music-large').live({mouseenter: function() {
-            $(this).find('a').css('color', 'white');
-            $(this).find('.play').css('display', 'block');
-        },mouseleave: function() {
-            $(this).find('a').css('color', 'black');
-            $(this).find('.play').css('display', 'none');
-        }});
+ResultSet.prototype.searchMore = function() {
+    $.bootstrapMessage('Loading...', 'info');
+    this.searchPage++;
+    alert(1 + (9 * (this.searchPage - 1)));
+    $.get('/api/search',{
+        q: this.searchString,
+        limit: 9,
+        offset: 1 + (9 * (this.searchPage - 1))
+    }, function (data) {
+        $.bootstrapMessageOff();
+        $.each(data, function(i, v) {
+            resultSet.appendTable(v.pic, v.title, v.you2better, v.duration);
+        });
+    }, 'json').error(function(data) {
+        $.bootstrapMessageAuto('An error occured', 'error');
     });
+}
+
+
+
+$(document).ready(function() {
+    $('.music-large').live({mouseenter: function() {
+        $(this).find('a').css('color', 'white');
+        $(this).find('.play').css('display', 'block');
+    },mouseleave: function() {
+        $(this).find('a').css('color', 'black');
+        $(this).find('.play').css('display', 'none');
+    }});
+
+    // query youtube for videos and fill the result table.
+    $('#search').ajaxForm({
+        dataType: 'json',
+        success: function (data) {
+            $.bootstrapMessageOff();
+            resultSet.cleanTable();
+            $.each(data, function(i, v) {
+                resultSet.appendTable(v.pic, v.title, v.you2better, v.duration);
+            });
+        },
+        beforeSubmit: function() {
+            resultSet.searchString = $('#q').val();
+            resultSet.searchPage = 1;
+            $.bootstrapMessage('Loading...', 'info');
+        }
+    });
+
+    $('#more-results').click(function(e) {
+        resultSet.searchMore();
+    });
+
+
+});

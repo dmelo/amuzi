@@ -21,17 +21,20 @@ class ApiController extends DZend_Controller_Action
      */
     public function searchAction()
     {
-        $q = $this->getRequest()->getParam('q');
+        $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
+            $limit = $this->_request->getParam('limit') ? $this->_request->getParam('limit') : 9;
+            $offset = $this->_request->getParam('offset') ? $this->_request->getParam('offset') : 1;
             $cache = Zend_Registry::get('cache');
-            if (($list = $cache->load(sha1($q))) === false) {
+            $key = sha1($q . $limit . $offset);
+            if (($list = $cache->load($key)) === false) {
                 $youtube = new Youtube();
-                $resultSet = $youtube->search($q);
+                $resultSet = $youtube->search($q, $limit, $offset);
                 $item = array();
                 foreach ($resultSet as $result)
                     $list[] = $result->getArray();
-                $cache->save($list, sha1($q));
+                $cache->save($list, $key);
             }
 
             $this->view->output = $list;

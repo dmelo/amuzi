@@ -13,6 +13,9 @@ class Youtube
                 );
 
         $xml = file_get_contents($this->_baseUrl . implode('&', $args));
+        $fd = fopen("/tmp/a.txt", "w");
+        fwrite($fd, $this->_baseUrl . implode('&', $args));
+        fclose($fd);
         $xml = str_replace(
             array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
         );

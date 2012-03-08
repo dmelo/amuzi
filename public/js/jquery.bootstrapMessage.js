@@ -9,27 +9,27 @@
  */
 
 
-    var MESSAGE_WARNING = 'warining';
-    var MESSAGE_ERROR = 'error';
-    var MESSAGE_SUCCESS = 'success';
-    var MESSAGE_INFO = 'info';
+    var MESSAGE_WARNING = 'alert-warining';
+    var MESSAGE_ERROR = 'alert-error';
+    var MESSAGE_SUCCESS = 'alert-success';
+    var MESSAGE_INFO = 'alert-info';
 
 
 (function($) {
     $.bootstrapMessage = function(text, messageCode) {
         messageCode = typeof(messageCode) == 'undefined' ? MESSAGE_INFO : messageCode;
-        $('div.alert-message').removeClass(MESSAGE_WARNING)
+        $('div.alert').removeClass(MESSAGE_WARNING)
             .removeClass(MESSAGE_ERROR)
             .removeClass(MESSAGE_SUCCESS)
             .removeClass(MESSAGE_INFO);
-        $('div.alert-message').addClass(messageCode);
+        $('div.alert').addClass('alert-' + messageCode);
 
-        $('div.alert-message p').html(text);
-        $('div.alert-message').fadeTo('fast', 1.0);
+        $('div.alert p').html(text);
+        $('div.alert').fadeTo('fast', 1.0);
     }
 
     $.bootstrapMessageOff = function() {
-        $('div.alert-message').fadeTo('slow', 0.0);
+        $('div.alert').fadeTo('slow', 0.0);
     }
 
     $.bootstrapMessageAuto = function(text, messageCode) {

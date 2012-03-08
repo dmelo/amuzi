@@ -272,25 +272,9 @@
     }
 
 
-
     $(document).ready(function() {
         // topbar menu
         $('.topbar').dropdown();
-        // query youtube for videos and fill the result table.
-        $('#search').ajaxForm({
-            dataType: 'json',
-            success: function (data) {
-                $.bootstrapMessageOff();
-                cleanTable();
-                $.each(data, function(i, v) {
-                    appendTable(v.pic, v.title, v.you2better, v.duration);
-                });
-            },
-            beforeSubmit: function() {
-                $.bootstrapMessage('Loading...');
-            }
-        });
-
         // add track into the playlist.
         $('.addplaylist').live('click', function(e) {
             e.preventDefault();
