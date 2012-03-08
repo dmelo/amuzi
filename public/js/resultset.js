@@ -78,7 +78,6 @@ ResultSet.prototype.appendTable = function(img, title, url, duration) {
 ResultSet.prototype.searchMore = function() {
     $.bootstrapMessage('Loading...', 'info');
     this.searchPage++;
-    alert(1 + (9 * (this.searchPage - 1)));
     $.get('/api/search',{
         q: this.searchString,
         limit: 9,
