@@ -25,16 +25,24 @@ AMUZI goals are:
 
 <p>Not all the features described on this document are implemented. This document aims to keep clear AMUZI's goals and peculiarities. The following sections explains how the main features works.</p>
 
-<h2>Commands</h2>
-
-<p>In order to enable music and playlist sharing, without breaking the second goal, it is a good decision to use the fragment part of the url to keep carry that information.</p>
-
-<p>
-
 
 <h2>Music Objects</h2>
 
+
 <h3>Music</h3>
 The music itself is the simplest object....
+
+<h2>Commands</h2>
+
+<p>In order to enable music objects to be shared it is a good decision to use the fragment part of the url to keep carry that information.</p>
+
+<p>As the commands will be embedded on links outside AMUZI, it must be done so that AMUZI will recognize the wish to add an object.</p>
+
+<p>Clicking on the share links have different effects depending if the user is or not new to AMUZI. For new users it will just show the shared object and allow him to play it. For returning users it will automatically add the object on the user's collection.</p>
+
+<p>To have a better control over the command structure, it will be used IDs instead of the music objects names. This will keep the URLs short.
+
+
+<h2>Automatically Associates Music with a Youtube Video</h2>
 
 <h2>API</h2>
