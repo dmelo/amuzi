@@ -4,9 +4,6 @@
 [submodule "library/LightningPackerHelper"]
 	path = library/LightningPackerHelper
 	url = git@github.com:dmelo/LightningPackerHelper.git
-[submodule "library/Zend"]
-	path = library/Zend
-	url = git@github.com:dmelo/Zend-1.11.git
 [submodule "library/DZend"]
 	path = library/DZend
 	url = git@github.com:dmelo/DZend.git
