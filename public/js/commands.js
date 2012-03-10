@@ -12,17 +12,13 @@ function Commands() {
 }
 
 Commands.prototype.runCommand = function(command) {
-    if('s' === command[0]) {
+    if('t' === command[0]) {
         id = command.substr(1);
         $.get('/api/gettrack', {
             id: id
         }, function(data) {
-            /*
-            myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
-            addTrack(commandParams[0], commandParams[1], commandParams[2]);
-            */
             myPlaylist.add({title: data.title, mp3: data.url, free:true}, true);
-            addTrackById(data.id);
+            addTrack(data.id);
 
         }, 'json');
 
@@ -37,8 +33,10 @@ Commands.prototype.runProgram = function() {
     this.isRunCommand = false;
     url = $.url(window.location.href);
     program = url.attr('fragment');
+    index = program.indexOf("!");
+    program = program.substr(index + 1);
 
-    if('string' == typeof(program)) {
+    if('string' === typeof(program)) {
         this.runCommand(program);
     }
 }
