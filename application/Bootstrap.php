@@ -38,6 +38,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.form.js';
         $js[] = $domainJs . 'jquery.autocomplete.js';
         $js[] = $domainJs . 'resultset.js';
+        $js[] = $domainJs . 'commands.js';
         $js[] = $domainJs . 'bootstrap-dropdown.js';
         $js[] = $domainJs . 'bootstrap-alert.js';
         $js[] = $domainJs . 'jquery.bootstrapMessage.js';
