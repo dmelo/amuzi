@@ -13,10 +13,18 @@ function Commands() {
 
 Commands.prototype.runCommand = function(command) {
     if('s' === command[0]) {
-        /*
-        myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
-        addTrack(commandParams[0], commandParams[1], commandParams[2]);
-        */
+        id = command.substr(1);
+        $.get('/api/gettrack', {
+            id: id
+        }, function(data) {
+            /*
+            myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
+            addTrack(commandParams[0], commandParams[1], commandParams[2]);
+            */
+            myPlaylist.add({title: data.title, mp3: data.url, free:true}, true);
+            addTrackById(data.id);
+
+        }, 'json');
 
     }
     else if ('p' === command[0]) {

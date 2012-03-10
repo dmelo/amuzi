@@ -64,9 +64,9 @@ class PlaylistController extends DZend_Controller_Action
     }
 
     /**
-     * addtrackAction Receives a post request informing the title, mp3 and
-     * cover of the track to be added into the playlist, the playlist's name is
-     * also passed by post parameter.
+     * addtrackAction Receives a post request informing ( title, mp3 and
+     * cover ) or ( id ) of the track to be added into the playlist, the
+     * playlist's name is also passed by post parameter.
      *
      * @return void
      */
@@ -75,9 +75,12 @@ class PlaylistController extends DZend_Controller_Action
         $message = null;
 
         if ($this->_request->isPost()) {
-            $trackInfo = array('title' => $this->_request->getPost('title'),
-                'mp3' => $this->_request->getPost('mp3'),
-                'cover' => $this->_request->getPost('cover'));
+            if($this->_request->getPost('id') !== null)
+                $trackInfo = array('id' => $this->_request->getPost('id'));
+            else
+                $trackInfo = array('title' => $this->_request->getPost('title'),
+                    'mp3' => $this->_request->getPost('mp3'),
+                    'cover' => $this->_request->getPost('cover'));
             try {
                 $this->_playlistModel->addTrack(
                     $trackInfo,

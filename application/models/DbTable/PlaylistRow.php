@@ -27,10 +27,22 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
         $this->_playlistHasTrackDb->insert($data);
     }
 
+    /**
+     * addTrack Add a track to this playlist.
+     *
+     * @param array $trackInfo is a array that have either the keys title, mp3
+     * and cover or the key id. The latter is valid just in case the track
+     * already exists
+     * @return void
+     */
     public function addTrack($trackInfo)
     {
         $maxSort = $this->_playlistHasTrackDb->getMaxSort($this->id);
-        $trackRow = $this->_trackDb->insert($trackInfo);
+        if (array_key_exists('id', $trackInfo))
+            $trackRow = $this->_trackDb->findRowById($trackInfo['id']);
+        else
+            $trackRow = $this->_trackDb->insert($trackInfo);
+
         $data = array(
             'playlist_id' => $this->id,
             'track_id' => $trackRow->id,

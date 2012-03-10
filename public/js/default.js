@@ -27,12 +27,21 @@
     }
 
     function addTrack(trackTitle, trackLink, trackCover) {
-        $.post('/playlist/addtrack', {
-            playlist: myPlaylist.name,
-            title: trackTitle,
-            mp3: trackLink,
-            cover: trackCover
-        }, function(data) {
+        var options;
+        if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover))
+            options = {
+                playlist: myPlaylist.name,
+                id: trackTitle
+            };
+        else
+            options = {
+                playlist: myPlaylist.name,
+                title: trackTitle,
+                mp3: trackLink,
+                cover: trackCover
+            };
+
+        $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1] ? 'success': 'error');
             if(false == data[1])
                 loadPlaylist(playlistName);
