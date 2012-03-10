@@ -133,10 +133,12 @@
     }
 
     function applyOverPlaylist() {
-        if(!jPlaylistTop)
-            jPlaylistTop = $('.jp-playlist').first().offset().top;
-        maxHeight = $(window).height() - jPlaylistTop - 2;
-        $('.jp-playlist').css('max-height', maxHeight);
+        if($('#jp_container_1').length > 0) {
+            if(!jPlaylistTop)
+                jPlaylistTop = $('.jp-playlist').first().offset().top;
+            maxHeight = $(window).height() - jPlaylistTop - 29;
+            $('.jp-playlist').css('max-height', maxHeight);
+        }
     }
 
     // Repeat
@@ -334,5 +336,7 @@
                 $('#load-modal-wrapper').modal('hide');
             }
         });
+
+        $('#toc').tableOfContents(null, {startLevel:2});
     });
 //})(jQuery);

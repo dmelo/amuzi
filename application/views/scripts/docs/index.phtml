@@ -1,5 +1,7 @@
 <h1>AMUZI Documentation</h1>
 
+<ul id="toc"></ul>
+
 <h2>Introduction</h2>
 
 AMUZI goals are:
@@ -40,7 +42,15 @@ The music itself is the simplest object....
 
 <p>Clicking on the share links have different effects depending if the user is or not new to AMUZI. For new users it will just show the shared object and allow him to play it. For returning users it will automatically add the object on the user's collection.</p>
 
-<p>To have a better control over the command structure, it will be used IDs instead of the music objects names. This will keep the URLs short.
+<p>To have a better control over the command structure, it will be used IDs instead of the music objects names. This will keep the URLs short. The indicate the beginning of the commands, the char "!" will be used. Each music object type will be represented by a different letter:</p>
+
+<ul>
+<li>m - Music;</li>
+<li>p - Playlist.</li>
+</ul>
+
+<p>The ID of each object is an integer. So, the string "p217" would represent the playlist that have ID equals 217. The user who click on a link like http://amuzi.net/#!p217 will only be able to view it's content if the playlist 217 is set to public.</p>
+
 
 
 <h2>Automatically Associates Music with a Youtube Video</h2>
