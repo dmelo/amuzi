@@ -12,7 +12,18 @@
 class ApiController extends DZend_Controller_Action
 {
     protected $_error = array(
-            'error' => 'Parameter "q" must be specified');
+            'error' => 'Parameter "q" must be specified'
+            );
+
+    protected $_trackModel;
+    protected $_playlistModel;
+
+    public function init()
+    {
+        parent::init();
+        $this->_trackModel = new Track();
+        $this->_playlistModel = new Playlist();
+    }
     /**
      * searchAction API search call.
      *
@@ -45,7 +56,7 @@ class ApiController extends DZend_Controller_Action
 
     public function autocompleteAction()
     {
-        $q = $this->getRequest()->getParam('q');
+        $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
             $lastfm = new Lastfm();
@@ -56,6 +67,36 @@ class ApiController extends DZend_Controller_Action
         }
         else
             $this->view->output = $this->_error;
+    }
+
+    /**
+     * Given the track id, return information about a specific song.
+     *
+     * @return void
+     */
+    public function gettrackAction()
+    {
+        if (($id = $this->_request->getParam('id')) !== null) {
+            $track = $this->_trackModel->findRowById($id);
+            if (null !== $track)
+                $this->view->output = $track->toArray();
+            else
+                $this->view->output = null;
+        }
+    }
+
+    /**
+     * Given the playlist id, return information about a specific playlist.
+     *
+     * @return void
+     */
+    public function getplaylistAction()
+    {
+        if (($id = $this->_request->getParam('id')) !== null) {
+            $playlist = $this->_playlistModel->findRowById($id);
+            // Only return the playlist if it's owned but the user or it is
+            // public.
+        }
     }
 
     /**

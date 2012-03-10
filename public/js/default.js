@@ -9,7 +9,6 @@
     var repeat;
     var current;
     var modalWrapper = "#load-modal-wrapper";
-    var isRunCommand = false;
 
     function callbackLogin(userId) {
         loadPlaylist();
@@ -28,12 +27,21 @@
     }
 
     function addTrack(trackTitle, trackLink, trackCover) {
-        $.post('/playlist/addtrack', {
-            playlist: myPlaylist.name,
-            title: trackTitle,
-            mp3: trackLink,
-            cover: trackCover
-        }, function(data) {
+        var options;
+        if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover))
+            options = {
+                playlist: myPlaylist.name,
+                id: trackTitle
+            };
+        else
+            options = {
+                playlist: myPlaylist.name,
+                title: trackTitle,
+                mp3: trackLink,
+                cover: trackCover
+            };
+
+        $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1] ? 'success': 'error');
             if(false == data[1])
                 loadPlaylist(playlistName);
@@ -77,8 +85,8 @@
                 setTimeout(callbackShuffle, 1500);
             }
         }, 'json').complete(function() {
-            if(isRunCommand)
-                setTimeout('runCommands()', 1500);
+            if(commands.isRunCommand)
+                setTimeout("commands.runProgram()", 1500);
         });
     }
 
@@ -91,7 +99,7 @@
     }
 
     function initAmuzi() {
-        isRunCommand = true;
+        commands.isRunCommand = true;
         loadPlaylist();
     }
 
@@ -134,10 +142,12 @@
     }
 
     function applyOverPlaylist() {
-        if(!jPlaylistTop)
-            jPlaylistTop = $('.jp-playlist').first().offset().top;
-        maxHeight = $(window).height() - jPlaylistTop - 2;
-        $('.jp-playlist').css('max-height', maxHeight);
+        if($('#jp_container_1').length > 0) {
+            if(!jPlaylistTop)
+                jPlaylistTop = $('.jp-playlist').first().offset().top;
+            maxHeight = $(window).height() - jPlaylistTop - 29;
+            $('.jp-playlist').css('max-height', maxHeight);
+        }
     }
 
     // Repeat
@@ -237,39 +247,6 @@
         });
     }
 
-    // Interpret and run commands
-    // The separator for the commands is "&&::&&"
-    function runCommands() {
-        isRunCommand = false;
-        url = $.url(window.location.href);
-        commands = url.attr('fragment');
-
-        if('string' == typeof(commands)) {
-            commandArray = commands.split("&&::&&");
-            for(var i = 0; i < commandArray.length; i++)
-                runCommand(commandArray[i]);
-        }
-    }
-
-    function runCommand(command) {
-        if(2 == command.split("$$::$$").length) {
-            var commandName = command.split("$$::$$")[0];
-            var commandParams = command.split("$$::$$")[1].split(":::");
-
-            // addTrack$$::$$title:::mp3:::pic
-            if("addTrack" == commandName) {
-                if(3 == commandParams.length) {
-                    myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
-                    addTrack(commandParams[0], commandParams[1], commandParams[2]);
-                }
-                else
-                    $.bootstrapMessageAuto("Invalid parameters for addTrack", "error");
-            }
-            else {
-                $.bootstrapMessageAuto("Command not found", "error");
-            }
-        }
-    }
 
 
     $(document).ready(function() {
@@ -368,5 +345,7 @@
                 $('#load-modal-wrapper').modal('hide');
             }
         });
+
+        $('#toc').tableOfContents(null, {startLevel:2});
     });
 //})(jQuery);

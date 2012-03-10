@@ -19,7 +19,8 @@ class IndexControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertQuery('div#jp_container_1');
         $this->assertQuery('div#result');
         $this->assertQuery('div#result');
-        $this->assertQuery('div.topbar');
+        $this->assertQuery('div.navbar');
+        $this->assertQuery('div.ribbon');
     }
 
     public function testAboutAction()

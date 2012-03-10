@@ -5,7 +5,7 @@ return array(
     'Playlist' => 'Playlist',
     'About' => 'Sobre',
 
-    'amazingly free' => 'Encrivelmente livre',
+    'amazingly free' => 'Incrivelmente livre',
 
     'Login with Facebook' => 'Login do Facebook',
     'Update Required' => 'Necessário fazer atualização',
