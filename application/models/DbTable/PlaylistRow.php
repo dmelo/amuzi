@@ -43,11 +43,15 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
         else
             $trackRow = $this->_trackDb->insert($trackInfo);
 
-        $data = array(
-            'playlist_id' => $this->id,
-            'track_id' => $trackRow->id,
-            'sort' => $maxSort + 1);
-        $this->_playlistHasTrackDb->insert($data);
+        if (null === $trackRow) {
+            throw new Zend_Db_Table_Row_Exception('Could not find the track: ' . print_r($trackInfo, true));
+        } else {
+            $data = array(
+                'playlist_id' => $this->id,
+                'track_id' => $trackRow->id,
+                'sort' => $maxSort + 1);
+            $this->_playlistHasTrackDb->insert($data);
+        }
     }
 
     public function rmTrack($url)

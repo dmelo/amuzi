@@ -4,6 +4,11 @@ require_once 'bootstrap.php';
 
 class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 {
+    public function __construct()
+    {
+        $this->_databaseUsage = true;
+    }
+
     public function assertValidSearch()
     {
         $this->assertAjaxWorks('/api/search');
@@ -99,5 +104,29 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertInternalType('array', $obj);
         $this->assertTrue(array_key_exists('error', $obj));
         $this->assertInternalType('string', $obj['error']);
+    }
+
+    public function testGettrackAction()
+    {
+        $this->request->setMethod('GET');
+        $this->setAjaxHeader();
+        $this->request->setParams(array('id' => 9));
+        $this->dispatch('/api/gettrack');
+        $this->assertResponseCode(200);
+        $obj = Zend_Json::decode($this->getResponse()->getBody());
+        $this->assertInternalType('array', $obj);
+        $this->assertTrue(array_key_exists('id', $obj));
+        $this->assertTrue(array_key_exists('title', $obj));
+        $this->assertTrue(array_key_exists('url', $obj));
+        $this->assertTrue(array_key_exists('cover', $obj));
+        $this->assertTrue(array_key_exists('duration', $obj));
+
+        // <track id="9"  title="Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction" url="Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction" cover="http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg" duration="0"/>
+
+        $this->assertEquals($obj['id'], 9);
+        $this->assertEquals($obj['title'], "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction");
+        $this->assertEquals($obj['url'], "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction");
+        $this->assertEquals($obj['cover'], "http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg");
+        $this->assertEquals($obj['duration'], 0);
     }
 }

@@ -154,6 +154,39 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         );
     }
 
+    /**
+     * testAddtrackAction3 Tests adding a track by track id.
+     *
+     * @return void
+     */
+    public function testAddtrackAction3()
+    {
+        User::loginDummy();
+        $this->request->setMethod('POST');
+        $this->request->setPost(array('id' => 9, 'playlist' => 3));
+
+        $this->assertAjaxWorks('/playlist/addtrack');
+        $this->assertJsonMessage(array('Track added', true));
+    }
+
+    /**
+     * testAddtrackAction4 Tests adding a track by givin an invalid track id.
+     *
+     * @return void
+     */
+    public function testAddtrackAction4()
+    {
+        User::loginDummy();
+        $this->request->setMethod('POST');
+        $this->request->setPost(array('id' => 9987, 'playlist' => 300));
+
+        $this->assertAjaxWorks('/playlist/addtrack');
+        $obj = Zend_Json::decode($this->response->getBody());
+        $this->assertEquals($obj[1], false);
+        $this->assertEquals(substr($obj[0], 0, 25), 'Problems adding the track');
+    }
+
+
     public function testRmtrackAction()
     {
         User::loginDummy();

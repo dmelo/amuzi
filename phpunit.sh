@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd tests
-phpunit
+phpunit --colors --debug --verbose
 cd -
