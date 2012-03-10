@@ -208,4 +208,15 @@ class Playlist
             return $e->getMessage();
         }
     }
+
+    /**
+     * findRowById Find a row, given it's ID.
+     *
+     * @param int $id Row ID
+     * @return Returns the asked row.
+     */
+    public function findRowById(int $id)
+    {
+        return $this->_playlistDb->findById($id);
+    }
 }

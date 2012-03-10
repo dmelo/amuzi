@@ -12,22 +12,14 @@ function Commands() {
 }
 
 Commands.prototype.runCommand = function(command) {
-    if(2 == command.split("$$::$$").length) {
-        var commandName = command.split("$$::$$")[0];
-        var commandParams = command.split("$$::$$")[1].split(":::");
+    if('s' === command[0]) {
+        /*
+        myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
+        addTrack(commandParams[0], commandParams[1], commandParams[2]);
+        */
 
-        // addTrack$$::$$title:::mp3:::pic
-        if("addTrack" == commandName) {
-            if(3 == commandParams.length) {
-                myPlaylist.add({title: commandParams[0], mp3: commandParams[1], free: true}, true);
-                addTrack(commandParams[0], commandParams[1], commandParams[2]);
-            }
-            else
-                $.bootstrapMessageAuto("Invalid parameters for addTrack", "error");
-        }
-        else {
-            $.bootstrapMessageAuto("Command not found", "error");
-        }
+    }
+    else if ('p' === command[0]) {
     }
 }
 
@@ -39,8 +31,6 @@ Commands.prototype.runProgram = function() {
     program = url.attr('fragment');
 
     if('string' == typeof(program)) {
-        commandArray = program.split("&&::&&");
-        for(var i = 0; i < commandArray.length; i++)
-            this.runCommand(commandArray[i]);
+        this.runCommand(program);
     }
 }
