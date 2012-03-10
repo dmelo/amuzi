@@ -47,6 +47,18 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertInternalType('string', $obj['error']);
     }
 
+    /**
+     * Tests the "more" button feature. This requests page 2.
+     */
+    public function testSearch4Action()
+    {
+        $this->request->setMethod('POST');
+        $this->request->setParams(
+            array('q' => 'Rolling Stones', 'offset' => 10, 'limit' => 9)
+        );
+        $this->assertValidSearch();
+    }
+
 
     public function assertValidAutocomplete()
     {

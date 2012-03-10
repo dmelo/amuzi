@@ -137,4 +137,9 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             $session->translate = $translate;
         }
     }
+
+    public function _initDateTime()
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+    }
 }
