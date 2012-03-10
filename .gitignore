@@ -2,3 +2,4 @@
 public/api/*
 docs/api
 tests/tmp
+public/tmp
