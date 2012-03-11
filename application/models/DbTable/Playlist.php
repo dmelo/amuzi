@@ -6,6 +6,18 @@ class DbTable_Playlist extends DZend_Model_DbTable
     protected $_primary = 'id';
     protected $_rowClass = 'DbTable_PlaylistRow';
 
+    public function insert(array $data)
+    {
+        // All checks
+        $firstLetter = substr($data['name'], 0, 1);
+        if($firstLetter < 'a' || $firstLetter > 'z')
+            throw new Zend_Db_Table_Exception(
+                "playlist.name must start with a letter"
+            );
+
+        parent::insert($data);
+    }
+
     public function findByName($name)
     {
         $user = $this->_session->user;

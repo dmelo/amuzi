@@ -71,8 +71,8 @@
     }
 
     /**
-     * Load the user's specific playlist or the default if an empty string is
-     * especified.
+     * Load the an specific playlist or the default if an empty string is
+     * especified. If a number is given, load the playlist by it's id.
      *
      * @param name Playlist's name, or an empty string to get the default
      * playlist.
@@ -81,9 +81,21 @@
     function loadPlaylist(name) {
         name = name || '';
         myPlaylist.removeAll();
-        $.post('/playlist/load', {
-            name: name
-        }, function(data) {
+        var options;
+
+        
+        if(typeof(name) == 'int' || (typeof(name) == 'string' && name[0] >= '0' && name[0] <= '9')) {
+            // It's an ID
+            if(typeof(name) == 'string')
+                name = parseInt(name);
+            options = { id: name };
+        }
+        else {
+            // It's a name
+            options = { name: name };
+        }
+
+        $.post('/playlist/load', options, function(data) {
             if(data != null) {
                 $.each(data[0], function(i, v) {
                     myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id});
