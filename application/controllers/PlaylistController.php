@@ -21,7 +21,7 @@ class PlaylistController extends DZend_Controller_Action
         $this->_loginRequired = true;
         $this->_messageFail = array(
             $this->view->t('Failed saving setting'),
-            false
+            'error'
         );
     }
 
@@ -89,20 +89,22 @@ class PlaylistController extends DZend_Controller_Action
                     $this->_request->getPost('playlist')
                 );
                 $message = array(
-                    $this->view->t('Track added'), true, $trackRow->toArray()
+                    $this->view->t('Track added'),
+                    'success',
+                    $trackRow->toArray()
                 );
             } catch(Zend_Exception $e) {
                 $message = array(
                     $this->view->t('Problems adding the track') . ': ' .
                         $e->getMessage(),
-                    false
+                    'error'
                 );
             }
         } else {
             $message = array(
                 $this->view->t('Problems adding track') . ': ' .
                 $this->view->t('Invalid request'),
-                false
+                'error'
             );
         }
 
@@ -123,7 +125,7 @@ class PlaylistController extends DZend_Controller_Action
                 $message = array(
                     $this->view->t('Problems removing the track: ') +
                         $e->getMessage(),
-                     false
+                    'error'
                  );
             }
 
@@ -196,7 +198,7 @@ class PlaylistController extends DZend_Controller_Action
             } catch(Zend_Exception $e) {
                 $message = array(
                     $this->view->t('Something went wrong: ') . $e->getMessage(),
-                    false
+                    'error'
                 );
             }
         }
@@ -241,5 +243,17 @@ class PlaylistController extends DZend_Controller_Action
         } else {
             $this->view->playlists = $this->_playlistModel->fetchAllUsers();
         }
+    }
+
+    public function privacyAction()
+    {
+        $message = $this->_messageFail;
+        if ($this->_request->isPost() &&
+            ($name = $this->_request->getPost('name')) !== null &&
+            ($public = $this->_request->getPost('public')) !== null) {
+            if ($this->_playlistModel->setPublic($name, $public))
+                $message = array($this->view->t('Setting saved'), 'success');
+        }
+        $this->view->message = $message;
     }
 }

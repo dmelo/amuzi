@@ -47,7 +47,7 @@
         }
 
         $.post('/playlist/addtrack', options, function(data) {
-            $.bootstrapMessageAuto(data[0], data[1] ? 'success': 'error');
+            $.bootstrapMessageAuto(data[0], data[1]);
             if(false === data[1])
                 loadPlaylist(playlistName);
             else if(true === data[1]) {
@@ -65,7 +65,7 @@
             url: url
         }, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
-            if(false == data[1])
+            if('error' === data[1])
                 loadPlaylist(playlistName);
         }, 'json');
     }
@@ -152,8 +152,8 @@
             name: myPlaylist.name,
             current: current
         }, function(data) {
-            if(false == data[1])
-                $.bootstrapMessageAuto(data[0], 'error');
+            if('error' == data[1])
+                $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json');
     }
 
@@ -178,8 +178,8 @@
             name: myPlaylist.name,
             repeat: repeat
         }, function(data) {
-            if(false == data[1])
-                $.bootstrapMessageAuto(data[0], 'error');
+            if('error' == data[1])
+                $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json');
     }
 
@@ -205,8 +205,8 @@
             name: myPlaylist.name,
             shuffle: shuffle
         }, function(data) {
-            if(false == data[1])
-                $.bootstrapMessageAuto(data[0], 'error');
+            if('error' == data[1])
+                $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json');
     }
 
@@ -344,12 +344,26 @@
         if(isLoggedIn())
             $('.loginRequired').fadeTo('slow', 1.0);
 
-        // playlistsettings -> search
+        // playlistsettings -> list
         $('#playlistsettings-result tbody tr.load').live('click', function(e) {
             loadPlaylist($(this).find('.name').html());
             $('#load-modal-wrapper').modal('hide');
         });
 
+        $('#playlistsettings-result tbody tr .public').live('click', function(e) {
+            var pub = $(this).val();
+            e.stopPropagation();
+            var name = $(this).parent().parent().find('.name').html();
+            $.post('/playlist/privacy', {
+                name: name,
+                public: ($(this).attr('checked') === 'checked' ? 'public' : 'private')
+            }, function(data) {
+                $.bootstrapMessageAuto(data[0], data[1])
+                $('#load-modal-wrapper').modal('hide');
+            }, 'json');
+        });
+
+        // playlistsettings -> remove
         $('#playlistsettings-result tbody tr .remove').live('click', function(e) {
             e.stopPropagation();
             if(confirm('Are you sure?')) {
@@ -360,6 +374,8 @@
                 $('#load-modal-wrapper').modal('hide');
             }
         });
+
+
 
         $('#toc').tableOfContents(null, {startLevel:2});
     });

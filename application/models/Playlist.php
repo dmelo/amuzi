@@ -224,4 +224,27 @@ class Playlist
     {
         return $this->_playlistDb->findById($id);
     }
+
+    /**
+     * Changes the privacy behavior of a user's playlist.
+     *
+     * @param $name string The name of the playlist.
+     * @param $public string whether it is public or private.
+     *
+     * @return boolean Returns true if the change well succeded, false
+     * otherwise.
+     */
+    public function setPublic($name, $privacy)
+    {
+        try {
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                $this->_session->user->id, $name
+            );
+            $playlistRow->privacy = $privacy;
+            $playlistRow->save();
+            return true;
+        } catch(Zend_Exception $e) {
+            return false;
+        }
+    }
 }
