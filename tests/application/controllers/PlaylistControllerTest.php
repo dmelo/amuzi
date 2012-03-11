@@ -139,7 +139,13 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setPost($this->_postAddtrack);
 
         $this->assertAjaxWorks('/playlist/addtrack');
-        $this->assertJsonMessage(array('Track added', true));
+        $this->assertJsonMessage(array('Track added', true, array(
+            'id' => '12',
+            'title' => 'Test Music',
+            'url' => 'http://example.com/a.mp3',
+            'cover' => 'http://example.com/a.jpg',
+            'duration' => '0'
+        )));
     }
 
     public function testAddtrackAction2()
@@ -166,7 +172,17 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setPost(array('id' => 9, 'playlist' => 3));
 
         $this->assertAjaxWorks('/playlist/addtrack');
-        $this->assertJsonMessage(array('Track added', true));
+        $obj = Zend_Json::decode($this->response->getBody());
+        $this->assertJsonMessage(array('Track added', true, array(
+            'id' => '9',
+            'title' => 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
+            'url' => 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
+            'cover' => 'http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg',
+            'duration' => '0'
+        )));
+
+
+       array("id" => 9, "title" => "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction", "url" => "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction", "cover" => "http:\/\/i.ytimg.com\/vi\/BaTSyGfxh5w\/3.jpg", "duration" => 0);
     }
 
     /**
