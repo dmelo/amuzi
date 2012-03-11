@@ -17,7 +17,6 @@ Commands.prototype.runCommand = function(command) {
         $.get('/api/gettrack', {
             id: id
         }, function(data) {
-            myPlaylist.add({title: data.title, mp3: data.url, free:true}, true);
             addTrack(data.id);
 
         }, 'json');

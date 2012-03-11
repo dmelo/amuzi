@@ -28,23 +28,32 @@
 
     function addTrack(trackTitle, trackLink, trackCover) {
         var options;
-        if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover))
+        var playNow;
+        if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover)) {
             options = {
                 playlist: myPlaylist.name,
                 id: trackTitle
             };
-        else
+            playNow = true;
+        }
+        else {
             options = {
                 playlist: myPlaylist.name,
                 title: trackTitle,
                 mp3: trackLink,
                 cover: trackCover
             };
+            playNow = false;
+        }
 
         $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1] ? 'success': 'error');
-            if(false == data[1])
+            if(false === data[1])
                 loadPlaylist(playlistName);
+            else if(true === data[1]) {
+                var v = data[2];
+                myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id}, playNow);
+            }
         }, 'json');
     }
 
@@ -77,7 +86,7 @@
         }, function(data) {
             if(data != null) {
                 $.each(data[0], function(i, v) {
-                    myPlaylist.add({title: v.title, mp3: v.mp3, free: true});
+                    myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id});
                 });
                 myPlaylist.name = data[1];
                 setRepeatAndCurrent(parseInt(data[2]), parseInt(data[4]));
@@ -258,12 +267,6 @@
             title = $(this).attr('title');
             mp3 = $(this).attr('href');
             pic = $(this).parent().parent().find('.image img').attr('src');
-            myPlaylist.add({
-                title: title,
-                mp3: mp3,
-                free: true
-            });
-
             addTrack(title, mp3, pic);
         });
 

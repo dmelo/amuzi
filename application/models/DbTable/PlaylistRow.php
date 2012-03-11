@@ -51,6 +51,8 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
                 'track_id' => $trackRow->id,
                 'sort' => $maxSort + 1);
             $this->_playlistHasTrackDb->insert($data);
+
+            return $trackRow;
         }
     }
 

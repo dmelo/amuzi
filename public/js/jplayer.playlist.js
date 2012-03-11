@@ -224,6 +224,12 @@
 			// Create remove control
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
 
+            // Create share link
+            if(media.id) {
+                listItem += "<span class=\"jp-free-media share\"><a href=\"" + $("#domain").html() + "/#!t" + media.id + "\">(share)</a></span>";
+            }
+
+
 			// Create links to free media
 			if(media.free) {
 				var first = true;
@@ -240,6 +246,7 @@
 				});
 				listItem += ")</span>";
 			}
+
 
 			// The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='1'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";

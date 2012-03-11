@@ -82,11 +82,13 @@ class PlaylistController extends DZend_Controller_Action
                     'mp3' => $this->_request->getPost('mp3'),
                     'cover' => $this->_request->getPost('cover'));
             try {
-                $this->_playlistModel->addTrack(
+                $trackRow = $this->_playlistModel->addTrack(
                     $trackInfo,
                     $this->_request->getPost('playlist')
                 );
-                $message = array($this->view->t('Track added'), true);
+                $message = array(
+                    $this->view->t('Track added'), true, $trackRow->toArray()
+                );
             } catch(Zend_Exception $e) {
                 $message = array(
                     $this->view->t('Problems adding the track') . ': ' .

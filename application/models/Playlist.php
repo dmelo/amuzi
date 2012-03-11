@@ -78,8 +78,7 @@ class Playlist
         $trackList = $playlistRow->getTrackList();
         $ret = array();
         foreach ($trackList as $track) {
-            $ret[] = array('title' => $track->title,
-                'mp3' => $track->url);
+            $ret[] = $track->toArray();
         }
 
         $ret = array(
@@ -131,7 +130,7 @@ class Playlist
     public function addTrack(array $trackInfo, $name = 'default')
     {
         $playlistRow = $this->create($name);
-        $playlistRow->addTrack($trackInfo);
+        return $playlistRow->addTrack($trackInfo);
     }
 
     /**
