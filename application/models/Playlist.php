@@ -17,10 +17,11 @@ class Playlist
      * create Verify if a playlist doesn't exist and creates it.
      *
      * @param string $name Playlist's name.
+     * @param boolean $public Says whether this playlist must be public or not.
      * @return DbTable_Playlist_Row Returns the playlist owned by the logged.
      * user which name maches the playlist's, or null if no user is logged.
      */
-    public function create($name)
+    public function create($name, $public)
     {
         $ret = null;
         if (isset($this->_session->user)) {
@@ -30,7 +31,7 @@ class Playlist
             );
             if (!$ret) {
                 $ret = $this->_playlistDb->create(
-                    $this->_session->user->id, $name
+                    $this->_session->user->id, $name, $public
                 );
             }
         }

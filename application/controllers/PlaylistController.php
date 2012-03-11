@@ -205,10 +205,12 @@ class PlaylistController extends DZend_Controller_Action
 
     public function newAction()
     {
-        $this->view->form = new Form_CreatePlaylist();
-        $name = $this->_request->getParam('name');
-        if (!$this->_request->isPost() && $name != null) {
-            $row = $this->_playlistModel->create($name);
+        $form = new Form_CreatePlaylist();
+        if (!$this->_request->isPost() && $form->isValid($this->_request->getParams())) {
+            $name = $this->_request->getParam('name');
+            $public = $this->_request->getParam('public');
+
+            $row = $this->_playlistModel->create($name, $public);
             if($row)
                 $this->view->message = array($this->view->t('Playlist created'),
                     'success'
@@ -219,6 +221,7 @@ class PlaylistController extends DZend_Controller_Action
                     'error'
                 );
         }
+        $this->view->form = $form;
     }
 
     public function removeAction()
