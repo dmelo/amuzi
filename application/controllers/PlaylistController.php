@@ -233,9 +233,10 @@ class PlaylistController extends DZend_Controller_Action
                 $message = array(
                     $this->view->t('Could not remove') . ': ' . $msg, 'error'
                 );
-        } else
-            $message = array($this->view->t('Invalid request'), 'error');
 
-        $this->view->message = $message;
+            $this->view->message = $message;
+        } else {
+            $this->view->playlists = $this->_playlistModel->fetchAllUsers();
+        }
     }
 }

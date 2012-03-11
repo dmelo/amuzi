@@ -1,8 +1,9 @@
 <?php
 
 return array(
-    'New' => 'Criar',
-    'Search' => 'Search',
+    'Create' => 'Create',
+    'List' => 'List',
+    'Remove' => 'Remove',
     'Playlist' => 'Playlist',
     'About' => 'About',
 

@@ -32,8 +32,19 @@ class DbTable_Playlist extends DZend_Model_DbTable
             $this->_session->user->id
         );
         return $this->fetchAll(
-            $this->select()->where($where)->order('name')->limit($limit, $offset)
+            $this->select()
+            ->where($where)->order('name')->limit($limit, $offset)
         );
+    }
+
+    public function fetchAllUsers()
+    {
+        $select = $this->select()
+            ->where(
+                $this->_db->quoteInto('user_id = ?', $this->_session->user->id)
+            )
+            ->order('name');
+        return $this->fetchAll($select);
     }
 
     public function create($userId, $name)

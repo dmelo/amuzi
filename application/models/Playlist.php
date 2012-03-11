@@ -155,6 +155,11 @@ class Playlist
         $row->save();
     }
 
+    public function fetchAllUsers()
+    {
+        return $this->_playlistDb->fetchAllUsers();
+    }
+
     public function search($q)
     {
         return $this->_playlistDb->search($q);

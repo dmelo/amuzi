@@ -152,3 +152,11 @@ dd#submit-element {
 #wrapper {
     margin-bottom: 37px;
 }
+
+.modal-body table {
+    width: 100%;
+}
+
+.modal-body table {
+    text-align: center;
+}

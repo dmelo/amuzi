@@ -1,6 +1,6 @@
 <? if(isset($this->resultSet)): ?>
     <? foreach($this->resultSet as $row): ?>
-    <tr>
+    <tr class="load">
         <td><img alt="Cover image" alt="<?= $row->name; ?>" src="<?= $row->getCover(); ?>"/></td>
         <td class="name"><?= $row->name; ?></td>
         <td><?= $row->countTracks(); ?></td>

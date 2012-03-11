@@ -345,7 +345,7 @@
             $('.loginRequired').fadeTo('slow', 1.0);
 
         // playlistsettings -> search
-        $('#playlistsettings-result tbody tr').live('click', function(e) {
+        $('#playlistsettings-result tbody tr.load').live('click', function(e) {
             loadPlaylist($(this).find('.name').html());
             $('#load-modal-wrapper').modal('hide');
         });
