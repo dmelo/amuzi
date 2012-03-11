@@ -66,7 +66,9 @@ class PlaylistController extends DZend_Controller_Action
     /**
      * addtrackAction Receives a post request informing ( title, mp3 and
      * cover ) or ( id ) of the track to be added into the playlist, the
-     * playlist's name is also passed by post parameter.
+     * playlist's name is also passed by post parameter. As a reponse, this
+     * action will send (in Json) an string, a boolean value indicating whether
+     * the it was succeded or not and the track itself (with it's ID).
      *
      * @return void
      */

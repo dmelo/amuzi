@@ -33,7 +33,7 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
      * @param array $trackInfo is a array that have either the keys title, mp3
      * and cover or the key id. The latter is valid just in case the track
      * already exists
-     * @return void
+     * @return Returns the track row.
      */
     public function addTrack($trackInfo)
     {

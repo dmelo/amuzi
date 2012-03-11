@@ -125,7 +125,7 @@ class Playlist
      *
      * @param array $trackInfo Track information
      * @param string $name Playlist's name
-     * @return void
+     * @return Returns the track row.
      */
     public function addTrack(array $trackInfo, $name = 'default')
     {
