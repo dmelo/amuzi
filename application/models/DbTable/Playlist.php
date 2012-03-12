@@ -47,7 +47,7 @@ class DbTable_Playlist extends DZend_Model_DbTable
         return $this->fetchAll($select);
     }
 
-    public function create($userId, $name, $public)
+    public function create($userId, $name, $public = 'public')
     {
         $data = array(
             'user_id' => $userId,

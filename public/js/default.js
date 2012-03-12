@@ -40,7 +40,7 @@
             options = {
                 playlist: myPlaylist.name,
                 title: trackTitle,
-                mp3: trackLink,
+                url: trackLink,
                 cover: trackCover
             };
             playNow = false;
@@ -48,11 +48,11 @@
 
         $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
-            if(false === data[1])
+            if('error' === data[1])
                 loadPlaylist(playlistName);
-            else if(true === data[1]) {
+            else if('success' === data[1]) {
                 var v = data[2];
-                myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id}, playNow);
+                myPlaylist.add({title: v.title, url: v.url, free: true, id: v.id}, playNow);
             }
         }, 'json');
     }
@@ -83,7 +83,6 @@
         myPlaylist.removeAll();
         var options;
 
-        
         if(typeof(name) == 'int' || (typeof(name) == 'string' && name[0] >= '0' && name[0] <= '9')) {
             // It's an ID
             if(typeof(name) == 'string')
@@ -374,8 +373,6 @@
                 $('#load-modal-wrapper').modal('hide');
             }
         });
-
-
 
         $('#toc').tableOfContents(null, {startLevel:2});
     });

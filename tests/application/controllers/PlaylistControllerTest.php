@@ -105,7 +105,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setMethod('POST');
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 3);
-        $this->assertQueryCount('tr td img', 6);
+        $this->assertQueryCount('tr td img', 3);
         $this->assertQueryCount('tr td', 12);
     }
 
@@ -117,7 +117,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setPost(array('q' => 'newOne'));
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 1);
-        $this->assertQueryCount('tr td img', 2);
+        $this->assertQueryCount('tr td img', 1);
         $this->assertQueryCount('tr td', 4);
     }
 
@@ -139,13 +139,14 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setPost($this->_postAddtrack);
 
         $this->assertAjaxWorks('/playlist/addtrack');
-        $this->assertJsonMessage(array('Track added', true, array(
+        $ret = array('Track added', 'success', array(
             'id' => '12',
             'title' => 'Test Music',
             'url' => 'http://example.com/a.mp3',
             'cover' => 'http://example.com/a.jpg',
             'duration' => '0'
-        )));
+        ));
+        $this->assertJsonMessage($ret);
     }
 
     public function testAddtrackAction2()
@@ -156,7 +157,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $this->assertJsonMessage(
-            array('Problems adding track: Invalid request', false)
+            array('Problems adding track: Invalid request', 'error')
         );
     }
 
@@ -169,11 +170,11 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     {
         User::loginDummy();
         $this->request->setMethod('POST');
-        $this->request->setPost(array('id' => 9, 'playlist' => 3));
+        $this->request->setPost(array('id' => 9, 'playlist' => 'default'));
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $obj = Zend_Json::decode($this->response->getBody());
-        $this->assertJsonMessage(array('Track added', true, array(
+        $this->assertJsonMessage(array('Track added', 'success', array(
             'id' => '9',
             'title' => 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
             'url' => 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
@@ -198,7 +199,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $obj = Zend_Json::decode($this->response->getBody());
-        $this->assertEquals($obj[1], false);
+        $this->assertEquals($obj[1], 'error');
         $this->assertEquals(substr($obj[0], 0, 25), 'Problems adding the track');
     }
 
@@ -210,6 +211,6 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->request->setPost($this->_postRmtrack);
 
         $this->assertAjaxWorks('/playlist/rmtrack');
-        $this->assertJsonMessage(array('Track removed', true));
+        $this->assertJsonMessage(array('Track removed', 'success'));
     }
 }

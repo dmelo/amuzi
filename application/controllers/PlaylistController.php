@@ -64,7 +64,7 @@ class PlaylistController extends DZend_Controller_Action
     }
 
     /**
-     * addtrackAction Receives a post request informing ( title, mp3 and
+     * addtrackAction Receives a post request informing ( title, url and
      * cover ) or ( id ) of the track to be added into the playlist, the
      * playlist's name is also passed by post parameter. As a reponse, this
      * action will send (in Json) an string, a boolean value indicating whether
@@ -81,7 +81,7 @@ class PlaylistController extends DZend_Controller_Action
                 $trackInfo = array('id' => $this->_request->getPost('id'));
             else
                 $trackInfo = array('title' => $this->_request->getPost('title'),
-                    'mp3' => $this->_request->getPost('mp3'),
+                    'url' => $this->_request->getPost('url'),
                     'cover' => $this->_request->getPost('cover'));
             try {
                 $trackRow = $this->_playlistModel->addTrack(
@@ -120,7 +120,7 @@ class PlaylistController extends DZend_Controller_Action
             $playlist = $this->_request->getPost('playlist');
             try {
                 $this->_playlistModel->rmTrack($url, $playlist);
-                $message = array($this->view->t('Track removed'), true);
+                $message = array($this->view->t('Track removed'), 'success');
             } catch(Zend_Exception $e) {
                 $message = array(
                     $this->view->t('Problems removing the track: ') +

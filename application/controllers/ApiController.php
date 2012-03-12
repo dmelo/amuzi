@@ -32,6 +32,7 @@ class ApiController extends DZend_Controller_Action
      */
     public function searchAction()
     {
+        try {
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
@@ -52,6 +53,9 @@ class ApiController extends DZend_Controller_Action
         }
         else
             $this->view->output = $this->_error;
+        } catch(Exception $e) {
+            $this->view->exception = $e;
+        }
     }
 
     public function autocompleteAction()

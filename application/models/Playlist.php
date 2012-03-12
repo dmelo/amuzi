@@ -21,7 +21,7 @@ class Playlist
      * @return DbTable_Playlist_Row Returns the playlist owned by the logged.
      * user which name maches the playlist's, or null if no user is logged.
      */
-    public function create($name, $public)
+    public function create($name, $public = 'public')
     {
         $ret = null;
         if (isset($this->_session->user)) {

@@ -5,9 +5,9 @@
     <user id="2" facebook_id="1625795908" name="Diogo Melo" email="melo@vonbraunlabs.com.br" url="kljkjkj" privacy="public"/>
 
     <!-- Playlist -->
-    <playlist id="2" user_id="2" name="default" repeat="1" shuffle="1" current_track="2"/>
-    <playlist id="3" user_id="2" name="newOne" repeat="0" shuffle="0" current_track="1"/>
-    <playlist id="4" user_id="2" name="newTwo" repeat="0" shuffle="0" current_track="1"/>
+    <playlist id="2" user_id="2" name="default" repeat="1" shuffle="1" current_track="2" privacy="public"/>
+    <playlist id="3" user_id="2" name="newOne" repeat="0" shuffle="0" current_track="1" privacy="public"/>
+    <playlist id="4" user_id="2" name="newTwo" repeat="0" shuffle="0" current_track="1" privacy="private"/>
 
     <!-- Track -->
     <track id="1" title="Rolling Stones - Sympathy for The Devil ( Live 1969 Altamont" url="http://amuzi.localhost/api/523/Dt0ipUCfdlU/Rolling Stones - Sympathy for The Devil ( Live 1969 Altamont.mp3" cover="null" duration="0"/>
