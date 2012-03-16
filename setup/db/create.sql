@@ -22,16 +22,14 @@ CREATE TABLE `track` (
 CREATE TABLE `playlist` (
     `id` int(11) NOT NULL auto_increment,
     `user_id` int(11) NOT NULL,
-    `name` varchar(63) collate utf8_swedish_ci default NULL,
+    `name` varchar(63) collate utf8_swedish_ci NOT NULL,
     `repeat` int(1) NOT NULL default 0,
     `shuffle` int(1) NOT NULL default 0,
     `current_track` int(11) NOT NULL default 0,
     `privacy` enum('public', 'private') NOT NULL DEFAULT 'public',
     PRIMARY KEY(`id`),
     UNIQUE(`user_id`, `name`),
-    CONSTRAINT `playlist_user_id_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
-    CONSTRAINT `playlist_name` CHECK substr(lower(name), 1, 1) >= 'a' AND substr(lower(name), 1, 1) <= 'z'
-    -- CONSTRAINT playlist_name CHECK (substring(initcap(name), 1, 1) >= 'a' AND substring(initcap(name), 1, 1) <= 'z') -- Postgres
+    CONSTRAINT `playlist_user_id_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 ALTER TABLE `user` ADD CONSTRAINT `user_playlist_id_ibfk_1` FOREIGN KEY (`current_playlist_id`) REFERENCES `playlist`(`id`);
