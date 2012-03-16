@@ -23,6 +23,8 @@ Commands.prototype.runCommand = function(command) {
 
     }
     else if ('p' === command[0]) {
+        id = command.substr(1);
+        loadPlaylist(id);
     }
 }
 

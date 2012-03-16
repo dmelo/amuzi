@@ -66,29 +66,38 @@ class Playlist
     public function export($name)
     {
         $user = $this->_session->user;
-        if ('' === $name)
-            $playlistRow = $this->_playlistDb->findRowById(
-                $user->currentPlaylistId
-            );
-        else
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $user->id, $name
-            );
-        $user->currentPlaylistId = $playlistRow->id;
-        $user->save();
-        $trackList = $playlistRow->getTrackList();
-        $ret = array();
-        foreach ($trackList as $track) {
-            $ret[] = $track->toArray();
+        if (gettype($name) === 'string') {
+            if ('' === $name)
+                $playlistRow = $this->_playlistDb->findRowById(
+                    $user->currentPlaylistId
+                );
+            else
+                $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                    $user->id, $name
+                );
+        } elseif (gettype($name) === 'integer') {
+            $playlistRow = $this->_playlistDb->findRowById($name);
+            if ($playlistRow->user_id !== $user->id && 'public' !== $playlistRow->privacy)
+                $playlistRow = null;
         }
 
-        $ret = array(
-            $ret,
-            $playlistRow->name,
-            $playlistRow->repeat,
-            $playlistRow->shuffle,
-            $playlistRow->currentTrack
-        );
+        $ret = null;
+        if (null !== $playlistRow) {
+            $ret = array();
+            $user->currentPlaylistId = $playlistRow->id;
+            $user->save();
+            $trackList = $playlistRow->getTrackList();
+            foreach ($trackList as $track) {
+                $ret[] = $track->toArray();
+            }
+            $ret = array(
+                $ret,
+                $playlistRow->name,
+                $playlistRow->repeat,
+                $playlistRow->shuffle,
+                $playlistRow->currentTrack
+            );
+        }
 
         return $ret;
     }

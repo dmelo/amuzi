@@ -83,7 +83,7 @@
         myPlaylist.removeAll();
         var options;
 
-        if(typeof(name) == 'int' || (typeof(name) == 'string' && name[0] >= '0' && name[0] <= '9')) {
+        if(typeof(name) == 'number' || (typeof(name) == 'string' && parseInt(name) >= 0)) {
             // It's an ID
             if(typeof(name) == 'string')
                 name = parseInt(name);
@@ -93,6 +93,7 @@
             // It's a name
             options = { name: name };
         }
+
 
         $.post('/playlist/load', options, function(data) {
             if(data != null) {
