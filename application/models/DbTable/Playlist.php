@@ -2,10 +2,6 @@
 
 class DbTable_Playlist extends DZend_Model_DbTable
 {
-    protected $_name = 'playlist';
-    protected $_primary = 'id';
-    protected $_rowClass = 'DbTable_PlaylistRow';
-
     public function insert(array $data)
     {
         // All checks

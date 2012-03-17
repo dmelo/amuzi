@@ -2,10 +2,6 @@
 
 class DbTable_PlaylistHasTrack extends DZend_Model_DbTable
 {
-    protected $_name = 'playlist_has_track';
-    protected $_primary = 'id';
-    protected $_rowClass = 'DbTable_PlaylistHasTrackRow';
-
     public function insert($data)
     {
         $row = $this->findRowByPlaylistIdAndSort(

@@ -2,9 +2,6 @@
 
 class DbTable_User extends DZend_Model_DbTable
 {
-    protected $_name = 'user';
-    protected $_rowClass = 'DbTable_UserRow';
-
     /**
      * register Make sure the user is registered on the database.
      *

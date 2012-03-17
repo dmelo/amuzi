@@ -2,10 +2,6 @@
 
 class DbTable_Track extends DZend_Model_DbTable
 {
-    protected $_name = 'track';
-    protected $_primary = 'id';
-    protected $_rowClass = 'DbTable_TrackRow';
-
     public function insert($data)
     {
         if (array_key_exists('mp3', $data)) {
