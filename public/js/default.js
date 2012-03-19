@@ -46,10 +46,11 @@
             playNow = false;
         }
 
+        console.log(options);
         $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if('error' === data[1])
-                loadPlaylist(playlistName);
+                loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
                 myPlaylist.add({title: v.title, url: v.url, free: true, id: v.id}, playNow);

@@ -13,12 +13,14 @@ class Playlist
 {
     protected $_playlistDb;
     protected $_playlistHasTrackDb;
+    protected $_userListenPlaylistModel;
     protected $_session;
 
     public function __construct()
     {
         $this->_playlistDb = new DbTable_Playlist();
         $this->_playlistHasTrackDb = new DbTable_PlaylistHasTrack();
+        $this->_userListenPlaylistModel = new UserListenPlaylist();
         $this->_session = DZend_Session_Namespace::get('session');
     }
 
@@ -27,7 +29,7 @@ class Playlist
      *
      * @param string $name Playlist's name.
      * @param boolean $public Says whether this playlist must be public or not.
-     * @return DbTable_Playlist_Row Returns the playlist owned by the logged.
+     * @return DbTable_PlaylistRow Returns the playlist owned by the logged.
      * user which name maches the playlist's, or null if no user is logged.
      */
     public function create($name, $public = 'public')
@@ -39,9 +41,13 @@ class Playlist
                 $name
             );
             if (!$ret) {
-                $ret = $this->_playlistDb->create(
-                    $this->_session->user->id, $name, $public
-                );
+                try {
+                    $ret = $this->_playlistDb->create(
+                        $this->_session->user->id, $name, $public
+                    );
+                } catch(Zend_Db_Table_Exception $e) {
+                    throw new Zend_Exception("the playlist is not yours");
+                }
             }
         }
 
@@ -88,6 +94,8 @@ class Playlist
             $playlistRow = $this->_playlistDb->findRowById($name);
             if ($playlistRow->user_id !== $user->id && 'public' !== $playlistRow->privacy)
                 $playlistRow = null;
+            else
+                $this->_userListenPlaylistModel->addUserPlaylist($playlistRow);
         }
 
         $ret = null;

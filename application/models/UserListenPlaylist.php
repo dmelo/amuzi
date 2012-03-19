@@ -30,28 +30,33 @@ class UserListenPlaylist
      * It will check for playlist and user existence and will only complete the 
      * operation if the playlist is set to be public.
      *
-     * @param mixed $playlistId Playlist ID
-     * @param mixed $userId User ID, if null is given, will assume the
+     * @param mixed $playlistRow Playlist row
+     * @param mixed $userRow User row, if null is given, will assume the
      * currently logged in user.
      * @return void Returns the new row ID in case of success, false otherwise.
      */
-    public function addUserPlaylist($playlistId, $userId = null)
+    public function addUserPlaylist($playlistRow, $userRow = null)
     {
-        $userRow = null;
-        if (null === $userId)
+        if (null === $userRow)
             $userRow = $this->_session->user;
-        else
-            $userRow = $this->_userDb->findRowById($userId);
 
-        if (null !== $userRow) {
-            $playlistRow = $this->_playlistDb->findRowById($playlistId);
-            if(null != $playlistRow && 'public' === $playlistRow->privacy) {
+        if ($userRow instanceOf DbTable_UserRow &&
+            $playlistRow instanceOf DbTable_PlaylistRow) {
+            if ('public' === $playlistRow->privacy) {
                 $data = array(
                     'user_id' => $userRow->id,
                     'playlist_id' => $playlistRow->id
                 );
 
-                return $this->_userListenPlaylistDb->insert($data);
+                try {
+                    return $this->_userListenPlaylistDb->insert($data);
+                } catch (Zend_Db_Statement_Exception $e) {
+                    $row = $this->_userListenPlaylistDb->
+                        findRowByUserIdAndPlaylistId(
+                            $data['user_id'], $data['playlist_id']
+                        );
+                    return $row->id;
+                }
             }
         }
 
