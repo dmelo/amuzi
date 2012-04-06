@@ -160,3 +160,12 @@ dd#submit-element {
 .modal-body table {
     text-align: center;
 }
+
+ul.jp-toggles li a.share {
+    background("/img/share-mini.png") 0 -420px no-repeat;
+    margin-left: 20px;
+}
+
+ul.jp-toggles li a.share:hover {
+    background("/img/share-mini.png") -30px -420px no-repeat;
+}
