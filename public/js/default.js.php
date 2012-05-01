@@ -1,7 +1,12 @@
+<? header("Content-Type: text/javascript"); ?>
+
 /*global  jPlayerPlaylist: false, jQuery:false */
 
 //(function($, undefined) {
 //    'use strict';
+
+<? echo "// it works"; ?>
+
 
     var myPlaylist;
     var jplayerCss;
@@ -9,6 +14,52 @@
     var repeat;
     var current;
     var modalWrapper = "#load-modal-wrapper";
+
+    // Call this from firebug:
+    // login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 'kljkjkj');
+    function login(facebook_id, name, email, url) {
+        $.get('/user/login', {
+            facebook_id: facebook_id,
+            name: name,
+            email: email,
+            url: url
+        }, function(data) {
+            callbackLogin(data);
+        });
+    }
+
+    function logout() {
+        $.get('/user/logout', {
+        }, function(data) {
+            $('#userId').remove();
+            $('.loginRequired').fadeTo('slow', 0.0);
+            unloadPlaylist();
+            $('.jp-title').css('display', 'none');
+        });
+    }
+
+    function processLogin() {
+        FB.api('/me', function(user) {
+            var userDiv = $('#user');
+            var loginDiv = $('#login-button');
+            console.log(user);
+            if(user != null && user.id != null) {
+                var image = document.getElementById('image');
+                image.src = 'http://graph.facebook.com/' + user.id + '/picture';
+                var name = document.getElementById('name');
+                name.innerHTML = user.name;
+                userDiv.css('visibility', 'visible');
+                loginDiv.css('visibility', 'hidden');
+
+                login(user.id, user.first_name + " " + user.last_name, user.email, user.link);
+            }
+            else {
+                userDiv.css('visibility', 'hidden');
+                loginDiv.css('visibility', 'visible');
+            }
+        });
+    }
+
 
     function callbackLogin(userId) {
         loadPlaylist();
@@ -98,6 +149,7 @@
 
         $.post('/playlist/load', options, function(data) {
             if(data != null) {
+                $('.jp-title').css('display', 'block');
                 $.each(data[0], function(i, v) {
                     myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id});
                 });
@@ -109,7 +161,14 @@
         }, 'json').complete(function() {
             if(commands.isRunCommand)
                 setTimeout("commands.runProgram()", 1500);
+        }).error(function(e) {
+            console.log("playlist not available");
         });
+    }
+
+    function unloadPlaylist() {
+        myPlaylist.name = null;
+        myPlaylist.removeAll();
     }
 
     function rmPlaylist(name) {
@@ -376,6 +435,8 @@
             }
         });
 
+        processLogin();
         $('#toc').tableOfContents(null, {startLevel:2});
+
     });
 //})(jQuery);

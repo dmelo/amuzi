@@ -498,7 +498,7 @@ div.jp-video .jp-volume-bar {
 }
 
 .jp-title {
-    display: block !important;
+    display: block;
 }
 
 .jp-toggles .jp-full-screen, .jp-tooggles .jp-restore-screen {

@@ -12,48 +12,10 @@
 <script src="http://connect.facebook.net/en_US/all.js">
 </script>
 <script>
-     FB.init({
+    FB.init({
         appId:'209056955830996', cookie:true,
         status:true, xfbml:true
-     });
-
-    // Call this from firebug:
-    // login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 'kljkjkj');
-    function login(facebook_id, name, email, url) {
-        $.get('/user/login', {
-            facebook_id: facebook_id,
-            name: name,
-            email: email,
-            url: url
-        }, function(data) {
-            callbackLogin(data);
-        });
-    }
-
-    function processLogin() {
-        FB.api('/me', function(user) {
-            var userDiv = $('#user');
-            var loginDiv = $('#login-button');
-            if(user != null && user.id != null) {
-                var image = document.getElementById('image');
-                image.src = 'http://graph.facebook.com/' + user.id + '/picture';
-                var name = document.getElementById('name');
-                name.innerHTML = user.name;
-                userDiv.css('visibility', 'visible');
-                loginDiv.css('visibility', 'hidden');
-
-                login(user.id, user.first_name + " " + user.last_name, user.email, user.link);
-            }
-            else {
-                userDiv.css('visibility', 'hidden');
-                loginDiv.css('visibility', 'visible');
-            }
-        });
-    }
-
-    processLogin();
-
-
+    });
 </script>
 
 <div class="navbar navbar-fixed-top">
