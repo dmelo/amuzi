@@ -17,6 +17,11 @@
 
     // Call this from firebug:
     // login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 'kljkjkj');
+
+    function fakeLogin() {
+        login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 'kljkjkj');
+    }
+
     function login(facebook_id, name, email, url) {
         $.get('/user/login', {
             facebook_id: facebook_id,
@@ -78,6 +83,7 @@
     }
 
     function addTrack(trackTitle, trackLink, trackCover) {
+        console.log("addTrack == trackTitle: " + trackTitle + ". trackLink: " + trackLink + ".trackCover: " + trackCover);
         var options;
         var playNow;
         if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover)) {
@@ -104,7 +110,9 @@
                 loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
-                myPlaylist.add({title: v.title, url: v.url, free: true, id: v.id}, playNow);
+                var pOpt = {title: v.title, mp3: v.url, free: true, id: v.id};
+                console.log(pOpt);
+                myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
     }

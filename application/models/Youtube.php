@@ -40,7 +40,7 @@ class Youtube
 
             $entry['you2better'] = Zend_Registry::get('domain');
             $entry['you2better'] .= '/api/' . $entry['duration'] . '/' .
-                $entry['id'] . '/' . $entry['title'] . '.mp3';
+                $entry['id'] . '/' . urlencode($entry['title']) . '.mp3';
 
             $resultSet[] = new YoutubeEntry($entry);
         }
