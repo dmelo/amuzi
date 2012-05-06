@@ -44,6 +44,7 @@
     }
 
     function processLogin() {
+        /*
         FB.api('/me', function(user) {
             var userDiv = $('#user');
             var loginDiv = $('#login-button');
@@ -63,6 +64,7 @@
                 loginDiv.css('visibility', 'visible');
             }
         });
+        */
     }
 
 
@@ -375,6 +377,10 @@
                 return '<img src="' + row.pic + '"/> <span>' + row.name + '</span>';
             }
         });
+
+        if($('#status-message').length > 0) {
+            $.bootstrapMessageAuto($('#status-message p').html(), $('#status-message span.status').html());
+        }
 
         // submit a query to youtube after change the value of the search input.
         $('#q').change(function() {
