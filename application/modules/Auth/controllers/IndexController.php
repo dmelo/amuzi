@@ -135,5 +135,14 @@ class Auth_IndexController extends DZend_Controller_Action
      */
     public function resetpasswordAction()
     {
+        $params = $this->_request->getParams();
+        $userRow = $this->_userModel->findByEmail($params['email']);
+        if($userRow && $userRow->isForgotPasswordUrlValid($params['time'], $params['hash'])) {
+            $this->view->email = $params['email'];
+            $form = new Auth_Model_Form_ResetPassword();
+
+
+            $this->view->form = $form;
+        }
     }
 }
