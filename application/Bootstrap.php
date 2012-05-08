@@ -76,8 +76,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             $view->lightningPackerLink()->appendStylesheet($item);
 
         $this->bootstrap('translate');
-        $session = DZend_Session_Namespace::get('session');
-        $view->translate = $session->translate;
+        $view->translate = Zend_Registry::get('translate');
     }
 
     public function _initCache()
@@ -95,21 +94,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         Zend_Registry::set('cache', $cache);
     }
-
-    public function _initLocale()
-    {
-        $this->bootstrap('path');
-        $session = DZend_Session_Namespace::get('session');
-        if (!isset($session->locale)) {
-            try {
-                $locale = new Zend_Locale('auto');
-            } catch(Zend_Locale_Exception $e) {
-                $locale = new Zend_Locale('en_US');
-            }
-            $session->locale = $locale;
-        }
-    }
-
 
     public function _initDateTime()
     {

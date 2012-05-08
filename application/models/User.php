@@ -9,12 +9,14 @@ class User extends DZend_Model
     private $_url;
     private $_loginArgs;
     private $_userDb;
+    private $_translate;
 
     public function __construct()
     {
         parent::__construct();
         $this->_loginArgs = array('facebook_id', 'name', 'email', 'url');
         $this->_userDb = new DbTable_User();
+        $this->_translate = Zend_Registry::get('translate');
     }
 
     public function login($params)
@@ -106,13 +108,12 @@ class User extends DZend_Model
     public function sendActivateAccountEmail($userRow)
     {
         $session = DZend_Session_Namespace::get('session');
-        $translate = $session->translate;
         $mail = new Zend_Mail('UTF-8');
 
-        $mail->setBodyHtml($translate->_("Hi %s,<br/><br/>Welcome to AMUZI. To activate your account just click on the link bellow:<br/><a href=\"%s\">%s</a><br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getUrlToken(), $userRow->getUrlToken()));
+        $mail->setBodyHtml($this->_translate->_("Hi %s,<br/><br/>Welcome to AMUZI. To activate your account just click on the link bellow:<br/><a href=\"%s\">%s</a><br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getUrlToken(), $userRow->getUrlToken()));
         $mail->setFrom('support@amuzi.net', 'AMUZI Team');
         $mail->addTo($userRow->email);
-        $mail->setSubject($translate->_("AMUZI -- Account activation"));
+        $mail->setSubject($this->_translate->_("AMUZI -- Account activation"));
 
         try {
             $mail->send();
@@ -125,13 +126,12 @@ class User extends DZend_Model
 
     public function sendForgotPasswordEmail($userRow) {
         $session = DZend_Session_Namespace::get('session');
-        $translate = $session->translate;
         $mail = new Zend_Mail('UTF-8');
 
-        $mail->setBodyHtml($translate->_("Hi %s,<br/><br/>Someone, hopefully you, requested a new password on AMUZI. To make a new password, please click the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getForgotPasswordUrl(), $userRow->getForgotPasswordUrl()));
+        $mail->setBodyHtml($this->_translate->_("Hi %s,<br/><br/>Someone, hopefully you, requested a new password on AMUZI. To make a new password, please click the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getForgotPasswordUrl(), $userRow->getForgotPasswordUrl()));
         $mail->setFrom('support@amuzi.net', 'AMUZI Team');
         $mail->addTo($userRow->email);
-        $mail->setSubject($translate->_("AMUZI -- New password request"));
+        $mail->setSubject($this->_translate->_("AMUZI -- New password request"));
 
         try {
             $mail->send();
