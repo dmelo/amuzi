@@ -2,6 +2,14 @@
 
 class Auth_IndexController extends DZend_Controller_Action
 {
+    protected $_userModel;
+
+    public function init()
+    {
+        parent::init();
+        $this->_userModel = new User();
+    }
+
     /**
      * loginAction Authenticate the user.
      *
@@ -9,7 +17,6 @@ class Auth_IndexController extends DZend_Controller_Action
      */
     public function loginAction()
     {
-        var_dump(Zend_Auth::getInstance()->getIdentity());
         $form = new Auth_Model_Form_Login();
         $params = $this->_request->getParams();
         if ($this->_request->isPost() && $form->isValid($this->_request->getParams())) {
@@ -54,20 +61,19 @@ class Auth_IndexController extends DZend_Controller_Action
         $form = new Auth_Model_Form_Register();
         $message = null;
         $params = $this->_request->getParams();
-        $userModel = new User();
         if($this->_request->isPost() && $form->isValid($params)) {
             if($params['password'] !== $params['password2'])
                 $message = array($this->view->t('Password doesn\'t match'), 'error');
-            elseif(($userRow = $userModel->findByEmail($params['email'])) !== null)
+            elseif(($userRow = $this->_userModel->findByEmail($params['email'])) !== null)
                 $message = array($this->view->t('Email is already registered'), 'error');
             else {
-                if($userModel->register($params['name'], $params['email'], $params['password']) === true) {
-                    $userRow = $userModel->findByEmail($params['email']);
-                    if($userModel->sendActivateAccountEmail($userRow))
+                if($this->_userModel->register($params['name'], $params['email'], $params['password']) === true) {
+                    $userRow = $this->_userModel->findByEmail($params['email']);
+                    if($this->_userModel->sendActivateAccountEmail($userRow))
                         $message = array($this->view->t('User registered. Check your email to activate your account.'), 'success');
                     else {
                         $message = array($this->view->t('An error occurred. It was not possible to send the email. Plase try again'), 'error');
-                        $userModel->deleteByEmail($params['email']);
+                        $this->_userModel->deleteByEmail($params['email']);
                     }
                 }
                 else
@@ -86,8 +92,7 @@ class Auth_IndexController extends DZend_Controller_Action
         $email = $this->_request->getParam('email');
         $token = Zend_Filter::filterStatic($this->_request->getParam('token'), 'Alnum');
 
-        $userModel = new User();
-        $userRow = $userModel->findByEmail($email);
+        $userRow = $this->_userModel->findByEmail($email);
         $message = null;
         if(null === $userRow || '' === $userRow->token || $userRow->token !== $token) {
             $message = array($this->view->t('The email %s cannot be activated', $email), 'error');
@@ -108,6 +113,19 @@ class Auth_IndexController extends DZend_Controller_Action
      */
     public function forgotpasswordAction()
     {
+        $form = new Auth_Model_Form_ForgotPassword();
+        $params = $this->_request->getParams();
+        if($this->_request->isPost() && $form->isValid($params)) {
+            $userRow = $this->_userModel->findByEmail($params['email']);
+            $message = array($this->view->t('If this email is registered then you will receive an email that allow you to edit your password'), 'success');
+            if($userRow) {
+                if(!$this->_userModel->sendForgotPasswordEmail($userRow))
+                    $message = array($this->view->t('A problem occured while trying to send your email. Please try again later'), 'error');
+            }
+            $this->view->message = $message;
+        }
+        else
+            $this->view->form = $form;
     }
 
     /**

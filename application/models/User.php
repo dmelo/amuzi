@@ -123,6 +123,25 @@ class User extends DZend_Model
         return true;
     }
 
+    public function sendForgotPasswordEmail($userRow) {
+        $session = DZend_Session_Namespace::get('session');
+        $translate = $session->translate;
+        $mail = new Zend_Mail('UTF-8');
+
+        $mail->setBodyHtml($translate->_("Hi %s,<br/><br/>Someone, hopefully you, requested a new password on AMUZI. To make a new password, please click the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getForgotPasswordUrl(), $userRow->getForgotPasswordUrl()));
+        $mail->setFrom('support@amuzi.net', 'AMUZI Team');
+        $mail->addTo($userRow->email);
+        $mail->setSubject($translate->_("AMUZI -- New password request"));
+
+        try {
+            $mail->send();
+        } catch(Zend_Mail_Transport_Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function loginDummy()
     {
         $user = new User();

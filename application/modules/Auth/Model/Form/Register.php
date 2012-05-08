@@ -10,27 +10,16 @@ class Auth_Model_Form_Register extends DZend_Form
         $element->setLabel($this->_t('Name'));
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Text('email');
-        $element->setRequired();
-        $element->setAttrib('placeholder', $this->_t('john.smith@gmail.com'));
-        $element->setLabel($this->_t('Email'));
-        $this->addElement($element);
-
-        $element = new Zend_Form_Element_Password('password');
-        $element->setRequired();
-        $element->setAttrib('placeholder', "******");
-        $element->setLabel($this->_t('Password'));
-        $this->addElement($element);
+        $this->addEmail();
+        $this->addPassword();
 
         $element = new Zend_Form_Element_Password('password2');
         $element->setRequired();
         $element->setAttrib('placeholder', "******");
-        $element->setLabel($this->_t('Password'));
+        $element->setLabel($this->_t('Confirm Password'));
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Submit('submit');
-        $element->setLabel($this->_t('Register'));
-        $this->addElement($element);
+        $this->addSubmit($this->_t('Register'));
 
         $this->setMethod('post');
     }
