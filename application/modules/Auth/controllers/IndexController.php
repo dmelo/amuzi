@@ -100,6 +100,7 @@ class Auth_IndexController extends DZend_Controller_Action
             $userRow->token = '';
             $userRow->save();
             $message = array('You account is activated. You can login now.', 'success');
+            $this->_helper->redirector('index', 'index', 'default');
         }
 
         $this->view->message = $message;
@@ -150,6 +151,7 @@ class Auth_IndexController extends DZend_Controller_Action
                     $userRow->password = sha1($params['passwordnew']);
                     $userRow->save();
                     $message = array($this->view->t('Password changed successfully'), 'success');
+                    $this->_helper->redirector('index', 'index', 'default');
                 }
                 $this->view->message = $message;
 
