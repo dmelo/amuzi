@@ -13,5 +13,6 @@ class Auth_Model_Form_ResetPassword extends DZend_Form
         $this->addConfirmPassword();
         $this->addSubmit($this->_t('Update Password'));
 
+        $this->setMethod('post');
     }
 }

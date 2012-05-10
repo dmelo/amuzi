@@ -141,8 +141,23 @@ class Auth_IndexController extends DZend_Controller_Action
             $this->view->email = $params['email'];
             $form = new Auth_Model_Form_ResetPassword();
 
+            if($this->_request->isPost() && $form->isValid($params)) {
+                if($params['password2'] !== $params['passwordnew'])
+                    $message = array($this->view->t('Passwords doesn\'t match'), 'error');
+                elseif(strlen($params['passwordnew']) < 6)
+                    $message = array($this->view->t('Password is too short'), 'error');
+                else {
+                    $userRow->password = sha1($params['passwordnew']);
+                    $userRow->save();
+                    $message = array($this->view->t('Password changed successfully'), 'success');
+                }
+                $this->view->message = $message;
 
-            $this->view->form = $form;
+                if('error' === $message[1])
+                    $this->view->form = $form;
+            }
+            else
+                $this->view->form = $form;
         }
     }
 }
