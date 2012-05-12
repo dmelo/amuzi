@@ -9,7 +9,7 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
-class Playlist
+class Playlist extends DZend_Model
 {
     protected $_playlistDb;
     protected $_playlistHasTrackDb;
@@ -18,6 +18,7 @@ class Playlist
 
     public function __construct()
     {
+        parent::__construct();
         $this->_playlistDb = new DbTable_Playlist();
         $this->_playlistHasTrackDb = new DbTable_PlaylistHasTrack();
         $this->_userListenPlaylistModel = new UserListenPlaylist();
@@ -46,6 +47,7 @@ class Playlist
                         $this->_session->user->id, $name, $public
                     );
                 } catch(Zend_Db_Table_Exception $e) {
+                    $this->_logger->info($e->getMessage());
                     throw new Zend_Exception("the playlist is not yours");
                 }
             }

@@ -28,6 +28,9 @@ class Youtube
                 );
             foreach ($node->getElementsByTagName('title') as $title)
                 $entry['title'] = $title->nodeValue;
+            // filtering
+            $entry['title'] = str_replace(array('"', '\'', '/'), array('', '', ''), strip_tags($entry['title']));
+
             foreach ($node->getElementsByTagName('content') as $content)
                 $entry['content'] = $content->nodeValue;
             foreach ($node->getElementsByTagName('mediaathumbnail') as $pic) {
@@ -41,6 +44,8 @@ class Youtube
             $entry['you2better'] = Zend_Registry::get('domain');
             $entry['you2better'] .= '/api/' . $entry['duration'] . '/' .
                 $entry['id'] . '/' . urlencode($entry['title']) . '.mp3';
+
+
 
             $resultSet[] = new YoutubeEntry($entry);
         }

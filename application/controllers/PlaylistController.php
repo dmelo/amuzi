@@ -215,7 +215,7 @@ class PlaylistController extends DZend_Controller_Action
             $name = $this->_request->getParam('name');
             $public = $this->_request->getParam('public');
 
-            $row = $this->_playlistModel->create($name, $public);
+            $row = $this->_playlistModel->create($name, $public ? 'public' : 'private');
             if($row)
                 $this->view->message = array($this->view->t('Playlist created'),
                     'success'

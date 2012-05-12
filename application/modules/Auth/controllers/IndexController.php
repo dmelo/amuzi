@@ -28,6 +28,7 @@ class Auth_IndexController extends DZend_Controller_Action
                 $auth->getIdentity();
             $result = $auth->authenticate($authAdapter);
             $message = null;
+            $this->_logger->info("out of the IF");
             if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
                 $this->_helper->redirector('index', 'index', 'default');
             } else {
@@ -47,8 +48,10 @@ class Auth_IndexController extends DZend_Controller_Action
     public function logoutAction()
     {
         $auth = Zend_Auth::getInstance();
-        if($auth->hasIdentity())
+        if($auth->hasIdentity()) {
+            unset($this->_session->user);
             $auth->clearIdentity();
+        }
     }
 
     /**
