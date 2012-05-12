@@ -42,6 +42,12 @@ class IndexController extends DZend_Controller_Action
         // action body
     }
 
+    public function testAction()
+    {
+        var_dump(Zend_Auth::getInstance()->getIdentity());
+        var_dump($this->_session->user);
+    }
+
 }
 
 

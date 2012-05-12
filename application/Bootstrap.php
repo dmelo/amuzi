@@ -10,10 +10,6 @@
  * @license GPL version 3
  */
 
-require_once 'Zend/Loader/Autoloader.php';
-$zendAutoloader = Zend_Loader_Autoloader::getInstance();
-$zendAutoloader->setFallbackAutoloader(true);
-
 class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 {
     /**
@@ -80,8 +76,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             $view->lightningPackerLink()->appendStylesheet($item);
 
         $this->bootstrap('translate');
-        $session = DZend_Session_Namespace::get('session');
-        $view->translate = $session->translate;
+        $view->translate = Zend_Registry::get('translate');
     }
 
     public function _initCache()
@@ -98,46 +93,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);
 
         Zend_Registry::set('cache', $cache);
-    }
-
-    public function _initLocale()
-    {
-        $this->bootstrap('path');
-        $session = DZend_Session_Namespace::get('session');
-        if (!isset($session->locale)) {
-            try {
-                $locale = new Zend_Locale('auto');
-            } catch(Zend_Locale_Exception $e) {
-                $locale = new Zend_Locale('en_US');
-            }
-            $session->locale = $locale;
-        }
-    }
-
-    public function getTranslate($locale)
-    {
-        return new Zend_Translate(
-            array('adapter' => 'array',
-                'content' => "../locale/${locale}.php",
-                'locale' => $locale)
-        );
-    }
-
-    public function _initTranslate()
-    {
-        $this->bootstrap('locale');
-        $session = DZend_Session_Namespace::get('session');
-        if (!isset($session->translate)) {
-            $locale = $session->locale;
-
-            try {
-                $translate = $this->getTranslate($locale);
-            } catch(Zend_Translate_Exception $e) {
-                $translate = $this->getTranslate('en_US');
-            }
-
-            $session->translate = $translate;
-        }
     }
 
     public function _initDateTime()

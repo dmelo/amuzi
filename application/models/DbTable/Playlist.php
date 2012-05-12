@@ -5,8 +5,8 @@ class DbTable_Playlist extends DZend_Model_DbTable
     public function insert(array $data)
     {
         // All checks
-        $firstLetter = substr($data['name'], 0, 1);
-        if($firstLetter < 'a' || $firstLetter > 'z')
+        $firstLetter = ucfirst(substr($data['name'], 0, 1));
+        if($firstLetter < 'A' || $firstLetter > 'Z')
             throw new Zend_Db_Table_Exception(
                 "playlist.name must start with a letter"
             );

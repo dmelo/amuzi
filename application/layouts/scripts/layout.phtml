@@ -8,21 +8,11 @@
     </head>
 
     <body>
-<div id="fb-root"></div>
-<script src="http://connect.facebook.net/en_US/all.js">
-</script>
-<script>
-    FB.init({
-        appId:'209056955830996', cookie:true,
-        status:true, xfbml:true
-    });
-</script>
-
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="#">Amuzi</a>
-            <ul class="nav">;
+            <a class="brand" href="/">Amuzi</a>
+            <ul class="nav">
                 <li class="dropdown">
                     <a href="#" class="loginRequired dropdown-toggle" data-toggle="dropdown" title="Playlist Manager"><?= $this->t('Playlist'); ?> <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -33,12 +23,9 @@
                 </li>
                 <li><a href="/user" class="loadModal loginRequired" title="User Settings"><?= $this->t('Settings'); ?></a></li>
                 <li><a href="/docs" title="Docs" target="_blank"><?= $this->t("Docs"); ?></a></li>
-                <li style="margin-top: -18px"><a href="/index/about" class="loadModal" title="About Amuzi"><?= $this->t('About'); ?></a></li> <!-- the style here is a dirty fix... TODO: find the real solution -->
+                <li><a href="/index/about" class="loadModal" title="About Amuzi"><?= $this->t('About'); ?></a></li>
             </ul>
             <div class="pull-right">
-                <fb:login-button id="login-button" scope="email,user_checkins" style="visibility: hidden" OnLogin="processLogin();" style="">
-                    <?= $this->t('Login with Facebook'); ?>
-                </fb:login-button>
             </div>
         </div>
     </div>

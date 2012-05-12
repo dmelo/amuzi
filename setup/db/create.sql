@@ -2,12 +2,14 @@ CREATE TABLE `user` (
     `id` int(11) NOT NULL auto_increment,
     `facebook_id` varchar(63) collate utf8_swedish_ci default NULL,
     `name` varchar(31) collate utf8_swedish_ci default NULL,
-    `email` varchar(2047) collate utf8_swedish_ci default NULL,
+    `email` varchar(255) collate utf8_swedish_ci default NULL,
+    `password` varchar(40) collate utf8_swedish_ci default NULL, 
+    `token` varchar(40) collate utf8_swedish_ci default NULL, 
     `url` varchar(2047) collate utf8_swedish_ci default NULL,
     `privacy` enum('public', 'private') NOT NULL default 'public',
     `current_playlist_id` int(11),
     PRIMARY KEY(`id`),
-    UNIQUE(`facebook_id`)
+    UNIQUE(`email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 CREATE TABLE `track` (
