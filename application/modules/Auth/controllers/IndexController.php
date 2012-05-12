@@ -19,7 +19,7 @@ class Auth_IndexController extends DZend_Controller_Action
     {
         $form = new Auth_Model_Form_Login();
         $params = $this->_request->getParams();
-        if ($this->_request->isPost() && $form->isValid($this->_request->getParams())) {
+        if ($this->_request->isPost() && $form->isValid($this->_request->getParams()) && ($userRow = $this->_userModel->findByEmail($params['email'])) !== null && $userRow->token === '') {
             $authAdapter = Zend_Registry::get('authAdapter');
             $authAdapter->setIdentity($params['email']);
             $authAdapter->setCredential($params['password']);
