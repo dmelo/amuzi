@@ -7,7 +7,6 @@ class DbTable_Track extends DZend_Model_DbTable
         // filtering fields.
         $data['title'] = str_replace(array('"', '\'', '/'), array('', '', ''), strip_tags($data['title']));
         $data['url'] = preg_replace("/[^a-zA-Z0-9 :\.\/%]+/", "", $data['url']);
-        $data['cover'] = preg_replace("/[^a-zA-Z0-9 :\.\?&=%]+/", "", $data['url']);
 
 
         if (array_key_exists('mp3', $data)) {
