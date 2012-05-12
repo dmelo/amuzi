@@ -73,8 +73,11 @@ class Auth_IndexController extends DZend_Controller_Action
             else {
                 if($this->_userModel->register($params['name'], $params['email'], $params['password']) === true) {
                     $userRow = $this->_userModel->findByEmail($params['email']);
-                    if($this->_userModel->sendActivateAccountEmail($userRow))
+                    if($this->_userModel->sendActivateAccountEmail($userRow)) {
                         $message = array($this->view->t('User registered. Check your email to activate your account.'), 'success');
+                        if (method_exists($userRow, 'postRegister'))
+                            $userRow->postRegister();
+                    }
                     else {
                         $message = array($this->view->t('An error occurred. It was not possible to send the email. Plase try again'), 'error');
                         $this->_userModel->deleteByEmail($params['email']);

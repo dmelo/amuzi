@@ -26,4 +26,16 @@ class DbTable_UserRow extends DZend_Model_DbTableRow
         $config = new Zend_Config_Ini(APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV);
         return (sha1($this->email . $time . $config->salt) === $hash);
     }
+
+    public function postRegister()
+    {
+        $playlistDb = new DbTable_Playlist();
+        $playlistSet = $playlistDb->findByUserId($this->id);
+        if (0 === count($playlistSet)) {
+            $playlistDb->insert(array('user_id' => $this->id, 'name' => $this->name, 'privacy' => $this->privacy));
+            $playlistRow = $playlistDb->findRowByUserId($this->id);
+            $this->current_playlist_id = $playlistRow->id;
+            $this->save();
+        }
+    }
 }
