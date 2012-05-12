@@ -51,6 +51,7 @@ class Auth_IndexController extends DZend_Controller_Action
         if($auth->hasIdentity()) {
             unset($this->_session->user);
             $auth->clearIdentity();
+            $this->_helper->redirector('login', 'index', 'Auth');
         }
     }
 

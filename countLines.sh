@@ -1,1 +1,1 @@
-wc -l `find application | grep "\.php$"` `find locale` public/js/default.js
+wc -l `find application | grep "\.php$"` `find locale` public/js/default.js.php
