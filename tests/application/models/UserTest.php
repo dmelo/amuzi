@@ -25,4 +25,10 @@ class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
             ), $ds
         );
     }
+
+    public function login()
+    {
+        $form = new Auth_Model_Form_Login();
+        $form->setAction('/Auth/index/login');
+    }
 }

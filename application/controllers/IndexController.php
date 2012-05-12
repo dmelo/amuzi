@@ -17,6 +17,7 @@ class IndexController extends DZend_Controller_Action
      */
     public function indexAction()
     {
+        $this->_logger->info("---" . $this->_request->getModuleName() . "#" . $this->_request->getControllerName() . "#" . $this->_request->getActionName());
         $this->view->form = new Form_Search();
         if(isset($this->_session->user))
             $this->view->userId = $this->_session->user->id;
