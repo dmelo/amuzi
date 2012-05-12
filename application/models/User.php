@@ -3,7 +3,6 @@
 class User extends DZend_Model
 {
     private $_id;
-    private $_facebookId;
     private $_name;
     private $_email;
     private $_url;
@@ -14,28 +13,8 @@ class User extends DZend_Model
     public function __construct()
     {
         parent::__construct();
-        $this->_loginArgs = array('facebook_id', 'name', 'email', 'url');
         $this->_userDb = new DbTable_User();
         $this->_translate = Zend_Registry::get('translate');
-    }
-
-    public function login($params)
-    {
-        $data = array();
-        foreach ($this->_loginArgs as $arg) {
-            if (array_key_exists($arg, $params)) {
-                $this->{'_' . $arg} = $params[$arg];
-                $data[$arg] = $params[$arg];
-            }
-        }
-
-        $row = $this->_userDb->register($data);
-        return $row->id;
-    }
-
-    public function findRowByFacebookId($facebookId)
-    {
-        return $this->_userDb->findRowByFacebookId($facebookId);
     }
 
     public function getSettings()
@@ -140,18 +119,6 @@ class User extends DZend_Model
         }
 
         return true;
-    }
-
-    public static function loginDummy()
-    {
-        $user = new User();
-        $userRow = $user->findRowByFacebookId('1625795908');
-        if ($userRow) {
-            $session = DZend_Session_Namespace::get('session');
-            $session->user = $userRow;
-        } else {
-            throw new Zend_Exception("Dummy login user does not exists");
-        }
     }
 }
 

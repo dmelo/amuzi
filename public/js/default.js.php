@@ -15,66 +15,6 @@
     var current;
     var modalWrapper = "#load-modal-wrapper";
 
-    // Call this from firebug:
-    // login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 'kljkjkj');
-
-    function fakeLogin() {
-        login('1625795908', 'Diogo Melo', 'melo@vonbraunlabs.com.br', 'kljkjkj');
-    }
-
-    function login(facebook_id, name, email, url) {
-        $.get('/user/login', {
-            facebook_id: facebook_id,
-            name: name,
-            email: email,
-            url: url
-        }, function(data) {
-            callbackLogin(data);
-        });
-    }
-
-    function logout() {
-        $.get('/user/logout', {
-        }, function(data) {
-            $('#userId').remove();
-            $('.loginRequired').fadeTo('slow', 0.0);
-            unloadPlaylist();
-            $('.jp-title').css('display', 'none');
-        });
-    }
-
-    function processLogin() {
-        /*
-        FB.api('/me', function(user) {
-            var userDiv = $('#user');
-            var loginDiv = $('#login-button');
-            console.log(user);
-            if(user != null && user.id != null) {
-                var image = document.getElementById('image');
-                image.src = 'http://graph.facebook.com/' + user.id + '/picture';
-                var name = document.getElementById('name');
-                name.innerHTML = user.name;
-                userDiv.css('visibility', 'visible');
-                loginDiv.css('visibility', 'hidden');
-
-                login(user.id, user.first_name + " " + user.last_name, user.email, user.link);
-            }
-            else {
-                userDiv.css('visibility', 'hidden');
-                loginDiv.css('visibility', 'visible');
-            }
-        });
-        */
-    }
-
-
-    function callbackLogin(userId) {
-        loadPlaylist();
-        $('.loginRequired').fadeTo('slow', 1.0);
-        $('body').append('<div class="invisible" id="userId">' + userId + '</div>');
-    }
-
-
     // Soon to be deprecated.
     function savePlaylist() {
         $.post('/playlist/save', {
