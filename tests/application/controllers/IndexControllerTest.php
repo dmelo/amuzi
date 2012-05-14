@@ -2,15 +2,27 @@
 
 require_once 'bootstrap.php';
 
-class IndexControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
+class IndexControllerTest extends AbstractControllerTest
 {
+    public function __construct()
+    {
+        $this->_databaseUsage = true;
+    }
+
     public function testSanity()
     {
         $this->assertTrue(true);
     }
 
+    public function testLoginFormAction()
+    {
+        $this->dispatch('/');
+        $this->assertLoginForm();
+    }
+
     public function testIndexAction()
     {
+        $this->testLogin();
         $this->dispatch('/');
         $this->assertBasics('index', 'index');
         $this->assertQuery('form#search');
@@ -29,4 +41,3 @@ class IndexControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertBasics('about', 'index');
     }
 }
-

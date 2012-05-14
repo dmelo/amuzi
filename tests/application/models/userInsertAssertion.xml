@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <dataset>
-    <user id="2" facebook_id="1625795908" name="Diogo Melo" email="melo@vonbraunlabs.com.br" url="kljkjkj" privacy="public"/>
-    <user id="3" facebook_id="blablabla" name="Test Test" email="test@test.com" url="http://example.com" privacy="public" current_playlist_id="5"/>
+    <table name="user">
+        <column>id</column>
+        <column>facebook_id</column>
+        <column>name</column>
+        <column>email</column>
+        <column>password</column>
+        <column>token</column>
+        <column>url</column>
+        <column>privacy</column>
+        <column>current_playlist_id</column>
+        <row>
+            <value>2</value>
+            <null/>
+            <value>Diogo Melo</value>
+            <value>dmelo87@gmail.com</value>
+            <value>30a8caa8b6a0ff02a958c31d8c5f7f622f12232c</value>
+            <value></value>
+            <value></value>
+            <value>public</value>
+            <null/>
+        </row>
+        <row>
+            <value>3</value>
+            <null/>
+            <value>Test Test</value>
+            <value>test@test.com</value>
+            <value>a9993e364706816aba3e25717850c26c9cd0d89d</value>
+            <value></value>
+            <value></value>
+            <value>public</value>
+            <value>5</value>
+        </row>
+    </table>
 </dataset>
+
+
+

@@ -2,7 +2,7 @@
 
 <dataset>
     <!-- User -->
-    <user id="2" facebook_id="1625795908" name="Diogo Melo" email="melo@vonbraunlabs.com.br" url="kljkjkj" privacy="public"/>
+    <user id="2" name="Diogo Melo" email="dmelo87@gmail.com" url="" privacy="public" password="30a8caa8b6a0ff02a958c31d8c5f7f622f12232c" token=""/>
 
     <!-- Playlist -->
     <playlist id="2" user_id="2" name="default" repeat="1" shuffle="1" current_track="2" privacy="public"/>

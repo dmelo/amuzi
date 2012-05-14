@@ -2,11 +2,11 @@
 
 require_once 'bootstrap.php';
 
-class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
+class PlaylistControllerTest extends AbstractControllerTest
 {
     private $_postAddtrack = array(
         'title' => 'Test Music',
-        'mp3' => 'http://example.com/a.mp3',
+        'url' => 'http://example.com/a.mp3',
         'cover' => 'http://example.com/a.jpg',
         'playlist' => 'default'
     );
@@ -29,7 +29,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
      */
     public function testLoggedOutIndex()
     {
-        $this->assertAjax500('/playlist/index');
+        $this->assertAjaxLoginForm('/playlist/index');
     }
 
     /**
@@ -39,47 +39,47 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
      */
     public function testLoggedOutSearch()
     {
-        $this->assertAjax500('/playlist/search');
+        $this->assertAjaxLoginForm('/playlist/search');
     }
 
     public function testLoggedOutSave()
     {
-        $this->assertAjax500('/playlist/save');
+        $this->assertAjaxLoginForm('/playlist/save');
     }
 
     public function testLoggedOutaddtrack()
     {
-        $this->assertAjax500('/playlist/addtrack');
+        $this->assertAjaxLoginForm('/playlist/addtrack');
     }
 
     public function testLoggedOutrmtrack()
     {
-        $this->assertAjax500('/playlist/rmtrack');
+        $this->assertAjaxLoginForm('/playlist/rmtrack');
     }
 
     public function testLoggedOutload()
     {
-        $this->assertAjax500('/playlist/load');
+        $this->assertAjaxLoginForm('/playlist/load');
     }
 
     public function testLoggedOutsetrepeat()
     {
-        $this->assertAjax500('/playlist/setrepeat');
+        $this->assertAjaxLoginForm('/playlist/setrepeat');
     }
 
     public function testLoggedOutsetshuffle()
     {
-        $this->assertAjax500('/playlist/setshuffle');
+        $this->assertAjaxLoginForm('/playlist/setshuffle');
     }
 
     public function testLoggedOutsetcurrent()
     {
-        $this->assertAjax500('/playlist/setcurrent');
+        $this->assertAjaxLoginForm('/playlist/setcurrent');
     }
 
     public function testLoggedOutnew()
     {
-        $this->assertAjax500('/playlist/new');
+        $this->assertAjaxLoginForm('/playlist/new');
     }
 
     /**
@@ -89,8 +89,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
      */
     public function testIndexAction()
     {
-        $this->_databaseUsage = true;
-        User::loginDummy();
+        $this->testLogin();
         $this->assertAjaxWorks('/playlist');
         $this->assertBasics('index', 'playlist');
         $this->assertQuery('form#playlistsettings');
@@ -100,8 +99,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testSearchAction()
     {
-        $this->_databaseUsage = true;
-        User::loginDummy();
+        $this->testLogin();
         $this->request->setMethod('POST');
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 3);
@@ -111,8 +109,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testSearchAction2()
     {
-        $this->_databaseUsage = true;
-        User::loginDummy();
+        $this->testLogin();
         $this->request->setMethod('POST');
         $this->request->setPost(array('q' => 'newOne'));
         $this->assertAjaxWorks('/playlist/search');
@@ -123,8 +120,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testSearchAction3()
     {
-        User::loginDummy();
-        $this->request->setMethod('GET');
+        $this->testLogin();
         $this->request->setParams(array('q' => 'newOne'));
         $this->assertAjax500('/playlist/search');
         $this->assertEquals(
@@ -134,9 +130,9 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testAddtrackAction()
     {
-        User::loginDummy();
-        $this->request->setMethod('POST');
+        $this->testLogin();
         $this->request->setPost($this->_postAddtrack);
+        $this->request->setMethod('post');
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $ret = array('Track added', 'success', array(
@@ -151,8 +147,7 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testAddtrackAction2()
     {
-        User::loginDummy();
-        $this->request->setMethod('GET');
+        $this->testLogin();
         $this->request->setParams($this->_postAddtrack);
 
         $this->assertAjaxWorks('/playlist/addtrack');
@@ -168,9 +163,9 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
      */
     public function testAddtrackAction3()
     {
-        User::loginDummy();
-        $this->request->setMethod('POST');
+        $this->testLogin();
         $this->request->setPost(array('id' => 9, 'playlist' => 'default'));
+        $this->request->setMethod('post');
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $obj = Zend_Json::decode($this->response->getBody());
@@ -181,9 +176,6 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
             'cover' => 'http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg',
             'duration' => '0'
         )));
-
-
-       array("id" => 9, "title" => "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction", "url" => "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction", "cover" => "http:\/\/i.ytimg.com\/vi\/BaTSyGfxh5w\/3.jpg", "duration" => 0);
     }
 
     /**
@@ -193,9 +185,9 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
      */
     public function testAddtrackAction4()
     {
-        User::loginDummy();
-        $this->request->setMethod('POST');
+        $this->testLogin();
         $this->request->setPost(array('id' => 9987, 'playlist' => 300));
+        $this->request->setMethod('post');
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $obj = Zend_Json::decode($this->response->getBody());
@@ -206,9 +198,9 @@ class PlaylistControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
     public function testRmtrackAction()
     {
-        User::loginDummy();
-        $this->request->setMethod('POST');
+        $this->testLogin();
         $this->request->setPost($this->_postRmtrack);
+        $this->request->setMethod('post');
 
         $this->assertAjaxWorks('/playlist/rmtrack');
         $this->assertJsonMessage(array('Track removed', 'success'));

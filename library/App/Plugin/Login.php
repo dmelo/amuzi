@@ -8,9 +8,9 @@ class App_Plugin_Login extends DZend_Plugin_Login
         $this->_allowLogOutAccess = array(
             array('default', 'api'),
             array('default', 'docs'),
-            array('derault', 'index', 'about'),
-            array('derault', 'index', 'error'),
-            array('derault', 'index', 'test')
+            array('default', 'index', 'about'),
+            array('default', 'index', 'error'),
+            array('default', 'index', 'test')
         );
     }
 }

@@ -6,11 +6,12 @@ class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
     public function testInsertUser()
     {
         $data = array(
-            'facebook_id' => 'blablabla',
             'name' => 'Test Test',
             'email' => 'test@test.com',
-            'url' => 'http://example.com',
-            'privacy' => 'public'
+            'password' => sha1('abc'),
+            'privacy' => 'public',
+            'token' => '',
+            'url' => ''
         );
 
         $userDb = new DbTable_User();
@@ -20,7 +21,7 @@ class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('user', 'SELECT * FROM user');
         $this->assertDataSetsEqual(
-            $this->createFlatXmlDataSet(
+            $this->createXMLDataSet(
                 dirname(__FILE__) . '/userInsertAssertion.xml'
             ), $ds
         );
