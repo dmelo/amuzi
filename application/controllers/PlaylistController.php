@@ -51,8 +51,11 @@ class PlaylistController extends DZend_Controller_Action
     public function saveAction()
     {
         if ($this->_request->isPost()) {
+            $playlist = $this->_request->getPost('playlist');
+            for($i = 0; $i < count($playlist); $i++)
+                $playlist[$i]['url'] = $playlist[$i]['mp3'];
             $this->_session->playlist = array(
-                $this->_request->getPost('playlist'),
+                $playlist,
                 $this->_request->getPost('name')
             );
             if (isset($this->_session->user))

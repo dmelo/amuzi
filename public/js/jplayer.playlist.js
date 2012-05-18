@@ -329,6 +329,7 @@
 				this._initPlaylist([]);
 				this._refresh(function() {
 					$(self.cssSelector.jPlayer).jPlayer("clearMedia");
+                    self.scan();
 				});
 				return true;
 			} else {
@@ -372,6 +373,7 @@
 							}
 
 							self.removing = false;
+                            self.scan();
 						});
 					}
 					return true;
@@ -467,16 +469,29 @@
             var isAdjusted = false;
 
             var replace = [];
+            var maxName = 0; // maximum value that name attribute assumes.
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-                replace[index] = self.original[$(value).attr('name')];
-                if(!isAdjusted && self.current === parseInt($(value).attr('name'), 10)) {
-                    self.current = index;
-                    isAdjusted = true;
+                if($(value).attr('name') > maxName)
+                    maxName = parseInt($(value).attr('name'));
+            });
+
+            var diffCount = maxName + 1 != $(this.cssSelector.playlist + " ul li").length; // Flag that marks if the number of "ul li" elements doesn't match the name attribute counting.
+
+            $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
+                if(!diffCount) {
+                    replace[index] = self.original[$(value).attr('name')];
+                    if(!isAdjusted && self.current === parseInt($(value).attr('name'), 10)) {
+                        self.current = index;
+                        isAdjusted = true;
+                    }
                 }
                 $(value).attr('name', index);
             });
-            this.original = replace;
-            this._originalPlaylist();
+
+            if(!diffCount) {
+                this.original = replace;
+                this._originalPlaylist();
+            }
         },
         setCurrent: function(current) {
             this.current = current;

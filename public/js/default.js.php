@@ -67,6 +67,7 @@
             url: url
         }, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
+            console.log(myPlaylist.original);
             if('error' === data[1])
                 loadPlaylist(playlistName);
         }, 'json');
