@@ -1,3 +1,7 @@
+.italic {
+    font-style: italic;
+}
+
 input[type=button].search, input[type=submit].search {
     height: 36px;
 	text-transform: uppercase;
