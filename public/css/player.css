@@ -5,3 +5,11 @@
 .jp-playlist {
     overflow: auto;
 }
+
+div.jp-playlist a {
+    color: #aaa !important;
+}
+
+div.jp-playlist a:hover, div.jp-playlist .jp-playlist-current a {
+    color: white !important;
+}
