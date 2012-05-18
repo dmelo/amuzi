@@ -219,7 +219,7 @@
 			var self = this;
 
 			// Wrap the <li> contents in a <div>
-			var listItem = "<li><div>";
+			var listItem = "<li name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\"><div>";
 
 			// Create remove control
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
@@ -234,7 +234,6 @@
 			if(media.free) {
 				var first = true;
 				listItem += "<span class='" + this.options.playlistOptions.freeGroupClass + "'>(";
-                console.log(media);
 				$.each(media, function(property,value) {
 					if($.jPlayer.prototype.format[property]) { // Check property is a media format.
 						if(first) {
@@ -311,7 +310,6 @@
 		},
 		add: function(media, playNow) {
 			$(this.cssSelector.playlist + " ul").append(this._createListItem(media)).find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
-            $(this.cssSelector.playlist + " ul li:last").attr('name', this.original.length);
 			this._updateControls();
 			this.original.push(media);
 			this.playlist.push(media); // Both array elements share the same object pointer. Comforms with _initPlaylist(p) system.
@@ -470,7 +468,6 @@
 
             var replace = [];
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-                alert($(value).attr('name'));
                 replace[index] = self.original[$(value).attr('name')];
                 if(!isAdjusted && self.current === parseInt($(value).attr('name'), 10)) {
                     self.current = index;

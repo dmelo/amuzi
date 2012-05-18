@@ -26,13 +26,12 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.js';
         $js[] = $domainJs . 'jquery.jplayer.js';
         $js[] = $domainJs . 'jplayer.playlist.js';
-        $js[] = 'http://jplayer.org/latest/js/jquery.jplayer.inspector.js';
-        $js[] = 'http://jplayer.org/js/themeswitcher.js';
-        $js[] = $domainJs . 'jquery-ui-1.8.16.custom.min.js';
+        $js[] = $domainJs . 'jquery.jplayer.inspector.js';
+        $js[] = $domainJs . 'themeswitcher.js';
+        $js[] = $domainJs . 'jquery-ui-1.8.20.custom.min.js';
         $js[] = $domainJs . 'jquery.progressbar.js';
         $js[] = $domainJs . 'jquery.placeholder.min.js';
         $js[] = $domainJs . 'jquery.form.js';
-        $js[] = $domainJs . 'jquery.autocomplete.js';
         $js[] = $domainJs . 'jquery.tableofcontents.js';
         $js[] = $domainJs . 'resultset.js';
         $js[] = $domainJs . 'commands.js';
@@ -45,7 +44,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'default.js';
 
         $css = array();
-        $jpSite = 'http://jplayer.org/';
         $css[] = $domainCss . 'prettify-jPlayer.css';
         $css[] = $domainCss . 'jplayer.pink.flag.css';
         $css[] = $domainCss . 'player.css';

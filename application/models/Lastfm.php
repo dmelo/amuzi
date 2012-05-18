@@ -36,6 +36,7 @@ class Lastfm
 
         $xml = $this->_request($args);
         $xmlDoc = new DOMDocument();
+        $i = 0;
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
             foreach ($xmlDoc->getElementsByTagName('track') as $track) {
@@ -46,6 +47,9 @@ class Lastfm
                 $name .= $names->item(0)->nodeValue;
                 $pic = $pics->length > 0 ? $pics->item(0)->nodeValue : '';
                 $resultSet[] = new LastfmEntry($name, $pic);
+                $i++;
+                if($i >= $limit)
+                    break;
             }
         }
 

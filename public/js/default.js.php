@@ -141,7 +141,6 @@
 
     function setPlaylistRepeat(name, repeat) {
         name = name || 'default';
-
     }
 
     /**
@@ -300,32 +299,48 @@
         // placeholder on the search input.
         $('#q').placeholder();
         // autocomplete the search input from last.fm.
-        $('#q').autocomplete('/api/autocomplete', {
-            dateType: 'json',
-            parse: function(data) {
-                data = $.parseJSON(data);
-                return $.map(data, function(row) {
-                    return {
-                        data: row,
-                        value: '<img src="' + row.pic + '"/> <span>' + row.name + '</span>',
-                        result: row.name
-                    };
-                });
+        $.ui.autocomplete.prototype._renderItem = function(ul, row) {
+            var a = $('<li></li>')
+                .data('item.autocomplete', row)
+                .append('<a>' + row.label + '</a>')
+                .appendTo(ul);
+            return a;
+        };
 
+        $('#q').autocomplete({
+            source: function(request, response) {
+                $.get('/api/autocomplete', {
+                    q: request.term,
+                }, function(data) {
+                    var a =  $.map(data, function(row) {
+                        return {
+                            data: row,
+                            label: '<img src="' + row.pic + '"/> <span>' + row.name + '</span>',
+                            value: row.name
+                        };
+                    }, 'json');
+
+                    response(a);
+                }, 'json');
             },
-            formatItem: function(row, i, n) {
-                return '<img src="' + row.pic + '"/> <span>' + row.name + '</span>';
+            change: function(e, ui) {
+                $('#q').val(ui.item.value);
+                $('#search').submit();
+            },
+            select: function(e, ui) {
+                $('#q').val(ui.item.value);
+                $('#search').submit();
+            },
+            focus: function(e, ui) {
+                $('#q').val(ui.item.value);
+            },
+            close: function(e, ui) {
             }
         });
 
         if($('#status-message').length > 0) {
             $.bootstrapMessageAuto($('#status-message p').html(), $('#status-message span.status').html());
         }
-
-        // submit a query to youtube after change the value of the search input.
-        $('#q').change(function() {
-            $('#search').submit();
-        });
 
         // start the jplayer.
         jplayerCss = "#jp_container_1";
@@ -389,7 +404,6 @@
             }
         });
 
-        processLogin();
         $('#toc').tableOfContents(null, {startLevel:2});
 
     });

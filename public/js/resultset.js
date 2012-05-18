@@ -115,6 +115,7 @@ $(document).ready(function() {
         },
         beforeSubmit: function() {
             resultSet.searchString = $('#q').val();
+            console.log($('#q').val());
             resultSet.searchPage = 1;
             $.bootstrapMessage('Loading...', 'info');
         }
