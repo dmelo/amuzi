@@ -8,9 +8,11 @@
     /* 45 deg ccw rotation */
     -moz-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
     /* shadow */
     -moz-box-shadow: 0 0 1em #888;
     -webkit-box-shadow: 0 0 1em #888;
+    box-shadow: 0 0 1em #888;
 
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
