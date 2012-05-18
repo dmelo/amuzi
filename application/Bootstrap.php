@@ -24,6 +24,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $domainCss = $this->getResource('domain') . '/css/';
         $js = array();
         $js[] = $domainJs . 'jquery.js';
+        $js[] = $domainJs . 'jquery.browser.min.js';
         $js[] = $domainJs . 'jquery.jplayer.js';
         $js[] = $domainJs . 'jplayer.playlist.js';
         $js[] = $domainJs . 'jquery.jplayer.inspector.js';

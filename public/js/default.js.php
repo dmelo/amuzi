@@ -407,5 +407,8 @@
 
         $('#toc').tableOfContents(null, {startLevel:2});
 
+        if('msie' === $.browser.name) {
+            $.bootstrapMessage('Please upgrade to a better browser', 'error');
+        }
     });
 //})(jQuery);
