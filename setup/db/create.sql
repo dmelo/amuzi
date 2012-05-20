@@ -10,7 +10,7 @@ CREATE TABLE `user` (
     `current_playlist_id` int(11),
     PRIMARY KEY(`id`),
     UNIQUE(`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 CREATE TABLE `track` (
     `id` int(11) NOT NULL auto_increment,
@@ -19,7 +19,7 @@ CREATE TABLE `track` (
     `cover` varchar(2047) collate utf8_swedish_ci default NULL,
     `duration` int(11) NOT NULL default 0,
     PRIMARY KEY(`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 CREATE TABLE `playlist` (
     `id` int(11) NOT NULL auto_increment,
@@ -32,7 +32,7 @@ CREATE TABLE `playlist` (
     PRIMARY KEY(`id`),
     UNIQUE(`user_id`, `name`),
     CONSTRAINT `playlist_user_id_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 ALTER TABLE `user` ADD CONSTRAINT `user_playlist_id_ibfk_1` FOREIGN KEY (`current_playlist_id`) REFERENCES `playlist`(`id`);
 
@@ -45,7 +45,7 @@ CREATE TABLE `playlist_has_track` (
     UNIQUE(`playlist_id`, `sort`),
     CONSTRAINT `has_playlist_id_ibfk_1` FOREIGN KEY (`playlist_id`) REFERENCES `playlist`(`id`),
     CONSTRAINT `has_track_id_ibfk_1` FOREIGN KEY (`track_id`) REFERENCES `track`(`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 CREATE TABLE `user_listen_playlist` (
     `id` int(11) NOT NULL auto_increment,
@@ -56,4 +56,4 @@ CREATE TABLE `user_listen_playlist` (
     UNIQUE(`user_id`, `playlist_id`),
     CONSTRAINT `user_listen_playlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
     CONSTRAINT `user_listen_playlist_ibfk_2` FOREIGN KEY (`playlist_id`) REFERENCES `playlist`(`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;

@@ -25,7 +25,6 @@
     }
 
     function addTrack(trackTitle, trackLink, trackCover) {
-        console.log("addTrack == trackTitle: " + trackTitle + ". trackLink: " + trackLink + ".trackCover: " + trackCover);
         var options;
         var playNow;
         if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover)) {
@@ -45,7 +44,6 @@
             playNow = false;
         }
 
-        console.log(options);
         $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if('error' === data[1])
@@ -53,7 +51,6 @@
             else if('success' === data[1]) {
                 var v = data[2];
                 var pOpt = {title: v.title, mp3: v.url, free: true, id: v.id};
-                console.log(pOpt);
                 myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
@@ -67,7 +64,6 @@
             url: url
         }, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
-            console.log(myPlaylist.original);
             if('error' === data[1])
                 loadPlaylist(playlistName);
         }, 'json');
@@ -113,7 +109,6 @@
             if(commands.isRunCommand)
                 setTimeout("commands.runProgram()", 1500);
         }).error(function(e) {
-            console.log("playlist not available");
         });
     }
 
