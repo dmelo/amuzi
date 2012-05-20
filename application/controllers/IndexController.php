@@ -50,7 +50,3 @@ class IndexController extends DZend_Controller_Action
     }
 
 }
-
-
-
-
