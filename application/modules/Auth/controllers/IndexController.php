@@ -19,6 +19,7 @@ class Auth_IndexController extends DZend_Controller_Action
     {
         $form = new Auth_Model_Form_Login();
         $params = $this->_request->getParams();
+        $message = null;
 
         if ($this->_request->isPost() && $form->isValid($this->_request->getParams()) && ($userRow = $this->_userModel->findByEmail($params['email'])) !== null && $userRow->token === '') {
             $authAdapter = Zend_Registry::get('authAdapter');
@@ -28,17 +29,18 @@ class Auth_IndexController extends DZend_Controller_Action
             if($auth->hasIdentity())
                 $auth->getIdentity();
             $result = $auth->authenticate($authAdapter);
-            $message = null;
             $this->_logger->info("out of the IF");
             if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
                 $this->_helper->redirector('index', 'index', 'default');
             } else {
                 $message = array($this->view->t("Invalid email and/or password."), "error");
             }
-            if(null !== $message)
-                $this->view->message = $message;
         }
         $this->view->form = $form;
+        if(null === $message && $this->_request->getParam('activated') == 1)
+            $message = array($this->view->t('Your account is active, you can LOGIN now'), 'success');
+        if(null !== $message)
+            $this->view->message = $message;
     }
 
     /**
@@ -108,7 +110,7 @@ class Auth_IndexController extends DZend_Controller_Action
             $userRow->token = '';
             $userRow->save();
             $message = array('You account is activated. You can login now.', 'success');
-            $this->_helper->redirector('index', 'index', 'default');
+            $this->_helper->redirector('login', 'index', 'Auth', array('activated' => '1'));
         }
 
         $this->view->message = $message;
