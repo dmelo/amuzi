@@ -215,3 +215,11 @@ ul.ui-autocomplete {
     top: 202px !important;
     width: 305px !important;
 }
+
+.share-link {
+    text-align: center;
+}
+
+.share-link {
+    font-size: 1.5em;
+}

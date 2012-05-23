@@ -274,6 +274,16 @@
     }
 
 
+    function shareLink(e) {
+        e.preventDefault();
+        $.post('/share', {
+            url: $(this).attr('href')
+        }, function(data) {
+            $(modalWrapper + ' .modal-body').html(data);
+            $(modalWrapper + ' h3').html('Share'); // TODO: translation
+            $(modalWrapper).modal('show');
+        });
+    }
 
     $(document).ready(function() {
         // topbar menu
@@ -405,5 +415,7 @@
         if('msie' === $.browser.name) {
             $.bootstrapMessage('Please upgrade to a better browser', 'error');
         }
+
+        $('.share a').live('click', shareLink);
     });
 //})(jQuery);
