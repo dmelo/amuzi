@@ -285,6 +285,51 @@
         });
     }
 
+    function opacityFull(element) {
+        element.addClass('opacity-full');
+        element.removeClass('opacity-none');
+    }
+
+    function opacityNone(element) {
+        element.addClass('opacity-none');
+        element.removeClass('opacity-full');
+    }
+
+    function preparePlaylistEditName() {
+        $('#playlistsettings-result tr').live('mouseover', function(e) {
+            $('.playlist-edit-name img').css('opacity', '0.0');
+            $(this).find('.playlist-edit-name img').css('opacity', '1.0');
+        });
+
+        $('#playlistsettings-result tr').live('mouseout', function(e) {
+            $('.playlist-edit-name img').css('opacity', '0.0');
+        });
+
+        $('.playlist-edit-name a').live('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var td = $(this).parent().parent();
+            td.find("span.playlist-name").css('display', 'none');
+            td.find(".playlist-form-name").css('display', 'block');
+            td.find("input#newname").val(td.find(".playlist-name").html());
+            td.find("input#name").val(td.find(".playlist-name").html());
+            td.find('.playlist-edit-name').css('display', 'none');
+            td.find("form").ajaxForm({dataType: 'json', success: function(data) {
+                $.bootstrapMessageAuto(data[0], data[1]);
+                if('success' === data[1]) {
+                    td.find('.playlist-name').html(td.find("input#newname").val());
+                }
+                td.find("span.playlist-name").css('display', 'block');
+                td.find(".playlist-form-name").css('display', 'none');
+                td.find('.playlist-edit-name').css('display', 'block');
+            }});
+        });
+
+        $('.playlist-form-name').live('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+
     $(document).ready(function() {
         // topbar menu
         $('.topbar').dropdown();
@@ -417,5 +462,7 @@
         }
 
         $('.share a').live('click', shareLink);
+        preparePlaylistEditName();
+
     });
 //})(jQuery);

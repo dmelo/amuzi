@@ -2,7 +2,7 @@
     <? foreach($this->resultSet as $row): ?>
     <tr class="load">
         <td><img alt="Cover image" alt="<?= $row->name; ?>" src="<?= $row->getCover(); ?>"/></td>
-        <td class="name"><?= $row->name; ?></td>
+        <td class="name"><span class="playlist-name"><?= $row->name; ?></span> <span class="playlist-edit-name"><a href="#"><img alt="<?= $this->t('Edit playlist\'s name'); ?>" src="/img/edit-icon.png"/></a></span><?= $this->formEdit; ?></td>
         <td><?= $row->countTracks(); ?></td>
         <td><input type="checkbox" name="public" class="public" <?= $row->privacy === 'public' ? 'checked="checked"' : ''; ?> /></td>
     </tr>

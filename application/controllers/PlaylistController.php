@@ -27,12 +27,14 @@ class PlaylistController extends DZend_Controller_Action
 
     public function indexAction()
     {
-        $this->view->form = new Form_PlaylistSettings();
         $this->view->resultSet = $this->_playlistModel->search('');
+        $this->view->form = new Form_PlaylistSettings();
+        $this->view->formEdit = new Form_PlaylistEditName();
     }
 
     public function searchAction()
     {
+        $this->view->formEdit = new Form_PlaylistEditName();
         if ($this->_request->isPost()) {
             $this->view->resultSet = $this->_playlistModel->search(
                 $this->_request->getPost('q')
@@ -260,6 +262,17 @@ class PlaylistController extends DZend_Controller_Action
             if ($this->_playlistModel->setPublic($name, $public))
                 $message = array($this->view->t('Setting saved'), 'success');
         }
+        $this->view->message = $message;
+    }
+
+    public function editnameAction()
+    {
+        $message = $this->_messageFail;
+        if ($this->_request->isPost() && ($name = $this->_request->getPost('name')) !== null && ($newName = $this->_request->getPost('newname')) !== null) {
+            if ($this->_playlistModel->setNewName($name, $newName))
+                $message = array($this->view->t('Saved'), 'success');
+        }
+
         $this->view->message = $message;
     }
 }

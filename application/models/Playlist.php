@@ -149,6 +149,20 @@ class Playlist extends DZend_Model
         }
     }
 
+    public function setNewName($name, $newName)
+    {
+        try {
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
+                $this->_session->user->id, $name
+            );
+            $playlistRow->name = $newName;
+            $playlistRow->save();
+            return true;
+        } catch(Zend_Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * addTrack Add a track into the playlist
      *

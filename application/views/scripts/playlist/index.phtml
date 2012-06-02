@@ -10,6 +10,6 @@
         </tr>
     </thead>
     <tbody>
-        <?= $this->partial('/playlist/search.phtml', array('resultSet' => $this->resultSet)); ?>
+        <?= $this->partial('/playlist/search.phtml', array('resultSet' => $this->resultSet, 'formEdit' => $this->formEdit)); ?>
     </tbody>
 </table>

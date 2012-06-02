@@ -223,3 +223,33 @@ ul.ui-autocomplete {
 .share-link {
     font-size: 1.5em;
 }
+
+.playlist-edit-name {
+    float: right;
+}
+
+.playlist-name {
+    float: left;
+}
+
+.playlist-edit-name img {
+    height: 20px !important;
+    width: 20px;
+    opacity: 0.0;
+}
+
+.playlist-form-name {
+    display: none;
+}
+
+.opacity-full {
+    opacity: 1.0;
+    -moz-opacity: 1.0;
+    filter: alpha(opacity=100);
+}
+
+.opacity-none {
+    opacity: 0.0;
+    -moz-opacity: 0.0;
+    filter: alpha(opacity=0);
+}
