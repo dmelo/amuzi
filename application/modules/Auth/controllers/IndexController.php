@@ -84,7 +84,11 @@ class Auth_IndexController extends DZend_Controller_Action
             elseif(($userRow = $this->_userModel->findByEmail($params['email'])) !== null)
                 $message = array($this->view->t('Email is already registered'), 'error');
             else {
-                if($this->_userModel->register($params['name'], $params['email'], $params['password']) === true) {
+                if(
+                    $this->_userModel->register(
+                        $params['name'], $params['email'], $params['password']
+                    ) === true
+                ) {
                     $userRow = $this->_userModel->findByEmail($params['email']);
                     if($this->_userModel->sendActivateAccountEmail($userRow)) {
                         $message = array($this->view->t('User registered. Check your email to activate your account.'), 'success');
@@ -110,11 +114,17 @@ class Auth_IndexController extends DZend_Controller_Action
     public function activateAction()
     {
         $email = $this->_request->getParam('email');
-        $token = Zend_Filter::filterStatic($this->_request->getParam('token'), 'Alnum');
+        $token = Zend_Filter::filterStatic(
+            $this->_request->getParam('token'), 'Alnum'
+        );
 
         $userRow = $this->_userModel->findByEmail($email);
         $message = null;
-        if(null === $userRow || '' === $userRow->token || $userRow->token !== $token) {
+        if(
+            null === $userRow ||
+            '' === $userRow->token ||
+            $userRow->token !== $token
+        ) {
             $message = array($this->view->t('The email %s cannot be activated', $email), 'error');
         } else {
             $userRow->token = '';
@@ -158,7 +168,10 @@ class Auth_IndexController extends DZend_Controller_Action
     {
         $params = $this->_request->getParams();
         $userRow = $this->_userModel->findByEmail($params['email']);
-        if($userRow && $userRow->isForgotPasswordUrlValid($params['time'], $params['hash'])) {
+        if(
+            $userRow &&
+            $userRow->isForgotPasswordUrlValid($params['time'], $params['hash'])
+        ) {
             $this->view->email = $params['email'];
             $form = new Auth_Model_Form_ResetPassword();
 

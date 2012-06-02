@@ -200,8 +200,10 @@ class PlaylistControllerTest extends AbstractControllerTest
         $obj = Zend_Json::decode($this->response->getBody());
         $this->assertJsonMessage(array('Track added', 'success', array(
             'id' => '9',
-            'title' => 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
-            'url' => 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
+            'title' =>
+                'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
+            'url' =>
+                'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
             'cover' => 'http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg',
             'duration' => '0'
         )));
