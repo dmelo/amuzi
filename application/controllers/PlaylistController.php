@@ -216,11 +216,14 @@ class PlaylistController extends DZend_Controller_Action
     public function newAction()
     {
         $form = new Form_CreatePlaylist();
-        if (!$this->_request->isPost() && $form->isValid($this->_request->getParams())) {
+        if (!$this->_request->isPost() &&
+                $form->isValid($this->_request->getParams())) {
             $name = $this->_request->getParam('name');
             $public = $this->_request->getParam('public');
 
-            $row = $this->_playlistModel->create($name, $public ? 'public' : 'private');
+            $row = $this->_playlistModel->create(
+                $name, $public ? 'public' : 'private'
+            );
             if($row)
                 $this->view->message = array($this->view->t('Playlist created'),
                     'success'
@@ -268,7 +271,11 @@ class PlaylistController extends DZend_Controller_Action
     public function editnameAction()
     {
         $message = $this->_messageFail;
-        if ($this->_request->isPost() && ($name = $this->_request->getPost('name')) !== null && ($newName = $this->_request->getPost('newname')) !== null) {
+        if (
+            $this->_request->isPost() &&
+            ($name = $this->_request->getPost('name')) !== null &&
+            ($newName = $this->_request->getPost('newname')) !== null
+            ) {
             if ($this->_playlistModel->setNewName($name, $newName))
                 $message = array($this->view->t('Saved'), 'success');
         }

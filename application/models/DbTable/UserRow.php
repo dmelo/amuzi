@@ -10,20 +10,30 @@ class DbTable_UserRow extends DZend_Model_DbTableRow
 
     public function getUrlToken()
     {
-        return Zend_Registry::get('domain') . '/Auth/index/activate/email/' . urlencode($this->email) . '/token/' . $this->token;
+        return Zend_Registry::get('domain') .
+            '/Auth/index/activate/email/' .
+            urlencode($this->email) . '/token/' . $this->token;
     }
 
     public function getForgotPasswordUrl()
     {
-        $config = new Zend_Config_Ini(APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV);
+        $config = new Zend_Config_Ini(
+            APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV
+        );
         $time = time(null);
         $hash = sha1($this->email . $time . $config->salt);
 
-        return Zend_Registry::get('domain') . '/Auth/index/resetpassword/email/' . $this->email . '/time/' . $time . '/hash/' . $hash;
+        return Zend_Registry::get('domain') .
+            '/Auth/index/resetpassword/email/' . $this->email . '/time/' .
+            $time . '/hash/' . $hash;
     }
 
-    public function isForgotPasswordUrlValid($time, $hash) {
-        $config = new Zend_Config_Ini(APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV);
+    public function isForgotPasswordUrlValid($time, $hash)
+    {
+        $config = new Zend_Config_Ini(
+            APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV
+        );
+
         return (sha1($this->email . $time . $config->salt) === $hash);
     }
 
@@ -32,9 +42,15 @@ class DbTable_UserRow extends DZend_Model_DbTableRow
         $playlistDb = new DbTable_Playlist();
         $playlistSet = $playlistDb->findByUserId($this->id);
         if (0 === count($playlistSet)) {
-            $playlistDb->insert(array('user_id' => $this->id, 'name' => $this->name, 'privacy' => $this->privacy));
+            $playlistDb->insert(
+                array(
+                    'user_id' => $this->id,
+                    'name' => $this->name,
+                    'privacy' => $this->privacy
+                )
+            );
             $playlistRow = $playlistDb->findRowByUserId($this->id);
-            $this->current_playlist_id = $playlistRow->id;
+            $this->currentPlaylistId = $playlistRow->id;
             $this->save();
         }
     }

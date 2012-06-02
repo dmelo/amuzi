@@ -44,7 +44,9 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
             $trackRow = $this->_trackDb->insert($trackInfo);
 
         if (null === $trackRow) {
-            throw new Zend_Db_Table_Row_Exception('Could not find the track: ' . print_r($trackInfo, true));
+            throw new Zend_Db_Table_Row_Exception(
+                'Could not find the track: ' . print_r($trackInfo, true)
+            );
         } else {
             $data = array(
                 'playlist_id' => $this->id,

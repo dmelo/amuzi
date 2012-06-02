@@ -21,7 +21,12 @@ class Auth_IndexController extends DZend_Controller_Action
         $params = $this->_request->getParams();
         $message = null;
 
-        if ($this->_request->isPost() && $form->isValid($this->_request->getParams()) && ($userRow = $this->_userModel->findByEmail($params['email'])) !== null && $userRow->token === '') {
+        if (
+            $this->_request->isPost() &&
+            $form->isValid($this->_request->getParams()) &&
+            ($userRow = $this->_userModel->findByEmail($params['email'])) !== null &&
+            $userRow->token === ''
+        ) {
             $authAdapter = Zend_Registry::get('authAdapter');
             $authAdapter->setIdentity($params['email']);
             $authAdapter->setCredential($params['password']);
@@ -33,12 +38,17 @@ class Auth_IndexController extends DZend_Controller_Action
             if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
                 $this->_helper->redirector('index', 'index', 'default');
             } else {
-                $message = array($this->view->t("Invalid email and/or password."), "error");
+                $message = array(
+                    $this->view->t("Invalid email and/or password."), "error"
+                );
             }
         }
         $this->view->form = $form;
         if(null === $message && $this->_request->getParam('activated') == 1)
-            $message = array($this->view->t('Your account is active, you can LOGIN now'), 'success');
+            $message = array(
+                $this->view->t('Your account is active, you can LOGIN now'),
+                'success'
+            );
         if(null !== $message)
             $this->view->message = $message;
     }

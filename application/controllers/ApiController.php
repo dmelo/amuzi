@@ -36,8 +36,10 @@ class ApiController extends DZend_Controller_Action
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
-            $limit = $this->_request->getParam('limit') ? $this->_request->getParam('limit') : 9;
-            $offset = $this->_request->getParam('offset') ? $this->_request->getParam('offset') : 1;
+            $limit = $this->_request->getParam('limit') ?
+                $this->_request->getParam('limit') : 9;
+            $offset = $this->_request->getParam('offset') ?
+                $this->_request->getParam('offset') : 1;
             $cache = Zend_Registry::get('cache');
             $key = sha1($q . $limit . $offset);
             if (($list = $cache->load($key)) === false) {
