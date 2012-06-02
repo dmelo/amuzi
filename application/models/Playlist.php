@@ -16,6 +16,11 @@ class Playlist extends DZend_Model
     protected $_userListenPlaylistModel;
     protected $_session;
 
+    /**
+     * __construct Initializes objects commonly used by other methods.
+     *
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -121,6 +126,14 @@ class Playlist extends DZend_Model
         return $ret;
     }
 
+    /**
+     * setRepeat Set a playlist to (or not to) loop the tracks.
+     *
+     * @param string $name Playlist's name
+     * @param string $repeat "true" for repeating, any other string otherwise.
+     * @return boolean Returns true if the adjustment was successful, false
+     * otherwise.
+     */
     public function setRepeat($name, $repeat)
     {
         try {
@@ -135,6 +148,14 @@ class Playlist extends DZend_Model
         }
     }
 
+    /**
+     * setShuffle Set a playlist to (or not to) shuffle the tracks.
+     *
+     * @param string $name Playlist's name
+     * @param string $shuffle "true" for shuffling, any other string otherwise.
+     * @return boolean Returns true if the adjustment was successful, false
+     * otherwise.
+     */
     public function setShuffle($name, $shuffle)
     {
         try {
@@ -149,6 +170,14 @@ class Playlist extends DZend_Model
         }
     }
 
+    /**
+     * setNewName
+     *
+     * @param string $name Current playlist's name.
+     * @param string $newName New playlist's name.
+     * @return boolean Return true if the operation was successful, false
+     * otherwise.
+     */
     public function setNewName($name, $newName)
     {
         try {
