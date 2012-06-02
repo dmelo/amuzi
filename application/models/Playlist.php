@@ -155,6 +155,8 @@ class Playlist extends DZend_Model
             $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
                 $this->_session->user->id, $name
             );
+            if(null === $playlistRow)
+                return false;
             $playlistRow->name = $newName;
             $playlistRow->save();
             return true;
@@ -189,6 +191,13 @@ class Playlist extends DZend_Model
         $playlistRow->rmTrack($url);
     }
 
+    /**
+     * setCurrentTrack Set a track as the currently played track.
+     *
+     * @param string $name Playlist's name
+     * @param int $current Track position on playlist.
+     * @return void
+     */
     public function setCurrentTrack($name, $current)
     {
         $row = $this->_playlistDb->findRowByUserIdAndName(
@@ -198,11 +207,23 @@ class Playlist extends DZend_Model
         $row->save();
     }
 
+    /**
+     * fetchAllUsers get all user's rows.
+     *
+     * @return void
+     */
     public function fetchAllUsers()
     {
         return $this->_playlistDb->fetchAllUsers();
     }
 
+    /**
+     * search Search for playlists owned by the current user.
+     *
+     * @param string $q Name (or part of it) of the playlist
+     * @return Zend_Db_Table_Rowset List of user's playlist that matches the
+     * search.
+     */
     public function search($q)
     {
         return $this->_playlistDb->search($q);

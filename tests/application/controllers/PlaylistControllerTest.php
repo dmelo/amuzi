@@ -2,8 +2,22 @@
 
 require_once 'bootstrap.php';
 
+/**
+ * PlaylistControllerTest Tests the PlaylistController class.
+ *
+ * @package amuzi
+ * @version 1.0
+ * @copyright Copyright (C) 2010 Diogo Oliveira de Melo. All rights reserved.
+ * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
+ * @license GPL version 3
+ */
 class PlaylistControllerTest extends AbstractControllerTest
 {
+    /**
+     * _postAddtrack Default post values for adding track.
+     *
+     * @var array
+     */
     private $_postAddtrack = array(
         'title' => 'Test Music',
         'url' => 'http://example.com/a.mp3',
@@ -11,10 +25,25 @@ class PlaylistControllerTest extends AbstractControllerTest
         'playlist' => 'default'
     );
 
+    /**
+     * _postRmtrack Default post values for removing a track.
+     *
+     * @var array
+     */
     private $_postRmtrack = array(
         'url' =>
             'http://amuzi.localhost/api/271/1MwjX4dG72s/Coldplay - Yellow.mp3',
         'playlist' => 'default'
+    );
+
+    /**
+     * _postEditname Default values for editing a playlist's name.
+     *
+     * @var array
+     */
+    private $_postEditname = array(
+        'name' => 'default',
+        'newname' => 'New name'
     );
 
     public function __construct()
@@ -103,7 +132,7 @@ class PlaylistControllerTest extends AbstractControllerTest
         $this->request->setMethod('POST');
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 3);
-        $this->assertQueryCount('tr td img', 3);
+        $this->assertQueryCount('tr td img', 6);
         $this->assertQueryCount('tr td', 12);
     }
 
@@ -114,7 +143,7 @@ class PlaylistControllerTest extends AbstractControllerTest
         $this->request->setPost(array('q' => 'newOne'));
         $this->assertAjaxWorks('/playlist/search');
         $this->assertQueryCount('tr', 1);
-        $this->assertQueryCount('tr td img', 1);
+        $this->assertQueryCount('tr td img', 2);
         $this->assertQueryCount('tr td', 4);
     }
 
@@ -204,5 +233,26 @@ class PlaylistControllerTest extends AbstractControllerTest
 
         $this->assertAjaxWorks('/playlist/rmtrack');
         $this->assertJsonMessage(array('Track removed', 'success'));
+    }
+
+    public function testEditnameAction()
+    {
+        $this->testLogin();
+        $this->request->setPost($this->_postEditname);
+        $this->request->setMethod('post');
+
+        $this->assertAjaxWorks('/playlist/editname');
+        $this->assertJsonMessage(array('Saved', 'success'));
+    }
+
+    public function testEditname2Action()
+    {
+        $this->testLogin();
+        $this->_postEditname['name'] = 'donotexists';
+        $this->request->setPost($this->_postEditname);
+        $this->request->setMethod('post');
+
+        $this->assertAjaxWorks('/playlist/editname');
+        $this->assertJsonMessage(array('Failed saving setting', 'error'));
     }
 }
