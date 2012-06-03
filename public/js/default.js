@@ -1,12 +1,7 @@
-<? header("Content-Type: text/javascript"); ?>
-
 /*global  jPlayerPlaylist: false, jQuery:false */
 
 //(function($, undefined) {
 //    'use strict';
-
-<? echo "// it works"; ?>
-
 
     var myPlaylist;
     var jplayerCss;
@@ -426,7 +421,7 @@
 
         // playlistsettings -> list
         $('#playlistsettings-result tbody tr.load').live('click', function(e) {
-            loadPlaylist($(this).find('.name').html());
+            loadPlaylist($(this).find('.name .playlist-name').html());
             $('#load-modal-wrapper').modal('hide');
         });
 
