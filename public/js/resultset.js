@@ -124,6 +124,4 @@ $(document).ready(function() {
     $('#more-results').click(function(e) {
         resultSet.searchMore();
     });
-
-
 });

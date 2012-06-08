@@ -6,6 +6,7 @@ class Form_Search extends DZend_Form
 
     public function init()
     {
+        $this->setAttrib('class', 'search');
         $element = new Zend_Form_Element_Text('q');
         $element->setRequired();
         $element->setAttrib('placeholder', $this->_t($this->_placeholder));

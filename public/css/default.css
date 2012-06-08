@@ -83,7 +83,7 @@ dd {
     cursor: pointer;
 }
 
-form#search {
+form.search {
     text-align: center;
 }
 
@@ -252,4 +252,8 @@ ul.ui-autocomplete {
     opacity: 0.0;
     -moz-opacity: 0.0;
     filter: alpha(opacity=0);
+}
+
+input[type=submit].search {
+    margin-top: -8px;
 }
