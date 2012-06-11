@@ -56,4 +56,3 @@ class Lastfm
         return $resultSet;
     }
 }
-
