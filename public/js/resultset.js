@@ -63,15 +63,16 @@ ResultSet.prototype.cleanTable = function() {
     $('#more-results').css('opacity', '0.0');
 }
 
-ResultSet.prototype.getMusicLarge = function(img, title, url, duration) {
+ResultSet.prototype.getMusicLarge = function(img, title, url, duration, youtubeUrl) {
     duration = this.secondsToHMS(duration);
+    var aYoutube = '<a target="_blank" href="' + youtubeUrl + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
     var aDownload = '<a target="_blank" href="' + url + '"title="download ' + title + '" class="download"><img src="/img/download_icon.png"/></a>';
     var aPlay = '<a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
-    return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aDownload + aPlay + '</div>';
+    return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aYoutube + aDownload + aPlay + '</div>';
 }
 
-ResultSet.prototype.appendTable = function(img, title, url, duration) {
-    $('#result').append(this.getMusicLarge(img, title, url, duration));
+ResultSet.prototype.appendTable = function(img, title, url, duration, youtubeUrl) {
+    $('#result').append(this.getMusicLarge(img, title, url, duration, youtubeUrl));
     $('#more-results').css('opacity', '1.0');
 }
 
@@ -85,7 +86,7 @@ ResultSet.prototype.searchMore = function() {
     }, function (data) {
         $.bootstrapMessageOff();
         $.each(data, function(i, v) {
-            resultSet.appendTable(v.pic, v.title, v.you2better, v.duration);
+            resultSet.appendTable(v.pic, v.title, v.you2better, v.duration, v.youtubeUrl);
         });
     }, 'json').error(function(data) {
         $.bootstrapMessageAuto('An error occured', 'error');
@@ -110,7 +111,7 @@ $(document).ready(function() {
             $.bootstrapMessageOff();
             resultSet.cleanTable();
             $.each(data, function(i, v) {
-                resultSet.appendTable(v.pic, v.title, v.you2better, v.duration);
+                resultSet.appendTable(v.pic, v.title, v.you2better, v.duration, v.youtubeUrl);
             });
         },
         beforeSubmit: function() {

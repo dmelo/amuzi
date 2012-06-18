@@ -16,6 +16,10 @@ class Youtube
         $xml = str_replace(
             array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
         );
+        $fd = fopen("/tmp/xml.txt", "w");
+        fwrite($fd, $xml);
+        fclose($fd);
+
         $xmlDoc = new DOMDocument();
 
         $xmlDoc->loadXML($xml);
@@ -46,6 +50,11 @@ class Youtube
                 $entry['id'] . '/' . urlencode($entry['title']) . '.mp3';
 
 
+            foreach ($node->getElementsByTagName('link') as $link) {
+                $href = $link->getAttribute('href');
+                if (strpos($href, "youtube") !== false && strpos($href, "watch") !== false)
+                    $entry['youtubeUrl'] = $href;
+            }
 
             $resultSet[] = new YoutubeEntry($entry);
         }

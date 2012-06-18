@@ -27,7 +27,7 @@ class View_Helper_JPlayer extends View_Helper_T
                 </div>
                 <div class="jp-controls-holder">
                     <ul class="jp-controls">
-                    <li><a href="javascript:;" class="jp-previous" tabindex="1"><' .  $this->t('previous') . '</a></li>
+                        <li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
                         <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
                         <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
                         <li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>

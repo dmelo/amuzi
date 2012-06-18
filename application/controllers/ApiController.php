@@ -44,7 +44,16 @@ class ApiController extends DZend_Controller_Action
             $key = sha1($q . $limit . $offset);
             if (($list = $cache->load($key)) === false) {
                 $youtube = new Youtube();
-                $resultSet = $youtube->search($q, $limit, $offset);
+                $complement = array();
+                $artist = null;
+                $musicTitle = null;
+                if (($artist = $this->_request->getParam('artist')) !== null) {
+                    $complement['artist'] = $artist;
+                    if (($musicTitle = $this->_request->getParam('music_title')) !== null)
+                        $complement['music_title'] = $musicTitle;
+                }
+                $resultSet = $youtube->search($q, $limit, $offset, $complement);
+                var_dump($resultSet);
                 $item = array();
                 foreach ($resultSet as $result)
                     $list[] = $result->getArray();
