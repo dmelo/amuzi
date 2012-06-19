@@ -47,13 +47,33 @@ class ApiController extends DZend_Controller_Action
                 $complement = array();
                 $artist = null;
                 $musicTitle = null;
-                if (($artist = $this->_request->getParam('artist')) !== null) {
-                    $complement['artist'] = $artist;
-                    if (($musicTitle = $this->_request->getParam('music_title')) !== null)
-                        $complement['music_title'] = $musicTitle;
+                $resultSet = $youtube->search($q, $limit, $offset);
+                if (
+                    ($artist = $this->_request->getParam('artist')) !== null &&
+                    ($musicTitle = $this->_request->getParam('musicTitle')) 
+                        !== null) {
+                    // TODO: add the tracks, artist, musicTitles, and
+                    // relationships between them.
+
+
+                    // insert tracks.
+                    foreach ($resultSet as $result) {
+                        $trackRow = $this->_trackModel->insert(
+                            array(
+                                'title' => $result->title,
+                                'url' => $result->you2better,
+                                'cover' => $result->pic,
+                                'duration' => $result->duration
+                                )
+                            );
+
+                        $artistRow = $this->_artistModel->insert('artist');
+                        $musicTitleRow = $this->_musicTitleModel->insert($musicTitle);
+                        $artistMusicTitleRow = $this->_artistMusicTitleModel->insert($artistRow->id, $musicTitleRow->id);
+                        $musicTrackVoteRow = $this->_musicTrackVoteModel->insert($artistMusicTitleRow->id, $trackRow->id);
+                    }
                 }
-                $resultSet = $youtube->search($q, $limit, $offset, $complement);
-                var_dump($resultSet);
+
                 $item = array();
                 foreach ($resultSet as $result)
                     $list[] = $result->getArray();

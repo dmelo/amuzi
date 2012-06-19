@@ -64,10 +64,13 @@ CREATE TABLE `music_track_vote` (
     `id` int(11) NOT NULL auto_increment,
     `artist_music_title_id` int(11) NOT NULL,
     `track_id` int(11) NOT NULL,
+    `user_id` int(11) NOT NULL,
     `vote` int(11) NOT NULL,
     PRIMARY KEY(`id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
-    `last_updated` TIMESTAMP ON UPDATE now()
+    `last_updated` TIMESTAMP ON UPDATE now(),
+    CONSTRAINT `music_track_vote_ibfk_1` FOREIGN KEY (`artist_music_title_id`) REFERENCES `artist_music_title`(`id`),
+    CONSTRAINT `music_track_vote_ibfk_2` FOREIGN KEY (`track_id`) REFERENCES `track`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `music_track_vote_created_trigger` BEFORE INSERT ON `music_track_vote` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 

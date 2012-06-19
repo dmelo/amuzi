@@ -20,4 +20,9 @@ class Track
         return $this->_trackDb->findRowById($id);
     }
 
+    public function insert($data)
+    {
+        return $this->_trackDb->insert($data);
+    }
+
 }

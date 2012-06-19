@@ -43,10 +43,11 @@ class Lastfm
                 $artists = $track->getElementsByTagName('artist');
                 $names = $track->getElementsByTagName('name');
                 $pics = $track->getElementsByTagName('image');
-                $name = $artists->item(0)->nodeValue . ' - ';
-                $name .= $names->item(0)->nodeValue;
+                $artist = $artists->item(0)->nodeValue;
+                $musicTitle = $names->item(0)->nodeValue;
+                $name = "${artist} - ${musicTitle}";
                 $pic = $pics->length > 0 ? $pics->item(0)->nodeValue : '';
-                $resultSet[] = new LastfmEntry($name, $pic);
+                $resultSet[] = new LastfmEntry($name, $pic, $artist, $musicTitle);
                 $i++;
                 if($i >= $limit)
                     break;

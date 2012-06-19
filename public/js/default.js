@@ -325,6 +325,14 @@
         });
     }
 
+    function handleAutocompleteChoice(ui) {
+        $('#q').val(ui.item.value);
+        $('#artist').val(ui.item.artist);
+        $('#musicTitle').val(ui.item.musicTitle);
+        console.log(ui.item.artist + "---" + ui.item.musicTitle);
+        $('#search').submit();
+    }
+
     $(document).ready(function() {
         // topbar menu
         $('.topbar').dropdown();
@@ -362,7 +370,9 @@
                         return {
                             data: row,
                             label: '<img src="' + row.pic + '"/> <span>' + row.name + '</span>',
-                            value: row.name
+                            value: row.name,
+                            artist: row.artist,
+                            musicTitle: row.musicTitle
                         };
                     }, 'json');
 
@@ -370,12 +380,10 @@
                 }, 'json');
             },
             change: function(e, ui) {
-                $('#q').val(ui.item.value);
-                $('#search').submit();
+                handleAutocompleteChoice(ui);
             },
             select: function(e, ui) {
-                $('#q').val(ui.item.value);
-                $('#search').submit();
+                handleAutocompleteChoice(ui);
             },
             focus: function(e, ui) {
                 $('#q').val(ui.item.value);

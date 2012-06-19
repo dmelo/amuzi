@@ -13,6 +13,12 @@ class Form_Search extends DZend_Form
         $element->setAttrib('class', 'search');
         $this->addElement($element);
 
+        $element = new Zend_Form_Element_Hidden('artist');
+        $this->addElement($element);
+
+        $element = new Zend_Form_Element_Hidden('musicTitle');
+        $this->addElement($element);
+
         $element = new Zend_Form_Element_Submit('submit');
         $element->setLabel('Search');
         $element->setAttrib('class', 'search');
