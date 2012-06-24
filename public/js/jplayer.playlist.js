@@ -233,7 +233,7 @@
 			// Create links to free media
 			if(media.free) {
 				var first = true;
-				listItem += "<span class='" + this.options.playlistOptions.freeGroupClass + "'>(";
+				listItem += "<span class='" + this.options.playlistOptions.freeGroupClass + "'>";
 				$.each(media, function(property,value) {
 					if($.jPlayer.prototype.format[property]) { // Check property is a media format.
 						if(first) {
@@ -241,11 +241,17 @@
 						} else {
 							listItem += " | ";
 						}
-						listItem += "<a class='" + self.options.playlistOptions.freeItemClass + "' href='" + value + "' tabindex='1'>" + property + "</a>";
+						listItem += "<a class='" + self.options.playlistOptions.freeItemClass + "' href='" + value + "' tabindex='1'>(" + property + ")</a>";
 					}
 				});
-				listItem += ")</span>";
+				listItem += "</span>";
 			}
+
+            if(media.id) {
+                listItem += "<span class=\"jp-free-media vote vote-down\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/vote/-1\"><img src=\"/img/emotion_sad_16.png\"/></a></span>";
+                listItem += "<span class=\"jp-free-media vote vote-up\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/vote/1\"><img src=\"/img/emotion_smile_16.png\"/></a></span>";
+            }
+
 
 
 			// The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7

@@ -12,12 +12,14 @@
 class PlaylistController extends DZend_Controller_Action
 {
     protected $_playlistModel;
+    protected $_artistMusicTitleModel;
     protected $_messageFail;
 
     public function init()
     {
         parent::init();
         $this->_playlistModel = new Playlist();
+        $this->_artistMusicTitleModel = new ArtistMusicTitle();
         $this->_loginRequired = true;
         $this->_messageFail = array(
             $this->view->t('Failed saving setting'),
@@ -88,6 +90,16 @@ class PlaylistController extends DZend_Controller_Action
                 $trackInfo = array('title' => $this->_request->getPost('title'),
                     'url' => $this->_request->getPost('url'),
                     'cover' => $this->_request->getPost('cover'));
+
+            var_dump($this->_request->getPost());
+            if (
+                ($artist = $this->_request->getPost('artist')) !== null &&
+                ($musicTitle = $this->_request->getPost('musicTitle')) !== null
+            ) {
+                $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
+                $trackInfo['artist_music_title_id'] = $artistMusicTitleId;
+            }
+
             try {
                 $trackRow = $this->_playlistModel->addTrack(
                     $trackInfo,
@@ -281,5 +293,17 @@ class PlaylistController extends DZend_Controller_Action
         }
 
         $this->view->message = $message;
+    }
+
+    public function votetrackAction()
+    {
+        if (
+            ($trackId = $this->_request->getParam('track_id')) !== null &&
+            ($artistMusicTitleId = $this->_request->getParam('artist_music_title_id')) !== null &&
+            ($vote = $this->_request->getParam('vote')) !== null
+            ) {
+                $vote = -1 != $vote ? 1 : -1;
+                $this->_artistMusicTitleModel->vote($artistMusicTitleId, $trackId, $vote);
+        }
     }
 }

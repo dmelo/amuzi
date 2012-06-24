@@ -20,6 +20,12 @@ class Track
         return $this->_trackDb->findRowById($id);
     }
 
+    /**
+     * insert Insert a row.
+     *
+     * @param mixed $data
+     * @return DbTable_TrackRow Returns the inserted row.
+     */
     public function insert($data)
     {
         return $this->_trackDb->insert($data);

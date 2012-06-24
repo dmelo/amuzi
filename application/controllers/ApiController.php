@@ -17,12 +17,20 @@ class ApiController extends DZend_Controller_Action
 
     protected $_trackModel;
     protected $_playlistModel;
+    protected $_artistModel;
+    protected $_musicTitleModel;
+    protected $_artistMusicTitleModel;
+    protected $_musicTrackVoteModel;
 
     public function init()
     {
         parent::init();
         $this->_trackModel = new Track();
         $this->_playlistModel = new Playlist();
+        $this->_artistModel = new Artist();
+        $this->_musicTitleModel = new MusicTitle();
+        $this->_artistMusicTitleModel = new ArtistMusicTitle();
+        $this->_musicTrackVoteModel = new MusicTrackVote();
     }
     /**
      * searchAction API search call.
@@ -42,7 +50,7 @@ class ApiController extends DZend_Controller_Action
                 $this->_request->getParam('offset') : 1;
             $cache = Zend_Registry::get('cache');
             $key = sha1($q . $limit . $offset);
-            if (($list = $cache->load($key)) === false) {
+            // if (($list = $cache->load($key)) === false) {
                 $youtube = new Youtube();
                 $complement = array();
                 $artist = null;
@@ -50,7 +58,7 @@ class ApiController extends DZend_Controller_Action
                 $resultSet = $youtube->search($q, $limit, $offset);
                 if (
                     ($artist = $this->_request->getParam('artist')) !== null &&
-                    ($musicTitle = $this->_request->getParam('musicTitle')) 
+                    ($musicTitle = $this->_request->getParam('musicTitle'))
                         !== null) {
                     // TODO: add the tracks, artist, musicTitles, and
                     // relationships between them.
@@ -67,18 +75,16 @@ class ApiController extends DZend_Controller_Action
                                 )
                             );
 
-                        $artistRow = $this->_artistModel->insert('artist');
-                        $musicTitleRow = $this->_musicTitleModel->insert($musicTitle);
-                        $artistMusicTitleRow = $this->_artistMusicTitleModel->insert($artistRow->id, $musicTitleRow->id);
-                        $musicTrackVoteRow = $this->_musicTrackVoteModel->insert($artistMusicTitleRow->id, $trackRow->id);
+                        $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
+                        $musicTrackVoteId = $this->_musicTrackVoteModel->voteBlank($artistMusicTitleId, $trackRow->id);
                     }
                 }
 
                 $item = array();
                 foreach ($resultSet as $result)
                     $list[] = $result->getArray();
-                $cache->save($list, $key);
-            }
+            //    $cache->save($list, $key);
+            //}
 
             $this->view->output = $list;
         }

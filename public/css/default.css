@@ -257,3 +257,7 @@ ul.ui-autocomplete {
 input[type=submit].search {
     margin-top: -8px;
 }
+
+span.vote {
+    margin-right: 3px;
+}

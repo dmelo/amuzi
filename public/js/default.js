@@ -19,25 +19,27 @@
         });
     }
 
-    function addTrack(trackTitle, trackLink, trackCover) {
+    function addTrack(trackTitle, trackLink, trackCover, artist, musicTitle) {
         var options;
         var playNow;
-        if("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover)) {
+        if(("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover)) || (null == trackLink && null == trackCover)) {
             options = {
-                playlist: myPlaylist.name,
                 id: trackTitle
             };
             playNow = true;
         }
         else {
             options = {
-                playlist: myPlaylist.name,
                 title: trackTitle,
                 url: trackLink,
                 cover: trackCover
             };
             playNow = false;
         }
+
+        options.playlist = myPlaylist.name;
+        options.artist = artist;
+        options.musicTitle = musicTitle;
 
         $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
@@ -342,7 +344,9 @@
             title = $(this).attr('title');
             mp3 = $(this).attr('href');
             pic = $(this).parent().parent().find('.image img').attr('src');
-            addTrack(title, mp3, pic);
+            artist = $(this).attr('artist');
+            musicTitle = $(this).attr('music_title');
+            addTrack(title, mp3, pic, artist, musicTitle);
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {

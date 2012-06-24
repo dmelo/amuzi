@@ -52,6 +52,8 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
                 'playlist_id' => $this->id,
                 'track_id' => $trackRow->id,
                 'sort' => $maxSort + 1);
+            if (array_key_exists('artist_music_title_id', $trackInfo))
+                $data['artist_music_title_id'] = $trackInfo['artist_music_title_id'];
             $this->_playlistHasTrackDb->insert($data);
 
             return $trackRow;

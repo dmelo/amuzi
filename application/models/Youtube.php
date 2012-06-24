@@ -6,7 +6,6 @@ class Youtube
 
     public function search($q, $limit = 9, $offset = 1, $complement = array())
     {
-        var_dump($complement);
         $args = array(
                 'q=' . urlencode($q),
                 'max-results=' . (int) $limit,
@@ -38,13 +37,16 @@ class Youtube
 
             foreach ($node->getElementsByTagName('content') as $content)
                 $entry['content'] = $content->nodeValue;
-            foreach ($node->getElementsByTagName('mediaathumbnail') as $pic) {
+
+            foreach ($node->getElementsByTagName('mediaathumbnail') as $pic)
                 $entry['pic'] = $pic->getAttribute('url');
-            }
+
             $mediaContentList = $node->getElementsByTagName('mediaacontent');
-            foreach ($mediaContentList as $mediaContent) {
+            foreach ($mediaContentList as $mediaContent)
                 $entry['duration'] = $mediaContent->getAttribute('duration');
-            }
+
+            if(!array_key_exists('duration', $entry))
+                continue;
 
             $entry['you2better'] = Zend_Registry::get('domain');
             $entry['you2better'] .= '/api/' . $entry['duration'] . '/' .
