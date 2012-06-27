@@ -21,6 +21,7 @@ class ApiController extends DZend_Controller_Action
     protected $_musicTitleModel;
     protected $_artistMusicTitleModel;
     protected $_musicTrackLinkModel;
+    protected $_bondModel;
 
     public function init()
     {
@@ -31,6 +32,7 @@ class ApiController extends DZend_Controller_Action
         $this->_musicTitleModel = new MusicTitle();
         $this->_artistMusicTitleModel = new ArtistMusicTitle();
         $this->_musicTrackLinkModel = new MusicTrackLink();
+        $this->_bondModel = new Bond();
     }
     /**
      * searchAction API search call.
@@ -76,7 +78,7 @@ class ApiController extends DZend_Controller_Action
                             );
 
                         $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
-                        $musicTrackLinkId = $this->_musicTrackLinkModel->voteBlank($artistMusicTitleId, $trackRow->id);
+                        $musicTrackLinkId = $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->search);
                     }
                 }
 

@@ -63,6 +63,7 @@ CREATE TRIGGER `track_created_trigger` BEFORE INSERT ON `track` FOR EACH ROW SET
 CREATE TABLE `bond` (
     `id` int(11) NOT NULL auto_increment,
     `name` varchar(63) collate utf8_swedish_ci NOT NULL,
+    `priority` int(11) NOT NULL,
     `comment` varchar(127) collate utf8_swedish_ci NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE(`name`),

@@ -295,15 +295,17 @@ class PlaylistController extends DZend_Controller_Action
         $this->view->message = $message;
     }
 
-    public function votetrackAction()
+/*
+    public function bondtrackAction()
     {
         if (
             ($trackId = $this->_request->getParam('track_id')) !== null &&
             ($artistMusicTitleId = $this->_request->getParam('artist_music_title_id')) !== null &&
-            ($vote = $this->_request->getParam('vote')) !== null
+            ($vote = $this->_request->getParam('bond')) !== null
             ) {
                 $vote = -1 != $vote ? 1 : -1;
-                $this->_artistMusicTitleModel->vote($artistMusicTitleId, $trackId, $vote);
+                $this->_artistMusicTitleModel->insert($artistMusicTitleId, $trackId, $vote);
         }
     }
+    */
 }
