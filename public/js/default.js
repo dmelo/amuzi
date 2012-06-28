@@ -335,6 +335,16 @@
         $('#search').submit();
     }
 
+    function preparePlaylistActions() {
+        $('.jp-playlist ul li div').live('mouseover', function(e) {
+            $(this).find('.jp-free-media').css('opacity', '1.0').css('-moz-opacity', '1.0').css('filter', 'alpha(opacity=100)');
+        });
+
+        $('.jp-playlist ul li div').live('mouseleave', function(e) {
+            $(this).find('.jp-free-media').css('opacity', '0.0').css('-moz-opacity', '0.0').css('filter', 'alpha(opacity=0)');
+        });
+    }
+
     $(document).ready(function() {
         // topbar menu
         $('.topbar').dropdown();
@@ -470,6 +480,6 @@
 
         $('.share a').live('click', shareLink);
         preparePlaylistEditName();
-
+        preparePlaylistActions();
     });
 //})(jQuery);

@@ -261,3 +261,9 @@ input[type=submit].search {
 span.vote {
     margin-right: 3px;
 }
+
+.jp-free-media {
+    opacity: 0.0;
+    -moz-opacity: 0.0;
+    filter: alpha(opacity=0);
+}
