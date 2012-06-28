@@ -14,12 +14,16 @@ class PlaylistController extends DZend_Controller_Action
     protected $_playlistModel;
     protected $_artistMusicTitleModel;
     protected $_messageFail;
+    protected $_musicTrackLinkModel;
+    protected $_bondModel;
 
     public function init()
     {
         parent::init();
         $this->_playlistModel = new Playlist();
         $this->_artistMusicTitleModel = new ArtistMusicTitle();
+        $this->_musicTrackLinkModel = new MusicTrackLink();
+        $this->_bondModel = new Bond();
         $this->_loginRequired = true;
         $this->_messageFail = array(
             $this->view->t('Failed saving setting'),
@@ -91,7 +95,6 @@ class PlaylistController extends DZend_Controller_Action
                     'url' => $this->_request->getPost('url'),
                     'cover' => $this->_request->getPost('cover'));
 
-            var_dump($this->_request->getPost());
             if (
                 ($artist = $this->_request->getPost('artist')) !== null &&
                 ($musicTitle = $this->_request->getPost('musicTitle')) !== null
@@ -105,6 +108,9 @@ class PlaylistController extends DZend_Controller_Action
                     $trackInfo,
                     $this->_request->getPost('playlist')
                 );
+
+                if (isset($artistMusicTitleId))
+                    $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->insert_playlist);
                 $message = array(
                     $this->view->t('Track added'),
                     'success',

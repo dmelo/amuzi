@@ -59,6 +59,11 @@ class Youtube
                     $entry['youtubeUrl'] = $href;
             }
 
+            if(!empty($complement)) {
+                $entry['artist'] = $complement['artist'];
+                $entry['musicTitle'] = $complement['musicTitle'];
+            }
+
             $resultSet[] = new YoutubeEntry($entry);
         }
 

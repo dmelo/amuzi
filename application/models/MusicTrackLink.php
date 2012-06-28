@@ -32,15 +32,18 @@ class MusicTrackLink
                 // then don't do the new bond
                 if($currentBondRow->priority > $bondRow->priority)
                     return null;
+                else
+                    $currentMusicTrackLinkRow->delete();
             }
 
-
-            return $this->_musicTrackLinkDb->insert(array(
+            $data = array(
                 'artist_music_title_id' => $artistMusicTitleId,
                 'track_id' => $trackId,
                 'user_id' => $this->_session->user->id,
                 'bond_id' => $bondRow->id
-            ));
+            );
+
+            return $this->_musicTrackLinkDb->insert($data);
         } catch (Exception $e) {
             return null;
         }

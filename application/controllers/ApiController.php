@@ -52,20 +52,17 @@ class ApiController extends DZend_Controller_Action
                 $this->_request->getParam('offset') : 1;
             $cache = Zend_Registry::get('cache');
             $key = sha1($q . $limit . $offset);
+            // TODO: UNCOMMENT CACHE.
             // if (($list = $cache->load($key)) === false) {
                 $youtube = new Youtube();
                 $complement = array();
-                $artist = null;
-                $musicTitle = null;
-                $resultSet = $youtube->search($q, $limit, $offset);
-                if (
-                    ($artist = $this->_request->getParam('artist')) !== null &&
-                    ($musicTitle = $this->_request->getParam('musicTitle'))
-                        !== null) {
-                    // TODO: add the tracks, artist, musicTitles, and
-                    // relationships between them.
-
-
+                $artist = $this->_request->getParam('artist');
+                $musicTitle = $this->_request->getParam('musicTitle');
+                $complement = null !== $artist && null !== $musicTitle ?
+                    array('artist' => $artist, 'musicTitle' => $musicTitle) :
+                    array();
+                $resultSet = $youtube->search($q, $limit, $offset, $complement);
+                if (!empty($complement)) {
                     // insert tracks.
                     foreach ($resultSet as $result) {
                         $trackRow = $this->_trackModel->insert(

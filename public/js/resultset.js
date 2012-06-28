@@ -67,7 +67,7 @@ ResultSet.prototype.getMusicLarge = function(img, title, url, duration, youtubeU
     duration = this.secondsToHMS(duration);
     var aYoutube = '<a target="_blank" href="' + youtubeUrl + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
     var aDownload = '<a target="_blank" href="' + url + '"title="download ' + title + '" class="download"><img src="/img/download_icon.png"/></a>';
-    var aPlay = '<a href="' + url + '" title="' + title + '" artist="nada" music_title="nada" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+    var aPlay = '<a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
     return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aYoutube + aDownload + aPlay + '</div>';
 }
 

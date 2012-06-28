@@ -344,8 +344,8 @@
             title = $(this).attr('title');
             mp3 = $(this).attr('href');
             pic = $(this).parent().parent().find('.image img').attr('src');
-            artist = $(this).attr('artist');
-            musicTitle = $(this).attr('music_title');
+            artist = $('#artist').val();
+            musicTitle = $('#musicTitle').val();
             addTrack(title, mp3, pic, artist, musicTitle);
         });
 
