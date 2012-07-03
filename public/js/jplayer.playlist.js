@@ -248,8 +248,8 @@
 			}
 
             if(media.id) {
-                listItem += "<span class=\"jp-free-media vote vote-down\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/vote/-1\"><img src=\"/img/emotion_sad_16.png\"/></a></span>";
-                listItem += "<span class=\"jp-free-media vote vote-up\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/vote/1\"><img src=\"/img/emotion_smile_16.png\"/></a></span>";
+                listItem += "<span class=\"jp-free-media bond vote_down\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/bond/vote_down\"><img src=\"/img/emotion_sad_16.png\"/></a></span>";
+                listItem += "<span class=\"jp-free-media bond vote_up\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/bond/vote_up\"><img src=\"/img/emotion_smile_16.png\"/></a></span>";
             }
 
 
