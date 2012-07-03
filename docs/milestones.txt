@@ -1,5 +1,8 @@
-1. manage multiple playlists
-    1.1 implement the user.current_playlist_id [ OK ]
-    1.2 implement the playlist/index to switch playlists
-2. make it shareble
-3. auto-import albuns from last.fm as playlists
+finish implementing 1/1 (music x youtube video).
+implement the search bond
+implement the "add to playlist" bond
+implement the vote bond
+handle music (not youtube videos) on the search
+handle albuns on the search
+implement the incBoard.
+
