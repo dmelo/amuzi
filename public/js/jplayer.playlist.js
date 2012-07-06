@@ -219,7 +219,7 @@
 			var self = this;
 
 			// Wrap the <li> contents in a <div>
-			var listItem = "<li name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\"><div>";
+			var listItem = "<li name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\" artist_music_title_id=\"" + media.artist_music_title_id + "\"><div>";
 
 			// Create remove control
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
@@ -247,9 +247,10 @@
 				listItem += "</span>";
 			}
 
-            if(media.id) {
-                listItem += "<span class=\"jp-free-media bond vote_down\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/bond/vote_down\"><img src=\"/img/emotion_sad_16.png\"/></a></span>";
-                listItem += "<span class=\"jp-free-media bond vote_up\"><a href=\"" + $("#domain").html() + "/api/vote/track_id/" + media.id + "/bond/vote_up\"><img src=\"/img/emotion_smile_16.png\"/></a></span>";
+            if(media.id && media.artist_music_title_id) {
+                var itemMask = "<span class=\"jp-free-media bond vote_DIRECTION\"><a href=\"" + $("#domain").html() + "/playlist/vote/track_id/" + media.id + "/artist_music_title_id/" + media.artist_music_title_id + "/bond/vote_DIRECTION\"><img src=\"/img/emotion_DIRECTION_16.png\"/></a></span>";
+                listItem += itemMask.replace(/DIRECTION/g, "down");
+                listItem += itemMask.replace(/DIRECTION/g, "up");
             }
 
 

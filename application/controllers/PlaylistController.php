@@ -301,17 +301,18 @@ class PlaylistController extends DZend_Controller_Action
         $this->view->message = $message;
     }
 
-/*
-    public function bondtrackAction()
+    public function voteAction()
     {
-        if (
-            ($trackId = $this->_request->getParam('track_id')) !== null &&
-            ($artistMusicTitleId = $this->_request->getParam('artist_music_title_id')) !== null &&
-            ($vote = $this->_request->getParam('bond')) !== null
-            ) {
-                $vote = -1 != $vote ? 1 : -1;
-                $this->_artistMusicTitleModel->insert($artistMusicTitleId, $trackId, $vote);
-        }
+        $message = array('Invalid request', 'error');
+        if (($trackId = $this->_request->getParam('track_id')) !== null &&
+            (($bond = $this->_request->getParam('bond')) !== null) &&
+            ($artistMusicTitleId = $this->_request->getParam('artist_music_title_id')) !== null) {
+            if (null === $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackId, $this->_bondModel->{$bond}))
+                $message = array('Error while registering vote', 'error');
+            else
+                $message = array('Vote saved!! Thank you for your help!', 'success');
+        };
+
+        $this->view->message = $message;
     }
-    */
 }

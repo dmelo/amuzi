@@ -110,12 +110,9 @@ class Playlist extends DZend_Model
             $ret = array();
             $user->currentPlaylistId = $playlistRow->id;
             $user->save();
-            $trackList = $playlistRow->getTrackList();
-            foreach ($trackList as $track) {
-                $ret[] = $track->toArray();
-            }
+            $trackList = $playlistRow->getTrackListAsArray();
             $ret = array(
-                $ret,
+                $trackList,
                 $playlistRow->name,
                 $playlistRow->repeat,
                 $playlistRow->shuffle,

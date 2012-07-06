@@ -1,8 +1,28 @@
-finish implementing 1/1 (music x youtube video).
-implement the search bond
-implement the "add to playlist" bond
-implement the vote bond
-handle music (not youtube videos) on the search
-handle albuns on the search
-implement the incBoard.
+1. finish implementing 1/1 (music x youtube video).
+    1.1 implement the search bond
+    1.2 implement the "add to playlist" bond
+    1.3 implement the vote bond
+2. handle music (not only youtube videos) on the search.
+    2.1 during the api/sarch, also return similar music titles to display as music objects.
+    2.2 make more searches on youtube (one for each similar music returned on previous step) to feed the music bond info.
+3. handle albuns on the search.
+4. implement the incBoard.
+5. instrument the code to retain information about all user's browsing.
 
+
+
+
+===== comments
+
+how to use the links between music and tracks?
+
+will people understand that they are voting on the sound quality and not the music itself? r: by the first time the user press the vote button it shows a popup saying its purpose.
+
+
+About feature 2, it can be so that music and youtube videos have different layouts (like border share and/or color). same comment about feature 3.
+
+About item 4. IncBoard will handle music and albuns only (not youtube videos directly). But, for the first version, incBoard can be done with music objects only.
+
+TODO: include on the documentation, the definicion of the objects "youtube video", "music" and "album".
+
+The algorithm of the 2.2 is when it searches on youtube, it also searches for similar music on last.fm, and afterwards on youtube again.

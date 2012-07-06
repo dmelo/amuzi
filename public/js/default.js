@@ -95,7 +95,7 @@
             if(data != null) {
                 $('.jp-title').css('display', 'block');
                 $.each(data[0], function(i, v) {
-                    myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id});
+                    myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id});
                 });
                 myPlaylist.name = data[1];
                 setRepeatAndCurrent(parseInt(data[2]), parseInt(data[4]));
@@ -345,6 +345,15 @@
         });
     }
 
+    function prepareMusicTrackVote() {
+        $('.bond a').live('click', function(e) {
+            e.preventDefault();
+            $.get($(this).attr('href'), function(data) {
+                $.bootstrapMessageAuto(data[0], data[1])
+            }, 'json');
+        });
+    }
+
     $(document).ready(function() {
         // topbar menu
         $('.topbar').dropdown();
@@ -481,5 +490,6 @@
         $('.share a').live('click', shareLink);
         preparePlaylistEditName();
         preparePlaylistActions();
+        prepareMusicTrackVote();
     });
 //})(jQuery);
