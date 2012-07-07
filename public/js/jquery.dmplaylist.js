@@ -33,14 +33,6 @@ $.fn.dmplaylist.addToPlaylist = function(src, title) {
 $.fn.dmplaylist.play = function(aElement) {
     var href = aElement.attr('href');
 
-    /*
-    $('.playlist-item').removeClass('active');
-    aElement.addClass('active');
-    $('audio').attr('src', href);
-    document.getElementsByTagName('audio')[0].load();
-    document.getElementsByTagName('audio')[0].play();
-    */
-
     aElement.mb_miniPlayer();
 }
 

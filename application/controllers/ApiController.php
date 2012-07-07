@@ -22,6 +22,25 @@ class ApiController extends DZend_Controller_Action
     protected $_artistMusicTitleModel;
     protected $_musicTrackLinkModel;
     protected $_bondModel;
+    protected $_lastfm;
+    protected $_youtube;
+
+    protected function _registerTracks($resultSet, $artist, $musicTitle)
+    {
+        foreach ($resultSet as $result) {
+            $trackRow = $this->_trackModel->insert(
+                array(
+                    'title' => $result->title,
+                    'url' => $result->url,
+                    'cover' => $result->pic,
+                    'duration' => $result->duration
+                    )
+                );
+
+            $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
+            $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->search);
+        }
+    }
 
     public function init()
     {
@@ -33,6 +52,8 @@ class ApiController extends DZend_Controller_Action
         $this->_artistMusicTitleModel = new ArtistMusicTitle();
         $this->_musicTrackLinkModel = new MusicTrackLink();
         $this->_bondModel = new Bond();
+        $this->_lastfm = new Lastfm();
+        $this->_youtube = new Youtube();
     }
     /**
      * searchAction API search call.
@@ -46,40 +67,22 @@ class ApiController extends DZend_Controller_Action
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
-            $limit = $this->_request->getParam('limit') ?
-                $this->_request->getParam('limit') : 9;
-            $offset = $this->_request->getParam('offset') ?
-                $this->_request->getParam('offset') : 1;
+            $limit = $this->_request->getParam('limit', 9);
+            $offset = $this->_request->getParam('offset', 1);
             $cache = Zend_Registry::get('cache');
             $key = sha1($q . $limit . $offset);
             // TODO: UNCOMMENT CACHE.
             // if (($list = $cache->load($key)) === false) {
-                $youtube = new Youtube();
                 $complement = array();
                 $artist = $this->_request->getParam('artist');
                 $musicTitle = $this->_request->getParam('musicTitle');
                 $complement = null !== $artist && null !== $musicTitle ?
                     array('artist' => $artist, 'musicTitle' => $musicTitle) :
                     array();
-                $resultSet = $youtube->search($q, $limit, $offset, $complement);
-                if (!empty($complement)) {
-                    // insert tracks.
-                    foreach ($resultSet as $result) {
-                        $trackRow = $this->_trackModel->insert(
-                            array(
-                                'title' => $result->title,
-                                'url' => $result->you2better,
-                                'cover' => $result->pic,
-                                'duration' => $result->duration
-                                )
-                            );
+                $resultSet = $this->_youtube->search($q, $limit, $offset, $complement);
+                if (!empty($complement))
+                    $this->_registerTracks($resultSet, $artist, $musicTitle);
 
-                        $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
-                        $musicTrackLinkId = $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->search);
-                    }
-                }
-
-                $item = array();
                 foreach ($resultSet as $result)
                     $list[] = $result->getArray();
             //    $cache->save($list, $key);
@@ -94,13 +97,39 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    public function searchsimilarAction()
+    {
+        if (($artist = $this->_request->getParam('artist')) !== null &&
+            ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
+            $titlesLimit = $this->_request->getParam('titlesLimit', 2);
+            $limit = $this->_request->getParam('limit', 9);
+            $offset = $this->_request->getParam('offset', 1);
+            $q = array();
+            $list = array();
+            $i = 0;
+            foreach ($this->_lastfm->getSimilar($artist, $musicTitle) as $row) {
+                $q[] = $row->name;
+                $resultSet = $this->_youtube->search($row->name, $limit, $offset, array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
+                $this->_registerTracks($resultSet, $row->artist, $row->musicTitle);
+                $trackRow = $this->_musicTrackLinkModel->getTrack($row->artist, $row->musicTitle);
+                $list[] = array_merge($trackRow->getArray(), array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
+
+               $i++;
+               if ($i >= $titlesLimit)
+                   break;
+            }
+
+            $this->view->output = $list;
+        } else
+            $this->view->output = $this->_error;
+    }
+
     public function autocompleteAction()
     {
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
-            $lastfm = new Lastfm();
-            $resultSet = $lastfm->search($q);
+            $resultSet = $this->_lastfm->search($q);
             foreach ($resultSet as $result)
                 $list[] = $result->getArray();
             $this->view->output = $list;

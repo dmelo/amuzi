@@ -86,11 +86,19 @@ ResultSet.prototype.searchMore = function() {
     }, function (data) {
         $.bootstrapMessageOff();
         $.each(data, function(i, v) {
-            resultSet.appendTable(v.pic, v.title, v.you2better, v.duration, v.youtubeUrl);
+            resultSet.appendTable(v.cover, v.title, v.url, v.duration, v.youtubeUrl);
         });
     }, 'json').error(function(data) {
         $.bootstrapMessageAuto('An error occured', 'error');
     });
+}
+
+ResultSet.prototype.getSimilarTracks = function(artist, musicTitle) {
+    $.get('/api/searchsimilar', {
+        artist: artist,
+        musicTitle: musicTitle
+    }, function(data) {
+    }, 'json');
 }
 
 
@@ -111,13 +119,14 @@ $(document).ready(function() {
             $.bootstrapMessageOff();
             resultSet.cleanTable();
             $.each(data, function(i, v) {
-                resultSet.appendTable(v.pic, v.title, v.you2better, v.duration, v.youtubeUrl);
+                resultSet.appendTable(v.cover, v.title, v.url, v.duration, v.youtubeUrl);
             });
         },
         beforeSubmit: function() {
             resultSet.searchString = $('#q').val();
             console.log($('#q').val());
             resultSet.searchPage = 1;
+            resultSet.getSimilarTracks($('#artist').val(), $('#musicTitle').val());
             $.bootstrapMessage('Loading...', 'info');
         }
     });

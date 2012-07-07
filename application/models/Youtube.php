@@ -38,8 +38,8 @@ class Youtube
             foreach ($node->getElementsByTagName('content') as $content)
                 $entry['content'] = $content->nodeValue;
 
-            foreach ($node->getElementsByTagName('mediaathumbnail') as $pic)
-                $entry['pic'] = $pic->getAttribute('url');
+            foreach ($node->getElementsByTagName('mediaathumbnail') as $cover)
+                $entry['cover'] = $cover->getAttribute('url');
 
             $mediaContentList = $node->getElementsByTagName('mediaacontent');
             foreach ($mediaContentList as $mediaContent)
@@ -48,8 +48,8 @@ class Youtube
             if(!array_key_exists('duration', $entry))
                 continue;
 
-            $entry['you2better'] = Zend_Registry::get('domain');
-            $entry['you2better'] .= '/api/' . $entry['duration'] . '/' .
+            $entry['url'] = Zend_Registry::get('domain');
+            $entry['url'] .= '/api/' . $entry['duration'] . '/' .
                 $entry['id'] . '/' . urlencode($entry['title']) . '.mp3';
 
 

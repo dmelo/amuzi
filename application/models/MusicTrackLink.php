@@ -3,13 +3,17 @@
 class MusicTrackLink
 {
     protected $_musicTrackLinkDb;
+    protected $_artistMusicTitleModel;
     protected $_bondModel;
+    protected $_trackModel;
     protected $_session;
 
     public function __construct()
     {
         $this->_musicTrackLinkDb = new DbTable_MusicTrackLink();
+        $this->_artistMusicTitleModel = new ArtistMusicTitle();
         $this->_bondModel = new Bond();
+        $this->_trackModel = new Track();
         $this->_session = DZend_Session_Namespace::get('session');
     }
 
@@ -47,5 +51,45 @@ class MusicTrackLink
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public function getTrack($artist, $musicTitle)
+    {
+        $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
+        $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId($artistMusicTitleId);
+        $points = array();
+        foreach ($rowSet as $row) {
+            if (!array_key_exists($row->trackId, $points))
+                $points[$row->trackId] = 0;
+
+            switch ($row->bond_id) {
+                case 0: // search
+                    $points[$row->trackId] += 1;
+                    break;
+                case 1: // insert_playlist
+                    $points[$row->trackId] += 4;
+                    break;
+                case 2: // vote_up
+                    $points[$row->trackId] += 16;
+                    break;
+                case 3:
+                    $points[$row->trackId] -= 16;
+                    break;
+            }
+        }
+
+        $trackId = 0;
+        $maxPoints = -10000;
+        foreach ($points as $key => $value) {
+            if ($maxPoints < $value) {
+                $maxPoints = $value;
+                $trackId = $key;
+            }
+        }
+
+        if ($trackId !== 0)
+            return $this->_trackModel->findRowById($trackId);
+        else
+            return null;
     }
 }

@@ -20,7 +20,7 @@ class YoutubeEntry extends AbstractEntry
     public function __construct($entry = array( ) )
     {
         $this->_fields = array(
-            'id', 'title', 'content', 'you2better', 'pic', 'duration', 'youtubeUrl', 'artist', 'musicTitle'
+            'id', 'title', 'content', 'url', 'cover', 'duration', 'youtubeUrl', 'artist', 'musicTitle'
         );
         $this->_data = array();
 

@@ -4,7 +4,7 @@ function  IncBoard() {
     this.searchString = "";
 }
 
-IncBoard.prototype.append = new function(pic, title, you2better, duration) {
+IncBoard.prototype.append = new function(cover, title, url, duration) {
 }
 
 IncBoard.prototype.clean = new function() {
@@ -19,7 +19,7 @@ $(document).ready(function() {
             $.bootstrapMessageOff();
             incBoard.clean();
             $.each(data, function(i, v) {
-                incBoard.append(v.pic, v.title, v.you2better, v.duration);
+                incBoard.append(v.cover, v.title, v.url, v.duration);
             });
         },
         beforeSubmit: function() {

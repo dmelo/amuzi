@@ -7,10 +7,10 @@ class LastfmEntry extends AbstractEntry
      *
      * @return void
      */
-    public function __construct($name, $pic, $artist, $musicTitle)
+    public function __construct($name, $cover, $artist, $musicTitle)
     {
-        $this->_fields = array('name', 'pic', 'artist', 'musicTitle');
-        $this->_data = array('name' => $name, 'pic' => $pic);
+        $this->_fields = array('name', 'cover', 'artist', 'musicTitle');
+        $this->_data = array('name' => $name, 'cover' => $cover);
         foreach($this->_fields as $field)
             $this->_data[$field] = $$field;
     }

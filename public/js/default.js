@@ -331,7 +331,6 @@
         $('#q').val(ui.item.value);
         $('#artist').val(ui.item.artist);
         $('#musicTitle').val(ui.item.musicTitle);
-        console.log(ui.item.artist + "---" + ui.item.musicTitle);
         $('#search').submit();
     }
 
@@ -362,10 +361,10 @@
             e.preventDefault();
             title = $(this).attr('title');
             mp3 = $(this).attr('href');
-            pic = $(this).parent().parent().find('.image img').attr('src');
+            cover = $(this).parent().parent().find('.image img').attr('src');
             artist = $('#artist').val();
             musicTitle = $('#musicTitle').val();
-            addTrack(title, mp3, pic, artist, musicTitle);
+            addTrack(title, mp3, cover, artist, musicTitle);
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
@@ -392,7 +391,7 @@
                     var a =  $.map(data, function(row) {
                         return {
                             data: row,
-                            label: '<img src="' + row.pic + '"/> <span>' + row.name + '</span>',
+                            label: '<img src="' + row.cover + '"/> <span>' + row.name + '</span>',
                             value: row.name,
                             artist: row.artist,
                             musicTitle: row.musicTitle
