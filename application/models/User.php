@@ -7,13 +7,11 @@ class User extends DZend_Model
     private $_email;
     private $_url;
     private $_loginArgs;
-    private $_userDb;
     private $_translate;
 
     public function __construct()
     {
         parent::__construct();
-        $this->_userDb = new DbTable_User();
         $this->_translate = Zend_Registry::get('translate');
     }
 

@@ -2,7 +2,7 @@
 /**
  * IndexController
  *
- * @package You2Better
+ * @package Amuzi
  * @version 1.0
  * @copyright Copyright (C) 2010 Diogo Oliveira de Melo. All rights reserved.
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>

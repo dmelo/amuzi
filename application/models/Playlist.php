@@ -11,9 +11,6 @@
  */
 class Playlist extends DZend_Model
 {
-    protected $_playlistDb;
-    protected $_playlistHasTrackDb;
-    protected $_userListenPlaylistModel;
     protected $_session;
 
     /**
@@ -24,9 +21,6 @@ class Playlist extends DZend_Model
     public function __construct()
     {
         parent::__construct();
-        $this->_playlistDb = new DbTable_Playlist();
-        $this->_playlistHasTrackDb = new DbTable_PlaylistHasTrack();
-        $this->_userListenPlaylistModel = new UserListenPlaylist();
         $this->_session = DZend_Session_Namespace::get('session');
     }
 

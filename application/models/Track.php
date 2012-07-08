@@ -1,14 +1,7 @@
 <?php
 
-class Track
+class Track extends DZend_Model
 {
-    protected $_trackDb;
-
-    public function __construct()
-    {
-        $this->_trackDb = new DbTable_Track();
-    }
-
     /**
      * findRowById Find a row, given it's ID.
      *

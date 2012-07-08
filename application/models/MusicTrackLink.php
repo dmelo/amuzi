@@ -1,22 +1,7 @@
 <?php
 
-class MusicTrackLink
+class MusicTrackLink extends DZend_Model
 {
-    protected $_musicTrackLinkDb;
-    protected $_artistMusicTitleModel;
-    protected $_bondModel;
-    protected $_trackModel;
-    protected $_session;
-
-    public function __construct()
-    {
-        $this->_musicTrackLinkDb = new DbTable_MusicTrackLink();
-        $this->_artistMusicTitleModel = new ArtistMusicTitle();
-        $this->_bondModel = new Bond();
-        $this->_trackModel = new Track();
-        $this->_session = DZend_Session_Namespace::get('session');
-    }
-
     public function bond($artistMusicTitleId, $trackId, $bondName)
     {
         try {

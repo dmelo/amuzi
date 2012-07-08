@@ -10,21 +10,8 @@
  * @author Diogo Oliveira de Melo <dmelo87@gmail.com>
  * @license GPL version 3
  */
-class UserListenPlaylist
+class UserListenPlaylist extends DZend_Model
 {
-    protected $_userListenPlaylistDb;
-    protected $_userDb;
-    protected $_playlistDb;
-    protected $_session;
-
-    public function __construct()
-    {
-        $this->_userListenPlaylistDb = new DbTable_UserListenPlaylist();
-        $this->_userDb = new DbTable_User();
-        $this->_playlistDb = new DbTable_Playlist();
-        $this->_session = DZend_Session_Namespace::get('session');
-    }
-
     /**
      * addUserPlaylist Add an user as being the listener of a foreign playlist. 
      * It will check for playlist and user existence and will only complete the 

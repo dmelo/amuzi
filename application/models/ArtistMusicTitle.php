@@ -1,18 +1,7 @@
 <?php
 
-class ArtistMusicTitle
+class ArtistMusicTitle extends DZend_Model
 {
-    protected $_artistMusicTitleDb;
-    protected $_artistModel;
-    protected $_musicTitleModel;
-
-    public function __construct()
-    {
-        $this->_artistMusicTitleDb = new DbTable_ArtistMusicTitle();
-        $this->_artistModel = new Artist();
-        $this->_musicTitleModel = new MusicTitle();
-    }
-
     public function insert($artist, $musicTitle)
     {
         $artistId = $this->_artistModel->insert($artist);

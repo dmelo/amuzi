@@ -1,14 +1,7 @@
 <?php
 
-class Bond
+class Bond extends DZend_Model
 {
-    protected $_bondDb;
-
-    public function __construct()
-    {
-        $this->_bondDb = new DbTable_Bond();
-    }
-
     public function findRowByName($name)
     {
         return $this->_bondDb->findRowByName($name);
