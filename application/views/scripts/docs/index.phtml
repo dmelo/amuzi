@@ -30,6 +30,30 @@ AMUZI goals are:
 
 <h2>Music Objects</h2>
 
+There is 4 different music objects:
+
+<ul>
+    <li>Track</li>
+    <li>Music</li>
+    <li>Album</li>
+    <li>User's playlist</li>
+</ul>
+
+<h3>Track</h3>
+
+<p>Is the simplest of all objects. Is basically composed by an URL that points to the media itself (mp3, ogg and so on). The track can also have a title, a cover image and information about it's duration.</p>
+
+<h3>Music</h3>
+
+<p>A music is like a track but more abstract. While the track is just the media file, the music relates to the artist name and the music title that it represents. The music object is represented by a track.</p>
+
+<h3>Album</h3>
+
+<p>An album is a collection of music objects. For each music disc recorded there is a corresponding album object.</p>
+
+<h3>User's playlist</h3>
+
+<p>While album is a set of music objects, the playlist is a set of tracks. Once a user have added a music to his/her playlist, what is trully added is the track that represents that music. Afterwards, if the music object have a new track to represent it, it won't affect the user's playlist.</p>
 
 <h3>Music</h3>
 The music itself is the simplest object....
