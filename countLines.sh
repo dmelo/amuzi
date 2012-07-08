@@ -1,1 +1,1 @@
-wc -l `find application | grep "\.php$"` `find locale` public/js/default.js.php
+wc -l `find application | grep "\.php$"` `find locale | grep "\.php$"` `find library/DZend | grep "\.php$"` `find public/ | grep "\.php$"`
