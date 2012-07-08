@@ -15,16 +15,6 @@ class ApiController extends DZend_Controller_Action
             'error' => 'Parameter "q" must be specified'
             );
 
-    protected $_trackModel;
-    protected $_playlistModel;
-    protected $_artistModel;
-    protected $_musicTitleModel;
-    protected $_artistMusicTitleModel;
-    protected $_musicTrackLinkModel;
-    protected $_bondModel;
-    protected $_lastfm;
-    protected $_youtube;
-
     protected function _registerTracks($resultSet, $artist, $musicTitle)
     {
         foreach ($resultSet as $result) {
@@ -42,21 +32,8 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
-    public function init()
-    {
-        parent::init();
-        $this->_trackModel = new Track();
-        $this->_playlistModel = new Playlist();
-        $this->_artistModel = new Artist();
-        $this->_musicTitleModel = new MusicTitle();
-        $this->_artistMusicTitleModel = new ArtistMusicTitle();
-        $this->_musicTrackLinkModel = new MusicTrackLink();
-        $this->_bondModel = new Bond();
-        $this->_lastfm = new Lastfm();
-        $this->_youtube = new Youtube();
-    }
     /**
-     * searchAction API search call.
+     * searchAction API search call that outputs a list of track objects.
      *
      * @return void
      *
@@ -79,7 +56,7 @@ class ApiController extends DZend_Controller_Action
                 $complement = null !== $artist && null !== $musicTitle ?
                     array('artist' => $artist, 'musicTitle' => $musicTitle) :
                     array();
-                $resultSet = $this->_youtube->search($q, $limit, $offset, $complement);
+                $resultSet = $this->_youtubeModel->search($q, $limit, $offset, $complement);
                 if (!empty($complement))
                     $this->_registerTracks($resultSet, $artist, $musicTitle);
 
@@ -97,6 +74,12 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    /**
+     * searchsimilarAction API call that searches for similar artist/music and
+     * compile a list of music objects.
+     *
+     * @return void
+     */
     public function searchsimilarAction()
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
@@ -107,9 +90,9 @@ class ApiController extends DZend_Controller_Action
             $q = array();
             $list = array();
             $i = 0;
-            foreach ($this->_lastfm->getSimilar($artist, $musicTitle) as $row) {
+            foreach ($this->_lastfmModel->getSimilar($artist, $musicTitle) as $row) {
                 $q[] = $row->name;
-                $resultSet = $this->_youtube->search($row->name, $limit, $offset, array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
+                $resultSet = $this->_youtubeModel->search($row->name, $limit, $offset, array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
                 $this->_registerTracks($resultSet, $row->artist, $row->musicTitle);
                 $trackRow = $this->_musicTrackLinkModel->getTrack($row->artist, $row->musicTitle);
                 $list[] = array_merge($trackRow->getArray(), array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
@@ -124,12 +107,17 @@ class ApiController extends DZend_Controller_Action
             $this->view->output = $this->_error;
     }
 
+    /**
+     * Given the user's incomplete outputs the list of suggestions in Json.
+     *
+     * @return void
+     */
     public function autocompleteAction()
     {
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
-            $resultSet = $this->_lastfm->search($q);
+            $resultSet = $this->_lastfmModel->search($q);
             foreach ($resultSet as $result)
                 $list[] = $result->getArray();
             $this->view->output = $list;
@@ -169,7 +157,7 @@ class ApiController extends DZend_Controller_Action
     }
 
     /**
-     * postDispatch Facilitates output using Json
+     * postDispatch Make it easier to output Json.
      *
      * @return void
      *

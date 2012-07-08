@@ -11,19 +11,11 @@
  */
 class PlaylistController extends DZend_Controller_Action
 {
-    protected $_playlistModel;
-    protected $_artistMusicTitleModel;
     protected $_messageFail;
-    protected $_musicTrackLinkModel;
-    protected $_bondModel;
 
     public function init()
     {
         parent::init();
-        $this->_playlistModel = new Playlist();
-        $this->_artistMusicTitleModel = new ArtistMusicTitle();
-        $this->_musicTrackLinkModel = new MusicTrackLink();
-        $this->_bondModel = new Bond();
         $this->_loginRequired = true;
         $this->_messageFail = array(
             $this->view->t('Failed saving setting'),
