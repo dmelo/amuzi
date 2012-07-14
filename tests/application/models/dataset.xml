@@ -2,12 +2,12 @@
 
 <dataset>
     <!-- User -->
-    <user id="2" name="Diogo Melo" email="dmelo87@gmail.com" url="" privacy="public" password="30a8caa8b6a0ff02a958c31d8c5f7f622f12232c" token=""/>
+    <user id="1" name="Diogo Melo" email="dmelo87@gmail.com" url="" privacy="public" password="30a8caa8b6a0ff02a958c31d8c5f7f622f12232c" token="" current_playlist_id="1"/>
 
     <!-- Playlist -->
-    <playlist id="2" user_id="2" name="default" repeat="1" shuffle="1" current_track="2" privacy="public"/>
-    <playlist id="3" user_id="2" name="newOne" repeat="0" shuffle="0" current_track="1" privacy="public"/>
-    <playlist id="4" user_id="2" name="newTwo" repeat="0" shuffle="0" current_track="1" privacy="private"/>
+    <playlist id="1" user_id="1" name="Diogo Melo" repeat="1" shuffle="1" current_track="2" privacy="public"/>
+    <playlist id="2" user_id="1" name="newOne" repeat="0" shuffle="0" current_track="1" privacy="public"/>
+    <playlist id="3" user_id="1" name="newTwo" repeat="0" shuffle="0" current_track="1" privacy="private"/>
 
     <!-- Track -->
     <track id="1" title="Rolling Stones - Sympathy for The Devil ( Live 1969 Altamont" url="http://amuzi.localhost/api/523/Dt0ipUCfdlU/Rolling Stones - Sympathy for The Devil ( Live 1969 Altamont.mp3" cover="null" duration="0"/>
