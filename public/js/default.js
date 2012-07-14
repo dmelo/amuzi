@@ -41,6 +41,7 @@
         options.artist = artist;
         options.musicTitle = musicTitle;
 
+        $.bootstrapMessageLoading();
         $.post('/playlist/addtrack', options, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if('error' === data[1])
@@ -56,6 +57,7 @@
     // TODO: take away the playlistName
     function rmTrack(url, playlistName) {
         playlistName = playlistName || 'default';
+        $.bootstrapMessageLoading();
         $.post('/playlist/rmtrack', {
             playlist: playlistName,
             url: url
@@ -115,6 +117,7 @@
     }
 
     function rmPlaylist(name) {
+        $.bootstrapMessageLoading();
         $.post('/playlist/remove', {
             name: name
         }, function(data) {
@@ -256,6 +259,7 @@
     }
 
     function newPlaylistCallback() {
+        $.bootstrapMessageLoading();
         $('form#newPlaylist').ajaxForm({
             dataType: 'json',
             success: function (data) {
@@ -311,6 +315,7 @@
             td.find("input#newname").val(td.find(".playlist-name").html());
             td.find("input#name").val(td.find(".playlist-name").html());
             td.find('.playlist-edit-name').css('display', 'none');
+            $.bootstrapMessageLoading();
             td.find("form").ajaxForm({dataType: 'json', success: function(data) {
                 $.bootstrapMessageAuto(data[0], data[1]);
                 if('success' === data[1]) {
@@ -347,6 +352,7 @@
     function prepareMusicTrackVote() {
         $('.bond a').live('click', function(e) {
             e.preventDefault();
+            $.bootstrapMessageLoading();
             $.get($(this).attr('href'), function(data) {
                 $.bootstrapMessageAuto(data[0], data[1])
             }, 'json');
@@ -459,6 +465,7 @@
             var pub = $(this).val();
             e.stopPropagation();
             var name = $(this).parent().parent().find('.name').html();
+            $.bootstrapMessageLoading();
             $.post('/playlist/privacy', {
                 name: name,
                 public: ($(this).attr('checked') === 'checked' ? 'public' : 'private')

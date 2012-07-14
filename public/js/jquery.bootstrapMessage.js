@@ -28,6 +28,10 @@
         $('div.alert').fadeTo('fast', 1.0);
     }
 
+    $.bootstrapMessageLoading = function() {
+        $.bootstrapMessage('<img src="img/loading.gif"/>', 'info');
+    }
+
     $.bootstrapMessageOff = function() {
         $('div.alert').fadeTo('slow', 0.0);
     }
