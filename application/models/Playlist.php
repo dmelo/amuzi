@@ -35,6 +35,7 @@ class Playlist extends DZend_Model
     public function create($name, $public = 'public')
     {
         $ret = null;
+        $this->_logger->info("Playlist::create## isset(user): " . isset($this->_session->user) . PHP_EOL);
         if (isset($this->_session->user)) {
             $ret = $this->_playlistDb->findRowByUserIdAndName(
                 $this->_session->user->id,
@@ -194,6 +195,7 @@ class Playlist extends DZend_Model
      */
     public function addTrack(array $trackInfo, $name = 'default')
     {
+        $this->_logger->info("Playlist::addTrack" . PHP_EOL);
         $playlistRow = $this->create($name);
         return $playlistRow->addTrack($trackInfo);
     }

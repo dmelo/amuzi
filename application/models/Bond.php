@@ -2,9 +2,16 @@
 
 class Bond extends DZend_Model
 {
-    public function findRowByName($name)
+    public function __get($name)
     {
-        return $this->_bondDb->findRowByName($name);
+        if(preg_match('/^_.*Model$/', $name) || preg_match('/^_.*Db$/', $name))
+            return parent::__get($name);
+        elseif(($row = $this->_bondDb->findRowByName($name)) !== null)
+            return $name;
+        else
+            trigger_error("Undefined property ${name}", E_USER_NOTICE);
+
+        return null;
     }
 
     public function findRowById($id)
@@ -12,14 +19,8 @@ class Bond extends DZend_Model
         return $this->_bondDb->findRowById($id);
     }
 
-    public function __get($name)
+    public function findRowByName($name)
     {
-        $row = $this->findRowByName($name);
-        if(null !== $row)
-            return $name;
-        else
-            trigger_error("Undefined property ${name}", E_USER_NOTICE);
-
-        return null;
+        return $this->_bondDb->findRowByName($name);
     }
 }

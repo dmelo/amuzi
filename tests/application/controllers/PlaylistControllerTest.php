@@ -22,7 +22,9 @@ class PlaylistControllerTest extends AbstractControllerTest
         'title' => 'Test Music',
         'url' => 'http://example.com/a.mp3',
         'cover' => 'http://example.com/a.jpg',
-        'playlist' => 'default'
+        'playlist' => 'default',
+        'artist' => 'U2',
+        'musicTitle' => 'All Because Of You'
     );
 
     /**
