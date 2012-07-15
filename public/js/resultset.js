@@ -63,16 +63,17 @@ ResultSet.prototype.cleanTable = function() {
     $('#more-results').css('opacity', '0.0');
 }
 
-ResultSet.prototype.getMusicLarge = function(img, title, url, duration, youtubeUrl) {
-    duration = this.secondsToHMS(duration);
-    var aYoutube = '<a target="_blank" href="' + youtubeUrl + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
-    var aDownload = '<a target="_blank" href="' + url + '"title="download ' + title + '" class="download"><img src="/img/download_icon.png"/></a>';
-    var aPlay = '<a href="' + url + '" title="' + title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
-    return '<div class="music-large"><div class="image"><img src="' + img + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + url + '">' + title + '</a></div><div class="play">' + aYoutube + aDownload + aPlay + '</div>';
+ResultSet.prototype.getMusicLarge = function(v, objectType) {
+    duration = this.secondsToHMS(v.duration);
+    var aYoutube = '<a target="_blank" href="' + v.youtubeUrl + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
+    var aDownload = '<a target="_blank" href="' + v.url + '"title="download ' + v.title + '" class="download"><img src="/img/download_icon.png"/></a>';
+    var aPlay = '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+    return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + aYoutube + aDownload + aPlay + '</div>';
 }
 
-ResultSet.prototype.appendTable = function(img, title, url, duration, youtubeUrl) {
-    $('#result').append(this.getMusicLarge(img, title, url, duration, youtubeUrl));
+ResultSet.prototype.appendTable = function(v, objectType) {
+    if($('[fid=' + v.fid + '][fcode=' + v.fcode + ']').length == 0)
+        $('#result').append(this.getMusicLarge(v, objectType));
     $('#more-results').css('opacity', '1.0');
 }
 
@@ -86,7 +87,7 @@ ResultSet.prototype.searchMore = function() {
     }, function (data) {
         $.bootstrapMessageOff();
         $.each(data, function(i, v) {
-            resultSet.appendTable(v.cover, v.title, v.url, v.duration, v.youtubeUrl);
+            resultSet.appendTable(v, 'track');
         });
     }, 'json').error(function(data) {
         $.bootstrapMessageAuto('An error occured', 'error');
@@ -98,6 +99,9 @@ ResultSet.prototype.getSimilarTracks = function(artist, musicTitle) {
         artist: artist,
         musicTitle: musicTitle
     }, function(data) {
+        $.each(data, function(i, v) {
+            resultSet.appendTable(v, 'music');
+        });
     }, 'json');
 }
 
@@ -117,12 +121,12 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
-            resultSet.cleanTable();
             $.each(data, function(i, v) {
-                resultSet.appendTable(v.cover, v.title, v.url, v.duration, v.youtubeUrl);
+                resultSet.appendTable(v, 'track');
             });
         },
         beforeSubmit: function() {
+            resultSet.cleanTable();
             resultSet.searchString = $('#q').val();
             console.log($('#q').val());
             resultSet.searchPage = 1;
