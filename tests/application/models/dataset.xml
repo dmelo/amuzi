@@ -27,4 +27,9 @@
     <playlist_has_track id="2" playlist_id="2" track_id="2" sort="1"/>
     <playlist_has_track id="3" playlist_id="2" track_id="3" sort="2"/>
     <playlist_has_track id="4" playlist_id="2" track_id="4" sort="3"/>
+
+    <bond id="1" name="search" priority="0" comment="A artist / music_title search lead to the track"/>
+    <bond id="2" name="insert_playlist" priority="8" comment="The track was chosen to go to the playlist"/>
+    <bond id="3" name="vote_up" priority="16" comment="The user gave a positive vote to the track"/>
+    <bond id="4" name="vote_down" priority="16" comment="The user gave a negative vote to the track"/>
 </dataset>

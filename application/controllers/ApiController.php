@@ -41,34 +41,34 @@ class ApiController extends DZend_Controller_Action
     public function searchAction()
     {
         try {
-        $q = $this->_request->getParam('q');
-        $list = array();
-        if (null !== $q) {
-            $limit = $this->_request->getParam('limit', 9);
-            $offset = $this->_request->getParam('offset', 1);
-            $cache = Zend_Registry::get('cache');
-            $key = sha1($q . $limit . $offset);
-            // TODO: UNCOMMENT CACHE.
-            // if (($list = $cache->load($key)) === false) {
-                $complement = array();
-                $artist = $this->_request->getParam('artist');
-                $musicTitle = $this->_request->getParam('musicTitle');
-                $complement = null !== $artist && null !== $musicTitle ?
-                    array('artist' => $artist, 'musicTitle' => $musicTitle) :
-                    array();
-                $resultSet = $this->_youtubeModel->search($q, $limit, $offset, $complement);
-                if (!empty($complement))
-                    $this->_registerTracks($resultSet, $artist, $musicTitle);
+            $q = $this->_request->getParam('q');
+            $list = array();
+            if (null !== $q) {
+                $limit = $this->_request->getParam('limit', 9);
+                $offset = $this->_request->getParam('offset', 1);
+                $cache = Zend_Registry::get('cache');
+                $key = sha1($q . $limit . $offset);
+                // TODO: UNCOMMENT CACHE.
+                // if (($list = $cache->load($key)) === false) {
+                    $complement = array();
+                    $artist = $this->_request->getParam('artist');
+                    $musicTitle = $this->_request->getParam('musicTitle');
+                    $complement = null !== $artist && null !== $musicTitle ?
+                        array('artist' => $artist, 'musicTitle' => $musicTitle) :
+                        array();
+                    $resultSet = $this->_youtubeModel->search($q, $limit, $offset, $complement);
+                    if (!empty($complement))
+                        $this->_registerTracks($resultSet, $artist, $musicTitle);
 
-                foreach ($resultSet as $result)
-                    $list[] = $result->getArray();
-            //    $cache->save($list, $key);
-            //}
+                    foreach ($resultSet as $result)
+                        $list[] = $result->getArray();
+                //    $cache->save($list, $key);
+                //}
 
-            $this->view->output = $list;
-        }
-        else
-            $this->view->output = $this->_error;
+                $this->view->output = $list;
+            }
+            else
+                $this->view->output = $this->_error;
         } catch(Exception $e) {
             $this->view->exception = $e;
         }

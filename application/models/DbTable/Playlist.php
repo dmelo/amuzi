@@ -11,7 +11,7 @@ class DbTable_Playlist extends DZend_Model_DbTable
                 "playlist.name must start with a letter"
             );
 
-        parent::insert($data);
+        return parent::insert($data);
     }
 
     public function findByName($name)
@@ -50,8 +50,6 @@ class DbTable_Playlist extends DZend_Model_DbTable
             'name' => $name,
             'privacy' => $public ? 'public' : 'private'
             );
-        $id = $this->insert($data);
-
-        return $this->findRowById($id);
+        return $this->findRowById($this->insert($data));
     }
 }

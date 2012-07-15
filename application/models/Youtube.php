@@ -16,9 +16,6 @@ class Youtube
         $xml = str_replace(
             array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
         );
-        $fd = fopen("/tmp/xml.txt", "w");
-        fwrite($fd, $xml);
-        fclose($fd);
 
         $xmlDoc = new DOMDocument();
 

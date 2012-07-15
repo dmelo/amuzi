@@ -16,6 +16,8 @@ class PlaylistController extends DZend_Controller_Action
     public function init()
     {
         parent::init();
+        $this->_logger->debug("debug....");
+
         $this->_loginRequired = true;
         $this->_messageFail = array(
             $this->view->t('Failed saving setting'),
@@ -95,6 +97,8 @@ class PlaylistController extends DZend_Controller_Action
                 $trackInfo['artist_music_title_id'] = $artistMusicTitleId;
             }
 
+
+            $this->_logger->debug('PlaylistController::addtrackAction -- ' . print_r($trackInfo, true));
             try {
                 $trackRow = $this->_playlistModel->addTrack(
                     $trackInfo,

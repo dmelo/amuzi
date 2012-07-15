@@ -171,7 +171,9 @@ class PlaylistControllerTest extends AbstractControllerTest
             'title' => 'Test Music',
             'url' => 'http://example.com/a.mp3',
             'cover' => 'http://example.com/a.jpg',
-            'duration' => '0'
+            'duration' => '0',
+            'artist' => 'U2',
+            'musicTitle' => 'All Because Of You'
         ));
         $this->assertJsonMessage($ret);
     }
@@ -207,7 +209,9 @@ class PlaylistControllerTest extends AbstractControllerTest
             'url' =>
                 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
             'cover' => 'http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg',
-            'duration' => '0'
+            'duration' => '0',
+            'artist' => 'U2',
+            'musicTitle' => 'All Because Of You'
         )));
     }
 

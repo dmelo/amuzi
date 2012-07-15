@@ -11,19 +11,6 @@
  */
 class Playlist extends DZend_Model
 {
-    protected $_session;
-
-    /**
-     * __construct Initializes objects commonly used by other methods.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->_session = DZend_Session_Namespace::get('session');
-    }
-
     /**
      * create Verify if a playlist doesn't exist and creates it.
      *
@@ -35,23 +22,27 @@ class Playlist extends DZend_Model
     public function create($name, $public = 'public')
     {
         $ret = null;
-        $this->_logger->info("Playlist::create## isset(user): " . isset($this->_session->user) . PHP_EOL);
         if (isset($this->_session->user)) {
+            fwrite($fd, 'Playlist::create## userId' . $this->_session->user->id . '. name: ' . $name . '. public: ' . $public . PHP_EOL);
             $ret = $this->_playlistDb->findRowByUserIdAndName(
                 $this->_session->user->id,
                 $name
             );
+            fwrite($fd, 'Playlist::create## ' . $ret . PHP_EOL);
             if (!$ret) {
                 try {
                     $ret = $this->_playlistDb->create(
                         $this->_session->user->id, $name, $public
                     );
+                    fwrite($fd, 'Playlist::create## ' . $ret . PHP_EOL);
                 } catch(Zend_Db_Table_Exception $e) {
+                    fwrite($fd, 'the playlist is not yours' . PHP_EOL);
                     $this->_logger->info($e->getMessage());
                     throw new Zend_Exception("the playlist is not yours");
                 }
             }
         }
+        fclose($fd);
 
         return $ret;
     }
@@ -195,7 +186,6 @@ class Playlist extends DZend_Model
      */
     public function addTrack(array $trackInfo, $name = 'default')
     {
-        $this->_logger->info("Playlist::addTrack" . PHP_EOL);
         $playlistRow = $this->create($name);
         return $playlistRow->addTrack($trackInfo);
     }
