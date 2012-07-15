@@ -68,11 +68,11 @@ ResultSet.prototype.getMusicLarge = function(v, objectType) {
     var aYoutube = '<a target="_blank" href="' + v.youtubeUrl + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
     var aDownload = '<a target="_blank" href="' + v.url + '"title="download ' + v.title + '" class="download"><img src="/img/download_icon.png"/></a>';
     var aPlay = '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
-    return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + aYoutube + aDownload + aPlay + '</div>';
+    return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + aYoutube + aDownload + aPlay + '</div>';
 }
 
 ResultSet.prototype.appendTable = function(v, objectType) {
-    if($('[fid=' + v.fid + '][fcode=' + v.fcode + ']').length == 0)
+    if($('[trackId=' + v.id + ']').length == 0)
         $('#result').append(this.getMusicLarge(v, objectType));
     $('#more-results').css('opacity', '1.0');
 }

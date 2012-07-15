@@ -110,7 +110,7 @@ class PlaylistController extends DZend_Controller_Action
                 $message = array(
                     $this->view->t('Track added'),
                     'success',
-                    $trackRow->toArray()
+                    $trackRow->getArray()
                 );
             } catch(Zend_Exception $e) {
                 $message = array(

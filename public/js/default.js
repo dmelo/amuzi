@@ -9,6 +9,7 @@
     var repeat;
     var current;
     var modalWrapper = "#load-modal-wrapper";
+    var latestSearch;
 
     // Soon to be deprecated.
     function savePlaylist() {
@@ -19,27 +20,15 @@
         });
     }
 
-    function addTrack(trackTitle, trackLink, trackCover, artist, musicTitle) {
+    function addTrack(trackId, artist, musicTitle) {
         var options;
-        var playNow;
-        if(("undefined" === typeof(trackLink) && "undefined" === typeof(trackCover)) || (null == trackLink && null == trackCover)) {
-            options = {
-                id: trackTitle
-            };
-            playNow = true;
-        }
-        else {
-            options = {
-                title: trackTitle,
-                url: trackLink,
-                cover: trackCover
-            };
-            playNow = false;
-        }
-
-        options.playlist = myPlaylist.name;
-        options.artist = artist;
-        options.musicTitle = musicTitle;
+        var playNow = false;
+        options = {
+            id: trackId,
+            playlist: myPlaylist.name,
+            artist: artist,
+            musicTitle: musicTitle
+        };
 
         $.bootstrapMessageLoading();
         $.post('/playlist/addtrack', options, function(data) {
@@ -48,7 +37,7 @@
                 loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
-                var pOpt = {title: v.title, mp3: v.url, free: true, id: v.id};
+                var pOpt = {title: v.title, mp3: v.url, free: true, id: v.fid};
                 myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
@@ -333,10 +322,13 @@
     }
 
     function handleAutocompleteChoice(ui) {
-        $('#q').val(ui.item.value);
-        $('#artist').val(ui.item.artist);
-        $('#musicTitle').val(ui.item.musicTitle);
-        $('#search').submit();
+        if(ui.item.value != latestSearch) {
+            $('#q').val(ui.item.value);
+            $('#artist').val(ui.item.artist);
+            $('#musicTitle').val(ui.item.musicTitle);
+            $('#search').submit();
+            latestSearch = ui.item.value;
+        }
     }
 
     function preparePlaylistActions() {
@@ -365,12 +357,10 @@
         // add track into the playlist.
         $('.addplaylist').live('click', function(e) {
             e.preventDefault();
-            title = $(this).attr('title');
-            mp3 = $(this).attr('href');
-            cover = $(this).parent().parent().find('.image img').attr('src');
+            trackId = $(this).parent().parent().attr('trackId');
             artist = $('#artist').val();
             musicTitle = $('#musicTitle').val();
-            addTrack(title, mp3, cover, artist, musicTitle);
+            addTrack(trackId, artist, musicTitle);
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {

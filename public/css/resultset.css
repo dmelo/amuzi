@@ -2,7 +2,6 @@
     float: left;
     width: 250px;
     min-height: 60px;
-    background-color: #ccc;
     margin: 10px;
     position: relative;
     -webkit-transition: background 300ms ease-in 0ms;
@@ -10,6 +9,13 @@
     -o-transition: background 300ms ease-in 0ms;
     transition: background 300ms ease-in 0ms;
     box-shadow: 0px 0px 5px #3a3e41;
+}
+
+.music-large.object-track {
+    background-color: #ccc;
+}
+.music-large.object-music {
+    background-color: #beb;
 }
 
 .music-large a {
