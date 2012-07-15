@@ -49,7 +49,7 @@ class YoutubeEntry extends AbstractEntry
     {
         $item = array();
         foreach($this->_fields as $field)
-            $item[$field] = isset($this->$field) ? $this->$field : '';
+            $item[$field] = null !== $this->$field ? $this->$field : '';
 
         return $item;
     }

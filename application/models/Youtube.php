@@ -1,6 +1,6 @@
 <?php
 
-class Youtube
+class Youtube extends DZend_Model
 {
     private $_baseUrl = 'https://gdata.youtube.com/feeds/api/videos?';
 
