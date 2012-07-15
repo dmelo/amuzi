@@ -23,26 +23,43 @@ class Auth_IndexController extends DZend_Controller_Action
 
         if (
             $this->_request->isPost() &&
-            $form->isValid($this->_request->getParams()) &&
-            ($userRow = $this->_userModel->findByEmail($params['email'])) !== null &&
-            $userRow->token === ''
+            $form->isValid($this->_request->getParams())
         ) {
-            $authAdapter = Zend_Registry::get('authAdapter');
-            $authAdapter->setIdentity($params['email']);
-            $authAdapter->setCredential($params['password']);
-            $auth = Zend_Auth::getInstance();
-            if($auth->hasIdentity())
-                $auth->getIdentity();
-            $result = $auth->authenticate($authAdapter);
-            $this->_logger->info("out of the IF");
-            if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
-                $this->_helper->redirector('index', 'index', 'default');
-            } else {
+            if (
+                ($userRow =
+                    $this->_userModel->findByEmail($params['email'])) === null
+            ) {
                 $message = array(
-                    $this->view->t("Invalid email and/or password."), "error"
+                    $this->view->t("Email not found. Are you new here?"),
+                    'error'
                 );
+
+            } elseif ('' != $userRow->token) {
+                $message = array(
+                    $this->view->t(
+                        "Acount not activated. Please, check your email"
+                    ),
+                    'error'
+                );
+            } else {
+                $authAdapter = Zend_Registry::get('authAdapter');
+                $authAdapter->setIdentity($params['email']);
+                $authAdapter->setCredential($params['password']);
+                $auth = Zend_Auth::getInstance();
+                if($auth->hasIdentity())
+                    $auth->getIdentity();
+                $result = $auth->authenticate($authAdapter);
+                $this->_logger->info("out of the IF");
+                if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
+                    $this->_helper->redirector('index', 'index', 'default');
+                } else {
+                    $message = array(
+                        $this->view->t("Wrong password."), "error"
+                    );
+                }
             }
         }
+
         $this->view->form = $form;
         if(null === $message && $this->_request->getParam('activated') == 1)
             $message = array(
@@ -61,7 +78,7 @@ class Auth_IndexController extends DZend_Controller_Action
     public function logoutAction()
     {
         $auth = Zend_Auth::getInstance();
-        if($auth->hasIdentity()) {
+        if ($auth->hasIdentity()) {
             unset($this->_session->user);
             $auth->clearIdentity();
             $this->_helper->redirector('login', 'index', 'Auth');
@@ -78,10 +95,10 @@ class Auth_IndexController extends DZend_Controller_Action
         $form = new Auth_Model_Form_Register();
         $message = null;
         $params = $this->_request->getParams();
-        if($this->_request->isPost() && $form->isValid($params)) {
-            if($params['password'] !== $params['password2'])
+        if ($this->_request->isPost() && $form->isValid($params)) {
+            if ($params['password'] !== $params['password2'])
                 $message = array($this->view->t('Password doesn\'t match'), 'error');
-            elseif(($userRow = $this->_userModel->findByEmail($params['email'])) !== null)
+            elseif (($userRow = $this->_userModel->findByEmail($params['email'])) !== null)
                 $message = array($this->view->t('Email is already registered'), 'error');
             else {
                 if(
