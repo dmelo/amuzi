@@ -18,18 +18,27 @@ class ApiController extends DZend_Controller_Action
     protected function _registerTracks($resultSet, $artist, $musicTitle)
     {
         foreach ($resultSet as $result) {
-            $trackRow = $this->_trackModel->insert(
-                array(
-                    'title' => $result->title,
-                    'url' => $result->url,
-                    'cover' => $result->pic,
-                    'duration' => $result->duration
-                    )
-                );
+            $data = array(
+                'title' => $result->title,
+                'fid' => $result->fid,
+                'fcode' => $result->fcode,
+                'cover' => $result->cover,
+                'duration' => $result->duration
+            );
+            $trackRow = $this->_trackModel->insert($data);
+
 
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
             $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->search);
+
+            $row = $trackRow->getArray();
+            $row['artist'] = $artist;
+            $row['musicTitle'] = $musicTitle;
+
+            $ret[] = $row;
         }
+
+        return $ret;
     }
 
     /**
@@ -58,10 +67,10 @@ class ApiController extends DZend_Controller_Action
                         array();
                     $resultSet = $this->_youtubeModel->search($q, $limit, $offset, $complement);
                     if (!empty($complement))
-                        $this->_registerTracks($resultSet, $artist, $musicTitle);
-
-                    foreach ($resultSet as $result)
-                        $list[] = $result->getArray();
+                        $list = $this->_registerTracks($resultSet, $artist, $musicTitle);
+                    else
+                        foreach ($resultSet as $result)
+                            $list[] = $result->getArray();
                 //    $cache->save($list, $key);
                 //}
 

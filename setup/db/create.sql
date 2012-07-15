@@ -51,10 +51,12 @@ CREATE TRIGGER `user_created_trigger` BEFORE INSERT ON `user` FOR EACH ROW SET N
 CREATE TABLE `track` (
     `id` int(11) NOT NULL auto_increment,
     `title` varchar(63) collate utf8_swedish_ci default NULL,
-    `url` varchar(2047) collate utf8_swedish_ci default NULL, -- Must be checked on PHP that url is unique.
+    `fid` varchar(15) collate utf8_swedish_ci default NULL, -- foreign system id - e.g.: S1xUBlM5erE
+    `fcode` varchar(7) collate utf8_swedish_ci default 'y', -- foreign system code - default is youtube (y)
     `cover` varchar(2047) collate utf8_swedish_ci default NULL,
     `duration` int(11) NOT NULL default 0,
     PRIMARY KEY(`id`),
+    UNIQUE(`fid`, `fcode`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;

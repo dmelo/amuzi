@@ -23,26 +23,21 @@ class Playlist extends DZend_Model
     {
         $ret = null;
         if (isset($this->_session->user)) {
-            fwrite($fd, 'Playlist::create## userId' . $this->_session->user->id . '. name: ' . $name . '. public: ' . $public . PHP_EOL);
             $ret = $this->_playlistDb->findRowByUserIdAndName(
                 $this->_session->user->id,
                 $name
             );
-            fwrite($fd, 'Playlist::create## ' . $ret . PHP_EOL);
             if (!$ret) {
                 try {
                     $ret = $this->_playlistDb->create(
                         $this->_session->user->id, $name, $public
                     );
-                    fwrite($fd, 'Playlist::create## ' . $ret . PHP_EOL);
                 } catch(Zend_Db_Table_Exception $e) {
-                    fwrite($fd, 'the playlist is not yours' . PHP_EOL);
                     $this->_logger->info($e->getMessage());
                     throw new Zend_Exception("the playlist is not yours");
                 }
             }
         }
-        fclose($fd);
 
         return $ret;
     }

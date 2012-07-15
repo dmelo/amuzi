@@ -11,6 +11,7 @@
  */
 class YoutubeEntry extends AbstractEntry
 {
+    public $fcode;
     /**
      * __construct
      *
@@ -19,8 +20,9 @@ class YoutubeEntry extends AbstractEntry
      */
     public function __construct($entry = array( ) )
     {
+        $this->fcode = 'y';
         $this->_fields = array(
-            'id', 'title', 'content', 'url', 'cover', 'duration', 'youtubeUrl', 'artist', 'musicTitle'
+            'id', 'title', 'fid', 'cover', 'duration', 'artist', 'musicTitle'
         );
         $this->_data = array();
 

@@ -45,16 +45,7 @@ class Youtube extends DZend_Model
             if(!array_key_exists('duration', $entry))
                 continue;
 
-            $entry['url'] = Zend_Registry::get('domain');
-            $entry['url'] .= '/api/' . $entry['duration'] . '/' .
-                $entry['id'] . '/' . urlencode($entry['title']) . '.mp3';
-
-
-            foreach ($node->getElementsByTagName('link') as $link) {
-                $href = $link->getAttribute('href');
-                if (strpos($href, "youtube") !== false && strpos($href, "watch") !== false)
-                    $entry['youtubeUrl'] = $href;
-            }
+            $entry['fid'] = $entry['id'];
 
             if(!empty($complement)) {
                 $entry['artist'] = $complement['artist'];

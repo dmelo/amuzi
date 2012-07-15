@@ -8,18 +8,13 @@ class DbTable_Track extends DZend_Model_DbTable
         $data['title'] = str_replace(
             array('"', '\'', '/'), array('', '', ''), strip_tags($data['title'])
         );
-        if (array_key_exists('mp3', $data)) {
-            $data['url'] = $data['mp3'];
-            unset($data['mp3']);
-        }
-        $data['url'] = preg_replace(
-            "/[^a-zA-Z0-9 :\.\/%-_]+/", "", $data['url']
-        );
 
-        $trackRow = $this->findRowByUrl($data['url']);
+        $trackRow = $this->findRowByFidAndFcode($data['fid'], $data['fcode']);
         if (!$trackRow) {
             parent::insert($data);
-            $trackRow = $this->findRowByUrl($data['url']);
+            $trackRow = $this->findRowByFidAndFcode(
+                $data['fid'], $data['fcode']
+            );
         }
 
         return $trackRow;
