@@ -83,7 +83,7 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
         $list = $this->_playlistHasTrackDb->findByPlaylistId($this->id);
         $ret = array();
         foreach ($list as $item) {
-            $ret[] = array_merge($trackDb->findRowById($item->trackId)->toArray(),
+            $ret[] = array_merge($trackDb->findRowById($item->trackId)->getArray(),
                 array('artist_music_title_id' => $item->artistMusicTitleId));
         }
 
