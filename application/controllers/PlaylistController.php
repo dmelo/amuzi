@@ -135,10 +135,10 @@ class PlaylistController extends DZend_Controller_Action
         $message = null;
 
         if ($this->_request->isPost()) {
-            $url = $this->_request->getPost('url');
+            $trackId = $this->_request->getPost('trackId');
             $playlist = $this->_request->getPost('playlist');
             try {
-                $this->_playlistModel->rmTrack($url, $playlist);
+                $this->_playlistModel->rmTrack($trackId, $playlist);
                 $message = array($this->view->t('Track removed'), 'success');
             } catch(Zend_Exception $e) {
                 $message = array(

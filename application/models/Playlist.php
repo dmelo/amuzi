@@ -188,14 +188,14 @@ class Playlist extends DZend_Model
     /**
      * rmTrack Remove a track from a playlist.
      *
-     * @param $url Track's url
+     * @param $trackId Track ID
      * @param string $name
      * @return void
      */
-    public function rmTrack($url, $name = 'default')
+    public function rmTrack($trackId, $name = 'default')
     {
         $playlistRow = $this->create($name);
-        $playlistRow->rmTrack($url);
+        $playlistRow->rmTrack($trackId);
     }
 
     /**

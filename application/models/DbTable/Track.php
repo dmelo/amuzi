@@ -19,4 +19,9 @@ class DbTable_Track extends DZend_Model_DbTable
 
         return $trackRow;
     }
+
+    public function findRowByUrl($url)
+    {
+        // TODO: transform the url into the current columns...
+    }
 }

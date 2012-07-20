@@ -37,19 +37,19 @@
                 loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
-                var pOpt = {title: v.title, mp3: v.url, free: true, id: v.fid};
+                var pOpt = {title: v.title, mp3: v.url, free: true, id: v.fid, trackId: v.trackId}; // TODO: verify this.
                 myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
     }
 
     // TODO: take away the playlistName
-    function rmTrack(url, playlistName) {
+    function rmTrack(trackId, playlistName) {
         playlistName = playlistName || 'default';
         $.bootstrapMessageLoading();
         $.post('/playlist/rmtrack', {
             playlist: playlistName,
-            url: url
+            trackId: trackId
         }, function(data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if('error' === data[1])
@@ -364,8 +364,8 @@
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
-            url = $(this).parent().parent().find('.jp-playlist-item-free').attr('href');
-            rmTrack(url, myPlaylist.name);
+            trackId = $(this).parent().parent().find('.jp-playlist-item-free').attr('trackId');
+            rmTrack(trackId, myPlaylist.name);
         });
 
         // placeholder on the search input.

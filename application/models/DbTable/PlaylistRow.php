@@ -60,9 +60,9 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
         }
     }
 
-    public function rmTrack($url)
+    public function rmTrack($trackId)
     {
-        $trackRow = $this->_trackDb->findRowByUrl($url);
+        $trackRow = $this->_trackDb->findRowById($trackId);
         $this->_playlistHasTrackDb->deleteByPlaylistIdAndTrackId(
             $this->id,
             $trackRow->id
