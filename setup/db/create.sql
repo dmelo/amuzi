@@ -31,6 +31,18 @@ CREATE TABLE `artist_music_title` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `artist_music_title_created_trigger` BEFORE INSERT ON `artist_music_title` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
+CREATE TABLE `music_similarity` (
+    `id` int(11) NOT NULL auto_increment,
+    `f_artist_music_title_id` int(11) NOT NULL,
+    `s_artist_music_title_id` int(11) NOT NULL,
+    `similarity` int(4) NOT NULL DEFAULT 0,
+    PRIMARY KEY(`id`),
+    UNIQUE(`f_artist_music_title_id`, `s_artist_music_title_id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `music_similarity_created_trigger` BEFORE INSERT ON `music_similarity` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
 CREATE TABLE `user` (
     `id` int(11) NOT NULL auto_increment,
     `facebook_id` varchar(63) collate utf8_swedish_ci default NULL,
