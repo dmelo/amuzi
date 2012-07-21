@@ -28,8 +28,13 @@ class ApiController extends DZend_Controller_Action
             $trackRow = $this->_trackModel->insert($data);
 
 
-            $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
-            $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->search);
+            $artistMusicTitleId = $this->_artistMusicTitleModel
+                ->insert($artist, $musicTitle);
+            $this->_musicTrackLinkModel->bond(
+                $artistMusicTitleId,
+                $trackRow->id,
+                $this->_bondModel->search
+            );
 
             $row = $trackRow->getArray();
             $row['artist'] = $artist;
@@ -63,11 +68,15 @@ class ApiController extends DZend_Controller_Action
                     $artist = $this->_request->getParam('artist');
                     $musicTitle = $this->_request->getParam('musicTitle');
                     $complement = null !== $artist && null !== $musicTitle ?
-                        array('artist' => $artist, 'musicTitle' => $musicTitle) :
+                        array('artist' => $artist, 'musicTitle' => $musicTitle):
                         array();
-                    $resultSet = $this->_youtubeModel->search($q, $limit, $offset, $complement);
+                    $resultSet = $this->_youtubeModel->search(
+                        $q, $limit, $offset, $complement
+                    );
                     if (!empty($complement))
-                        $list = $this->_registerTracks($resultSet, $artist, $musicTitle);
+                        $list = $this->_registerTracks(
+                            $resultSet, $artist, $musicTitle
+                        );
                     else
                         foreach ($resultSet as $result)
                             $list[] = $result->getArray();
@@ -99,16 +108,32 @@ class ApiController extends DZend_Controller_Action
             $q = array();
             $list = array();
             $i = 0;
-            foreach ($this->_lastfmModel->getSimilar($artist, $musicTitle) as $row) {
+            foreach ($this->_lastfmModel->getSimilar($artist, $musicTitle) as
+                $row) {
                 $q[] = $row->name;
-                $resultSet = $this->_youtubeModel->search($row->name, $limit, $offset, array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
-                $this->_registerTracks($resultSet, $row->artist, $row->musicTitle);
-                $trackRow = $this->_musicTrackLinkModel->getTrack($row->artist, $row->musicTitle);
-                $list[] = array_merge($trackRow->getArray(), array('artist' => $row->artist, 'musicTitle' => $row->musicTitle));
+                $resultSet = $this->_youtubeModel->search(
+                    $row->name, $limit, $offset, array(
+                        'artist' => $row->artist,
+                        'musicTitle' => $row->musicTitle
+                    )
+                );
+                $this->_registerTracks(
+                    $resultSet, $row->artist, $row->musicTitle
+                );
+                $trackRow = $this->_musicTrackLinkModel->getTrack(
+                    $row->artist, $row->musicTitle
+                );
+                $list[] = array_merge(
+                    $trackRow->getArray(),
+                    array(
+                        'artist' => $row->artist,
+                        'musicTitle' => $row->musicTitle
+                    )
+                );
 
-               $i++;
-               if ($i >= $titlesLimit)
-                   break;
+                $i++;
+                if ($i >= $titlesLimit)
+                    break;
             }
 
             $this->view->output = $list;

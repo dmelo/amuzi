@@ -53,7 +53,8 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
                 'track_id' => $trackRow->id,
                 'sort' => $maxSort + 1);
             if (array_key_exists('artist_music_title_id', $trackInfo))
-                $data['artist_music_title_id'] = $trackInfo['artist_music_title_id'];
+                $data['artist_music_title_id']
+                    = $trackInfo['artist_music_title_id'];
             $this->_playlistHasTrackDb->insert($data);
 
             return $trackRow;
@@ -83,8 +84,10 @@ class DbTable_PlaylistRow extends DZend_Model_DbTableRow
         $list = $this->_playlistHasTrackDb->findByPlaylistId($this->id);
         $ret = array();
         foreach ($list as $item) {
-            $ret[] = array_merge($trackDb->findRowById($item->trackId)->getArray(),
-                array('artist_music_title_id' => $item->artistMusicTitleId));
+            $ret[] = array_merge(
+                $trackDb->findRowById($item->trackId)->getArray(),
+                array('artist_music_title_id' => $item->artistMusicTitleId)
+            );
         }
 
         return $ret;

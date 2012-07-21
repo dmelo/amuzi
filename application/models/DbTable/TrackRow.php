@@ -5,7 +5,14 @@ class DbTable_TrackRow extends DZend_Model_DbTableRow
     public function getArray()
     {
         $columns = array(
-            'id', 'title', 'fid', 'fcode', 'url', 'cover', 'duration', 'youtubeUrl'
+            'id',
+            'title',
+            'fid',
+            'fcode',
+            'url',
+            'cover',
+            'duration',
+            'youtubeUrl'
         );
         $ret = array();
         foreach ($columns as $column)

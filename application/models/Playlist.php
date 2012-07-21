@@ -80,7 +80,8 @@ class Playlist extends DZend_Model
                 );
         } elseif (gettype($name) === 'integer') {
             $playlistRow = $this->_playlistDb->findRowById($name);
-            if ($playlistRow->user_id !== $user->id && 'public' !== $playlistRow->privacy)
+            if ($playlistRow->userId !== $user->id
+                    && 'public' !== $playlistRow->privacy)
                 $playlistRow = null;
             else
                 $this->_userListenPlaylistModel->addUserPlaylist($playlistRow);

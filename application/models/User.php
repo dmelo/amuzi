@@ -87,7 +87,16 @@ class User extends DZend_Model
         $session = DZend_Session_Namespace::get('session');
         $mail = new Zend_Mail('UTF-8');
 
-        $mail->setBodyHtml($this->_translate->_("Hi %s,<br/><br/>Welcome to AMUZI. To activate your account just click on the link bellow:<br/><a href=\"%s\">%s</a><br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getUrlToken(), $userRow->getUrlToken()));
+        $mail->setBodyHtml(
+            $this->_translate->_(
+                "Hi %s,<br/><br/>Welcome to AMUZI. To activate your account "
+                . "just click on the link bellow:<br/><a href=\"%s\">%s</a>"
+                . "<br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team",
+                $userRow->name,
+                $userRow->getUrlToken(),
+                $userRow->getUrlToken()
+            )
+        );
         $mail->setFrom('support@amuzi.net', 'AMUZI Team');
         $mail->addTo($userRow->email);
         $mail->setSubject($this->_translate->_("AMUZI -- Account activation"));
@@ -106,7 +115,18 @@ class User extends DZend_Model
         $session = DZend_Session_Namespace::get('session');
         $mail = new Zend_Mail('UTF-8');
 
-        $mail->setBodyHtml($this->_translate->_("Hi %s,<br/><br/>Someone, hopefully you, requested a new password on AMUZI. To make a new password, please click the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>Best regards,<br/>AMUZI Team", $userRow->name, $userRow->getForgotPasswordUrl(), $userRow->getForgotPasswordUrl()));
+        $mail->setBodyHtml(
+            $this->_translate->_(
+                "Hi %s,<br/><br/>Someone, hopefully you, requested a new "
+                . "password on AMUZI. To make a new password, please click "
+                . "the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>"
+                . "Best regards,<br/>",
+                "AMUZI Team",
+                $userRow->name,
+                $userRow->getForgotPasswordUrl(),
+                $userRow->getForgotPasswordUrl()
+            )
+        );
         $mail->setFrom('support@amuzi.net', 'AMUZI Team');
         $mail->addTo($userRow->email);
         $mail->setSubject(

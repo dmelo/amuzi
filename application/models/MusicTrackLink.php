@@ -15,7 +15,9 @@ class MusicTrackLink extends DZend_Model
 
             $currentBondRow = null;
             if (null !== $currentMusicTrackLinkRow) {
-                $currentBondRow = $this->_bondModel->findRowById($currentMusicTrackLinkRow->bondId);
+                $currentBondRow = $this->_bondModel->findRowById(
+                    $currentMusicTrackLinkRow->bondId
+                );
 
                 // If the current bond has higher priority than the new bond,
                 // then don't do the new bond
@@ -40,14 +42,18 @@ class MusicTrackLink extends DZend_Model
 
     public function getTrack($artist, $musicTitle)
     {
-        $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
-        $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId($artistMusicTitleId);
+        $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+            $artist, $musicTitle
+        );
+        $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
+            $artistMusicTitleId
+        );
         $points = array();
         foreach ($rowSet as $row) {
             if (!array_key_exists($row->trackId, $points))
                 $points[$row->trackId] = 0;
 
-            switch ($row->bond_id) {
+            switch ($row->bondId) {
                 case 0: // search
                     $points[$row->trackId] += 1;
                     break;

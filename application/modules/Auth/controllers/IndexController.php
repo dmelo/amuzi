@@ -97,28 +97,40 @@ class Auth_IndexController extends DZend_Controller_Action
         $params = $this->_request->getParams();
         if ($this->_request->isPost() && $form->isValid($params)) {
             if ($params['password'] !== $params['password2'])
-                $message = array($this->view->t('Password doesn\'t match'), 'error');
-            elseif (($userRow = $this->_userModel->findByEmail($params['email'])) !== null)
-                $message = array($this->view->t('Email is already registered'), 'error');
+                $message = array(
+                    $this->view->t('Password doesn\'t match'), 'error'
+                );
+            elseif (($userRow 
+                = $this->_userModel->findByEmail($params['email'])) !== null)
+                $message = array(
+                    $this->view->t('Email is already registered'), 'error'
+                );
             else {
-                if(
+                if (
                     $this->_userModel->register(
                         $params['name'], $params['email'], $params['password']
                     ) === true
                 ) {
                     $userRow = $this->_userModel->findByEmail($params['email']);
-                    if($this->_userModel->sendActivateAccountEmail($userRow)) {
-                        $message = array($this->view->t('User registered. Check your email to activate your account.'), 'success');
+                    if ($this->_userModel->sendActivateAccountEmail($userRow)) {
+                        $message = array($this->view->t(
+                            'User registered. Check your '
+                            . 'email to activate your account.'
+                        ), 'success');
                         if (method_exists($userRow, 'postRegister'))
                             $userRow->postRegister();
-                    }
-                    else {
-                        $message = array($this->view->t('An error occurred. It was not possible to send the email. Plase try again'), 'error');
+                    } else {
+                        $message = array($this->view->t(
+                            'An error occurred. It was not possible to send '
+                            . 'the email. Plase try again'
+                        ), 'error');
                         $this->_userModel->deleteByEmail($params['email']);
                     }
                 }
                 else
-                    $message = array($this->view->t('Some error occurred, please try again'), 'error');
+                    $message = array($this->view->t(
+                        'Some error occurred, please try again'
+                    ), 'error');
             }
 
             if($message[1] !== 'success')
@@ -137,12 +149,15 @@ class Auth_IndexController extends DZend_Controller_Action
 
         $userRow = $this->_userModel->findByEmail($email);
         $message = null;
-        if(
+        if (
             null === $userRow ||
             '' === $userRow->token ||
             $userRow->token !== $token
         ) {
-            $message = array($this->view->t('The email %s cannot be activated', $email), 'error');
+            $message = array(
+                $this->view->t('The email %s cannot be activated', $email),
+                'error'
+            );
         } else {
             $userRow->token = '';
             $userRow->save();

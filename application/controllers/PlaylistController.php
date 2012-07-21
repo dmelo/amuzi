@@ -93,12 +93,16 @@ class PlaylistController extends DZend_Controller_Action
                 ($artist = $this->_request->getPost('artist')) !== null &&
                 ($musicTitle = $this->_request->getPost('musicTitle')) !== null
             ) {
-                $artistMusicTitleId = $this->_artistMusicTitleModel->insert($artist, $musicTitle);
+                $artistMusicTitleId = $this->_artistMusicTitleModel
+                    ->insert($artist, $musicTitle);
                 $trackInfo['artist_music_title_id'] = $artistMusicTitleId;
             }
 
 
-            $this->_logger->debug('PlaylistController::addtrackAction -- ' . print_r($trackInfo, true));
+            $this->_logger->debug(
+                'PlaylistController::addtrackAction -- ' .
+                print_r($trackInfo, true)
+            );
             try {
                 $trackRow = $this->_playlistModel->addTrack(
                     $trackInfo,
@@ -106,7 +110,11 @@ class PlaylistController extends DZend_Controller_Action
                 );
 
                 if (isset($artistMusicTitleId))
-                    $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackRow->id, $this->_bondModel->insert_playlist);
+                    $this->_musicTrackLinkModel->bond(
+                        $artistMusicTitleId,
+                        $trackRow->id,
+                        $this->_bondModel->insert_playlist
+                    );
                 $message = array(
                     $this->view->t('Track added'),
                     'success',
@@ -302,11 +310,18 @@ class PlaylistController extends DZend_Controller_Action
         $message = array('Invalid request', 'error');
         if (($trackId = $this->_request->getParam('track_id')) !== null &&
             (($bond = $this->_request->getParam('bond')) !== null) &&
-            ($artistMusicTitleId = $this->_request->getParam('artist_music_title_id')) !== null) {
-            if (null === $this->_musicTrackLinkModel->bond($artistMusicTitleId, $trackId, $this->_bondModel->{$bond}))
+            (
+                $artistMusicTitleId
+                = $this->_request->getParam('artist_music_title_id')
+            ) !== null) {
+            if (null === $this->_musicTrackLinkModel->bond(
+                $artistMusicTitleId, $trackId, $this->_bondModel->{$bond}
+            ))
                 $message = array('Error while registering vote', 'error');
             else
-                $message = array('Vote saved!! Thank you for your help!', 'success');
+                $message = array(
+                    'Vote saved!! Thank you for your help!', 'success'
+                );
         };
 
         $this->view->message = $message;
