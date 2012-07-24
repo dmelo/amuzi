@@ -1,6 +1,6 @@
 <?php
 
-class Lastfm
+class Lastfm extends DZend_Model
 {
     private $_baseUrl = 'http://ws.audioscrobbler.com/2.0/';
     private $_key;
@@ -12,7 +12,10 @@ class Lastfm
         foreach ($args as $key => $value)
             $final[] = $key . '='. urlencode($value);
 
-        return file_get_contents($this->_baseUrl . '?' . implode('&', $final));
+        $url = $this->_baseUrl . '?' . implode('&', $final);
+        $this->_logger->debug('Lastfm::_request - ' . $url);
+
+        return file_get_contents($url);
     }
 
     protected function _calcName($artist, $musicTitle)
@@ -51,18 +54,23 @@ class Lastfm
             ->nodeValue;
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
-        return new LastfmEntry($name, $cover, $artist, $musicTitle);
+        $similarity = $track->getElementsByTagName('match')
+            ->item(0)
+            ->nodeValue * 10000.0;
+        return new LastfmEntry($name, $cover, $artist, $musicTitle, $similarity);
     }
 
-    public function _exploreDOM($xml, $func, $limit)
+    public function _exploreDOM($xml, $func, $limit = null)
     {
         $resultSet = array();
         $xmlDoc = new DOMDocument();
         $i = 0;
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
-            foreach ($xmlDoc->getElementsByTagName('track') as $track) {
+            foreach ($xmlDoc->getElementsByTagName('track') as $track)
                 $resultSet[] = $this->$func($track);
+
+            if (null !== $limit) {
                 $i++;
                 if ($i >= $limit)
                     break;
@@ -75,6 +83,7 @@ class Lastfm
 
     public function __construct()
     {
+        parent::__construct();
         $config = new Zend_Config_Ini(
             '../application/configs/application.ini',
             'production'
@@ -95,7 +104,7 @@ class Lastfm
         return $this->_exploreDOM($xml, '_processResponseSearch', $limit);
     }
 
-    public function getSimilar($artist, $music, $limit = 10, $offset = 1)
+    public function getSimilar($artist, $music)
     {
         $resultSet = array();
         $args = array(
@@ -105,6 +114,6 @@ class Lastfm
             );
 
         $xml = $this->_request($args);
-        return $this->_exploreDOM($xml, '_processResponseSimilar', $limit);
+        return $this->_exploreDOM($xml, '_processResponseSimilar');
     }
 }

@@ -108,32 +108,45 @@ class ApiController extends DZend_Controller_Action
             $q = array();
             $list = array();
             $i = 0;
+
+            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+                $artist, $musicTitle
+            );
+
             foreach ($this->_lastfmModel->getSimilar($artist, $musicTitle) as
                 $row) {
-                $q[] = $row->name;
-                $resultSet = $this->_youtubeModel->search(
-                    $row->name, $limit, $offset, array(
-                        'artist' => $row->artist,
-                        'musicTitle' => $row->musicTitle
-                    )
-                );
-                $this->_registerTracks(
-                    $resultSet, $row->artist, $row->musicTitle
-                );
-                $trackRow = $this->_musicTrackLinkModel->getTrack(
+                $i++;
+                if ($i <= $titlesLimit) {
+                    $q[] = $row->name;
+                    $resultSet = $this->_youtubeModel->search(
+                        $row->name, $limit, $offset, array(
+                            'artist' => $row->artist,
+                            'musicTitle' => $row->musicTitle
+                        )
+                    );
+                    $this->_registerTracks(
+                        $resultSet, $row->artist, $row->musicTitle
+                    );
+                    $trackRow = $this->_musicTrackLinkModel->getTrack(
+                        $row->artist, $row->musicTitle
+                    );
+
+                    $list[] = array_merge(
+                        $trackRow->getArray(),
+                        array(
+                            'artist' => $row->artist,
+                            'musicTitle' => $row->musicTitle
+                        )
+                    );
+                }
+
+                $artistMusicTitleId2 = $this->_artistMusicTitleModel->insert(
                     $row->artist, $row->musicTitle
                 );
-                $list[] = array_merge(
-                    $trackRow->getArray(),
-                    array(
-                        'artist' => $row->artist,
-                        'musicTitle' => $row->musicTitle
-                    )
-                );
 
-                $i++;
-                if ($i >= $titlesLimit)
-                    break;
+                $this->_musicSimilarityModel->insert(
+                    $artistMusicTitleId, $artistMusicTitleId2, $row->similarity
+                );
             }
 
             $this->view->output = $list;
