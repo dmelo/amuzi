@@ -11,5 +11,7 @@ return array(
 
     'Login with Facebook' => 'Logar com Facebook',
     'Update Required' => 'Necessário fazer atualização',
-'To play the media you will need to either update your browser to a recent version or update your ' => 'To play the media you will need to either update your browser to a recent version or update your '
+    'To play the media you will need to either update your browser to a ' .
+        'recent version or update your ' => 'To play the media you will ' .
+        'need to either update your browser to a recent version or update your '
 );

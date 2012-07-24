@@ -202,7 +202,9 @@ class PlaylistControllerTest extends AbstractControllerTest
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $obj = Zend_Json::decode($this->response->getBody());
-        $this->assertJsonMessage(array('Track added', 'success', array(
+        $this->assertJsonMessage(
+            array(
+            'Track added', 'success', array(
             'id' => '9',
             'title' =>
                 'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
@@ -212,7 +214,9 @@ class PlaylistControllerTest extends AbstractControllerTest
             'duration' => '0',
             'artist' => 'U2',
             'musicTitle' => 'All Because Of You'
-        )));
+        )
+        )
+        );
     }
 
     /**
@@ -229,7 +233,9 @@ class PlaylistControllerTest extends AbstractControllerTest
         $this->assertAjaxWorks('/playlist/addtrack');
         $obj = Zend_Json::decode($this->response->getBody());
         $this->assertEquals($obj[1], 'error');
-        $this->assertEquals(substr($obj[0], 0, 25), 'Problems adding the track');
+        $this->assertEquals(
+            substr($obj[0], 0, 25), 'Problems adding the track'
+        );
     }
 
 

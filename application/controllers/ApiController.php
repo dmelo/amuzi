@@ -15,7 +15,15 @@ class ApiController extends DZend_Controller_Action
             'error' => 'Parameter "q" must be specified'
             );
 
-    protected function _registerTracks($resultSet, $artist, $musicTitle)
+    /**
+     * _registerTracks Persists track on database.
+     *
+     * @param array $resultSet List of results to persist.
+     * @param mixed $artist Artist related to the results' list.
+     * @param mixed $musicTitle Music title related to the results' list.
+     * @return void Return an array with the list of registered elements.
+     */
+    protected function _registerTracks(array $resultSet, $artist, $musicTitle)
     {
         foreach ($resultSet as $result) {
             $data = array(
@@ -140,12 +148,12 @@ class ApiController extends DZend_Controller_Action
                     );
                 }
 
-                $artistMusicTitleId2 = $this->_artistMusicTitleModel->insert(
+                $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
                     $row->artist, $row->musicTitle
                 );
 
                 $this->_musicSimilarityModel->insert(
-                    $artistMusicTitleId, $artistMusicTitleId2, $row->similarity
+                    $artistMusicTitleId, $sArtistMusicTitleId, $row->similarity
                 );
             }
 

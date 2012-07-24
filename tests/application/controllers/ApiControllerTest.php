@@ -130,10 +130,14 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertTrue(array_key_exists('cover', $obj));
         $this->assertTrue(array_key_exists('duration', $obj));
 
+        $title = "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp " .
+            "Fiction";
         $this->assertEquals($obj['id'], 9);
-        $this->assertEquals($obj['title'], "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction");
-        $this->assertEquals($obj['url'], "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction");
-        $this->assertEquals($obj['cover'], "http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg");
+        $this->assertEquals($obj['title'], $title);
+        $this->assertEquals($obj['url'], $title);
+        $this->assertEquals(
+            $obj['cover'], "http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg"
+        );
         $this->assertEquals($obj['duration'], 0);
     }
 }

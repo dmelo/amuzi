@@ -11,7 +11,9 @@ return array(
 
     'Login with Facebook' => 'Login with Facebook',
     'Update Required' => 'Update Required',
-    'To play the media you will need to either update your browser to a recent version or update your ' => 'To play the media you will need to either update your browser to a recent version or update your ',
+    'To play the media you will need to either update your browser to a ' .
+        'recent version or update your ' => 'To play the media you will need' .
+        ' to either update your browser to a recent version or update your ',
     'Permission denied' => 'Permission denied',
 
     // Controller Playlist, Action addtrack

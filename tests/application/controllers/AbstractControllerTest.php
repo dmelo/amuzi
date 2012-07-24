@@ -1,6 +1,7 @@
 <?php
 
-abstract class AbstractControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
+abstract class AbstractControllerTest
+    extends DZend_Test_PHPUnit_ControllerTestCase
 {
     public function testLogin()
     {
