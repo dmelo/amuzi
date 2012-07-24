@@ -30,7 +30,11 @@ class Youtube extends DZend_Model
             foreach ($node->getElementsByTagName('title') as $title)
                 $entry['title'] = $title->nodeValue;
             // filtering
-            $entry['title'] = str_replace(array('"', '\'', '/'), array('', '', ''), strip_tags($entry['title']));
+            $entry['title'] = str_replace(
+                array('"', '\'', '/'),
+                array('', '', ''),
+                strip_tags($entry['title'])
+            );
 
             foreach ($node->getElementsByTagName('content') as $content)
                 $entry['content'] = $content->nodeValue;
@@ -42,12 +46,12 @@ class Youtube extends DZend_Model
             foreach ($mediaContentList as $mediaContent)
                 $entry['duration'] = $mediaContent->getAttribute('duration');
 
-            if(!array_key_exists('duration', $entry))
+            if (!array_key_exists('duration', $entry))
                 continue;
 
             $entry['fid'] = $entry['id'];
 
-            if(!empty($complement)) {
+            if (!empty($complement)) {
                 $entry['artist'] = $complement['artist'];
                 $entry['musicTitle'] = $complement['musicTitle'];
             }

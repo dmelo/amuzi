@@ -33,7 +33,13 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     public function testSearch1Action()
     {
         $this->request->setMethod('GET');
-        $this->request->setParams(array('q' => 'Coldplay - Yellow', 'artist' => 'Coldplay', 'musicTitle' => 'Yellow'));
+        $this->request->setParams(
+            array(
+                'q' => 'Coldplay - Yellow',
+                'artist' => 'Coldplay',
+                'musicTitle' => 'Yellow'
+            )
+        );
         $this->assertValidSearch();
     }
 
@@ -123,8 +129,6 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
         $this->assertTrue(array_key_exists('url', $obj));
         $this->assertTrue(array_key_exists('cover', $obj));
         $this->assertTrue(array_key_exists('duration', $obj));
-
-        // <track id="9"  title="Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction" url="Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction" cover="http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg" duration="0"/>
 
         $this->assertEquals($obj['id'], 9);
         $this->assertEquals($obj['title'], "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction");

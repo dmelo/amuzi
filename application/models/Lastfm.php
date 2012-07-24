@@ -57,7 +57,9 @@ class Lastfm extends DZend_Model
         $similarity = $track->getElementsByTagName('match')
             ->item(0)
             ->nodeValue * 10000.0;
-        return new LastfmEntry($name, $cover, $artist, $musicTitle, $similarity);
+        return new LastfmEntry(
+            $name, $cover, $artist, $musicTitle, $similarity
+        );
     }
 
     public function _exploreDOM($xml, $func, $limit = null)

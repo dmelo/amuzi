@@ -161,8 +161,12 @@ class Auth_IndexController extends DZend_Controller_Action
         } else {
             $userRow->token = '';
             $userRow->save();
-            $message = array('You account is activated. You can login now.', 'success');
-            $this->_helper->redirector('login', 'index', 'Auth', array('activated' => '1'));
+            $message = array(
+                'You account is activated. You can login now.', 'success'
+            );
+            $this->_helper->redirector(
+                'login', 'index', 'Auth', array('activated' => '1')
+            );
         }
 
         $this->view->message = $message;
@@ -178,12 +182,19 @@ class Auth_IndexController extends DZend_Controller_Action
     {
         $form = new Auth_Model_Form_ForgotPassword();
         $params = $this->_request->getParams();
-        if($this->_request->isPost() && $form->isValid($params)) {
+        if ($this->_request->isPost() && $form->isValid($params)) {
             $userRow = $this->_userModel->findByEmail($params['email']);
-            $message = array($this->view->t('If this email is registered then you will receive an email that allow you to edit your password'), 'success');
-            if($userRow) {
-                if(!$this->_userModel->sendForgotPasswordEmail($userRow))
-                    $message = array($this->view->t('A problem occured while trying to send your email. Please try again later'), 'error');
+            $message = array($this->view->t(
+                'If this email is registered then you will receive an email ' .
+                'that allow you to edit your password'
+            ), 'success');
+            if ($userRow) {
+                if (!$this->_userModel->sendForgotPasswordEmail($userRow))
+                    $message = array($this->view->t(
+                        'A problem occured while ' .
+                        'trying to send your email. Please try again ' .
+                        'later'
+                    ), 'error');
             }
             $this->view->message = $message;
         }
@@ -200,22 +211,28 @@ class Auth_IndexController extends DZend_Controller_Action
     {
         $params = $this->_request->getParams();
         $userRow = $this->_userModel->findByEmail($params['email']);
-        if(
+        if (
             $userRow &&
             $userRow->isForgotPasswordUrlValid($params['time'], $params['hash'])
         ) {
             $this->view->email = $params['email'];
             $form = new Auth_Model_Form_ResetPassword();
 
-            if($this->_request->isPost() && $form->isValid($params)) {
-                if($params['password2'] !== $params['passwordnew'])
-                    $message = array($this->view->t('Passwords doesn\'t match'), 'error');
-                elseif(strlen($params['passwordnew']) < 6)
-                    $message = array($this->view->t('Password is too short'), 'error');
+            if ($this->_request->isPost() && $form->isValid($params)) {
+                if ($params['password2'] !== $params['passwordnew'])
+                    $message = array(
+                        $this->view->t('Passwords doesn\'t match'), 'error'
+                    );
+                elseif (strlen($params['passwordnew']) < 6)
+                    $message = array(
+                        $this->view->t('Password is too short'), 'error'
+                    );
                 else {
                     $userRow->password = sha1($params['passwordnew']);
                     $userRow->save();
-                    $message = array($this->view->t('Password changed successfully'), 'success');
+                    $message = array($this->view->t(
+                        'Password changed successfully'
+                    ), 'success');
                     $this->_helper->redirector('index', 'index', 'default');
                 }
                 $this->view->message = $message;
