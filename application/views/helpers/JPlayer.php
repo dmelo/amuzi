@@ -63,7 +63,7 @@ class View_Helper_JPlayer extends View_Helper_T
                 <div class="jp-controls-holder">
                     <ul class="jp-controls">';
         foreach ($controls as $class)
-            echo _li($class);
+            echo $this->_li($class);
 
         echo '
                     </ul>
@@ -75,7 +75,7 @@ class View_Helper_JPlayer extends View_Helper_T
                             $this->t('share this') .
                         '</a></li>';
         foreach ($toggles as $class)
-            echo _liTwo($class);
+            echo $this->_liTwo($class);
 
         echo '
                     </ul>
