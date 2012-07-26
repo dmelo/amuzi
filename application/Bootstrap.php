@@ -43,6 +43,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.bootstrapLoadModal.js';
         $js[] = $domainJs . 'jquery.url.js';
         $js[] = $domainJs . 'default.js';
+        $js[] = $domainJs . 'incboard.js';
+        $js[] = $domainJs . 'incboard-cell.js';
 
         $css = array();
         $css[] = $domainCss . 'prettify-jPlayer.css';
@@ -54,6 +56,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $css[] = $domainCss . 'bootstrap.css';
         $css[] = $domainCss . 'github-badge.css';
         $css[] = $domainCss . 'default.css';
+        $css[] = $domainCss . 'incboard.css';
 
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');

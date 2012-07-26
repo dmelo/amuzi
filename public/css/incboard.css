@@ -1,0 +1,7 @@
+#incboard {
+    position: relative;
+}
+
+.incboard-cell {
+    position: absolute;
+}
