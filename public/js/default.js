@@ -326,7 +326,7 @@
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
-            $('#search').submit();
+            $('form.search').submit();
             latestSearch = ui.item.value;
         }
     }
