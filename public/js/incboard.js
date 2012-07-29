@@ -41,28 +41,34 @@ IncBoard.prototype.animateCells = function() {
     });
 }
 
+IncBoard.prototype.searchMusic = function(artist, musicTitle, pos) {
+    $.get('/api/searchmusic', {
+        'artist': artist,
+        'musicTitle': musicTitle
+    }, function(v) {
+        incBoard.insert(v, Math.floor(pos / incBoard.cols), pos % incBoard.cols);
+    }, 'json');
+}
+
+
 $(document).ready(function() {
     incBoard.init();
     $('#incboard-search').ajaxForm({
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
-            incBoard.clean();
             $.each(data, function(i, s) {
-                if(i < incBoard.cols * incBoard.rows) {
-                    $.get('/api/searchmusic', {
-                        'artist': s.artist,
-                        'musicTitle': s.musicTitle
-                    }, function(v) {
-                        incBoard.insert(v, Math.floor(i / incBoard.cols), i % incBoard.cols);
-                    }, 'json');
-                }
+                var k = i + 1;
+                if(k < incBoard.cols * incBoard.rows)
+                    incBoard.searchMusic(s.artist, s.musicTitle, k);
             });
         },
         beforeSubmit: function() {
             incBoard.searchString = $('#q').val();
             console.log($('#q').val());
             $.bootstrapMessage('Loading...', 'info');
+            incBoard.clean();
+            incBoard.searchMusic($('#artist').val(), $('#musicTitle').val(), 0);
         }
     });
 
