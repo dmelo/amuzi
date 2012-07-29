@@ -10,10 +10,23 @@
     display: none;
 }
 
-.incboard-cell.inevidence .incboard-img {
-    width: 120px;
+.incboard-cell .incboard-control {
+    display: none;
 }
 
-.incboard-cell.inevidence .incboard-info {
+.incboard-cell.inevidence {
+    width: 300px !important;
+    height: 120px;
+    background-color: #dfd !important;
+    z-index: 100;
+}
+
+.incboard-cell .object-music {
+    display: none;
+}
+
+.incboard-cell .inevidence.object-music {
     display: block;
 }
+
+

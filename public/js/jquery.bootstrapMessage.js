@@ -29,7 +29,7 @@
     }
 
     $.bootstrapMessageLoading = function() {
-        $.bootstrapMessage('<img src="img/loading.gif"/>', 'info');
+        $.bootstrapMessage('<img src="/img/loading.gif"/>', 'info');
     }
 
     $.bootstrapMessageOff = function() {

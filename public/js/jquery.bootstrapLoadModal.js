@@ -22,7 +22,7 @@
     $.bootstrapLoadModalLoading = function() {
         var modalWrapper = '#load-modal-wrapper';
         $.bootstrapLoadModalInit();
-        $(modalWrapper + ' .modal-body').html('<img src="img/loading.gif"/>');
+        $(modalWrapper + ' .modal-body').html('<img src="/img/loading.gif"/>');
         $(modalWrapper + ' h3').html('Loading...');
         $(modalWrapper).modal('show');
     };

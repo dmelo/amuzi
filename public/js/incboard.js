@@ -29,8 +29,15 @@ IncBoard.prototype.init = function() {
 
 IncBoard.prototype.animateCells = function() {
     $('.incboard-cell').live('mouseover', function(e) {
-        $('.incboard-cell').removeClass('inevidence');
-        $(this).addClass('inevidence');
+        $('.incboard-img').css('display', 'block');
+        $('.incboard-cell').find('.inevidence').removeClass('inevidence');
+        $(this).find('.object-music').addClass('inevidence');
+        $(this).find('.incboard.img').css('display', 'none');
+    });
+
+    $('.incboard-cell').live('mouseleave', function(e) {
+        $('.incboard-img').css('display', 'block');
+        $('.incboard-cell').find('.inevidence').removeClass('inevidence');
     });
 }
 

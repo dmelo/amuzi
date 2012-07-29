@@ -1,3 +1,4 @@
+
 function IncBoardCell(cellSize) {
     this.cellSize = cellSize;
     this.content = null;
@@ -15,9 +16,14 @@ IncBoardCell.prototype.setPos = function(row, col) {
 }
 
 IncBoardCell.prototype.getHtml = function() {
+    var v = this.content;
+    var resultSet = new ResultSet();
     sty = 'width: ' + this.cellSize + 'px; height: ' + this.cellSize + 'px; ';
-    img = '<div class="incboard-img"><img src="' + this.content.cover + '"/></div>';
+    img = '<div class="incboard-img"><img src="' + v.cover + '"/></div>';
     console.log(this.content);
-    info = '<div class="incboard-info"><p>bla bla bla bla</p><input type="button" val="add"/></div>';
-    return '<div class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSize) + 'px; left: ' + (this.col * this.cellSize) + 'px;">' + img + info + '</div>';
+    title = '<span class="title">' + v.artist + ' - ' + v.musicTitle + '</span>';
+    duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
+    info = '<div class="incboard-info">' + title + duration + '</div>';
+    control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
+    return '<div class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSize) + 'px; left: ' + (this.col * this.cellSize) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>';
 }
