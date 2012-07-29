@@ -110,7 +110,7 @@ class ApiController extends DZend_Controller_Action
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
-            $titlesLimit = $this->_request->getParam('titlesLimit', 2);
+            $titlesLimit = $this->_request->getParam('titlesLimit', 10);
             $limit = $this->_request->getParam('limit', 9);
             $offset = $this->_request->getParam('offset', 1);
             $q = array();
@@ -152,9 +152,12 @@ class ApiController extends DZend_Controller_Action
                     $row->artist, $row->musicTitle
                 );
 
-                $this->_musicSimilarityModel->insert(
-                    $artistMusicTitleId, $sArtistMusicTitleId, $row->similarity
-                );
+                if (null !== $sArtistMusicTitleId)
+                    $this->_musicSimilarityModel->insert(
+                        $artistMusicTitleId,
+                        $sArtistMusicTitleId,
+                        $row->similarity
+                    );
             }
 
             $this->view->output = $list;

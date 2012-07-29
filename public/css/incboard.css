@@ -5,3 +5,15 @@
 .incboard-cell {
     position: absolute;
 }
+
+.incboard-info {
+    display: none;
+}
+
+.incboard-cell.inevidence .incboard-img {
+    width: 120px;
+}
+
+.incboard-cell.inevidence .incboard-info {
+    display: block;
+}

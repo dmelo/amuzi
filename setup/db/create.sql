@@ -10,7 +10,7 @@ CREATE TRIGGER `artist_created_trigger` BEFORE INSERT ON `artist` FOR EACH ROW S
 
 CREATE TABLE `music_title` (
     `id` int(11) NOT NULL auto_increment,
-    `name` varchar(63) collate utf8_swedish_ci NOT NULL,
+    `name` varchar(255) collate utf8_swedish_ci NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE(`name`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
