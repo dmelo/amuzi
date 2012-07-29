@@ -69,13 +69,14 @@ class Lastfm extends DZend_Model
         $i = 0;
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
-            foreach ($xmlDoc->getElementsByTagName('track') as $track)
+            foreach ($xmlDoc->getElementsByTagName('track') as $track) {
                 $resultSet[] = $this->$func($track);
 
-            if (null !== $limit) {
-                $i++;
-                if ($i >= $limit)
-                    break;
+                if (null !== $limit) {
+                    $i++;
+                    if ($i >= $limit)
+                        break;
+                }
             }
         }
 
@@ -116,6 +117,6 @@ class Lastfm extends DZend_Model
             );
 
         $xml = $this->_request($args);
-        return $this->_exploreDOM($xml, '_processResponseSimilar');
+        return $this->_exploreDOM($xml, '_processResponseSimilar', 100);
     }
 }
