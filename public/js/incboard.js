@@ -2,8 +2,8 @@ var incBoard = new IncBoard();
 
 function  IncBoard() {
     this.searchString = "";
-    this.rows = 10;
-    this.cols = 10;
+    this.rows = 7;
+    this.cols = 14;
     this.cellSize = 50;
 }
 
@@ -48,9 +48,15 @@ $(document).ready(function() {
         success: function (data) {
             $.bootstrapMessageOff();
             incBoard.clean();
-            $.each(data, function(i, v) {
-                console.log(v);
-                incBoard.insert(v, Math.floor(i / incBoard.cols), i % incBoard.cols);
+            $.each(data, function(i, s) {
+                if(i < incBoard.cols * incBoard.rows) {
+                    $.get('/api/searchmusic', {
+                        'artist': s.artist,
+                        'musicTitle': s.musicTitle
+                    }, function(v) {
+                        incBoard.insert(v, Math.floor(i / incBoard.cols), i % incBoard.cols);
+                    }, 'json');
+                }
             });
         },
         beforeSubmit: function() {

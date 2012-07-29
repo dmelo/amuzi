@@ -29,20 +29,11 @@ class MusicSimilarity extends DZend_Model
             array($fArtistMusicTitleId, $sArtistMusicTitleId):
             array($sArtistMusicTitleId, $fArtistMusicTitleId);
 
-        try {
-            return $this->_musicSimilarityDb->insert(
-                array('f_artist_music_title_id' => $f,
-                    's_artist_music_title_id' => $s,
-                    'similarity' => $similarity
-                )
-            );
-        } catch (Zend_Db_Statement_Exception $e) {
-            $row =  $this->_musicSimilarityDb
-                ->findRowByFArtistMusicTitleIdAndSArtistMusicTitleId($f, $s);
-            if (null !== $row)
-                return $row->id;
-            else
-                throw $e;
-        }
+        return $this->_musicSimilarityDb->insert(
+            array('f_artist_music_title_id' => $f,
+                's_artist_music_title_id' => $s,
+                'similarity' => $similarity
+            )
+        );
     }
 }

@@ -58,7 +58,7 @@ class Lastfm extends DZend_Model
             ->item(0)
             ->nodeValue * 10000.0;
         return new LastfmEntry(
-            $name, $cover, $artist, $musicTitle, $similarity
+            $name, $cover, $artist, $musicTitle, (int) $similarity
         );
     }
 

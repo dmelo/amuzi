@@ -123,30 +123,11 @@ class ApiController extends DZend_Controller_Action
 
             foreach ($this->_lastfmModel->getSimilar($artist, $musicTitle) as
                 $row) {
-                $i++;
-                if ($i <= $titlesLimit) {
-                    $q[] = $row->name;
-                    $resultSet = $this->_youtubeModel->search(
-                        $row->name, $limit, $offset, array(
-                            'artist' => $row->artist,
-                            'musicTitle' => $row->musicTitle
-                        )
-                    );
-                    $this->_registerTracks(
-                        $resultSet, $row->artist, $row->musicTitle
-                    );
-                    $trackRow = $this->_musicTrackLinkModel->getTrack(
-                        $row->artist, $row->musicTitle
-                    );
-
-                    $list[] = array_merge(
-                        $trackRow->getArray(),
-                        array(
-                            'artist' => $row->artist,
-                            'musicTitle' => $row->musicTitle
-                        )
-                    );
-                }
+                $list[] = array(
+                    'artist' => $row->artist,
+                    'musicTitle' => $row->musicTitle,
+                    'similarity' => $row->similarity
+                );
 
                 $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
                     $row->artist, $row->musicTitle
@@ -163,6 +144,39 @@ class ApiController extends DZend_Controller_Action
             $this->view->output = $list;
         } else
             $this->view->output = $this->_error;
+    }
+
+    public function searchmusicAction()
+    {
+        if (($artist = $this->_request->getParam('artist')) !== null &&
+            ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
+            $trackRow = $this->_musicTrackLinkModel->getTrack(
+                $artist, $musicTitle
+            );
+            if (null === $trackRow) {
+                // Look for it on Youtube.
+                $resultSet = $this->_youtubeModel->search(
+                    "${artist} - ${musicTitle}", 5, 1, array(
+                        'artist' => $artist,
+                        'musicTitle' => $musicTitle
+                    )
+                );
+                $this->_registerTracks(
+                    $resultSet, $artist, $musicTitle
+                );
+                $trackRow = $this->_musicTrackLinkModel->getTrack(
+                    $artist, $musicTitle
+                );
+            }
+
+            $this->view->output = array_merge(
+                $trackRow->getArray(),
+                array(
+                    'artist' => $artist,
+                    'musicTitle' => $musicTitle
+                )
+            );
+        }
     }
 
     /**

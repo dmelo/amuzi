@@ -14,19 +14,14 @@
     display: none;
 }
 
-.incboard-cell.inevidence {
-    width: 300px !important;
-    height: 120px;
-    background-color: #dfd !important;
-    z-index: 100;
-}
-
 .incboard-cell .object-music {
     display: none;
+    z-index: 100;
 }
 
 .incboard-cell .inevidence.object-music {
     display: block;
+    margin: 5px;
 }
 
 

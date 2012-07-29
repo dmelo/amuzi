@@ -23,7 +23,11 @@
   <pre><?php echo $this->escape(var_export($this->request->getParams(), true)) ?>
   </pre>
 
+  <h3>Class:</h3>
+  <pre><?php echo get_class($this->exception); ?></pre>
+
   <?php endif ?>
+
 
 </body>
 </html>
