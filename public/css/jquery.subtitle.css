@@ -1,0 +1,25 @@
+ul.subtitle {
+    list-style-type: none;
+    border: 1px solid gray;
+    padding: 5px;
+    position: fixed;
+}
+
+ul.subtitle li {
+    /*position: relative;*/
+    padding: 3px;
+}
+
+ul.subtitle .subtitle-color {
+    width: 15px;
+    height: 15px;
+    border: 1px solid gray;
+    padding: 1px;
+    /*position: absolute;*/
+}
+
+ul.subtitle .subtitle-label {
+    /*position: absolute;*/
+    top: 0px;
+    left: 20px;
+}

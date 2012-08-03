@@ -14,7 +14,7 @@ class DbTable_MusicSimilarity extends DZend_Model_DbTable
                $this->quoteInto('f_artist_music_title_id = ?', $f) .
                $this->quoteInto(' AND s_artist_music_title_id = ?', $s)
             );
-            $row = $this->findByFArtistMusicTitleIdAndSArtistMusicTitleId(
+            $row = $this->findRowByFArtistMusicTitleIdAndSArtistMusicTitleId(
                 $f, $s
             );
             $this->_cache->save($row->id, $this->getCacheKey($data));
