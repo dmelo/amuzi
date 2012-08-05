@@ -12,6 +12,10 @@ IncBoard.prototype.insert = function(v, row, col) {
     cell.setContent(v);
     cell.setPos(row, col);
     cellHtml = cell.getHtml();
+    $('#subtitle').subtitleAdd(v.artist);
+    cellHtml.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
+    console.log(v.artist);
+    console.log($('#subtitle').subtitleGetColor(v.artist));
     $('#incboard-result #incboard').append(cellHtml);
 }
 
@@ -64,6 +68,7 @@ $(document).ready(function() {
             });
         },
         beforeSubmit: function() {
+            $('#subtitle').subtitleInit();
             incBoard.searchString = $('#q').val();
             console.log($('#q').val());
             $.bootstrapMessage('Loading...', 'info');
@@ -71,5 +76,4 @@ $(document).ready(function() {
             incBoard.searchMusic($('#artist').val(), $('#musicTitle').val(), 0);
         }
     });
-
 });
