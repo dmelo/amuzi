@@ -25,5 +25,5 @@ IncBoardCell.prototype.getHtml = function() {
     duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
     info = '<div class="incboard-info">' + title + duration + '</div>';
     control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
-    return '<div class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSize) + 'px; left: ' + (this.col * this.cellSize) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>';
+    return $('<div artist="' + v.artist + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSize) + 'px; left: ' + (this.col * this.cellSize) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>');
 }
