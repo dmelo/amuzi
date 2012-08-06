@@ -19,6 +19,12 @@
     z-index: 100;
 }
 
+.incboard-cell .incboard-img img {
+    width: 50px;
+    height: 38px;
+    margin: 3px;
+}
+
 .incboard-cell .inevidence.object-music {
     display: block;
     margin: 5px;

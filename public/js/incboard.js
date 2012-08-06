@@ -4,11 +4,12 @@ function  IncBoard() {
     this.searchString = "";
     this.rows = 7;
     this.cols = 14;
-    this.cellSize = 50;
+    this.cellSizeX = 56;
+    this.cellSizeY = 44;
 }
 
 IncBoard.prototype.insert = function(v, row, col) {
-    cell = new IncBoardCell(this.cellSize);
+    cell = new IncBoardCell(this.cellSizeX, this.cellSizeY);
     cell.setContent(v);
     cell.setPos(row, col);
     cellHtml = cell.getHtml();
@@ -21,8 +22,8 @@ IncBoard.prototype.insert = function(v, row, col) {
 
 IncBoard.prototype.clean = function() {
     var table = $('<div id="incboard"></div>');
-    table.css('width', this.cols * this.cellSize);
-    table.css('height', this.rows * this.cellSize);
+    table.css('width', this.cols * this.cellSizeX);
+    table.css('height', this.rows * this.cellSizeY);
     $('#incboard-result').html(table);
 }
 
