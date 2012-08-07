@@ -38,11 +38,20 @@ IncBoard.prototype.animateCells = function() {
         $('.incboard-cell').find('.inevidence').removeClass('inevidence');
         $(this).find('.object-music').addClass('inevidence');
         $(this).find('.incboard.img').css('display', 'none');
+
+        var artist = $(this).attr('artist');
+        $.each($('.incboard-cell'), function(i, e) {
+            if($(this).attr('artist') === artist)
+                $(this).addClass('focus');
+            else
+                $(this).removeClass('focus');
+        });
     });
 
     $('.incboard-cell').live('mouseleave', function(e) {
         $('.incboard-img').css('display', 'block');
         $('.incboard-cell').find('.inevidence').removeClass('inevidence');
+        $('.incboard-cell').removeClass('focus');
     });
 }
 

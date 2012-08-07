@@ -30,4 +30,6 @@
     margin: 5px;
 }
 
-
+.incboard-cell.focus {
+    background-color: blue !important;
+}

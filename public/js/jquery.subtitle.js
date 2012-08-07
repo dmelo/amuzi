@@ -1,5 +1,5 @@
 (function($, undefined) {
-    var colors = ['blue', 'green', 'red', 'yellow', 'gray', 'pink', 'black'];
+    var colors = ['green', 'red', 'yellow', 'gray', 'pink', 'black', '#0ff', '#f0f'];
     var subtitles = [];
     var counter = [];
     $.fn.extend({
