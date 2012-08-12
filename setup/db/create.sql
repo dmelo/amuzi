@@ -36,6 +36,7 @@ CREATE TABLE `music_similarity` (
     `f_artist_music_title_id` int(11) NOT NULL,
     `s_artist_music_title_id` int(11) NOT NULL,
     `similarity` SMALLINT NOT NULL DEFAULT 0,
+    `degree` int(3) NOT NULL DEFAULT 0,
     PRIMARY KEY(`id`),
     UNIQUE(`f_artist_music_title_id`, `s_artist_music_title_id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',

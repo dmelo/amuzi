@@ -54,9 +54,12 @@ class Lastfm extends DZend_Model
             ->nodeValue;
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
+        $this->_logger->debug('Lastfm::_processResponseSimilar 0 nodeValue' . $track->getElementsByTagName('match')->item(0)->nodeValue);
+        $this->_logger->debug('Lastfm::_processResponseSimilar 1 nodeValue' . ($track->getElementsByTagName('match')->item(0)->nodeValue * 10000.0));
         $similarity = $track->getElementsByTagName('match')
             ->item(0)
             ->nodeValue * 10000.0;
+        $this->_logger->debug('Lastfm::_processResponseSimilar 2 nodeValue' . ((int)$similarity));
         return new LastfmEntry(
             $name, $cover, $artist, $musicTitle, (int) $similarity
         );
@@ -117,6 +120,6 @@ class Lastfm extends DZend_Model
             );
 
         $xml = $this->_request($args);
-        return $this->_exploreDOM($xml, '_processResponseSimilar', 100);
+        return $this->_exploreDOM($xml, '_processResponseSimilar', 200);
     }
 }

@@ -22,7 +22,7 @@ class MusicSimilarity extends DZend_Model
      * otherwise.
      */
     public function insert(
-        $fArtistMusicTitleId, $sArtistMusicTitleId, $similarity
+        $fArtistMusicTitleId, $sArtistMusicTitleId, $similarity, $degree = 0
     )
     {
         list($f, $s) = $fArtistMusicTitleId < $sArtistMusicTitleId ?
@@ -32,8 +32,23 @@ class MusicSimilarity extends DZend_Model
         return $this->_musicSimilarityDb->insert(
             array('f_artist_music_title_id' => $f,
                 's_artist_music_title_id' => $s,
-                'similarity' => $similarity
+                'similarity' => $similarity,
+                'degree' => $degree
             )
         );
+    }
+
+    public function findByArtistMusicTitleIdAndDegree(
+        $artistMusicTitleId, $degree
+    )
+    {
+        $db = $this->_musicSimilarityDb->getAdapter();
+        $sql = $db->quoteInto(
+            '(f_artist_music_title_id = ?', $artistMusicTitleId
+        ) .
+        $db->quoteInto(' OR s_artist_music_title_id = ?', $artistMusicTitleId) .
+        $db->quoteInto(') AND degree = ?', $degree);
+
+        return $this->db->fetchAll($sql);
     }
 }

@@ -91,7 +91,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         );
 
         $backend = array(
-            'cache_dir' => 'tmp/'
+            'cache_dir' => '../public/tmp/'
         );
 
         $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);

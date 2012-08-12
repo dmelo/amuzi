@@ -18,7 +18,7 @@
             if(subtitles.indexOf(subtitle) == -1) {
                 subtitles.push(subtitle);
                 if(typeof this.subtitleGetColor(subtitle) !== 'undefined') {
-                    var e = $('<li><span class="subtitle-color">&nbsp;&nbsp;&nbsp;</span><span class="subtitle-label"> - ' + subtitle + '</span></li>');
+                    var e = $('<li artist="' + subtitle + '"><span class="subtitle-color">&nbsp;&nbsp;&nbsp;</span><span class="subtitle-label"> - ' + subtitle + '</span></li>');
                     e.find('.subtitle-color').css('background-color', this.subtitleGetColor(subtitle));
                     $(this).find('ul').append(e);
                     $(this).find('ul').css('display', 'block');

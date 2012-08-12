@@ -86,4 +86,8 @@ $(document).ready(function() {
             incBoard.searchMusic($('#artist').val(), $('#musicTitle').val(), 0);
         }
     });
+
+    $('#subtitle li').live('hover', function(e) {
+        alert('blink' + $(this).attr('artist'));
+    });
 });

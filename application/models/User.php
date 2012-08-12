@@ -84,7 +84,6 @@ class User extends DZend_Model
 
     public function sendActivateAccountEmail($userRow)
     {
-        $session = DZend_Session_Namespace::get('session');
         $mail = new Zend_Mail('UTF-8');
 
         $mail->setBodyHtml(
@@ -112,7 +111,6 @@ class User extends DZend_Model
 
     public function sendForgotPasswordEmail($userRow)
     {
-        $session = DZend_Session_Namespace::get('session');
         $mail = new Zend_Mail('UTF-8');
 
         $mail->setBodyHtml(

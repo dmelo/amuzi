@@ -33,3 +33,8 @@
 .incboard-cell.focus {
     background-color: blue !important;
 }
+
+.incboard-cell .music-large {
+    top: -5px;
+    left: -5px;
+}
