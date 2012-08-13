@@ -49,6 +49,19 @@ class MusicSimilarity extends DZend_Model
         $db->quoteInto(' OR s_artist_music_title_id = ?', $artistMusicTitleId) .
         $db->quoteInto(') AND degree = ?', $degree);
 
-        return $this->db->fetchAll($sql);
+        return $this->_musicSimilarityDb->fetchAll($sql, 'similarity desc');
+    }
+
+    public function findByArtistMusicTitleIdSetAndDegree(
+        $artistMusicTitleIdSet, $degree = 0
+    )
+    {
+        $db = $this->_musicSimilarityDb->getAdapter();
+        $sqlIds = implode(', ', $artistMusicTitleIdSet);
+        $sql = "(f_artist_music_title_id in ($sqlIds) OR ";
+        $sql .= " s_artist_music_title_id in ($sqlIds)) ";
+        $sql .= $db->quoteInto(' AND degree = ?', $degree);
+
+        return $this->_musicSimilarityDb->fetchAll($sql);
     }
 }

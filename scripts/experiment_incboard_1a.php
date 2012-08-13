@@ -54,11 +54,8 @@ foreach ($artistMusicTitleIds as $artistMusicTitleId) {
 
     $completeRowSet = $musicSimilarityModel->findByArtistMusicTitleIdSetAndDegree($ids, 0);
     $similarityMap = array();
-
-    echo 'ids: ' . count($ids) . PHP_EOL;
-    echo 'completeRowSet: ' . count($completeRowSet) . PHP_EOL;
-    $primary = 0;
-    $secundary = 0;
+    $nroSimilar = 0;
+    echo "artistMusicTitleId: $artistMusicTitleId" . PHP_EOL;
 
     foreach ($completeRowSet as $row) {
         if (!array_key_exists($row->fArtistMusicTitleId, $similarityMap))
@@ -69,14 +66,12 @@ foreach ($artistMusicTitleIds as $artistMusicTitleId) {
         if (array_search($row->fArtistMusicTitleId, $ids) !== FALSE &&
             array_search($row->sArtistMusicTitleId, $ids) !== FALSE) {
 
-            if ($row->fArtistMusicTitleId == $artistMusicTitleId ||
-                $row->sArtistMusicTitleId == $artistMusicTitleId)
-                $primary++;
-            else
-                $secundary++;
+            $nroSimilar++;
         }
     }
 
-    echo 'primary: ' . $primary . PHP_EOL;
-    echo 'secundary: ' . $secundary . PHP_EOL . PHP_EOL;
+    $nroIds = count($ids);
+    $percentSimilar = ($nroSimilar * 100) / (($nroIds * ($nroIds - 1) ) / 2);
+    echo "nroSimilar: ${nroSimilar}" . PHP_EOL;
+    echo "% Similar: ${percentSimilar}" . PHP_EOL . PHP_EOL;
 }
