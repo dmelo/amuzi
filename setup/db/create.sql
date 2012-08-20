@@ -17,6 +17,7 @@ CREATE TABLE `music_title` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `music_title_created_trigger` BEFORE INSERT ON `music_title` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `music_title` auto_increment = 10000;
 
 CREATE TABLE `artist_music_title` (
     `id` int(11) NOT NULL auto_increment,
@@ -30,6 +31,7 @@ CREATE TABLE `artist_music_title` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `artist_music_title_created_trigger` BEFORE INSERT ON `artist_music_title` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `artist_music_title` auto_increment = 20000;
 
 CREATE TABLE `music_similarity` (
     `id` int(11) NOT NULL auto_increment,
@@ -43,6 +45,7 @@ CREATE TABLE `music_similarity` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `music_similarity_created_trigger` BEFORE INSERT ON `music_similarity` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `music_similarity` auto_increment = 30000;
 
 CREATE TABLE `user` (
     `id` int(11) NOT NULL auto_increment,
@@ -60,6 +63,7 @@ CREATE TABLE `user` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `user_created_trigger` BEFORE INSERT ON `user` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `user` auto_increment = 40000;
 
 CREATE TABLE `track` (
     `id` int(11) NOT NULL auto_increment,
@@ -74,6 +78,7 @@ CREATE TABLE `track` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `track_created_trigger` BEFORE INSERT ON `track` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `track` auto_increment = 50000;
 
 CREATE TABLE `bond` (
     `id` int(11) NOT NULL auto_increment,
@@ -86,12 +91,13 @@ CREATE TABLE `bond` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `bond_created_trigger` BEFORE INSERT ON `bond` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `bond` auto_increment = 60000;
 
 CREATE TABLE `music_track_link` (
     `id` int(11) NOT NULL auto_increment,
     `artist_music_title_id` int(11) NOT NULL,
     `track_id` int(11) NOT NULL,
-    `user_id` int(11) NOT NULL,
+    `user_id` int(11),
     `bond_id` int(11) NOT NULL,
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -103,6 +109,7 @@ CREATE TABLE `music_track_link` (
     CONSTRAINT `music_track_link_ibfk_4` FOREIGN KEY (`bond_id`) REFERENCES `bond`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `music_track_link_created_trigger` BEFORE INSERT ON `music_track_link` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `music_track_link` auto_increment = 70000;
 
 CREATE TABLE `playlist` (
     `id` int(11) NOT NULL auto_increment,
@@ -119,6 +126,7 @@ CREATE TABLE `playlist` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `playlist_created_trigger` BEFORE INSERT ON `playlist` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `playlist` auto_increment = 80000;
 
 ALTER TABLE `user` ADD CONSTRAINT `user_playlist_id_ibfk_1` FOREIGN KEY (`current_playlist_id`) REFERENCES `playlist`(`id`);
 
@@ -137,6 +145,7 @@ CREATE TABLE `playlist_has_track` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `playlist_has_track_created_trigger` BEFORE INSERT ON `playlist_has_track` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `playlist_has_track` auto_increment = 90000;
 
 CREATE TABLE `user_listen_playlist` (
     `id` int(11) NOT NULL auto_increment,
@@ -151,3 +160,4 @@ CREATE TABLE `user_listen_playlist` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `user_listen_playlist_created_trigger` BEFORE INSERT ON `user_listen_playlist` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+ALTER TABLE `user_listen_playlist` auto_increment = 100000;

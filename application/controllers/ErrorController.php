@@ -29,16 +29,6 @@ class ErrorController extends Zend_Controller_Action
                 break;
         }
 
-        // Log exception, if logger available
-        if ($log = $this->getLog()) {
-            $log->log($this->view->message, $priority, $errors->exception);
-            $log->log(
-                'Request Parameters',
-                $priority,
-                $errors->request->getParams()
-            );
-        }
-
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->exception = $errors->exception;
@@ -46,17 +36,6 @@ class ErrorController extends Zend_Controller_Action
 
         $this->view->request   = $errors->request;
     }
-
-    public function getLog()
-    {
-        $bootstrap = $this->getInvokeArg('bootstrap');
-        if (!$bootstrap->hasResource('Log')) {
-            return false;
-        }
-        $log = $bootstrap->getResource('Log');
-        return $log;
-    }
-
 
 }
 
