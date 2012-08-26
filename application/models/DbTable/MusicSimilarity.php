@@ -20,8 +20,17 @@ class DbTable_MusicSimilarity extends DZend_Model_DbTable
             $row = $this->findRowByFArtistMusicTitleIdAndSArtistMusicTitleId(
                 $f, $s
             );
-            $this->_cache->save($row->id, $this->getCacheKey($data));
+            // TODO: Uncomment when cache mechanism is fixed.
+            // $this->_cache->save($row->id, $this->getCacheKey($data));
             return $row->id;
         }
+    }
+
+    public function getRandomArtistMusicTitleId()
+    {
+        $column = rand() % 2 ? 'f_artist_music_title_id' : 's_artist_music_title_id';
+        $select = $this->select()->where('1 = 1')->order('rand()')->group($column);
+        $row = $this->fetchRow($select);
+        return $row->$column;
     }
 }

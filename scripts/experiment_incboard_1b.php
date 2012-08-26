@@ -6,6 +6,8 @@ $logger = Zend_Registry::get('logger');
 $baseUrl = 'http://amuzi.localhost';
 $artistMusicTitleModel = new ArtistMusicTitle();
 
+$logger->info('Starting experiment_incboard_1b.php');
+
 $list = array(
     array('artist' => 'Muse', 'musicTitle' => 'Starlight'),
     array('artist' => 'U2', 'musicTitle' => 'One'),
@@ -28,7 +30,15 @@ foreach($list as $artistMusic) {
     $params['q'] = $artistMusic['artist'] . ' - ' . $artistMusic['musicTitle'];
     $url = $urlSearchSimilar . paramsToUri($params);
     $logger->debug("getting: $url");
-    $similars = Zend_Json::decode(file_get_contents($url));
+
+    try {
+        $content = file_get_contents($url);
+        $similars = Zend_Json::decode($content);
+    } catch(Zend_Json_Exception $e) {
+        $logger->debug('Could not decode json: ' . $content);
+        echo $e->getMessage() . PHP_EOL;
+        echo $e->getTrace() . PHP_EOL;
+    }
 
     $artistMusicTitleRow = $artistMusicTitleModel->findByArtistAndMusicTitle($artistMusic['artist'], $artistMusic['musicTitle']);
     $artistMusicTitleId = $artistMusicTitleRow->id;

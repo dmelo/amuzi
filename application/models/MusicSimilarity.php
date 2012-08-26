@@ -12,6 +12,21 @@
  */
 class MusicSimilarity extends DZend_Model
 {
+    public function packData(
+        $fArtistMusicTitleId, $sArtistMusicTitleId, $similarity, $degree = 0
+    )
+    {
+        list($f, $s) = $fArtistMusicTitleId < $sArtistMusicTitleId ?
+            array($fArtistMusicTitleId, $sArtistMusicTitleId):
+            array($sArtistMusicTitleId, $fArtistMusicTitleId);
+
+        return array('f_artist_music_title_id' => $f,
+            's_artist_music_title_id' => $s,
+            'similarity' => $similarity,
+            'degree' => $degree
+        );
+    }
+
     /**
      * insert Inset an element.
      *
@@ -25,21 +40,18 @@ class MusicSimilarity extends DZend_Model
         $fArtistMusicTitleId, $sArtistMusicTitleId, $similarity, $degree = 0
     )
     {
-        list($f, $s) = $fArtistMusicTitleId < $sArtistMusicTitleId ?
-            array($fArtistMusicTitleId, $sArtistMusicTitleId):
-            array($sArtistMusicTitleId, $fArtistMusicTitleId);
-
         return $this->_musicSimilarityDb->insert(
-            array('f_artist_music_title_id' => $f,
-                's_artist_music_title_id' => $s,
-                'similarity' => $similarity,
-                'degree' => $degree
+            $this->packData(
+                $fArtistMusicTitleId,
+                $sArtistMusicTitleId,
+                $similarity,
+                $degree
             )
         );
     }
 
     public function findByArtistMusicTitleIdAndDegree(
-        $artistMusicTitleId, $degree
+        $artistMusicTitleId, $degree = 0
     )
     {
         $db = $this->_musicSimilarityDb->getAdapter();
@@ -63,5 +75,20 @@ class MusicSimilarity extends DZend_Model
         $sql .= $db->quoteInto(' AND degree = ?', $degree);
 
         return $this->_musicSimilarityDb->fetchAll($sql);
+    }
+
+    public function getRandomArtistMusicTitleId()
+    {
+        return $this->_musicSimilarityDb->getRandomArtistMusicTitleId();
+    }
+
+    public function test()
+    {
+        $this->_musicSimilarityDb->test();
+    }
+
+    public function insertTree($dataSet)
+    {
+        return $this->_musicSimilarityDb->insertTree($dataSet);
     }
 }

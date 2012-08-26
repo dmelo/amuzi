@@ -62,8 +62,8 @@ class IndexController extends DZend_Controller_Action
 
     public function testAction()
     {
-        $this->_request->setParam('kk', 'kk');
-        var_dump($this->_request->getParams());
+        $musicSimilarityModel =  new MusicSimilarity();
+        $musicSimilarityModel->test();
     }
 
 }
