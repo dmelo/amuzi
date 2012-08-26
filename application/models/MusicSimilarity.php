@@ -58,8 +58,9 @@ class MusicSimilarity extends DZend_Model
         $sql = $db->quoteInto(
             '(f_artist_music_title_id = ?', $artistMusicTitleId
         ) .
-        $db->quoteInto(' OR s_artist_music_title_id = ?', $artistMusicTitleId) .
-        $db->quoteInto(') AND degree = ?', $degree);
+        $db->quoteInto(' OR s_artist_music_title_id = ?)', $artistMusicTitleId);
+        if (false !== $degree)
+            $sql .= $db->quoteInto(' AND degree = ?', $degree);
 
         return $this->_musicSimilarityDb->fetchAll($sql, 'similarity desc');
     }
@@ -72,7 +73,8 @@ class MusicSimilarity extends DZend_Model
         $sqlIds = implode(', ', $artistMusicTitleIdSet);
         $sql = "(f_artist_music_title_id in ($sqlIds) OR ";
         $sql .= " s_artist_music_title_id in ($sqlIds)) ";
-        $sql .= $db->quoteInto(' AND degree = ?', $degree);
+        if (false !== $degree)
+            $sql .= $db->quoteInto(' AND degree = ?', $degree);
 
         return $this->_musicSimilarityDb->fetchAll($sql);
     }
@@ -87,8 +89,28 @@ class MusicSimilarity extends DZend_Model
         $this->_musicSimilarityDb->test();
     }
 
-    public function insertTree($dataSet)
+    public function calcSimilarityDegree($artistMusicTitleId, $degree = 1)
     {
-        return $this->_musicSimilarityDb->insertTree($dataSet);
+        $rowSet = $this->findByArtistMusicTitleIdAndDegree($artistMusicTitleId, $degree - 1);
+        $ids = array();
+        $similarities = array();
+        $newRows = array();
+        foreach ($rowSet as $row) {
+            $ids[] = $row->fArtistMusicTitleId == $artistMusicTitleId ? $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
+            $similarities[] = $row->similarity;
+        }
+
+        for ($i = 0; $i < count($ids); $i++)
+            for ($j = $i + 1; $j < count($ids); $j++)
+                if (($similarity = ($similarities[$i] * $similarities[$j]) / 10000) > 25)
+                    $newRows[] = $this->packData($ids[$i], $ids[$j], $similarity, $degree);
+
+        $ret = $this->_musicSimilarityDb->insertTree($newRows);
+
+        return array(
+            'tried to insert' => count($newRows),
+            'requests' => $ret[0],
+            'inserted' => $ret[1]
+        );
     }
 }

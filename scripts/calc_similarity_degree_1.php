@@ -10,24 +10,7 @@ $musicSimilarityModel = new MusicSimilarity();
 
 while (1) {
     $artistMusicTitleId = $musicSimilarityModel->getRandomArtistMusicTitleId();
-    $rowSet = $musicSimilarityModel->findByArtistMusicTitleIdAndDegree($artistMusicTitleId);
-    $ids = array();
-    $similarities = array();
-    $newRows = array();
-    foreach ($rowSet as $row) {
-        $ids[] = $row->fArtistMusicTitleId == $artistMusicTitleId ? $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
-        $similarities[] = $row->similarity;
-    }
+    print_r($musicSimilarityModel->calcSimilarityDegree($artistMusicTitleId, 1));
 
-    for ($i = 0; $i < count($ids); $i++)
-        for ($j = $i + 1; $j < count($ids); $j++)
-            if (($similarity = ($similarities[$i] * $similarities[$j]) / 10000) > 25)
-                $newRows[] = $musicSimilarityModel->packData($ids[$i], $ids[$j], $similarity, 1);
 
-    if (count($newRows) > 0) {
-        echo 'trying to insert ' . count($newRows) . PHP_EOL;
-        $ret = $musicSimilarityModel->insertTree($newRows);
-        echo 'requests: ' . $ret[0] . PHP_EOL;
-        echo 'rows inserted: ' . $ret[1] . PHP_EOL . PHP_EOL;
-    }
 }

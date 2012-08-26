@@ -34,11 +34,11 @@ function mapInsert($value, $map)
     return $map;
 }
 
-function countSimilaritiesOnIncBoard($artistMusicTitleId)
+function countSimilaritiesOnIncBoard($artistMusicTitleId, $degree = 0)
 {
     $musicSimilarityModel = new MusicSimilarity();
     $rowSet = $musicSimilarityModel->findByArtistMusicTitleIdAndDegree(
-        $artistMusicTitleId, 0
+        $artistMusicTitleId, $degree
     );
 
     $ids = array();
@@ -50,7 +50,7 @@ function countSimilaritiesOnIncBoard($artistMusicTitleId)
             break;
     }
 
-    $completeRowSet = $musicSimilarityModel->findByArtistMusicTitleIdSetAndDegree($ids, 0);
+    $completeRowSet = $musicSimilarityModel->findByArtistMusicTitleIdSetAndDegree($ids, $degree);
     $similarityMap = array();
     $nroSimilar = 0;
 
@@ -60,8 +60,8 @@ function countSimilaritiesOnIncBoard($artistMusicTitleId)
         $similarityMap[$row->fArtistMusicTitleId][$row->sArtistMusicTitleId] =
             $row->similarity;
 
-        if (array_search($row->fArtistMusicTitleId, $ids) !== FALSE &&
-            array_search($row->sArtistMusicTitleId, $ids) !== FALSE) {
+        if (array_search($row->fArtistMusicTitleId, $ids) !== false &&
+            array_search($row->sArtistMusicTitleId, $ids) !== false) {
 
             $nroSimilar++;
         }
