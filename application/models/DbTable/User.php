@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_User extends DZend_Model_DbTable
+class DbTable_User extends DZend_Db_Table
 {
     /**
      * register Make sure the user is registered on the database.

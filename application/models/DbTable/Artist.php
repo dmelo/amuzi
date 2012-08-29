@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_Artist extends DZend_Model_DbTable
+class DbTable_Artist extends DZend_Db_Table
 {
     public function insert($data)
     {

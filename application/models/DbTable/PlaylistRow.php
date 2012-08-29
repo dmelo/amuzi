@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_PlaylistRow extends DZend_Model_DbTableRow
+class DbTable_PlaylistRow extends DZend_Db_Table_Row
 {
     protected $_playlistDb;
     protected $_playlistHasTrackDb;

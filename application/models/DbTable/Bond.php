@@ -1,5 +1,5 @@
 <?php
 
-class DbTable_Bond extends DZend_Model_DbTable
+class DbTable_Bond extends DZend_Db_Table
 {
 }

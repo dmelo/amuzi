@@ -1,6 +1,6 @@
 <?php
 
-class DbTable_TrackRow extends DZend_Model_DbTableRow
+class DbTable_TrackRow extends DZend_Db_Table_Row
 {
     public function getArray()
     {
