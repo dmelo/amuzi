@@ -52,6 +52,4 @@ foreach($list as $artistMusic) {
     $msg = 'Experiment1. artist_music_id ' . $artistMusicTitleId . " similar nro: $i. nroSimilars: $nroSimilar. percentSimilar: $percentSimilar";
     echo $msg . PHP_EOL;
     $logger->info($msg);
-
-
 }
