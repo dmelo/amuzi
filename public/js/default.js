@@ -411,7 +411,13 @@
         });
 
         if($('#status-message').length > 0) {
-            $.bootstrapMessageAuto($('#status-message p').html(), $('#status-message span.status').html());
+            var message = $('#status-message p').html();
+            var st = $('#status-message span.status').html();
+
+            if($('#status-message').attr('noauto') === 'noauto')
+                $.bootstrapMessage(message, st);
+            else
+                $.bootstrapMessageAuto(message, st);
         }
 
         // start the jplayer.

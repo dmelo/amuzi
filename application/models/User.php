@@ -86,23 +86,24 @@ class User extends DZend_Model
     {
         $mail = new Zend_Mail('UTF-8');
 
-        $mail->setBodyHtml(
-            $this->_translate->_(
-                "Hi %s,<br/><br/>Welcome to AMUZI. To activate your account "
-                . "just click on the link bellow:<br/><a href=\"%s\">%s</a>"
-                . "<br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team",
-                $userRow->name,
-                $userRow->getUrlToken(),
-                $userRow->getUrlToken()
-            )
+        $msg = $this->_translate->_(
+            "Hi %s,<br/><br/>Welcome to AMUZI. To activate your account "
+            . "just click on the link bellow:<br/><a href=\"%s\">%s</a>"
+            . "<br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team",
+            $userRow->name,
+            $userRow->getUrlToken(),
+            $userRow->getUrlToken()
         );
+        $mail->setBodyHtml($msg);
         $mail->setFrom('support@amuzi.net', 'AMUZI Team');
         $mail->addTo($userRow->email);
         $mail->setSubject($this->_translate->_("AMUZI -- Account activation"));
 
         try {
             $mail->send();
+            $this->_logger->debug('User::sendActivateAccountEmail sending ok. --> ' . $msg);
         } catch(Zend_Mail_Transport_Exception $e) {
+            $this->_logger->error($e);
             return false;
         }
 
@@ -113,18 +114,18 @@ class User extends DZend_Model
     {
         $mail = new Zend_Mail('UTF-8');
 
-        $mail->setBodyHtml(
-            $this->_translate->_(
-                "Hi %s,<br/><br/>Someone, hopefully you, requested a new "
-                . "password on AMUZI. To make a new password, please click "
-                . "the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>"
-                . "Best regards,<br/>",
-                "AMUZI Team",
-                $userRow->name,
-                $userRow->getForgotPasswordUrl(),
-                $userRow->getForgotPasswordUrl()
-            )
+        $msg = $this->_translate->_(
+            "Hi %s,<br/><br/>Someone, hopefully you, requested a new "
+            . "password on AMUZI. To make a new password, please click "
+            . "the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>"
+            . "Best regards,<br/>",
+            "AMUZI Team",
+            $userRow->name,
+            $userRow->getForgotPasswordUrl(),
+            $userRow->getForgotPasswordUrl()
         );
+
+        $mail->setBodyHtml($msg);
         $mail->setFrom('support@amuzi.net', 'AMUZI Team');
         $mail->addTo($userRow->email);
         $mail->setSubject(
@@ -133,7 +134,9 @@ class User extends DZend_Model
 
         try {
             $mail->send();
+            $this->_logger->debug('User::sendForgotPasswordEmail sending ok. --> ' . $msg);
         } catch(Zend_Mail_Transport_Exception $e) {
+            $this->_logger->error('User::sendForgotPasswordEmail error while sending email to user: ' . $userRow->email);
             return false;
         }
 

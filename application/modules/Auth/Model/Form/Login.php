@@ -9,5 +9,6 @@ class Auth_Model_Form_Login extends DZend_Form
         $this->addSubmit($this->_t('Login'));
 
         $this->setMethod('post');
+        $this->setAction('/Auth/index/login');
     }
 }

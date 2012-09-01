@@ -3,7 +3,4 @@ if(isset($this->message))
     echo $this->statusMessage($this->message);
 ?>
 <?= $this->form; ?>
-<p>
-    <a href="/Auth/index/register"><?= $this->t("Register");?></a> | 
-    <a href="/Auth/index/forgotpassword"><?= $this->t("Forgot password?"); ?></a>
-</p>
+<?= $this->render('index/login-complement.phtml');

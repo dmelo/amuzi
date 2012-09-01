@@ -1,1 +1,8 @@
-<?= $this->statusMessage($this->message); ?>
+<?php
+
+echo $this->statusMessage($this->message, true);
+
+if(isset($this->form))
+    echo $this->form . $this->render('index/login-complement.phtml');
+
+

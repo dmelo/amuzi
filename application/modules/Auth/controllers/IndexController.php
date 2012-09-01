@@ -161,6 +161,7 @@ class Auth_IndexController extends DZend_Controller_Action
         } else {
             $userRow->token = '';
             $userRow->save();
+            $this->view->form = new Auth_Model_Form_Login();
             $message = array(
                 'You account is activated. You can login now.', 'success'
             );
@@ -186,7 +187,7 @@ class Auth_IndexController extends DZend_Controller_Action
             $userRow = $this->_userModel->findByEmail($params['email']);
             $message = array($this->view->t(
                 'If this email is registered then you will receive an email ' .
-                'that allow you to edit your password'
+                'that will allow you to edit your password'
             ), 'success');
             if ($userRow) {
                 if (!$this->_userModel->sendForgotPasswordEmail($userRow))
