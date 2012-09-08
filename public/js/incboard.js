@@ -32,26 +32,40 @@ IncBoard.prototype.init = function() {
     this.animateCells();
 }
 
+IncBoard.prototype.focusArtist = function(artist) {
+    $.each($('.incboard-cell'), function(i, e) {
+        if($(this).attr('artist') === artist)
+            $(this).addClass('focus');
+        else
+            $(this).removeClass('focus');
+    });
+}
+
 IncBoard.prototype.animateCells = function() {
+    var incBoard = this;
     $('.incboard-cell').live('mouseover', function(e) {
         $('.incboard-img').css('display', 'block');
         $('.incboard-cell').find('.inevidence').removeClass('inevidence');
         $(this).find('.object-music').addClass('inevidence');
         $(this).find('.incboard.img').css('display', 'none');
 
-        var artist = $(this).attr('artist');
-        $.each($('.incboard-cell'), function(i, e) {
-            if($(this).attr('artist') === artist)
-                $(this).addClass('focus');
-            else
-                $(this).removeClass('focus');
-        });
+        incBoard.focusArtist($(this).attr('artist'));
     });
 
     $('.incboard-cell').live('mouseleave', function(e) {
         $('.incboard-img').css('display', 'block');
         $('.incboard-cell').find('.inevidence').removeClass('inevidence');
         $('.incboard-cell').removeClass('focus');
+    });
+
+    $('#subtitle li').live('hover', function(e) {
+        incBoard.focusArtist($(this).attr('artist'));
+        $('html').css('cursor', 'pointer');
+    });
+
+    $('#subtitle li').live('mouseleave', function(e) {
+        $('.incboard-cell').removeClass('focus');
+        $('html').css('cursor', 'default');
     });
 }
 
@@ -87,6 +101,4 @@ $(document).ready(function() {
         }
     });
 
-    $('#subtitle li').live('hover', function(e) {
-    });
 });

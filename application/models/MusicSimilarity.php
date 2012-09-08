@@ -114,7 +114,7 @@ class MusicSimilarity extends DZend_Model
 
         for ($i = 0; $i < count($ids); $i++)
             for ($j = $i + 1; $j < count($ids); $j++)
-                if (($similarity = ($similarities[$i] * $similarities[$j]) / 10000) > -1) // Threashold.
+                if (($similarity = ($similarities[$i] * $similarities[$j]) / 10000) > 20) // Threashold.
                     $newRows[] = $this->packData($ids[$i], $ids[$j], $similarity, $degree);
 
         $ret = $this->_musicSimilarityDb->insertTree($newRows);
