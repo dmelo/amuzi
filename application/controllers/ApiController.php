@@ -36,6 +36,9 @@ class ApiController extends DZend_Controller_Action
      */
     protected function _registerTracks(array $resultSet, $artist, $musicTitle)
     {
+        $artistMusicTitleId = $this->_artistMusicTitleModel
+            ->insert($artist, $musicTitle);
+
         foreach ($resultSet as $result) {
             $data = array(
                 'title' => $result->title,
@@ -46,9 +49,6 @@ class ApiController extends DZend_Controller_Action
             );
             $trackRow = $this->_trackModel->insert($data);
 
-
-            $artistMusicTitleId = $this->_artistMusicTitleModel
-                ->insert($artist, $musicTitle);
             $this->_musicTrackLinkModel->bond(
                 $artistMusicTitleId,
                 $trackRow->id,
@@ -115,6 +115,10 @@ class ApiController extends DZend_Controller_Action
      * searchsimilarAction API call that searches for similar artist/music and
      * compile a list of music objects.
      *
+     * It will output an json array with two elements. The first is the list of 
+     * all similar artist/musicTitle and the second is a matrix with the
+     * similarity between each of it.
+     *
      * @return void
      */
     public function searchsimilarAction()
@@ -131,14 +135,13 @@ class ApiController extends DZend_Controller_Action
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
             );
+            $artistMusicTitleIdList = array($artistMusicTitleId);
+            $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
+            $this->_musicSimilarityModel->calcSimilarityDegree(
+                $artistMusicTitleId
+            );
 
-            foreach ($this->_lastfmModel->getSimilar($artist, $musicTitle) as
-                $row) {
-                $list[] = array(
-                    'artist' => $row->artist,
-                    'musicTitle' => $row->musicTitle,
-                    'similarity' => $row->similarity
-                );
+            foreach ($rowSet as $row) {
 
                 $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
                     $row->artist, $row->musicTitle
@@ -150,9 +153,23 @@ class ApiController extends DZend_Controller_Action
                         $sArtistMusicTitleId,
                         $row->similarity
                     );
+
+                $list[] = array(
+                    'artist' => $row->artist,
+                    'musicTitle' => $row->musicTitle,
+                    'similarity' => $row->similarity,
+                    'artistMusicTitleId' => $sArtistMusicTitleId
+                );
+
+                $artistMusicTitleIdList[] = $sArtistMusicTitleId;
             }
 
-            $this->view->output = $list;
+            $this->view->output = array(
+                $list,
+                $this->_musicSimilarityModel->getSimilarityMatrix(
+                    $artistMusicTitleIdList
+                )
+            );
         } else
             $this->view->output = $this->_error;
     }
@@ -169,7 +186,8 @@ class ApiController extends DZend_Controller_Action
                 $resultSet = $this->_youtubeModel->search(
                     "${artist} - ${musicTitle}", 5, 1, array(
                         'artist' => $artist,
-                        'musicTitle' => $musicTitle
+                        'musicTitle' => $musicTitle,
+
                     )
                 );
                 $this->_registerTracks(
@@ -184,7 +202,9 @@ class ApiController extends DZend_Controller_Action
                 $trackRow->getArray(),
                 array(
                     'artist' => $artist,
-                    'musicTitle' => $musicTitle
+                    'musicTitle' => $musicTitle,
+                    'artistMusicTitleId' => $this->_artistMusicTitleModel
+                        ->insert($artist, $musicTitle)
                 )
             );
         }

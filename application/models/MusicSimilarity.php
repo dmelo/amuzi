@@ -125,4 +125,24 @@ class MusicSimilarity extends DZend_Model
             'inserted' => $ret[1]
         );
     }
+
+    public function getSimilarityMatrix($list)
+    {
+        $rowSet = $this->findByArtistMusicTitleIdSetAndDegree($list, false);
+        $matrix = array();
+        foreach ($list as $a) {
+            $matrix[$a] = array();
+            foreach ($list as $b)
+                $matrix[$a][$b] = 0;
+        }
+
+        foreach ($rowSet as $row) {
+            $a = $row->fArtistMusicTitleId;
+            $b = $row->sArtistMusicTitleId;
+            if (in_array($a, $list) && in_array($b, $list))
+                $matrix[$a][$b] = $matrix[$b][$a] = (int) $row->similarity;
+        }
+
+        return $matrix;
+    }
 }

@@ -71,7 +71,7 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
-            $.each(data, function(i, s) {
+            $.each(data[0], function(i, s) {
                 var k = i + 1;
                 if(k < incBoard.cols * incBoard.rows)
                     incBoard.searchMusic(s.artist, s.musicTitle, k);
@@ -88,6 +88,5 @@ $(document).ready(function() {
     });
 
     $('#subtitle li').live('hover', function(e) {
-        alert('blink' + $(this).attr('artist'));
     });
 });
