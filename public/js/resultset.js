@@ -137,7 +137,6 @@ $(document).ready(function() {
             resultSet.searchString = $('#q').val();
             console.log($('#q').val());
             resultSet.searchPage = 1;
-            resultSet.getSimilarTracks($('#artist').val(), $('#musicTitle').val());
             $.bootstrapMessage('Loading...', 'info');
         }
     });
