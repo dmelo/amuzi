@@ -87,6 +87,8 @@ ResultSet.prototype.searchMore = function() {
     this.searchPage++;
     $.get('/api/search',{
         q: this.searchString,
+        artist: $('#artist').val(),
+        musicTitle: $('#musicTitle').val(),
         limit: 9,
         offset: 1 + (9 * (this.searchPage - 1))
     }, function (data) {
