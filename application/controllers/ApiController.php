@@ -125,6 +125,8 @@ class ApiController extends DZend_Controller_Action
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
+            $this->_logger->debug('ApiController::searchsimilarAction A ' . microtime(true));
+
             $titlesLimit = $this->_request->getParam('titlesLimit', 10);
             $limit = $this->_request->getParam('limit', 9);
             $offset = $this->_request->getParam('offset', 1);
@@ -132,17 +134,16 @@ class ApiController extends DZend_Controller_Action
             $list = array();
             $i = 0;
 
+
+            $this->_logger->debug('ApiController::searchsimilarAction B ' . microtime(true));
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
             );
             $artistMusicTitleIdList = array($artistMusicTitleId);
             $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
-            $this->_musicSimilarityModel->calcSimilarityDegree(
-                $artistMusicTitleId
-            );
 
+            $this->_logger->debug('ApiController::searchsimilarAction C ' . microtime(true));
             foreach ($rowSet as $row) {
-
                 $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
                     $row->artist, $row->musicTitle
                 );
@@ -163,6 +164,13 @@ class ApiController extends DZend_Controller_Action
 
                 $artistMusicTitleIdList[] = $sArtistMusicTitleId;
             }
+            $this->_logger->debug('ApiController::searchsimilarAction D ' . microtime(true));
+
+            $this->_musicSimilarityModel->calcSimilarityDegree(
+                $artistMusicTitleId
+            );
+            $this->_logger->debug('ApiController::searchsimilarAction E ' . microtime(true));
+
 
             $this->view->output = array(
                 $list,
@@ -170,6 +178,7 @@ class ApiController extends DZend_Controller_Action
                     $artistMusicTitleIdList
                 )
             );
+            $this->_logger->debug('ApiController::searchsimilarAction F ' . microtime(true));
         } else
             $this->view->output = $this->_error;
     }

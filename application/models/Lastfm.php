@@ -26,6 +26,7 @@ class Lastfm extends DZend_Model
     private $_baseUrl = 'http://ws.audioscrobbler.com/2.0/';
     private $_key;
     private $_secret;
+    private $_cache;
 
     protected function _request($args)
     {
@@ -118,29 +119,48 @@ class Lastfm extends DZend_Model
 
         $this->_key = $config->lastfm->key;
         $this->_secret = $config->lastfm->secret;
+        $this->_cache = Zend_Registry::get('cache');
     }
 
     public function search($q, $limit = 10, $offset = 1)
     {
-        $args = array(
-            'method' => 'track.search',
-            'track' => $q
-            );
+        $key = sha1("Lastfm::search#$q");
 
-        $xml = $this->_request($args);
+        $this->_logger->debug('Lastfm::search A ' . microtime(true));
+        if (($xml = $this->_cache->load($key)) === false) {
+            $args = array(
+                'method' => 'track.search',
+                'track' => $q
+                );
+
+            $xml = $this->_request($args);
+            $this->_cache->save($xml, $key);
+            $this->_logger->debug('Lastfm::search B ' . microtime(true));
+        }
+        $this->_logger->debug('Lastfm::search C ' . microtime(true));
+
         return $this->_exploreDOM($xml, '_processResponseSearch', $limit);
     }
 
     public function getSimilar($artist, $music)
     {
-        $resultSet = array();
-        $args = array(
-            'method' => 'track.getsimilar',
-            'artist' => $artist,
-            'track' => $music
-            );
+        $key = sha1("Lastfm::search#$artist#$music");
 
-        $xml = $this->_request($args);
+        $this->_logger->debug('Lastfm::getSimilar A ' . microtime(true));
+        if (($xml = $this->_cache->load($key)) === false) {
+            $resultSet = array();
+            $args = array(
+                'method' => 'track.getsimilar',
+                'artist' => $artist,
+                'track' => $music
+                );
+
+            $xml = $this->_request($args);
+            $this->_cache->save($xml, $key);
+            $this->_logger->debug('Lastfm::getSimilar B ' . microtime(true));
+        }
+        $this->_logger->debug('Lastfm::getSimilar C ' . microtime(true));
+
         return $this->_exploreDOM($xml, '_processResponseSimilar', 200);
     }
 }

@@ -87,9 +87,12 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
+            var total = 0;
             $.each(data[0], function(i, s) {
-                if(pos < incBoard.cols * incBoard.rows)
+                if(total < incBoard.cols * incBoard.rows) {
                     incBoard.searchMusic(s.artist, s.musicTitle);
+                    total++;
+                }
             });
         },
         beforeSubmit: function() {

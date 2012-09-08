@@ -83,7 +83,7 @@ class MusicSimilarity extends DZend_Model
     {
         $db = $this->_musicSimilarityDb->getAdapter();
         $sqlIds = implode(', ', $artistMusicTitleIdSet);
-        $sql = "(f_artist_music_title_id in ($sqlIds) OR ";
+        $sql = "(f_artist_music_title_id in ($sqlIds) AND ";
         $sql .= " s_artist_music_title_id in ($sqlIds)) ";
         if (false !== $degree)
             $sql .= $db->quoteInto(' AND degree = ?', $degree);
@@ -117,7 +117,7 @@ class MusicSimilarity extends DZend_Model
                 if (($similarity = ($similarities[$i] * $similarities[$j]) / 10000) > 20) // Threashold.
                     $newRows[] = $this->packData($ids[$i], $ids[$j], $similarity, $degree);
 
-        $ret = $this->_musicSimilarityDb->insertTree($newRows);
+        $ret = $this->_musicSimilarityDb->insertMulti($newRows);
 
         return array(
             'tried to insert' => count($newRows),
@@ -128,20 +128,23 @@ class MusicSimilarity extends DZend_Model
 
     public function getSimilarityMatrix($list)
     {
+        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix A ' . microtime(true));
         $rowSet = $this->findByArtistMusicTitleIdSetAndDegree($list, false);
+        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix B ' . microtime(true));
         $matrix = array();
         foreach ($list as $a) {
             $matrix[$a] = array();
             foreach ($list as $b)
                 $matrix[$a][$b] = 0;
         }
+        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix C ' . microtime(true) . ' -- ' . count($rowSet));
 
         foreach ($rowSet as $row) {
             $a = $row->fArtistMusicTitleId;
             $b = $row->sArtistMusicTitleId;
-            if (in_array($a, $list) && in_array($b, $list))
-                $matrix[$a][$b] = $matrix[$b][$a] = (int) $row->similarity;
+            $matrix[$a][$b] = $matrix[$b][$a] = (int) $row->similarity;
         }
+        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix D ' . microtime(true));
 
         return $matrix;
     }
