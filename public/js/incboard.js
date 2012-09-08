@@ -6,6 +6,7 @@ function  IncBoard() {
     this.cols = 14;
     this.cellSizeX = 56;
     this.cellSizeY = 44;
+    this.pos = 0;
 }
 
 IncBoard.prototype.insert = function(v, row, col) {
@@ -24,6 +25,7 @@ IncBoard.prototype.clean = function() {
     var table = $('<div id="incboard"></div>');
     table.css('width', this.cols * this.cellSizeX);
     table.css('height', this.rows * this.cellSizeY);
+    this.pos = 0;
     $('#incboard-result').html(table);
 }
 
@@ -42,7 +44,6 @@ IncBoard.prototype.focusArtist = function(artist) {
 }
 
 IncBoard.prototype.animateCells = function() {
-    var incBoard = this;
     $('.incboard-cell').live('mouseover', function(e) {
         $('.incboard-img').css('display', 'block');
         $('.incboard-cell').find('.inevidence').removeClass('inevidence');
@@ -69,12 +70,13 @@ IncBoard.prototype.animateCells = function() {
     });
 }
 
-IncBoard.prototype.searchMusic = function(artist, musicTitle, pos) {
+IncBoard.prototype.searchMusic = function(artist, musicTitle) {
     $.get('/api/searchmusic', {
         'artist': artist,
         'musicTitle': musicTitle
     }, function(v) {
-        incBoard.insert(v, Math.floor(pos / incBoard.cols), pos % incBoard.cols);
+        incBoard.pos++;
+        incBoard.insert(v, Math.floor(incBoard.pos / incBoard.cols), incBoard.pos % incBoard.cols);
     }, 'json');
 }
 
@@ -86,9 +88,8 @@ $(document).ready(function() {
         success: function (data) {
             $.bootstrapMessageOff();
             $.each(data[0], function(i, s) {
-                var k = i + 1;
-                if(k < incBoard.cols * incBoard.rows)
-                    incBoard.searchMusic(s.artist, s.musicTitle, k);
+                if(pos < incBoard.cols * incBoard.rows)
+                    incBoard.searchMusic(s.artist, s.musicTitle);
             });
         },
         beforeSubmit: function() {
