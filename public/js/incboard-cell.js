@@ -11,13 +11,13 @@ IncBoardCell.prototype.setContent = function(v) {
     this.content = v;
 }
 
-IncBoardCell.prototype.setPos = function(row, col) {
-    this.row = row;
+IncBoardCell.prototype.setPos = function(col, row) {
     this.col = col;
+    this.row = row;
 }
 
 IncBoardCell.prototype.getPos = function() {
-    return [this.row, this.col];
+    return [this.col, this.row];
 }
 
 IncBoardCell.prototype.getHtml = function() {

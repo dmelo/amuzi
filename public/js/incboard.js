@@ -4,11 +4,12 @@ function  IncBoard() {
     this.searchString = "";
     this.rows = 7;
     this.cols = 14;
-    this.pos = 0;
     this.similarity = null;
     this.artistMusicTitleList = []; // list of incBoard cells.
     this.l = []; // list of elements inside incboard.
-    this.cachePos = [] // Caches the l elements by position.
+    this.cachePos = []; // Caches the l elements by position.
+
+    this.shiftList = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
 }
 
 // Calculate the shift on X and Y that must be applied to a position to get to 
@@ -116,6 +117,39 @@ IncBoard.prototype.calcError = function(v) {
     return werr;
 }
 
+IncBoard.prototype.resolveConflict = function(mostSimilar, newCell, visitedCells) {
+    var msPos = mostSimilar.getPos();
+    var ncPos = newCell.getPos();
+
+    var bestMsPos = null;
+    var bestNcPos = null;
+    var bestWerr = 10000000;
+
+    [0, 1].forEach(function(state) {
+        incBoard.shiftList.forEach(function(shift) {
+            if(0 == state) {
+                mostSimilar.setPos(msPos[0], msPos[1]);
+                newCell.setPos(ncPos[0] + shift[0], ncPos[1] + shift[1]);
+            } else {
+                mostSimilar.setPos(msPos[0] + shift[0], msPos[1] + shift[1]);
+                newCell.setPos(ncPos[0], ncPos[1]);
+            }
+
+            var currentWerr = incBoard.calcError(mostSimilar) + incBoard.calcError(newCell);
+            if(currentWerr < bestWerr) {
+                bestWerr = currentWerr;
+                bestMsPos = mostSimilar.getPos();
+                bestNcPos = newCell.getPos();
+            }
+        });
+    });
+
+    newCell.setPos(bestNcPos[0], bestNcPos[1]);
+    mostSimilar.setPos(bestMsPos[0], bestMsPos[1]);
+
+    // Check if the solutino of this conflict caused another conflic.
+}
+
 IncBoard.prototype.insert = function(v) {
     // Find the most similar element already on incBoard.
     var maxSimilarity = 0;
@@ -131,8 +165,6 @@ IncBoard.prototype.insert = function(v) {
 
     cell = new IncBoardCell();
     cell.setContent(v);
-    cell.setPos(Math.floor(incBoard.pos / incBoard.cols), incBoard.pos % incBoard.cols);
-    this.pos++;
 
 
     
@@ -141,9 +173,14 @@ IncBoard.prototype.insert = function(v) {
 
         //console.log(cell);
         //console.log(mostSimilar);
-        console.log("error v: " + this.calcError(cell));
-        console.log("error mostSimilar: " + this.calcError(mostSimilar));
-    }
+        //console.log("error v: " + this.calcError(cell));
+        //console.log("error mostSimilar: " + this.calcError(mostSimilar));
+
+        cell.setPos(mostSimilar.col, mostSimilar.row);
+        this.resolveConflict(mostSimilar, cell, []);
+    } else
+        cell.setPos(Math.floor(this.cols / 2), Math.floor(this.rows / 2));
+
     
     cellHtml = cell.getHtml();
     $('#subtitle').subtitleAdd(v.artist);
@@ -160,7 +197,6 @@ IncBoard.prototype.clean = function() {
     var table = $('<div id="incboard"></div>');
     table.css('width', this.cols * this.cellSizeX);
     table.css('height', this.rows * this.cellSizeY);
-    this.pos = 0;
     this.similarity = [];
     this.artistMusicTitleList = [];
     this.l = [];
