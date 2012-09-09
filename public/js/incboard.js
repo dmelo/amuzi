@@ -69,6 +69,9 @@ IncBoard.prototype.get2DRank = function(v) {
 }
 
 IncBoard.prototype.getNDRank = function(cell) {
+    if (!cell instanceof IncBoardCell)
+        return null;
+
     var rank = new Array();
 
     var currentRank = 1;
@@ -95,24 +98,22 @@ IncBoard.prototype.getNDRank = function(cell) {
 
     });
 
-
     return rank;
 }
 
 // Calculate Werr of element v.
 IncBoard.prototype.calcError = function(v) {
-    var werr = 0;
-    if (v instanceof IncBoardCell) {
-        var rank2D = this.get2DRank(v);
-        var rankND = this.getNDRank(v);
-
-        rank2D.forEach(function(item, r2) {
-            rN = rankND.indexOf(item);
-            if (rN !== r2)
-                werr += Math.abs((rN - r2) * (incBoard.l.length - rN));
-        });
-    } else
+    if (!v instanceof IncBoardCell)
         return null;
+    var werr = 0;
+    var rank2D = this.get2DRank(v);
+    var rankND = this.getNDRank(v);
+
+    rank2D.forEach(function(item, r2) {
+        rN = rankND.indexOf(item);
+        if (rN !== r2)
+            werr += Math.abs((rN - r2) * (incBoard.l.length - rN));
+    });
 
     return werr;
 }
@@ -148,6 +149,9 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newCell, visitedCells
     mostSimilar.setPos(bestMsPos[0], bestMsPos[1]);
 
     // Check if the solutino of this conflict caused another conflic.
+    
+
+    console.log('solved element: ' + newCell.content.artistMusicTitleId + " -- " + newCell.getPos()[0] + "#" + newCell.getPos()[1]);
 }
 
 IncBoard.prototype.insert = function(v) {
@@ -261,7 +265,7 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
-            var total = 1;
+            var total = 90;
             incBoard.similarity = data[1];
             $.each(data[0], function(i, s) {
                 if(total < incBoard.cols * incBoard.rows) {
