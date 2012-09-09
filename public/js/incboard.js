@@ -75,8 +75,8 @@ IncBoard.prototype.searchMusic = function(artist, musicTitle) {
         'artist': artist,
         'musicTitle': musicTitle
     }, function(v) {
-        incBoard.pos++;
         incBoard.insert(v, Math.floor(incBoard.pos / incBoard.cols), incBoard.pos % incBoard.cols);
+        incBoard.pos++;
     }, 'json');
 }
 
@@ -87,7 +87,7 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
-            var total = 0;
+            var total = 1;
             $.each(data[0], function(i, s) {
                 if(total < incBoard.cols * incBoard.rows) {
                     incBoard.searchMusic(s.artist, s.musicTitle);
