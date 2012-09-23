@@ -32,13 +32,29 @@ IncBoardCell.prototype.setContent = function(v) {
     this.content = v;
 }
 
-IncBoardCell.prototype.setPos = function(col, row) {
-    this.col = col;
-    this.row = row;
+/**
+ * Set position of the cell.
+ * Can be used as setPos(2, 3) or setPos([2, 3]).
+ */
+IncBoardCell.prototype.setPos = function(pos) {
+    if ('object' === typeof pos) {
+        this.col = pos[0];
+        this.row = pos[1];
+    } else {
+        throw new Error('First argument of IncBoardCell.setPos not an object.');
+    }
 }
 
 IncBoardCell.prototype.getPos = function() {
     return [this.col, this.row];
+}
+
+IncBoardCell.prototype.setContent = function(content) {
+    this.content = content;
+}
+
+IncBoardCell.prototype.getContent = function() {
+    return this.content;
 }
 
 IncBoardCell.prototype.getHtml = function() {
@@ -51,4 +67,17 @@ IncBoardCell.prototype.getHtml = function() {
     info = '<div class="incboard-info">' + title + duration + '</div>';
     control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
     return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSizeY) + 'px; left: ' + (this.col * this.cellSizeX) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>');
+}
+
+IncBoardCell.prototype.toString = function() {
+    return '[ ' + this.content.artistMusicTitleId + ' (' + this.col + ',' + this.row + ')]';
+}
+
+IncBoardCell.prototype.draw = function() {
+    var v = this.content;
+    $('#' + v.artistMusicTitleId).remove();
+    cellHtml = this.getHtml();
+    $('#subtitle').subtitleAdd(v.artist);
+    cellHtml.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
+    $('#incboard-result #incboard').append(cellHtml);
 }

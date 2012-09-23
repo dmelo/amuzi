@@ -19,23 +19,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var incBoard = new IncBoard();
+
+"use strict";
 
 function  IncBoard() {
-    this.searchString = "";
-    this.rows = 7;
-    this.cols = 14;
-    this.similarity = null;
-    this.artistMusicTitleList = []; // list of incBoard cells.
-    this.l = []; // list of elements inside incboard.
-    this.cachePos = []; // Caches the l elements by position.
-
+    this.pos = 0;
+    this.ibb = new IncBoardBoard();
+    this.ibb.init();
     this.shiftList = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+    this.similarity = null;
+    this.error = false;
 }
+
 
 // Calculate the shift on X and Y that must be applied to a position to get to 
 // the next cell position
-IncBoard.prototype.nextCell = function(center, shift) {
+IncBoard.prototype.nextCell = function(center, shift, depth) {
+    if (typeof depth === 'undefined')
+        depth = 1;
+    else
+        depth++;
+
+    if (depth > 5000) {
+        return null;
+    }
+
     var nShift;
 
     if (shift !== null) {
@@ -44,7 +52,7 @@ IncBoard.prototype.nextCell = function(center, shift) {
         // No way to continue.
         if (max > Math.max(this.rows, this.cols))
             return null;
-        
+
         if(-max === nShift[0] && 1 - max === nShift[1]) {
             // go to the first element of the outer layer.
             max++;
@@ -63,45 +71,53 @@ IncBoard.prototype.nextCell = function(center, shift) {
             // left border moving up.
             nShift[1]--;
         }
-    } else
+    } else {
         nShift = [-1, -1];
+    }
 
     var nCenter = [center[0] + nShift[0], center[1] + nShift[1]];
 
-    if (nCenter[0] >= 0 && nCenter[0] < this.cols && nCenter[1] >= 0 && nCenter[1] < this.rows)
+
+
+
+    if (nCenter[0] >= 0 && nCenter[0] < this.ibb.getCols() && nCenter[1] >= 0 && nCenter[1] < this.ibb.getRows())
         return nShift;
-    else
-        return this.nextCell(center, nShift);
+    else {
+        try {
+            return this.nextCell(center, nShift, depth);
+        } catch (e) {
+            console.log("Trying to get nextCell of (" + center[0] + ", " + center[1] + ". shift: (" + shift[0] + ", " + shift[1]);
+            return null;
+        }
+    }
 }
 
 IncBoard.prototype.get2DRank = function(v) {
-    var center = [v.col, v.row];
+    var center = this.ibb.getPos(v.artistMusicTitleId);
     var shift = null;
-    var currentRank = 1;
     var rank = new Array();
 
     while ((shift = this.nextCell(center, shift)) !== null) {
         var nShift = [center[0] + shift[0], center[1] + shift[1]];
-        if ('undefined' !== typeof this.cachePos[nShift[0]] && 'undefined' !== typeof this.cachePos[nShift[0]][nShift[1]])
-            rank[currentRank++] = this.cachePos[nShift[0]][nShift[1]].content.artistMusicTitleId;
+
+        this.ibb.getByPos(nShift).forEach(function (item) {
+            rank.push(item.artistMusicTitleList);
+        });
     }
 
     return rank;
 }
 
-IncBoard.prototype.getNDRank = function(cell) {
-    if (!cell instanceof IncBoardCell)
-        return null;
+IncBoard.prototype.getNDRank = function(music) {
+    var rank = new Array(),
+        currentRank = 1,
+        localSimilarity = new Array(),
+        artistMusicTitleId = music.artistMusicTitleId,
+        rank = new Array(),
+        self = this;
 
-    var rank = new Array();
-
-    var currentRank = 1;
-    var localSimilarity = new Array();
-    var artistMusicTitleId = cell.content.artistMusicTitleId;
-    var rank = new Array();
-
-    this.l.forEach(function(item, id) {
-        localSimilarity[id] = incBoard.similarity[artistMusicTitleId][id];
+    this.ibb.getAllMusic().forEach(function(item, id) {
+        localSimilarity[id] = self.similarity[artistMusicTitleId][id];
     });
 
     localSimilarity.forEach(function(trash) {
@@ -114,8 +130,10 @@ IncBoard.prototype.getNDRank = function(cell) {
                 val = id;
             }
         });
-        if (null !== val)
-            rank[currentRank++] = val;
+        if (null !== val) {
+            rank.push(val);
+            localSimilarity.splice(localSimilarity.indexOf(val), 1);
+        }
 
     });
 
@@ -124,177 +142,145 @@ IncBoard.prototype.getNDRank = function(cell) {
 
 // Calculate Werr of element v.
 IncBoard.prototype.calcError = function(v) {
-    if (!v instanceof IncBoardCell)
-        return null;
-    var werr = 0;
-    var rank2D = this.get2DRank(v);
-    var rankND = this.getNDRank(v);
+    var werr = 0,
+        rank2D = this.get2DRank(v),
+        rankND = this.getNDRank(v),
+        rN = 0,
+        self = this;
 
     rank2D.forEach(function(item, r2) {
         rN = rankND.indexOf(item);
         if (rN !== r2)
-            werr += Math.abs((rN - r2) * (incBoard.l.length - rN));
+            werr += Math.abs((rN - r2) * (self.ibb.getSize() - rN));
     });
+
 
     return werr;
 }
 
-IncBoard.prototype.resolveConflict = function(mostSimilar, newCell, visitedCells) {
-    var msPos = mostSimilar.getPos();
-    var ncPos = newCell.getPos();
+IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCells) {
+    var self = this;
+    if ('undefined' === typeof mostSimilar || 'undefined' === typeof newMusic) {
+        console.log(visitedCells);
+    }
 
-    var bestMsPos = null;
-    var bestNcPos = null;
-    var bestWerr = 10000000;
+    var msPos = this.ibb.getPos(mostSimilar.artistMusicTitleId),
+        ncPos = this.ibb.getPos(newMusic.artistMusicTitleId),
+        bestMsPos = null,
+        bestNcPos = null,
+        bestWerr = 10000000,
+        bestState = 0;
 
     [0, 1].forEach(function(state) {
-        incBoard.shiftList.forEach(function(shift) {
-            if(0 == state) {
-                mostSimilar.setPos(msPos[0], msPos[1]);
-                newCell.setPos(ncPos[0] + shift[0], ncPos[1] + shift[1]);
-            } else {
-                mostSimilar.setPos(msPos[0] + shift[0], msPos[1] + shift[1]);
-                newCell.setPos(ncPos[0], ncPos[1]);
-            }
+        self.shiftList.forEach(function(shift) {
+            var pos = [ncPos[0] + shift[0], ncPos[1] + shift[1]];
+            if (-1 === visitedCells.indexOf(self.ibb.posToInt(pos))) {
+                if(0 == state) {
+                    self.ibb.setPos(mostSimilar.artistMusicTitleId, msPos);
+                    self.ibb.setPos(newMusic.artistMusicTitleId, pos);
+                } else {
+                    self.ibb.setPos(mostSimilar.artistMusicTitleId, pos);
+                    self.ibb.setPos(newMusic.artistMusicTitleId, ncPos);
+                }
 
-            var currentWerr = incBoard.calcError(mostSimilar) + incBoard.calcError(newCell);
-            if(currentWerr < bestWerr) {
-                bestWerr = currentWerr;
-                bestMsPos = mostSimilar.getPos();
-                bestNcPos = newCell.getPos();
+                var currentWerr = self.calcError(mostSimilar) + self.calcError(newMusic);
+                if(currentWerr < bestWerr || (currentWerr == bestWerr && !self.ibb.isPosOccupied(pos))) {
+                    bestWerr = currentWerr;
+                    bestMsPos = self.ibb.getPos(mostSimilar.artistMusicTitleId);
+                    bestNcPos = self.ibb.getPos(newMusic.artistMusicTitleId);
+                    bestState = state;
+                }
             }
         });
     });
 
-    newCell.setPos(bestNcPos[0], bestNcPos[1]);
-    mostSimilar.setPos(bestMsPos[0], bestMsPos[1]);
 
-    // Check if the solutino of this conflict caused another conflic.
-    
+    this.ibb.setPos(newMusic.artistMusicTitleId, bestNcPos);
+    this.ibb.setPos(mostSimilar.artistMusicTitleId, bestMsPos);
 
-    console.log('solved element: ' + newCell.content.artistMusicTitleId + " -- " + newCell.getPos()[0] + "#" + newCell.getPos()[1]);
+    var externalCell = 0 === bestState ? newMusic : mostSimilar;
+    var pos = this.ibb.getPos(externalCell.artistMusicTitleId);
+    if (this.ibb.isPosOccupied(pos) >= 2) {
+        console.log(this.ibb.getByPos(pos));
+        visitedCells.push(this.ibb.posToInt(this.ibb.getPos(newMusic.artistMusicTitleId)));
+        visitedCells.push(this.ibb.posToInt(this.ibb.getPos(mostSimilar.artistMusicTitleId)));
+
+        var conflictList = this.ibb.getByPos(pos),
+            first = conflictList[0],
+            second = conflictList[1];
+
+        console.log(first);
+        console.log(second);
+        console.log(visitedCells);
+        this.resolveConflict(first, second, visitedCells);
+    } else {
+        console.log('DONE WITH: ' + newMusic);
+    }
 }
 
 IncBoard.prototype.insert = function(v) {
     // Find the most similar element already on incBoard.
-    var maxSimilarity = 0;
-    var mostSimilar = null;
-    var nSwitches = 0;
-    this.l.forEach(function(e, artistMusicTitleId) {
-        if(maxSimilarity < incBoard.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
-            maxSimilarity = incBoard.similarity[artistMusicTitleId][v.artistMusicTitleId];
+    var maxSimilarity = 0,
+        mostSimilar = null,
+        nSwitches = 0,
+        self = this;
+
+    this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
+        if(maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
+            maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
             mostSimilar = e;
             nSwitches++;
         }
     });
 
-    cell = new IncBoardCell();
-    cell.setContent(v);
-
-
-    
     if(null !== mostSimilar) {
-        // console.log(v.artist + '#' + v.musicTitle + ' is very similar to ' + mostSimilar.content.artist + '#' + mostSimilar.content.musicTitle + ' (' + mostSimilar.getPos()[0] + ', ' + mostSimilar.getPos()[1] + ') -- ' + maxSimilarity + "--" + nSwitches);
-
-        //console.log(cell);
-        //console.log(mostSimilar);
-        //console.log("error v: " + this.calcError(cell));
-        //console.log("error mostSimilar: " + this.calcError(mostSimilar));
-
-        cell.setPos(mostSimilar.col, mostSimilar.row);
-        this.resolveConflict(mostSimilar, cell, []);
-    } else
-        cell.setPos(Math.floor(this.cols / 2), Math.floor(this.rows / 2));
-
-    
-    cellHtml = cell.getHtml();
-    $('#subtitle').subtitleAdd(v.artist);
-    cellHtml.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
-    $('#incboard-result #incboard').append(cellHtml);
-    this.l[v.artistMusicTitleId] = cell;
-    if('undefined' === typeof this.cachePos[cell.col])
-        this.cachePos[cell.col] = [];
-
-    this.cachePos[cell.col][cell.row] = cell;
-}
-
-IncBoard.prototype.clean = function() {
-    var table = $('<div id="incboard"></div>');
-    table.css('width', this.cols * this.cellSizeX);
-    table.css('height', this.rows * this.cellSizeY);
-    this.similarity = [];
-    this.artistMusicTitleList = [];
-    this.l = [];
-    this.cachePos = [];
-    $('#incboard-result').html(table);
-}
-
-IncBoard.prototype.init = function() {
-    this.clean();
-    this.animateCells();
-}
-
-IncBoard.prototype.focusArtist = function(artist) {
-    $.each($('.incboard-cell'), function(i, e) {
-        if($(this).attr('artist') === artist)
-            $(this).addClass('focus');
-        else
-            $(this).removeClass('focus');
-    });
-}
-
-IncBoard.prototype.animateCells = function() {
-    $('.incboard-cell').live('mouseover', function(e) {
-        $('.incboard-img').css('display', 'block');
-        $('.incboard-cell').find('.inevidence').removeClass('inevidence');
-        $(this).find('.object-music').addClass('inevidence');
-        $(this).find('.incboard.img').css('display', 'none');
-
-        incBoard.focusArtist($(this).attr('artist'));
-    });
-
-    $('.incboard-cell').live('mouseleave', function(e) {
-        $('.incboard-img').css('display', 'block');
-        $('.incboard-cell').find('.inevidence').removeClass('inevidence');
-        $('.incboard-cell').removeClass('focus');
-    });
-
-    $('#subtitle li').live('hover', function(e) {
-        incBoard.focusArtist($(this).attr('artist'));
-        $('html').css('cursor', 'pointer');
-    });
-
-    $('#subtitle li').live('mouseleave', function(e) {
-        $('.incboard-cell').removeClass('focus');
-        $('html').css('cursor', 'default');
-    });
+        this.ibb.insert(v, this.ibb.getPos(mostSimilar.artistMusicTitleId));
+        this.resolveConflict(mostSimilar, v, []);
+    } else {
+        this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
+    }
 }
 
 IncBoard.prototype.searchMusic = function(artist, musicTitle) {
+    var self = this;
+
     $.get('/api/searchmusic', {
         'artist': artist,
         'musicTitle': musicTitle
     }, function(v) {
-        incBoard.insert(v);
+        if (false === false  /* this.error */) {
+            try {
+                self.insert(v);
+            } catch(e) {
+                console.log(e.stack);
+                console.log(e);
+                this.error = true;
+            }
+        }
     }, 'json');
 }
 
+IncBoard.prototype.clean = function() {
+}
+
+var incBoard = new IncBoard();
 
 $(document).ready(function() {
-    incBoard.init();
     $('#incboard-search').ajaxForm({
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
             var total = 90;
             incBoard.similarity = data[1];
+            var a = new Date();
             $.each(data[0], function(i, s) {
-                if(total < incBoard.cols * incBoard.rows) {
-                    incBoard.artistMusicTitleList[s.artistMusicTitleId] = s;
+                if(total < 100) {
                     incBoard.searchMusic(s.artist, s.musicTitle);
                     total++;
                 }
             });
+            var b = new Date();
+            console.log(total + " cells inserted in " + (b.getTime() - a.getTime()) + " secs");
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();
