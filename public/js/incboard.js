@@ -35,13 +35,10 @@ function  IncBoard() {
 // Calculate the shift on X and Y that must be applied to a position to get to 
 // the next cell position
 IncBoard.prototype.nextCell = function(center, shift, depth) {
-    if (typeof depth === 'undefined')
+    if (typeof depth === 'undefined') {
         depth = 1;
-    else
+    } else {
         depth++;
-
-    if (depth > 5000) {
-        return null;
     }
 
     var nShift;
@@ -50,7 +47,7 @@ IncBoard.prototype.nextCell = function(center, shift, depth) {
         var max = Math.max(Math.abs(shift[0]), Math.abs(shift[1]));
         nShift = [shift[0], shift[1]];
         // No way to continue.
-        if (max > Math.max(this.rows, this.cols))
+        if (max > Math.max(this.rows, this.cols) || depth > 7 * max)
             return null;
 
         if(-max === nShift[0] && 1 - max === nShift[1]) {
@@ -77,12 +74,9 @@ IncBoard.prototype.nextCell = function(center, shift, depth) {
 
     var nCenter = [center[0] + nShift[0], center[1] + nShift[1]];
 
-
-
-
-    if (nCenter[0] >= 0 && nCenter[0] < this.ibb.getCols() && nCenter[1] >= 0 && nCenter[1] < this.ibb.getRows())
+    if (nCenter[0] >= 0 && nCenter[0] < this.ibb.getCols() && nCenter[1] >= 0 && nCenter[1] < this.ibb.getRows()) {
         return nShift;
-    else {
+    } else {
         try {
             return this.nextCell(center, nShift, depth);
         } catch (e) {
@@ -112,29 +106,22 @@ IncBoard.prototype.getNDRank = function(music) {
     var rank = new Array(),
         currentRank = 1,
         localSimilarity = new Array(),
+        similarityPull = new Array(),
         artistMusicTitleId = music.artistMusicTitleId,
         rank = new Array(),
         self = this;
 
     this.ibb.getAllMusic().forEach(function(item, id) {
         localSimilarity[id] = self.similarity[artistMusicTitleId][id];
+        similarityPull.push(self.similarity[artistMusicTitleId][id]);
     });
 
     localSimilarity.forEach(function(trash) {
-        var max = 0;
-        var val = null;
-
-        localSimilarity.forEach(function(item, id) {
-            if(item > max && rank.indexOf(id) === -1) {
-                max = item;
-                val = id;
-            }
-        });
-        if (null !== val) {
-            rank.push(val);
-            localSimilarity.splice(localSimilarity.indexOf(val), 1);
-        }
-
+        var max = Math.max.apply(Math, similarityPull);
+        var val = localSimilarity.indexOf(max);
+        rank.push(val);
+        delete localSimilarity[val];
+        delete similarityPull[similarityPull.indexOf(val)];
     });
 
     return rank;
@@ -142,9 +129,12 @@ IncBoard.prototype.getNDRank = function(music) {
 
 // Calculate Werr of element v.
 IncBoard.prototype.calcError = function(v) {
+    var s0 = new Date().getTime();
     var werr = 0,
         rank2D = this.get2DRank(v),
+        s1 = new Date().getTime(),
         rankND = this.getNDRank(v),
+        s2 = new Date().getTime(v),
         rN = 0,
         self = this;
 
@@ -153,6 +143,10 @@ IncBoard.prototype.calcError = function(v) {
         if (rN !== r2)
             werr += Math.abs((rN - r2) * (self.ibb.getSize() - rN));
     });
+
+    var s3 = new Date().getTime();
+
+    console.log("calcError times: " + (s1 - s0) + "#" + (s2 - s1) + "#" + (s3 - s2));
 
 
     return werr;
@@ -164,8 +158,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
         console.log(visitedCells);
     }
 
-    var msPos = this.ibb.getPos(mostSimilar.artistMusicTitleId),
-        ncPos = this.ibb.getPos(newMusic.artistMusicTitleId),
+    var ncPos = this.ibb.getPos(newMusic.artistMusicTitleId),
         bestMsPos = null,
         bestNcPos = null,
         bestWerr = 10000000,
@@ -176,15 +169,16 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
             var pos = [ncPos[0] + shift[0], ncPos[1] + shift[1]];
             if (-1 === visitedCells.indexOf(self.ibb.posToInt(pos))) {
                 if(0 == state) {
-                    self.ibb.setPos(mostSimilar.artistMusicTitleId, msPos);
+                    self.ibb.setPos(mostSimilar.artistMusicTitleId, ncPos);
                     self.ibb.setPos(newMusic.artistMusicTitleId, pos);
                 } else {
                     self.ibb.setPos(mostSimilar.artistMusicTitleId, pos);
                     self.ibb.setPos(newMusic.artistMusicTitleId, ncPos);
                 }
 
-                var currentWerr = self.calcError(mostSimilar) + self.calcError(newMusic);
-                if(currentWerr < bestWerr || (currentWerr == bestWerr && !self.ibb.isPosOccupied(pos))) {
+                // TODO: verify if this is correct or if Werr = Werr(newMusic) + Werr(mostSimilart).
+                var currentWerr = 0 == state ? self.calcError(newMusic): self.calcError(mostSimilar);
+                if(currentWerr < bestWerr || (currentWerr == bestWerr && 1 === self.ibb.isPosOccupied(pos))) {
                     bestWerr = currentWerr;
                     bestMsPos = self.ibb.getPos(mostSimilar.artistMusicTitleId);
                     bestNcPos = self.ibb.getPos(newMusic.artistMusicTitleId);
@@ -201,7 +195,6 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
     var externalCell = 0 === bestState ? newMusic : mostSimilar;
     var pos = this.ibb.getPos(externalCell.artistMusicTitleId);
     if (this.ibb.isPosOccupied(pos) >= 2) {
-        console.log(this.ibb.getByPos(pos));
         visitedCells.push(this.ibb.posToInt(this.ibb.getPos(newMusic.artistMusicTitleId)));
         visitedCells.push(this.ibb.posToInt(this.ibb.getPos(mostSimilar.artistMusicTitleId)));
 
@@ -209,9 +202,6 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
             first = conflictList[0],
             second = conflictList[1];
 
-        console.log(first);
-        console.log(second);
-        console.log(visitedCells);
         this.resolveConflict(first, second, visitedCells);
     } else {
         console.log('DONE WITH: ' + newMusic);
@@ -239,6 +229,8 @@ IncBoard.prototype.insert = function(v) {
     } else {
         this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
     }
+
+    this.ibb.flushDraw();
 }
 
 IncBoard.prototype.searchMusic = function(artist, musicTitle) {
@@ -250,7 +242,10 @@ IncBoard.prototype.searchMusic = function(artist, musicTitle) {
     }, function(v) {
         if (false === false  /* this.error */) {
             try {
+                var start = new Date().getTime();
                 self.insert(v);
+                var end = new Date().getTime();
+                console.log((end - start) + "ms to insert " + v.artistMusicTitleId);
             } catch(e) {
                 console.log(e.stack);
                 console.log(e);
@@ -260,8 +255,12 @@ IncBoard.prototype.searchMusic = function(artist, musicTitle) {
     }, 'json');
 }
 
-IncBoard.prototype.clean = function() {
-}
+IncBoard.prototype.clean = function () {
+};
+
+IncBoard.prototype.posToString = function (pos) {
+    return "(" + pos[0] + "," + pos[1] + ")";
+};
 
 var incBoard = new IncBoard();
 
@@ -272,15 +271,12 @@ $(document).ready(function() {
             $.bootstrapMessageOff();
             var total = 90;
             incBoard.similarity = data[1];
-            var a = new Date();
             $.each(data[0], function(i, s) {
                 if(total < 100) {
                     incBoard.searchMusic(s.artist, s.musicTitle);
                     total++;
                 }
             });
-            var b = new Date();
-            console.log(total + " cells inserted in " + (b.getTime() - a.getTime()) + " secs");
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();

@@ -29,7 +29,7 @@ function IncBoardBoard() {
     this.listByAMTId = [];
     this.listByPos = [];
     this.size = 0;
-
+    this.drawList = [];
 }
 
 IncBoardBoard.prototype.init = function () {
@@ -64,16 +64,17 @@ IncBoardBoard.prototype.insert = function (music, pos) {
 
         this.listByPos[intPos][music.artistMusicTitleId] = cell;
 
-        cell.draw();
-
         ret = true;
         this.size++;
+        if (this.drawList.indexOf(music.artistMusicTitleId) === -1) {
+            this.drawList.push(music.artistMusicTitleId);
+        }
     } else {
         throw new Error('Invalid parameter given');
         ret = false;
     }
 
-    this.fsck();
+    // this.fsck();
 
     return ret;
 };
@@ -97,7 +98,10 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
 
         this.listByPos[intPos][artistMusicTitleId] = cell;
         cell.setPos(pos);
-        cell.draw();
+
+        if (this.drawList.indexOf(artistMusicTitleId) === -1) {
+            this.drawList.push(artistMusicTitleId);
+        }
 
         ret = true;
     } else {
@@ -105,9 +109,19 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
         ret = false;
     }
 
-    this.fsck();
+    // this.fsck();
 
     return ret;
+};
+
+IncBoardBoard.prototype.flushDraw = function() {
+    var self = this;
+
+    this.drawList.forEach(function(id) {
+        self.listByAMTId[id].draw();
+    });
+
+    this.drawList = [];
 };
 
 IncBoardBoard.prototype.getByPos = function(pos) {
@@ -202,15 +216,15 @@ IncBoardBoard.prototype.animateCells = function () {
 
 IncBoardBoard.prototype.posToInt = function (pos) {
     return (pos[1] * 10000) + pos[0];
-}
+};
 
 IncBoardBoard.prototype.intToPos = function (num) {
     return [num % 10000, Math.floor(num / 10000)];
-}
+};
 
 IncBoardBoard.prototype.getSize = function () {
     return this.size;
-}
+};
 
 IncBoardBoard.prototype.fsck = function () {
     var counter = [],
@@ -256,4 +270,4 @@ IncBoardBoard.prototype.fsck = function () {
     });
 
     return true;
-}
+};
