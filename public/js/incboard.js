@@ -154,7 +154,9 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
         bestMsPos = null,
         bestNcPos = null,
         bestWerr = 10000000,
-        bestState = 0;
+        bestState = 0,
+        occupancy = 1000;
+        
 
     [0, 1].forEach(function(state) {
         self.shiftList.forEach(function(shift) {
@@ -170,33 +172,38 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
 
                 // TODO: verify if this is correct or if Werr = Werr(newMusic) + Werr(mostSimilart).
                 var currentWerr = 0 == state ? self.calcError(newMusic): self.calcError(mostSimilar);
-                if(currentWerr < bestWerr || (currentWerr == bestWerr && 1 === self.ibb.isPosOccupied(pos))) {
+                if(currentWerr < bestWerr || (currentWerr == bestWerr && occupancy > self.ibb.isPosOccupied(pos))) {
                     bestWerr = currentWerr;
                     bestMsPos = self.ibb.getPos(mostSimilar.artistMusicTitleId);
                     bestNcPos = self.ibb.getPos(newMusic.artistMusicTitleId);
                     bestState = state;
+                    occupancy = self.ibb.isPosOccupied(pos);
                 }
             }
         });
     });
 
 
-    this.ibb.setPos(newMusic.artistMusicTitleId, bestNcPos);
-    this.ibb.setPos(mostSimilar.artistMusicTitleId, bestMsPos);
+    if (null !== bestNcPos && null !== bestMsPos) {
+        this.ibb.setPos(newMusic.artistMusicTitleId, bestNcPos);
+        this.ibb.setPos(mostSimilar.artistMusicTitleId, bestMsPos);
 
-    var externalCell = 0 === bestState ? newMusic : mostSimilar;
-    var pos = this.ibb.getPos(externalCell.artistMusicTitleId);
-    if (this.ibb.isPosOccupied(pos) >= 2) {
-        visitedCells.push(this.ibb.posToInt(this.ibb.getPos(newMusic.artistMusicTitleId)));
-        visitedCells.push(this.ibb.posToInt(this.ibb.getPos(mostSimilar.artistMusicTitleId)));
+        var externalCell = 0 === bestState ? newMusic : mostSimilar;
+        var pos = this.ibb.getPos(externalCell.artistMusicTitleId);
+        if (this.ibb.isPosOccupied(pos) >= 2) {
+            visitedCells.push(this.ibb.posToInt(this.ibb.getPos(newMusic.artistMusicTitleId)));
+            visitedCells.push(this.ibb.posToInt(this.ibb.getPos(mostSimilar.artistMusicTitleId)));
 
-        var conflictList = this.ibb.getByPos(pos),
-            first = conflictList[0],
-            second = conflictList[1];
+            var conflictList = this.ibb.getByPos(pos),
+                first = conflictList[0],
+                second = conflictList[1];
 
-        this.resolveConflict(first, second, visitedCells);
-    } else {
-        console.log('DONE WITH: ' + newMusic);
+            this.resolveConflict(first, second, visitedCells);
+        } else {
+            console.log('DONE WITH: ' + newMusic);
+        }
+    } else { // the cell is trapped.
+        // TODO: cry.
     }
 }
 
