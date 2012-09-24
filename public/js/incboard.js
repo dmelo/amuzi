@@ -29,6 +29,7 @@ function  IncBoard() {
     this.shiftList = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
     this.similarity = null;
     this.error = false;
+    this.stochasticLength = 15;
 }
 
 IncBoard.prototype.posGreaterThan = function(posA, posB) {
@@ -59,7 +60,41 @@ IncBoard.prototype.posGreaterThan = function(posA, posB) {
     }
 };
 
-IncBoard.prototype.get2DRank = function(music) {
+IncBoard.prototype.stochasticItems = function(center) {
+    var start = new Date().getTime();
+    var self = this,
+        list = [],
+        idsList = this.ibb.getIdsList();
+
+    this.ibb.getByPos(center).forEach(function(item) {
+        var id = item.artistMusicTitleId;
+        list.push(id);
+        idsList.splice(idsList.indexOf(id), 1);
+    });
+
+    this.shiftList.forEach(function(shift) {
+        var pos = [center[0] + shift[0], center[1] + shift[1]];
+        self.ibb.getByPos(pos).forEach(function(item) {
+            var id = item.artistMusicTitleId;
+            list.push(id);
+            idsList.splice(idsList.indexOf(id), 1);
+        });
+    });
+
+    while (list.length < this.stochasticLength && idsList.length > 0) {
+        var rid = Math.floor(Math.random() * idsList.length);
+        list.push(idsList[rid]);
+        idsList.splice(rid, 1);
+    }
+
+    var end = new Date().getTime();
+
+    console.log('stochasticItems ' + (end - start));
+
+    return list;
+}
+
+IncBoard.prototype.get2DRank = function(music, musicList) {
     var center = this.ibb.getPos(music.artistMusicTitleId),
         list = [],
         rank = [],
@@ -67,7 +102,7 @@ IncBoard.prototype.get2DRank = function(music) {
         i,
         j;
 
-    this.ibb.getAllMusic().forEach(function(item, id) {
+    musicList.forEach(function(id) {
         var a = [],
             pos =  self.ibb.getPos(id);
 
@@ -94,7 +129,7 @@ IncBoard.prototype.get2DRank = function(music) {
     return rank;
 }
 
-IncBoard.prototype.getNDRank = function(music) {
+IncBoard.prototype.getNDRank = function(music, musicList) {
     var rank = new Array(),
         currentRank = 1,
         localSimilarity = new Array(),
@@ -103,7 +138,7 @@ IncBoard.prototype.getNDRank = function(music) {
         rank = new Array(),
         self = this;
 
-    this.ibb.getAllMusic().forEach(function(item, id) {
+    musicList.forEach(function(id) {
         localSimilarity[id] = self.similarity[artistMusicTitleId][id];
         similarityPull.push(self.similarity[artistMusicTitleId][id]);
     });
@@ -120,12 +155,12 @@ IncBoard.prototype.getNDRank = function(music) {
 }
 
 // Calculate Werr of element v.
-IncBoard.prototype.calcError = function(v) {
+IncBoard.prototype.calcError = function(v, musicList) {
     var s0 = new Date().getTime();
     var werr = 0,
-        rank2D = this.get2DRank(v),
+        rank2D = this.get2DRank(v, musicList),
         s1 = new Date().getTime(),
-        rankND = this.getNDRank(v),
+        rankND = this.getNDRank(v, musicList),
         s2 = new Date().getTime(v),
         rN = 0,
         self = this;
@@ -155,8 +190,9 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
         bestNcPos = null,
         bestWerr = 10000000,
         bestState = 0,
-        occupancy = 1000;
-        
+        occupancy = 1000,
+        musicList = this.stochasticItems(ncPos);
+
 
     [0, 1].forEach(function(state) {
         self.shiftList.forEach(function(shift) {
@@ -171,7 +207,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
                 }
 
                 // TODO: verify if this is correct or if Werr = Werr(newMusic) + Werr(mostSimilart).
-                var currentWerr = 0 == state ? self.calcError(newMusic): self.calcError(mostSimilar);
+                var currentWerr = self.calcError(newMusic, musicList);
                 if(currentWerr < bestWerr || (currentWerr == bestWerr && occupancy > self.ibb.isPosOccupied(pos))) {
                     bestWerr = currentWerr;
                     bestMsPos = self.ibb.getPos(mostSimilar.artistMusicTitleId);

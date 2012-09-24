@@ -226,6 +226,16 @@ IncBoardBoard.prototype.getSize = function () {
     return this.size;
 };
 
+IncBoardBoard.prototype.getIdsList = function() {
+    var list = [];
+
+    this.listByAMTId.forEach(function (item, id) {
+        list.push(id);
+    });
+
+    return list;
+};
+
 IncBoardBoard.prototype.fsck = function () {
     var counter = [],
         self = this;
