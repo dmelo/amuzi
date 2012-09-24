@@ -31,73 +31,65 @@ function  IncBoard() {
     this.error = false;
 }
 
+IncBoard.prototype.posGreaterThan = function(posA, posB) {
+    var maxA = Math.max(Math.abs(posA[0]), Math.abs(posA[1])),
+        maxB = Math.max(Math.abs(posB[0]), Math.abs(posB[1])),
+        qA,
+        qB,
+        sumA,
+        sumB;
 
-// Calculate the shift on X and Y that must be applied to a position to get to 
-// the next cell position
-IncBoard.prototype.nextCell = function(center, shift, depth) {
-    if (typeof depth === 'undefined') {
-        depth = 1;
+    if (maxA !== maxB) {
+        return maxA > maxB;
     } else {
-        depth++;
-    }
+        qA = posA[1] === -maxA || posA[0] === maxA ? 0 : 1;
+        qB = posB[1] === -maxA || posB[0] === maxA ? 0 : 1;
 
-    var nShift;
-
-    if (shift !== null) {
-        var max = Math.max(Math.abs(shift[0]), Math.abs(shift[1]));
-        nShift = [shift[0], shift[1]];
-        // No way to continue.
-        if (max > Math.max(this.rows, this.cols) || depth > 7 * max)
-            return null;
-
-        if(-max === nShift[0] && 1 - max === nShift[1]) {
-            // go to the first element of the outer layer.
-            max++;
-            nShift[0] = -max;
-            nShift[1] = -max;
-        } else if(-max === nShift[1] && max > nShift[0]) {
-            // top border moving to right.
-            nShift[0]++;
-        } else if(max === nShift[0] && max > nShift[1]) {
-            // right border moving down.
-            nShift[1]++;
-        } else if(max === nShift[1] && -max < nShift[0]) {
-            // bottom border moving left.
-            nShift[0]--;
-        } else if(-max === nShift[0] && -max < nShift[1]) {
-            // left border moving up.
-            nShift[1]--;
-        }
-    } else {
-        nShift = [-1, -1];
-    }
-
-    var nCenter = [center[0] + nShift[0], center[1] + nShift[1]];
-
-    if (nCenter[0] >= 0 && nCenter[0] < this.ibb.getCols() && nCenter[1] >= 0 && nCenter[1] < this.ibb.getRows()) {
-        return nShift;
-    } else {
-        try {
-            return this.nextCell(center, nShift, depth);
-        } catch (e) {
-            console.log("Trying to get nextCell of (" + center[0] + ", " + center[1] + ". shift: (" + shift[0] + ", " + shift[1]);
-            return null;
+        if (qA !== qB) {
+            return qA > qB;
+        } else {
+            sumA = posA[0] + posA[1];
+            sumB = posB[0] + posB[1];
+            if (0 === qA) {
+                return sumA > sumB;
+            } else {
+                return sumB > sumA;
+            }
         }
     }
-}
+};
 
-IncBoard.prototype.get2DRank = function(v) {
-    var center = this.ibb.getPos(v.artistMusicTitleId);
-    var shift = null;
-    var rank = new Array();
+IncBoard.prototype.get2DRank = function(music) {
+    var center = this.ibb.getPos(music.artistMusicTitleId),
+        list = [],
+        rank = [],
+        self = this,
+        i,
+        j;
 
-    while ((shift = this.nextCell(center, shift)) !== null) {
-        var nShift = [center[0] + shift[0], center[1] + shift[1]];
+    this.ibb.getAllMusic().forEach(function(item, id) {
+        var a = [],
+            pos =  self.ibb.getPos(id);
 
-        this.ibb.getByPos(nShift).forEach(function (item) {
-            rank.push(item.artistMusicTitleList);
-        });
+        a['pos'] = [pos[0] - center[0], pos[1] - center[1]];
+        a['id'] = id;
+
+        list.push(a);
+    });
+
+    for (i = 0; i < list.length; i++) {
+        for (j = i + 1; j < list.length; j++) {
+            if (self.posGreaterThan(list[i].pos, list[j].pos)) {
+                var aux = list[i];
+                list[i] = list[j];
+                list[j] = aux;
+            }
+        }
     }
+
+    list.forEach(function(item) {
+        rank.push(item.id);
+    });
 
     return rank;
 }
@@ -146,7 +138,7 @@ IncBoard.prototype.calcError = function(v) {
 
     var s3 = new Date().getTime();
 
-    console.log("calcError times: " + (s1 - s0) + "#" + (s2 - s1) + "#" + (s3 - s2));
+    // console.log("calcError times: " + (s1 - s0) + "#" + (s2 - s1) + "#" + (s3 - s2));
 
 
     return werr;
@@ -167,7 +159,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
     [0, 1].forEach(function(state) {
         self.shiftList.forEach(function(shift) {
             var pos = [ncPos[0] + shift[0], ncPos[1] + shift[1]];
-            if (-1 === visitedCells.indexOf(self.ibb.posToInt(pos))) {
+            if (-1 === visitedCells.indexOf(self.ibb.posToInt(pos)) && pos[0] >= 0 && pos[0] < self.ibb.cols && pos[1] >= 0 && pos[1] < self.ibb.rows) {
                 if(0 == state) {
                     self.ibb.setPos(mostSimilar.artistMusicTitleId, ncPos);
                     self.ibb.setPos(newMusic.artistMusicTitleId, pos);
@@ -269,7 +261,7 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data) {
             $.bootstrapMessageOff();
-            var total = 90;
+            var total = 60;
             incBoard.similarity = data[1];
             $.each(data[0], function(i, s) {
                 if(total < 100) {
