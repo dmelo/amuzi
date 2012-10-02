@@ -45,4 +45,9 @@ class ArtistMusicTitle extends DZend_Model
         $where .= $db->quoteInto(' AND music_title_id in (select id from music_title where name = ?)', $musicTitle);
         return $this->_artistMusicTitleDb->fetchRow($where);
     }
+
+    public function fetchAllArtistAndMusicTitle($idsList)
+    {
+        return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle($idsList);
+    }
 }

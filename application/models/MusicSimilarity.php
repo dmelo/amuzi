@@ -148,4 +148,23 @@ class MusicSimilarity extends DZend_Model
 
         return $matrix;
     }
+
+    /**
+     * Returns an array with two elements. The first is an array of similar
+     * elements, each element containing artist and musicTitle. The second
+     * element is the similarity matrix.
+     */
+    public function getSimilar($artist, $musicTitle)
+    {
+        $similarList = $this->_musicSimilarityDb->getSimilar($artist, $musicTitle);
+        $idsList = array();
+        foreach ($similarList as $entry) {
+            $idsList[] = $entry['artist_music_title_id'];
+        }
+
+        return array(
+            $this->_artistMusicTitleModel->fetchAllArtistAndMusicTitle($idsList),
+            $this->getSimilarityMatrix($idsList)
+        );
+    }
 }

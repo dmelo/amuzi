@@ -139,7 +139,11 @@ class ApiController extends DZend_Controller_Action
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
             );
+
             $artistMusicTitleIdList = array($artistMusicTitleId);
+            $rowSet = $this->_musicSimilarityModel->getSimilar($artist, $musicTitle);
+            $this->view->output = $rowSet;
+            /*
             $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
 
             $this->_logger->debug('ApiController::searchsimilarAction C ' . microtime(true));
@@ -179,6 +183,7 @@ class ApiController extends DZend_Controller_Action
                 )
             );
             $this->_logger->debug('ApiController::searchsimilarAction F ' . microtime(true));
+            */
         } else
             $this->view->output = $this->_error;
     }

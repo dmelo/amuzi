@@ -49,9 +49,39 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
 
     public function getRandomArtistMusicTitleId()
     {
-        $column = rand() % 2 ? 'f_artist_music_title_id' : 's_artist_music_title_id';
-        $select = $this->select()->where('1 = 1')->order('rand()')->group($column);
+        $column = rand() % 2 ?
+            'f_artist_music_title_id' : 's_artist_music_title_id';
+        $select = $this->select()
+            ->where('1 = 1')
+            ->order('rand()')
+            ->group($column);
         $row = $this->fetchRow($select);
         return $row->$column;
     }
+
+    public function getSimilar($artist, $musicTitle)
+    {
+        $artistMusicTitleModel = new ArtistMusicTitle();
+        $artistMusicTitleId = $artistMusicTitleModel->insert(
+            $artist, $musicTitle
+        );
+
+        $db = $this->getAdapter();
+
+        $where = "f_artist_music_title_id = $artistMusicTitleId " .
+            "or s_artist_music_title_id = $artistMusicTitleId";
+        $rowSet = $this->fetchAll($where, 'similarity desc');
+        $ret = array();
+        foreach ($rowSet as $row) {
+            $id = $artistMusicTitleId == $row->fArtistMusicTitleId ?
+                $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
+            $ret[] = array(
+                'artist_music_title_id' => $id,
+                'similarity' => $row->similarity
+            );
+        }
+
+        return $ret;
+    }
+
 }
