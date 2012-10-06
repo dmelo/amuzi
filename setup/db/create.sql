@@ -161,3 +161,45 @@ CREATE TABLE `user_listen_playlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `user_listen_playlist_created_trigger` BEFORE INSERT ON `user_listen_playlist` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 ALTER TABLE `user_listen_playlist` auto_increment = 100000;
+
+CREATE TABLE `task_type` (
+    `id` int(11) NOT NULL auto_increment,
+    `name` varchar(31),
+    PRIMARY KEY(`id`),
+    UNIQUE(`name`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+
+CREATE TABLE `task_set` (
+    `id` int(11) NOT NULL auto_increment,
+    `task_type_id` int(11),
+    `done` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `expiration` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    PRIMARY KEY(`id`),
+    UNIQUE(`task_type_id`, `done`),
+    CONSTRAINT `task_set_ibfk_1` FOREIGN KEY (`task_type_id`) REFERENCES `task_type`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+
+CREATE TABLE `task_request` (
+    `id` int(11) NOT NULL auto_increment,
+    `task_set_id` int(11) NOT NULL,
+    PRIMARY KEY(`id`),
+    CONSTRAINT `task_request_ibfk_1` FOREIGN KEY (`task_set_id`) REFERENCES `task_set`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+
+CREATE TABLE `task_parameter` (
+    `id` int(11) NOT NULL auto_increment,
+    `task_set_id` int(11) NOT NULL,
+    `order` int(11) NOT NULL,
+    `param` varchar(255) NOT NULL,
+    PRIMARY KEY(`id`),
+    UNIQUE(`task_set_id`, `order`),
+    CONSTRAINT `task_parameter_ibfk_1` FOREIGN KEY (`task_set_id`) REFERENCES `task_set`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
