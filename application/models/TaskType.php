@@ -23,4 +23,9 @@
  */
 class TaskType extends DZend_Model
 {
+    public function findRowByName($name)
+    {
+        return $this->_taskTypeDb->findRowByName($name);
+    }
 }
+

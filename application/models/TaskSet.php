@@ -23,4 +23,50 @@
  */
 class TaskSet extends DZend_Model
 {
+    public function findByTaskTypeId($taskTypeId)
+    {
+        return $this->_taskSetDb->findByTaskTypeId($taskTypeId);
+    }
+
+    public function findMostRecentTask($name, $args)
+    {
+        $taskTypeRow = $this->_taskTypeModel->findRowByName($name);
+        $rowSet = $this->findByTaskTypeId($taskTypeRow->id);
+        $ids = array();
+
+        foreach ($rowSet as $row) {
+            $ids[] = $row->id;
+        }
+
+        if (0 !== count($rowSet)) {
+            $id = $this->_taskParameterModel->findMostRecentTaskSetId($ids, $args);
+            if (false === $id) {
+                return false;
+            } else {
+                return $this->_taskSetDb->findById($id);
+            }
+        }
+
+        return false;
+    }
+
+    public function createTask($name, $args)
+    {
+        $args = array_slice(func_get_args(), 1);
+        $taskTypeRow = $this->_taskTypeModel->findByName($name);
+
+        $data = array(
+            'task_type_id' => $taskTypeRow->id,
+        );
+
+        $taskSetId = $this->_taskSetDb->insert($data);
+
+        $i = 0;
+        foreach ($args as $arg) {
+            $this->_taskParameterModel->createParameter($taskSetId, $i, $arg);
+            $i++;
+        }
+
+        return $taskSetId;
+    }
 }

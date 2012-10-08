@@ -284,4 +284,9 @@ class ApiController extends DZend_Controller_Action
         if (isset( $this->view->output ))
             echo Zend_Json::encode($this->view->output);
     }
+
+    public function testAction()
+    {
+        $this->_taskRequestModel->addTask('SearchSimilar', 'Coldplay', 'Yellow');
+    }
 }

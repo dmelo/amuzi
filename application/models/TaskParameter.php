@@ -23,4 +23,19 @@
  */
 class TaskParameter extends DZend_Model
 {
+    public function findMostRecentTaskSetId($ids, $args)
+    {
+        return $this->_taskParameterDb->findMostRecentTaskSetId($ids, $args);
+    }
+
+    public function createParameter($taskSetId, $count, $param)
+    {
+        return $this->_taskParameterDb->insert(
+            array(
+                'task_set_id' => $taskSetId,
+                'order' => $count,
+                'param' => $param
+            )
+        );
+    }
 }

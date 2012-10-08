@@ -23,4 +23,25 @@
  */
 class TaskRequest extends DZend_Model
 {
+    /**
+     * Add a task request.
+     *
+     * @param requestName Name of the request
+     * @param ... Parameters.
+     */
+    public function addTask($requestName)
+    {
+        $args = array_slice(func_get_args(), 1);
+
+        if (($taskSetId = $this->_taskSetModel->findMostRecentTask($requestName, $args)) !== false) {
+            $taskSetId = $this->_taskSetModel->createTask($requestName, $args);
+        }
+
+        $this->_logger->debug("TaskRequest::addTask -> inserting taskSetId $taskSetId");
+        return $this->_taskRequestDb->insert(
+            array(
+                'task_set_id' => $taskSetId
+            )
+        );
+    }
 }

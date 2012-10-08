@@ -165,11 +165,13 @@ ALTER TABLE `user_listen_playlist` auto_increment = 100000;
 CREATE TABLE `task_type` (
     `id` int(11) NOT NULL auto_increment,
     `name` varchar(31),
+    `duration` int(11), -- After the task is done, how many seconds it should wait to accept running the same task again.
     PRIMARY KEY(`id`),
     UNIQUE(`name`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `task_type_created_trigger` BEFORE INSERT ON `task_type` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 CREATE TABLE `task_set` (
     `id` int(11) NOT NULL auto_increment,
@@ -182,6 +184,7 @@ CREATE TABLE `task_set` (
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `task_set_created_trigger` BEFORE INSERT ON `task_set` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 CREATE TABLE `task_request` (
     `id` int(11) NOT NULL auto_increment,
@@ -191,6 +194,7 @@ CREATE TABLE `task_request` (
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `task_request_created_trigger` BEFORE INSERT ON `task_request` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 CREATE TABLE `task_parameter` (
     `id` int(11) NOT NULL auto_increment,
@@ -203,3 +207,6 @@ CREATE TABLE `task_parameter` (
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `task_parameter_created_trigger` BEFORE INSERT ON `task_parameter` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+INSERT INTO `task_type`(`name`) values('SearchSimilar');
