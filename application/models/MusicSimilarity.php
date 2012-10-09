@@ -103,19 +103,28 @@ class MusicSimilarity extends DZend_Model
 
     public function calcSimilarityDegree($artistMusicTitleId, $degree = 1)
     {
-        $rowSet = $this->findByArtistMusicTitleIdAndDegree($artistMusicTitleId, $degree - 1);
+        $rowSet = $this->findByArtistMusicTitleIdAndDegree(
+            $artistMusicTitleId, $degree - 1
+        );
         $ids = array();
         $similarities = array();
         $newRows = array();
         foreach ($rowSet as $row) {
-            $ids[] = $row->fArtistMusicTitleId == $artistMusicTitleId ? $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
+            $ids[] = $row->fArtistMusicTitleId == $artistMusicTitleId ?
+                $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
             $similarities[] = $row->similarity;
         }
 
-        for ($i = 0; $i < count($ids); $i++)
-            for ($j = $i + 1; $j < count($ids); $j++)
-                if (($similarity = ($similarities[$i] * $similarities[$j]) / 10000) > 20) // Threashold.
-                    $newRows[] = $this->packData($ids[$i], $ids[$j], $similarity, $degree);
+        for ($i = 0; $i < count($ids); $i++) {
+            for ($j = $i + 1; $j < count($ids); $j++) {
+                if (($similarity =
+                        ($similarities[$i] * $similarities[$j]) / 10000) > 20) {
+                    $newRows[] = $this->packData(
+                        $ids[$i], $ids[$j], $similarity, $degree
+                    );
+                }
+            }
+        }
 
         $ret = $this->_musicSimilarityDb->insertMulti($newRows);
 
@@ -126,27 +135,49 @@ class MusicSimilarity extends DZend_Model
         );
     }
 
+    /**
+     * getSimilarityMatrix Calculate the similarity matrix for a given set of
+     * elements
+     *
+     * @param mixed $list List of artist_music_title_id.
+     * @return Returns an array with three elements: the similarity matrix
+     * itself, the total number of elements and the quality of the similarity
+     * matrix which is measured by N / M, where N is the number of non-zero
+     * elements and M is the total number of elements on the matrix.
+     */
     public function getSimilarityMatrix($list)
     {
-        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix A ' . microtime(true));
+        $this->_logger->debug('MS::getSimilarityMatrix A ' . microtime(true));
         $rowSet = $this->findByArtistMusicTitleIdSetAndDegree($list, false);
-        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix B ' . microtime(true));
+        $this->_logger->debug('MS::getSimilarityMatrix B ' . microtime(true));
         $matrix = array();
         foreach ($list as $a) {
             $matrix[$a] = array();
             foreach ($list as $b)
                 $matrix[$a][$b] = 0;
         }
-        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix C ' . microtime(true) . ' -- ' . count($rowSet));
+        $this->_logger->debug(
+            'MS::getSimilarityMatrix C ' . microtime(true) .
+            ' -- ' . count($rowSet)
+        );
+        $count = 0;
 
         foreach ($rowSet as $row) {
+            $count++;
             $a = $row->fArtistMusicTitleId;
             $b = $row->sArtistMusicTitleId;
             $matrix[$a][$b] = $matrix[$b][$a] = (int) $row->similarity;
         }
-        $this->_logger->debug('MusicSimilarity::getSimilarityMatrix D ' . microtime(true));
+        $this->_logger->debug(
+            'MusicSimilarity::getSimilarityMatrix D ' .
+            microtime(true) . "#" . $count
+        );
 
-        return $matrix;
+        $total = count($list);
+        $quality = $count / ($total * $total * 0.5);
+
+
+        return array($matrix, $total, $quality);
     }
 
     /**
@@ -156,15 +187,68 @@ class MusicSimilarity extends DZend_Model
      */
     public function getSimilar($artist, $musicTitle)
     {
-        $similarList = $this->_musicSimilarityDb->getSimilar($artist, $musicTitle);
+        $similarList = $this->_musicSimilarityDb->getSimilar(
+            $artist, $musicTitle
+        );
         $idsList = array();
         foreach ($similarList as $entry) {
             $idsList[] = $entry['artist_music_title_id'];
         }
 
+        $similarityMatrixResponse = $this->getSimilarityMatrix($idsList);
+
+        $artistAndMusicTitleList = $this->_artistMusicTitleModel
+            ->fetchAllArtistAndMusicTitle($idsList);
+
+        if (
+            $similarityMatrixResponse[2] < 20 ||
+            $similarityMatrixResponse[3] < 0.3
+        ) {
+            return $this->searchSimilarSync($artist, $musicTitle);
+        }
+
         return array(
-            $this->_artistMusicTitleModel->fetchAllArtistAndMusicTitle($idsList),
-            $this->getSimilarityMatrix($idsList)
+            $artistAndMusicTitleList,
+            $similarityMatrixResponse[0]
+        );
+    }
+
+    public function searchSimilarSync($artist, $musicTitle)
+    {
+        $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
+
+        foreach ($rowSet as $row) {
+            $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
+                $row->artist, $row->musicTitle
+            );
+
+            if (null !== $sArtistMusicTitleId)
+                $this->_musicSimilarityModel->insert(
+                    $artistMusicTitleId,
+                    $sArtistMusicTitleId,
+                    $row->similarity
+                );
+
+            $list[] = array(
+                'artist' => $row->artist,
+                'musicTitle' => $row->musicTitle,
+                'similarity' => $row->similarity,
+                'artistMusicTitleId' => $sArtistMusicTitleId
+            );
+
+            $artistMusicTitleIdList[] = $sArtistMusicTitleId;
+        }
+
+        $this->_musicSimilarityModel->calcSimilarityDegree(
+            $artistMusicTitleId
+        );
+
+
+        $this->view->output = array(
+            $list,
+            $this->_musicSimilarityModel->getSimilarityMatrix(
+                $artistMusicTitleIdList
+            )
         );
     }
 }

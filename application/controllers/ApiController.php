@@ -118,7 +118,7 @@ class ApiController extends DZend_Controller_Action
      * It will output an json array with two elements. The first is the list of 
      * all similar artist/musicTitle and the second is a matrix with the
      * similarity between each of it.
-     *
+     *;
      * @return void
      */
     public function searchsimilarAction()
@@ -143,47 +143,9 @@ class ApiController extends DZend_Controller_Action
             $artistMusicTitleIdList = array($artistMusicTitleId);
             $rowSet = $this->_musicSimilarityModel->getSimilar($artist, $musicTitle);
             $this->view->output = $rowSet;
-            /*
-            $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
 
-            $this->_logger->debug('ApiController::searchsimilarAction C ' . microtime(true));
-            foreach ($rowSet as $row) {
-                $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
-                    $row->artist, $row->musicTitle
-                );
+            $this->_taskRequestModel->addTask('SearchSimilar', $artist, $musicTitle);
 
-                if (null !== $sArtistMusicTitleId)
-                    $this->_musicSimilarityModel->insert(
-                        $artistMusicTitleId,
-                        $sArtistMusicTitleId,
-                        $row->similarity
-                    );
-
-                $list[] = array(
-                    'artist' => $row->artist,
-                    'musicTitle' => $row->musicTitle,
-                    'similarity' => $row->similarity,
-                    'artistMusicTitleId' => $sArtistMusicTitleId
-                );
-
-                $artistMusicTitleIdList[] = $sArtistMusicTitleId;
-            }
-            $this->_logger->debug('ApiController::searchsimilarAction D ' . microtime(true));
-
-            $this->_musicSimilarityModel->calcSimilarityDegree(
-                $artistMusicTitleId
-            );
-            $this->_logger->debug('ApiController::searchsimilarAction E ' . microtime(true));
-
-
-            $this->view->output = array(
-                $list,
-                $this->_musicSimilarityModel->getSimilarityMatrix(
-                    $artistMusicTitleIdList
-                )
-            );
-            $this->_logger->debug('ApiController::searchsimilarAction F ' . microtime(true));
-            */
         } else
             $this->view->output = $this->_error;
     }
