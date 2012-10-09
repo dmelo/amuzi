@@ -62,10 +62,8 @@ class DbTable_TaskParameter extends DZend_Db_Table
             } else {
                 $sql .= " OR ";
             }
-            $sql .= $db->quoteInto(" ( $sqlAux AND `order` = ? AND `param` = ? ) ", $order, $param);
+            $sql .= $db->quoteInto(" ( $sqlAux AND `order` = ?", $order) . $db->quoteInto(" AND `param` = ? ) ", $param);
         }
-
-        $this->_logger->debug("DbTable_TaskParameter::findMostRecentTaskSetId -> " . $sql);
 
         $rowSet = $this->fetchAll($sql);
         $result = array();
@@ -73,19 +71,20 @@ class DbTable_TaskParameter extends DZend_Db_Table
         foreach ($rowSet as $row) {
             $tsi = $row->taskSetId;
             if (array_key_exists($tsi, $result)) {
-                $result[$row->taskSetId]++;
+                $result[$tsi]++;
             } else {
-                $result[$row->taskSetId] = 1;
+                $result[$tsi] = 1;
             }
         }
 
         $max = -1;
 
-        foreach ($results as $tsi => $count) {
-            if ($count === count($args) && $tsi > $max) {
+        foreach ($result as $tsi => $count) {
+            if ($count == count($args) && $tsi > $max) {
                 $max = $tsi;
             }
         }
+
 
         return -1 === $max ? false : $max;
     }

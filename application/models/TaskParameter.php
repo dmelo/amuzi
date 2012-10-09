@@ -30,12 +30,12 @@ class TaskParameter extends DZend_Model
 
     public function createParameter($taskSetId, $count, $param)
     {
-        return $this->_taskParameterDb->insert(
-            array(
-                'task_set_id' => $taskSetId,
-                'order' => $count,
-                'param' => $param
-            )
+        $data = array(
+            'task_set_id' => $taskSetId,
+            'order' => $count,
+            'param' => $param
         );
+
+        return $this->_taskParameterDb->insert($data);
     }
 }

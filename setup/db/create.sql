@@ -179,7 +179,6 @@ CREATE TABLE `task_set` (
     `done` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `expiration` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     PRIMARY KEY(`id`),
-    UNIQUE(`task_type_id`, `done`),
     CONSTRAINT `task_set_ibfk_1` FOREIGN KEY (`task_type_id`) REFERENCES `task_type`(`id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP

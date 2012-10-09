@@ -287,6 +287,6 @@ class ApiController extends DZend_Controller_Action
 
     public function testAction()
     {
-        $this->_taskRequestModel->addTask('SearchSimilar', 'Coldplay', 'Yellow');
+        $this->_taskRequestModel->addTask('SearchSimilar', 'Coldplay', 'Bla');
     }
 }

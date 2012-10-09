@@ -32,6 +32,7 @@ class TaskSet extends DZend_Model
     {
         $taskTypeRow = $this->_taskTypeModel->findRowByName($name);
         $rowSet = $this->findByTaskTypeId($taskTypeRow->id);
+
         $ids = array();
 
         foreach ($rowSet as $row) {
@@ -39,12 +40,7 @@ class TaskSet extends DZend_Model
         }
 
         if (0 !== count($rowSet)) {
-            $id = $this->_taskParameterModel->findMostRecentTaskSetId($ids, $args);
-            if (false === $id) {
-                return false;
-            } else {
-                return $this->_taskSetDb->findById($id);
-            }
+            return $this->_taskParameterModel->findMostRecentTaskSetId($ids, $args);
         }
 
         return false;
@@ -52,14 +48,14 @@ class TaskSet extends DZend_Model
 
     public function createTask($name, $args)
     {
-        $args = array_slice(func_get_args(), 1);
-        $taskTypeRow = $this->_taskTypeModel->findByName($name);
+        $taskTypeRow = $this->_taskTypeModel->findRowByName($name);
 
         $data = array(
             'task_type_id' => $taskTypeRow->id,
         );
 
         $taskSetId = $this->_taskSetDb->insert($data);
+
 
         $i = 0;
         foreach ($args as $arg) {
