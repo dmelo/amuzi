@@ -207,5 +207,3 @@ CREATE TABLE `task_parameter` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `task_parameter_created_trigger` BEFORE INSERT ON `task_parameter` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
-
-INSERT INTO `task_type`(`name`) values('SearchSimilar');

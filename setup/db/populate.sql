@@ -8,3 +8,5 @@ INSERT INTO `user`(`name`, `email`, `password`)
     VALUES('Diogo Melo', 'dmelo87@gmail.com', '30a8caa8b6a0ff02a958c31d8c5f7f622f12232c');
 
 INSERT INTO `playlist`(user_id, name) VALUES(last_insert_id(), 'Diogo Melo');
+
+INSERT INTO `task_type`(`name`) values('SearchSimilar');
