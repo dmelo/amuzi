@@ -23,4 +23,12 @@
  */
 class DbTable_TaskSet extends DZend_Db_Table
 {
+    public function findOpenTasks($taskTypeId)
+    {
+        $db = $this->getAdapter();
+        $where = $db->quoteInto('task_type_id = ?', $taskTypeId) .
+            $db->quoteInto(' AND done = ?', '0000-00-00 00:00:00');
+
+        return $this->fetchAll($where);
+    }
 }

@@ -70,4 +70,17 @@ class TaskSet extends DZend_Model
 
         return $taskSetId;
     }
+
+    public function findOpenTasks($name)
+    {
+        $taskTypeRow = $this->_taskTypeModel->findRowByName($name);
+        return $this->_taskTypeDb->findOpenTasks($taskTypeRow->id);
+    }
+
+    public function closeTask($id)
+    {
+        $row = $this->findRowById($id);
+        $row->done = date('Y-m-d H:i:s');
+        return $row->save();
+    }
 }

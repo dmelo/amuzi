@@ -52,4 +52,14 @@ class TaskRequest extends DZend_Model
             )
         );
     }
+
+    public function findOpenTasks($requestName)
+    {
+        return $this->_taskSetModel->findOpenTasks($requestName);
+    }
+
+    public function closeTask($taskSetId)
+    {
+        return $ths->_taskSetModel->closeTask($taskSetId);
+    }
 }
