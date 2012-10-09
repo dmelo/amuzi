@@ -23,6 +23,11 @@
  */
 class TaskSet extends DZend_Model
 {
+    public function findRowById($id)
+    {
+        return $this->_taskSetDb->findRowById($id);
+    }
+
     public function findByTaskTypeId($taskTypeId)
     {
         return $this->_taskSetDb->findByTaskTypeId($taskTypeId);

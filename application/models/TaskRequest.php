@@ -37,7 +37,12 @@ class TaskRequest extends DZend_Model
             $taskSetId = $this->_taskSetModel->createTask($requestName, $args);
         }
 
-        $taskSetRow = $this->_taskSetModel->findById($taskSetId);
+        $taskSetRow = $this->_taskSetModel->findRowById($taskSetId);
+        $expDate = new DateTime($taskSetRow->expiration);
+        $now = new DateTime();
+        if ($taskSetRow->expiration !== '0000-00-00 00:00:00' && $expDate < $now) {
+            $taskSetId = $this->_taskSetModel->createTask($requestName, $args);
+        }
 
 
         $this->_logger->debug("TaskRequest::addTask -> inserting taskSetId $taskSetId");
