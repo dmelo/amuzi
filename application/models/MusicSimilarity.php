@@ -81,14 +81,18 @@ class MusicSimilarity extends DZend_Model
         $artistMusicTitleIdSet, $degree = 0
     )
     {
-        $db = $this->_musicSimilarityDb->getAdapter();
-        $sqlIds = implode(', ', $artistMusicTitleIdSet);
-        $sql = "(f_artist_music_title_id in ($sqlIds) AND ";
-        $sql .= " s_artist_music_title_id in ($sqlIds)) ";
-        if (false !== $degree)
-            $sql .= $db->quoteInto(' AND degree = ?', $degree);
+        if (empty($artistMusicTitleIdSet)) {
+            return array();
+        } else {
+            $db = $this->_musicSimilarityDb->getAdapter();
+            $sqlIds = implode(', ', $artistMusicTitleIdSet);
+            $sql = "(f_artist_music_title_id in ($sqlIds) AND ";
+            $sql .= " s_artist_music_title_id in ($sqlIds)) ";
+            if (false !== $degree)
+                $sql .= $db->quoteInto(' AND degree = ?', $degree);
 
-        return $this->_musicSimilarityDb->fetchAll($sql);
+            return $this->_musicSimilarityDb->fetchAll($sql);
+        }
     }
 
     public function getRandomArtistMusicTitleId()
@@ -118,7 +122,7 @@ class MusicSimilarity extends DZend_Model
         for ($i = 0; $i < count($ids); $i++) {
             for ($j = $i + 1; $j < count($ids); $j++) {
                 if (($similarity =
-                        ($similarities[$i] * $similarities[$j]) / 10000) > 20) {
+                        ($similarities[$i] * $similarities[$j]) / 10000) >= 20) {
                     $newRows[] = $this->packData(
                         $ids[$i], $ids[$j], $similarity, $degree
                     );
@@ -174,7 +178,7 @@ class MusicSimilarity extends DZend_Model
         );
 
         $total = count($list);
-        $quality = $count / ($total * $total * 0.5);
+        $quality = $count / (($total * $total * 0.5) + 1);
 
 
         return array($matrix, $total, $quality);
@@ -195,27 +199,46 @@ class MusicSimilarity extends DZend_Model
             $idsList[] = $entry['artist_music_title_id'];
         }
 
-        $similarityMatrixResponse = $this->getSimilarityMatrix($idsList);
-
-        $artistAndMusicTitleList = $this->_artistMusicTitleModel
-            ->fetchAllArtistAndMusicTitle($idsList);
-
-        if (
-            $similarityMatrixResponse[2] < 20 ||
-            $similarityMatrixResponse[3] < 0.3
-        ) {
+        if (empty($idsList)) {
+            $this->_logger->debug("MusicSimilarity::getSimilar local empty");
             return $this->searchSimilarSync($artist, $musicTitle);
-        }
 
-        return array(
-            $artistAndMusicTitleList,
-            $similarityMatrixResponse[0]
-        );
+        } else {
+            $similarityMatrixResponse = $this->getSimilarityMatrix($idsList);
+
+            $this->_logger->debug("MusicSimilarity::getSimilar local quality{ size: " . $similarityMatrixResponse[1] . ". non-zero: " . $similarityMatrixResponse[2]);
+            if (
+                $similarityMatrixResponse[1] < 20 ||
+                $similarityMatrixResponse[2] < 0.03
+            ) {
+                return $this->searchSimilarSync($artist, $musicTitle);
+            }
+
+            $artistAndMusicTitleList = $this->_artistMusicTitleModel
+                ->fetchAllArtistAndMusicTitle($idsList);
+
+            // If local information is used, then there must be a task to
+            // refresh current data.
+            $this->_taskRequestModel->addTask(
+                'SearchSimilar', $artist, $musicTitle
+            );
+
+
+            return array(
+                $artistAndMusicTitleList,
+                $similarityMatrixResponse[0]
+            );
+        }
     }
 
     public function searchSimilarSync($artist, $musicTitle)
     {
         $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
+        $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+            $artist, $musicTitle
+        );
+        $artistMusicTitleIdList = array();
+        $list = array();
 
         foreach ($rowSet as $row) {
             $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
@@ -243,12 +266,15 @@ class MusicSimilarity extends DZend_Model
             $artistMusicTitleId
         );
 
+        $similarityMatrixResponse = $this->_musicSimilarityModel
+            ->getSimilarityMatrix(
+            $artistMusicTitleIdList
+        );
 
-        $this->view->output = array(
+
+        return array(
             $list,
-            $this->_musicSimilarityModel->getSimilarityMatrix(
-                $artistMusicTitleIdList
-            )
+            $similarityMatrixResponse[0]
         );
     }
 }

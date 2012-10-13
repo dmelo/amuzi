@@ -125,27 +125,11 @@ class ApiController extends DZend_Controller_Action
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
-            $this->_logger->debug('ApiController::searchsimilarAction A ' . microtime(true));
 
-            $titlesLimit = $this->_request->getParam('titlesLimit', 10);
-            $limit = $this->_request->getParam('limit', 9);
-            $offset = $this->_request->getParam('offset', 1);
-            $q = array();
-            $list = array();
-            $i = 0;
+            $this->view->output = $this->_musicSimilarityModel
+                ->getSimilar($artist, $musicTitle);
 
-
-            $this->_logger->debug('ApiController::searchsimilarAction B ' . microtime(true));
-            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
-                $artist, $musicTitle
-            );
-
-            $artistMusicTitleIdList = array($artistMusicTitleId);
-            $rowSet = $this->_musicSimilarityModel->getSimilar($artist, $musicTitle);
-            $this->view->output = $rowSet;
-
-            $this->_taskRequestModel->addTask('SearchSimilar', $artist, $musicTitle);
-
+            $this->_logger->debug('ApiController::searchsimilarAction md5 ' . md5(Zend_Json::encode($this->view->output)));
         } else
             $this->view->output = $this->_error;
     }

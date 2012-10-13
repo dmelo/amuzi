@@ -33,8 +33,8 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         $db = $this->getAdapter();
         $select = $db->select();
         $select->from(array('amt' => 'artist_music_title'), array('id'))
-            ->join(array('a' => 'artist'), 'a.id = amt.artist_id', array('at' => 'name'))
-            ->join(array('m' => 'music_title'), 'm.id = amt.music_title_id', array('mt' => 'name'))
+            ->join(array('a' => 'artist'), 'a.id = amt.artist_id', array('artist' => 'name'))
+            ->join(array('m' => 'music_title'), 'm.id = amt.music_title_id', array('musicTitle' => 'name'))
             ->where('amt.id in ( ' . implode(', ', $idsList) . ')');
         $this->_logger->debug("-----> select: " . $select);
         return $db->fetchAll($select);
