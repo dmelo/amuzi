@@ -203,32 +203,37 @@ class MusicSimilarity extends DZend_Model
             $this->_logger->debug("MusicSimilarity::getSimilar local empty");
             return $this->searchSimilarSync($artist, $musicTitle);
 
-        } else {
-            $similarityMatrixResponse = $this->getSimilarityMatrix($idsList);
-
-            $this->_logger->debug("MusicSimilarity::getSimilar local quality{ size: " . $similarityMatrixResponse[1] . ". non-zero: " . $similarityMatrixResponse[2]);
-            if (
-                $similarityMatrixResponse[1] < 20 ||
-                $similarityMatrixResponse[2] < 0.03
-            ) {
-                return $this->searchSimilarSync($artist, $musicTitle);
-            }
-
-            $artistAndMusicTitleList = $this->_artistMusicTitleModel
-                ->fetchAllArtistAndMusicTitle($idsList);
-
-            // If local information is used, then there must be a task to
-            // refresh current data.
-            $this->_taskRequestModel->addTask(
-                'SearchSimilar', $artist, $musicTitle
-            );
-
-
-            return array(
-                $artistAndMusicTitleList,
-                $similarityMatrixResponse[0]
-            );
         }
+
+        $similarityMatrixResponse = $this->getSimilarityMatrix($idsList);
+
+        $this->_logger->debug("MusicSimilarity::getSimilar local quality{ size: " . $similarityMatrixResponse[1] . ". non-zero: " . $similarityMatrixResponse[2]);
+
+        if (
+            $similarityMatrixResponse[1] < 20 ||
+            $similarityMatrixResponse[2] < 0.03
+        ) {
+            return $this->searchSimilarSync($artist, $musicTitle);
+        }
+
+        $artistAndMusicTitleList = $this->_artistMusicTitleModel
+            ->fetchAllArtistAndMusicTitle($idsList);
+
+        // If local information is used, then there must be a task to
+        // refresh current data.
+        $this->_taskRequestModel->addTask(
+            'SearchSimilar', $artist, $musicTitle
+        );
+
+
+
+
+
+
+        return array(
+            $artistAndMusicTitleList,
+            $similarityMatrixResponse[0]
+        );
     }
 
     public function searchSimilarSync($artist, $musicTitle)
