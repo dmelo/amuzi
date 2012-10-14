@@ -191,10 +191,13 @@ class MusicSimilarity extends DZend_Model
      */
     public function getSimilar($artist, $musicTitle)
     {
+        $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+            $artist, $musicTitle
+        );
         $similarList = $this->_musicSimilarityDb->getSimilar(
             $artist, $musicTitle
         );
-        $idsList = array();
+        $idsList = array($artistMusicTitleId);
         foreach ($similarList as $entry) {
             $idsList[] = $entry['artist_music_title_id'];
         }
@@ -237,8 +240,12 @@ class MusicSimilarity extends DZend_Model
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
             $artist, $musicTitle
         );
-        $artistMusicTitleIdList = array();
-        $list = array();
+        $artistMusicTitleIdList = array($artistMusicTitleId);
+        $list = array(
+            'artist' => $artist,
+            'musicTitle' => $musicTitle,
+            'artistMusicTitleId' => $artistMusicTitleId
+        );
 
         foreach ($rowSet as $row) {
             $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
@@ -255,7 +262,6 @@ class MusicSimilarity extends DZend_Model
             $list[] = array(
                 'artist' => $row->artist,
                 'musicTitle' => $row->musicTitle,
-                'similarity' => $row->similarity,
                 'artistMusicTitleId' => $sArtistMusicTitleId
             );
 
