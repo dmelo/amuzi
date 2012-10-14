@@ -366,6 +366,10 @@
         }
     }
 
+    function callback_userSettings(data) {
+        verifyView();
+    }
+
     $(document).ready(function() {
         verifyView();
 

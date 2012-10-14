@@ -66,6 +66,7 @@
 
             $(this).click(function(e) {
                 e.preventDefault();
+                var callback = $(this).attr('id');
                 if(0 == lock) {
                     lock++;
                     var noForm = false;
@@ -87,13 +88,19 @@
                                 dataType: 'json',
                                 success: function (data) {
                                     $.bootstrapMessageAuto('Saved');
+                                    if ('undefined' !== typeof(callback)) {
+                                        callback = "callback_" + callback;
+                                        if ('function' === typeof(eval(callback))) {
+                                            eval(callback)(data);
+                                        }
+                                    }
                                 },
                                 error: function(data) {
                                     $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
                                 },
                                 beforeSubmit: function() {
                                     $(modalWrapper).modal('hide');
-                                   $.bootstrapMessage('Saving...');
+                                    $.bootstrapMessage('Saving...');
                                 }
                             });
                         }
