@@ -43,6 +43,7 @@ class User extends DZend_Model
         $ret['name'] = $user->name;
         $ret['email'] = $user->email;
         $ret['privacy'] = $user->privacy;
+        $ret['view'] = $user->view;
 
         return $ret;
     }
@@ -53,7 +54,14 @@ class User extends DZend_Model
         $user->name = $params['name'];
         $user->email = $params['email'];
         $user->privacy = $params['privacy'];
+        $user->view = $params['view'];
         $user->save();
+    }
+
+    public function getView()
+    {
+        $user = $this->_userDb->findCurrent();
+        return $user->view;
     }
 
     /**

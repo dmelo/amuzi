@@ -56,6 +56,7 @@ CREATE TABLE `user` (
     `token` varchar(40) collate utf8_swedish_ci default NULL,
     `url` varchar(2047) collate utf8_swedish_ci default NULL,
     `privacy` enum('public', 'private') NOT NULL default 'public',
+    `view` enum('default', 'incboard') NOT NULL default 'default',
     `current_playlist_id` int(11),
     PRIMARY KEY(`id`),
     UNIQUE(`email`),

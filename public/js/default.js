@@ -351,7 +351,24 @@
         });
     }
 
+    function verifyView() {
+        var viewPaths = ['/', '/index/incboard'];
+        var pathname = window.location.pathname;
+
+        if (-1 !== viewPaths.indexOf(pathname)) {
+            $.get('/user/getview', function(data) {
+                if ('incboard' === data && '/index/incboard' !== pathname) {
+                    window.location.pathname = '/index/incboard';
+                } else if ('default' === data && '/' !== pathname) {
+                    window.location.pathname = '/';
+                }
+            });
+        }
+    }
+
     $(document).ready(function() {
+        verifyView();
+
         // topbar menu
         $('.topbar').dropdown();
         // add track into the playlist.

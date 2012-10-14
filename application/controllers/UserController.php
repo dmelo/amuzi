@@ -44,4 +44,9 @@ class UserController extends DZend_Controller_Action
 
         $this->view->form = $form;
     }
+
+    public function getviewAction()
+    {
+        $this->view->view = $this->_userModel->getView();
+    }
 }
