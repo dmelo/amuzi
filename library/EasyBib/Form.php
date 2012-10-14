@@ -25,7 +25,7 @@
  * @package  Form
  * @author   Michael Scholl <michael@sch0ll.de>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
- * @version  git: $id$
+ * @version  GIT: <git_id>
  * @link     https://github.com/easybib/EasyBib_Form_Decorator
  */
 
@@ -40,17 +40,23 @@
  * @category EasyBib
  * @package  Form
  * @author   Michael Scholl <michael@sch0ll.de>
+ * @author   César <cesar.bmcosta@gmail.co>
+ * @author   Seth Miller <cr125rider@gmail.com>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
  * @version  Release: @package_version@
  * @link     https://github.com/easybib/EasyBib_Form_Decorator
  */
-
 class EasyBib_Form extends Zend_Form
 {
+    /**
+     * @var mixed
+     */
     protected $model;
 
     /**
-     * @return the $model
+     * Return the model.
+     *
+     * @return mixed
      */
     public function getModel()
     {
@@ -58,18 +64,26 @@ class EasyBib_Form extends Zend_Form
     }
 
     /**
-     * @param $model
+     * Set the model.
+     *
+     * @param mixed $model
+     *
+     * @return $this
      */
     public function setModel($model)
     {
         $this->model = $model;
+        return $this;
     }
-    
+
     /**
-     * Proxie to Zend_Form::isValid()
-     * calls buildBootstrapErrorDecorators for parent::isValid() returning false
+     * Proxy to {@link Zend_Form::isValid()}.
      *
-     * @param  array $data
+     * Calls {@link self::buildBootstrapErrorDecorators()} for
+     * {@link parent::isValid()} returning false.
+     *
+     * @param array $data
+     *
      * @return boolean
      */
     public function isValid($values)
@@ -83,18 +97,53 @@ class EasyBib_Form extends Zend_Form
 
     /**
      * Build Bootstrap Error Decorators
+     *
+     * @return void
+     * @todo   Why call {@link parent::getSubForms()} twice?
      */
-    public function buildBootstrapErrorDecorators() {
-        foreach ($this->getErrors() AS $key=>$errors) {
-            $htmlTagDecorator = $this->getElement($key)->getDecorator('HtmlTag');
-            if (empty($htmlTagDecorator)) {
-                continue;
-            }
+    public function buildBootstrapErrorDecorators()
+    {
+        $subForms   = $this->getSubForms();
+        $styleClass = 'error';
+
+        $messages = array_merge($this->getErrors(), $this->getMessages());
+        foreach ($messages as $key => $errors) {
             if (empty($errors)) {
                 continue;
             }
+            if (true === array_key_exists($key, $subForms)) {
+                $subForm = $this->getSubForm($key); // why not re-use the $subForms?
+
+                foreach ($errors as $subKey => $subErrors) {
+                    if (empty($subErrors)) {
+                        continue;
+                    }
+                    $this->setClassToAnElement(
+                        $subForm->getElement($subKey),
+                        $styleClass
+                    );
+                }
+                continue;
+            }
+            $this->setClassToAnElement($this->getElement($key), $styleClass);
+        }
+    }
+
+    /**
+     * Set an error class into element HtmlTag decorator
+     *
+     * @param Zend_Form_Element $element    Element to 'decorate' for the error.
+     * @param string            $styleClass CSS class name.
+     *
+     * @return void
+     */
+    protected function setClassToAnElement(Zend_Form_Element $element, $styleClass)
+    {
+        $htmlTagDecorator = $element->getDecorator('HtmlTag');
+
+        if (!empty($htmlTagDecorator)) {
             $class = $htmlTagDecorator->getOption('class');
-            $htmlTagDecorator->setOption('class', $class . ' error');
+            $htmlTagDecorator->setOption('class', $class . ' ' . $styleClass);
         }
     }
 }

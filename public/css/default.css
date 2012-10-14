@@ -2,43 +2,12 @@
     font-style: italic;
 }
 
-input[type=button].search, input[type=submit].search {
-    height: 36px;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-family: Tahoma, Geneva, sans-serif;
-	text-align: center;
-	font-size: 11px;
-	font-weight: normal;
-	color: #FFFFFF;
-    --moz-border-radius: 5px;
-    --moz-border-bottom-left-radius: 0px;
-    --moz-border-top-left-radius: 0px;
-    border-radius: 5px;
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
-    background-color: #3a3e41;
-    box-shadow: 0px 0px 5px #3a3e41;
-    border: 0px;
-    padding: 0px 12px !important;
-    margin-left: -2px;
-
+#logo {
+    margin-top: 40px;
 }
 
 input[type=button]:hover, input[type=submit]:hover {
     cursor: pointer;
-}
-
-input[type=text].search {
-    width: 300px;
-    border: 0px;
-    padding: 7px 7px 9px 7px !important;
-    box-shadow: 0px 0px 5px #3a3e41;
-    --moz-border-radius: 5px;
-    border-radius: 5px;
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-    background-color: #d8d8d8;
 }
 
 table img {
@@ -212,8 +181,9 @@ ul.ui-autocomplete li a img {
 
 ul.ui-autocomplete {
     position: absolute !important;
-    top: 202px !important;
-    width: 305px !important;
+    top: 208px !important;
+    width: 298px !important;
+    margin-left: 56px !important;
 }
 
 .share-link {
@@ -252,10 +222,6 @@ ul.ui-autocomplete {
     opacity: 0.0;
     -moz-opacity: 0.0;
     filter: alpha(opacity=0);
-}
-
-input[type=submit].search {
-    margin-top: -8px;
 }
 
 span.vote {
