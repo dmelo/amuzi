@@ -225,11 +225,6 @@ class MusicSimilarity extends DZend_Model
             'SearchSimilar', $artist, $musicTitle
         );
 
-
-
-
-
-
         return array(
             $artistAndMusicTitleList,
             $similarityMatrixResponse[0]
