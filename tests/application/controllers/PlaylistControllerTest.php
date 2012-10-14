@@ -167,12 +167,12 @@ class PlaylistControllerTest extends AbstractControllerTest
         $ret = array('Track added', 'success', array(
             'id' => '8',
             'title' => 'The Rolling Stones- Paint it Black',
-            'fid' => 'y',
-            'fcode' => 'Q9DDpmy',
-            'url' => '/api/255/y/The+Rolling+Stones-+Paint+it+Black.mp3',
+            'fid' => 'Q9DDpmyPZZA',
+            'fcode' => 'y',
+            'url' => '/api/255/Q9DDpmyPZZA/The+Rolling+Stones-+Paint+it+Black.mp3',
             'cover' => 'null',
             'duration' => '255',
-            'youtubeUrl' => 'http://www.youtube.com/watch?v=y'
+            'youtubeUrl' => 'http://www.youtube.com/watch?v=Q9DDpmyPZZA'
         ));
         $this->assertJsonMessage($ret);
     }
@@ -196,7 +196,7 @@ class PlaylistControllerTest extends AbstractControllerTest
     public function testAddtrackAction3()
     {
         $this->testLogin();
-        $this->request->setPost(array('id' => 9, 'playlist' => 'default'));
+        $this->request->setPost(array('id' => 7, 'playlist' => 'default'));
         $this->request->setMethod('post');
 
         $this->assertAjaxWorks('/playlist/addtrack');
@@ -204,15 +204,14 @@ class PlaylistControllerTest extends AbstractControllerTest
         $this->assertJsonMessage(
             array(
             'Track added', 'success', array(
-            'id' => '9',
-            'title' =>
-                'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
-            'url' =>
-                'Motion City Soundtrack - My Dinosaur Life - 08 - Pulp Fiction',
-            'cover' => 'http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg',
-            'duration' => '0',
-            'artist' => 'U2',
-            'musicTitle' => 'All Because Of You'
+            'id' => '7',
+            'title' => 'Angie - The Rolling Stones',
+            'fid' => 'JMkFjYRWM4M',
+            'fcode' => 'y',
+            'url' => '/api/277/JMkFjYRWM4M/Angie+-+The+Rolling+Stones.mp3',
+            'cover' => 'null',
+            'duration' => '277',
+            'youtubeUrl' => 'http://www.youtube.com/watch?v=JMkFjYRWM4M'
         )
         )
         );
