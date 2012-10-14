@@ -19,12 +19,10 @@ class PlaylistControllerTest extends AbstractControllerTest
      * @var array
      */
     private $_postAddtrack = array(
-        'title' => 'Test Music',
-        'url' => 'http://example.com/a.mp3',
-        'cover' => 'http://example.com/a.jpg',
-        'playlist' => 'default',
-        'artist' => 'U2',
-        'musicTitle' => 'All Because Of You'
+        'id' => 8,
+        'playlist' => 'Diogo Melo',
+        'artist' => 'The Rolling Stones',
+        'musicTitle' => 'Paint it Black'
     );
 
     /**
@@ -167,13 +165,14 @@ class PlaylistControllerTest extends AbstractControllerTest
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $ret = array('Track added', 'success', array(
-            'id' => '12',
-            'title' => 'Test Music',
-            'url' => 'http://example.com/a.mp3',
-            'cover' => 'http://example.com/a.jpg',
-            'duration' => '0',
-            'artist' => 'U2',
-            'musicTitle' => 'All Because Of You'
+            'id' => '8',
+            'title' => 'The Rolling Stones- Paint it Black',
+            'fid' => 'y',
+            'fcode' => 'Q9DDpmy',
+            'url' => '/api/255/y/The+Rolling+Stones-+Paint+it+Black.mp3',
+            'cover' => 'null',
+            'duration' => '255',
+            'youtubeUrl' => 'http://www.youtube.com/watch?v=y'
         ));
         $this->assertJsonMessage($ret);
     }
