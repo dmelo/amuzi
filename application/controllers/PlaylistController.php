@@ -66,17 +66,23 @@ class PlaylistController extends DZend_Controller_Action
     {
         if ($this->_request->isPost()) {
             $playlist = $this->_request->getPost('playlist');
-            for($i = 0; $i < count($playlist); $i++)
-                $playlist[$i]['url'] = $playlist[$i]['mp3'];
+            $trackSet = array();
+
+            for($i = 0; $i < count($playlist); $i++) {
+                $trackSet[$i]['id'] = $playlist[$i]['id'];
+            }
+
             $this->_session->playlist = array(
-                $playlist,
+                $trackSet,
                 $this->_request->getPost('name')
             );
-            if (isset($this->_session->user))
+
+            if (isset($this->_session->user)) {
                 $this->_playlistModel->import(
                     $this->_session->playlist[0],
                     $this->_session->playlist[1]
                 );
+            }
         }
     }
 

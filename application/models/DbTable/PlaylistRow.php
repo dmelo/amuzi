@@ -36,13 +36,10 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row
     }
     public function setTrack($trackInfo, $sort)
     {
-        // Make sure trackInfo is on the database and retrieve it's row.
-        $trackRow = $this->_trackDb->insert($trackInfo);
-
         // Set the right order and bound between the track and the playlist.
         $data = array(
             'playlist_id' => $this->id,
-            'track_id' => $trackRow->id,
+            'track_id' => $trackInfo['id'],
             'sort' => $sort);
 
         $this->_playlistHasTrackDb->insert($data);

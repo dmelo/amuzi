@@ -21,9 +21,9 @@ class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('user', 'SELECT * FROM user');
         $this->assertDataSetsEqual(
-            $this->createXMLDataSet(
-                dirname(__FILE__) . '/userInsertAssertion.xml'
-            ), $ds
+            $this->filterTable('user', $this->createXMLDataSet(
+                dirname(__FILE__) . '/userInsertAssertion.xml')
+            ), $this->filterTable('user', $ds)
         );
     }
 
