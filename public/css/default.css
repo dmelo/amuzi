@@ -182,8 +182,7 @@ ul.ui-autocomplete li a img {
 ul.ui-autocomplete {
     position: absolute !important;
     top: 208px !important;
-    width: 298px !important;
-    margin-left: 56px !important;
+    width: 300px !important;
 }
 
 .share-link {

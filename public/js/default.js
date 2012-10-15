@@ -428,6 +428,10 @@
                 $('#q').val(ui.item.value);
             },
             close: function(e, ui) {
+            },
+            open: function() {
+                var left = $('.ui-autocomplete').position().left;
+                $('.ui-autocomplete').css('left', (left + 15) + 'px');
             }
         });
 
