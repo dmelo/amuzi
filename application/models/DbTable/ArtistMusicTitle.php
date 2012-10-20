@@ -39,4 +39,21 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         $this->_logger->debug("-----> select: " . $select);
         return $db->fetchAll($select);
     }
+
+    public function autocomplete($q, $limit = 10)
+    {
+        $db = $this->getAdapter();
+        $select = $db->select();
+        $select->from(array('a' => 'artist'), array('name' => 'concat(a.name, " - ", mt.name)', 'cover' => 't.cover', 'artist' => 'name', 'musicTitle' => 'mt.name'))
+            ->join(array('amt' => 'artist_music_title'), 'amt.artist_id = a.id', array())
+            ->join(array('mt' => 'music_title'), 'mt.id = amt.music_title_id', array())
+            ->join(array('mtl' => 'music_track_link'), 'mtl.artist_music_title_id = amt.id', array())
+            ->join(array('t' => 'track'), 't.id = mtl.track_id', array())
+            ->where('concat(a.name, " - ", mt.name) like ?', '%' . $q . '%')
+            ->group('amt.id')
+            ->limit($limit);
+
+        $this->_logger->debug("-----> select: " . $select);
+        return $db->fetchAll($select);
+    }
 }

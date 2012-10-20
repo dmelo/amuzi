@@ -50,4 +50,9 @@ class ArtistMusicTitle extends DZend_Model
     {
         return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle($idsList);
     }
+
+    public function autocomplete($q)
+    {
+        return $this->_artistMusicTitleDb->autocomplete($q);
+    }
 }

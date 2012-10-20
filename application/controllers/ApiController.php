@@ -180,9 +180,12 @@ class ApiController extends DZend_Controller_Action
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
-            $resultSet = $this->_lastfmModel->search($q);
-            foreach ($resultSet as $result)
-                $list[] = $result->getArray();
+            $list = $this->_artistMusicTitleModel->autocomplete($q);
+            if (count($list) < 5) {
+                $resultSet = $this->_lastfmModel->search($q);
+                foreach ($resultSet as $result)
+                    $list[] = $result->getArray();
+            }
             $this->view->output = $list;
         }
         else
