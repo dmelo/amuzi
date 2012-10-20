@@ -370,6 +370,12 @@
         verifyView();
     }
 
+    function addToPlaylist(trackId) {
+        artist = $('#artist').val();
+        musicTitle = $('#musicTitle').val();
+        addTrack(trackId, artist, musicTitle);
+    }
+
     $(document).ready(function() {
         verifyView();
 
@@ -378,10 +384,17 @@
         // add track into the playlist.
         $('.addplaylist').live('click', function(e) {
             e.preventDefault();
-            trackId = $(this).parent().parent().attr('trackId');
-            artist = $('#artist').val();
-            musicTitle = $('#musicTitle').val();
-            addTrack(trackId, artist, musicTitle);
+            addToPlaylist($(this).parent().parent().attr('trackId'));
+        });
+
+        $('.music-large').live('click', function(e) {
+            e.preventDefault();
+            console.log('kkkkk');
+            addToPlaylist($(this).attr('trackId'));
+        });
+
+        $('.youtube-link, .download').live('click', function(e) {
+            e.stopPropagation();
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
