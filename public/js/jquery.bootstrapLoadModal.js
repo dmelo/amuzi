@@ -40,13 +40,28 @@
             $('body').append('<div id="load-modal-wrapper" class="modal hide fade"><div class="modal-header"><a href="#" class="close" data-dismiss="modal">&times;</a><h3></h3></div><div class="modal-body"></div></div>');
     };
 
-    $.bootstrapLoadModalLoading = function() {
+    $.bootstrapLoadModalDisplay = function(title, content, addClass) {
         var modalWrapper = '#load-modal-wrapper';
         $.bootstrapLoadModalInit();
-        $(modalWrapper + ' .modal-body').html('<img src="/img/loading.gif"/>');
-        $(modalWrapper + ' h3').html('Loading...');
+        $(modalWrapper + ' .modal-body').html(content);
+        $(modalWrapper + ' h3').html(title);
         $(modalWrapper).modal('show');
+        if ('undefined' !== typeof addClass) {
+            $(modalWrapper).addClass(addClass);
+        }
+
+        $(modalWrapper).bind('hidden', function(e) {
+            $(modalWrapper + ' .modal-body').html(' ');
+        });
     };
+
+
+
+
+    $.bootstrapLoadModalLoading = function() {
+        $.bootstrapLoadModalDisplay('Loading...', '<img src="/img/loading.gif"/>');
+    };
+
     $.fn.extend({
         bootstrapLoadModalLock: 0,
 

@@ -118,6 +118,11 @@ dd#submit-element {
     overflow: auto;
 }
 
+.big-modal {
+    width: 592px;
+    margin-left: -296px;
+}
+
 #playlistsettings-result {
     width: 100%;
 }

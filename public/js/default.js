@@ -397,6 +397,15 @@
             e.stopPropagation();
         });
 
+        $('.youtube-link').live('click', function(e) {
+            e.preventDefault();
+            $.bootstrapLoadModalDisplay(
+                'Youtube',
+                '<iframe width="560" height="315" src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe>',
+                'big-modal'
+            );
+        });
+
         $('.jp-playlist-item-remove').live('click', function(e) {
             trackId = $(this).parent().parent().find('.jp-playlist-item-free').attr('trackId');
             rmTrack(trackId, myPlaylist.name);

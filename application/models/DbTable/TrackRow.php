@@ -48,7 +48,7 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
             return Zend_Registry::get('domain') . '/api/' . $this->duration
                 . '/' . $this->fid . '/' . urlencode($this->title) . '.mp3';
         } elseif ('youtubeUrl' === $name)
-            return 'http://www.youtube.com/watch?v=' . $this->fid;
+            return 'http://www.youtube.com/embed/' . $this->fid;
         else
             return parent::__get($name);
     }
