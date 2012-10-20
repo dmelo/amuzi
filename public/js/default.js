@@ -395,6 +395,7 @@
 
         $('.youtube-link, .download').live('click', function(e) {
             e.stopPropagation();
+            myPlaylist.pause();
         });
 
         $('.youtube-link').live('click', function(e) {
