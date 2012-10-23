@@ -38,6 +38,13 @@ dd {
     top: 40px;
 }
 
+/*
+#jquery_jplayer_1 {
+    height: 0px !important;
+    opacity: 0.0;
+}
+    */
+
 .ac_results li.ac_even {
     background-color: #d5d5d5;
 }

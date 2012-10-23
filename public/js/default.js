@@ -37,7 +37,7 @@
                 loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
-                var pOpt = {title: v.title, mp3: v.url, free: true, id: v.fid, trackId: v.trackId}; // TODO: verify this.
+                var pOpt = {title: v.title, flv: v.url, free: true, id: v.fid, trackId: v.trackId}; // TODO: verify this.
                 myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
@@ -86,7 +86,7 @@
             if(data != null) {
                 $('.jp-title').css('display', 'block');
                 $.each(data[0], function(i, v) {
-                    myPlaylist.add({title: v.title, mp3: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id});
+                    myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id});
                 });
                 myPlaylist.name = data[1];
                 setRepeatAndCurrent(parseInt(data[2]), parseInt(data[4]));
@@ -473,7 +473,7 @@
         myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: jplayerCss
-        }, [], {supplied: 'mp3', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
+        }, [], {supplied: 'flv', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
 
         $(jplayerCss + ' ul:last').sortable({
             update: function() {
@@ -541,5 +541,8 @@
         preparePlaylistEditName();
         preparePlaylistActions();
         prepareMusicTrackVote();
+        $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
+            $(this).jPlayer("play");
+        });
     });
 //})(jQuery);

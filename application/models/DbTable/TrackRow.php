@@ -46,7 +46,7 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
         if ('url' === $name) {
             // For now it's prepared for youtube only.
             return Zend_Registry::get('domain') . '/api/' . $this->duration
-                . '/' . $this->fid . '/' . urlencode($this->title) . '.mp3';
+                . '/' . $this->fid . '/' . urlencode($this->title) . '.flv';
         } elseif ('youtubeUrl' === $name)
             return 'http://www.youtube.com/embed/' . $this->fid . '?autoplay=1&rel=0';
         else
