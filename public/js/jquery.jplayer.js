@@ -1152,7 +1152,6 @@ var kkl = null;
 						this._updateInterface();
 						this._trigger(eventType);
 
-                        console.log(status.currentPercentAbsolute);
                         if (status.currentPercentAbsolute >= 100.0) {
                             myPlaylist.next();
                         }
@@ -1168,7 +1167,6 @@ var kkl = null;
 						this._trigger(eventType);
 						break;
 					case $.jPlayer.event.ended:
-                        console.log('ended');
 						this._updateButtons(false);
 						this._trigger(eventType);
 						break;
@@ -1209,13 +1207,11 @@ var kkl = null;
 						this._trigger(eventType);
 						break;
 					case $.jPlayer.event.ready:
-                        console.log('ready');
 						this._trigger(eventType);
 						// The ready event is handled outside the switch statement.
 						// Captured here otherwise 2 ready events would be generated if the ready event handler used setMedia.
 						break;
 					default:
-                        console.log(eventType);
 						this._trigger(eventType);
 				}
 			}
@@ -1435,9 +1431,7 @@ var kkl = null;
 				if(this.html.active) {
 					this._html_play(time);
 				} else if(this.flash.active) {
-                    console.log('play: 1');
 					this._flash_play(time);
-                    console.log('play: 2');
 				}
 			} else {
 				this._urlNotSetError("play");
@@ -2206,17 +2200,11 @@ var kkl = null;
 			this.status.waitForLoad = false;
 		},
 		_flash_play: function(time) {
-            console.log('---- 1');
 			try {
-            console.log('---- 2');
 				this._getMovie().fl_play(time);
-            console.log('---- 3');
 			} catch(err) { this._flashError(err); }
-            console.log('---- 4');
 			this.status.waitForLoad = false;
-            console.log('---- 5');
 			this._flash_checkWaitForPlay();
-            console.log('---- 6');
 		},
 		_flash_pause: function(time) {
 			try {
