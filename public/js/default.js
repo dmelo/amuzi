@@ -381,11 +381,6 @@
 
         // topbar menu
         $('.topbar').dropdown();
-        // add track into the playlist.
-        $('.addplaylist').live('click', function(e) {
-            e.preventDefault();
-            addToPlaylist($(this).parent().parent().attr('trackId'));
-        });
 
         $('.music-large').live('click', function(e) {
             e.preventDefault();
