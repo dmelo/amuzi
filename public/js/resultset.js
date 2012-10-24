@@ -153,6 +153,9 @@ $(document).ready(function() {
                 resultSet.appendTable(v, 'track');
             });
         },
+        error: function (data) {
+            $.bootstrapMessageAuto('Error searching for music', 'error');
+        },
         beforeSubmit: function() {
             resultSet.cleanTable();
             resultSet.searchString = $('#q').val();

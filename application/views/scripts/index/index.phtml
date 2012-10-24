@@ -1,13 +1,32 @@
-<?= $this->form; ?>
 
-<?= $this->jPlayer(); ?>
 
-<div id="result">
+<div class="slidegroup">
+
+    <div class="slide" id="slide-search">
+        <div class="container">
+            <?= $this->form; ?>
+            <div id="result">
+            </div>
+            <button id="more-results" class="btn"><?= $this->t('More'); ?></button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide-music-manager">
+    <?= $this->jPlayer(); ?>
+    </div>
+
 </div>
-<button id="more-results" class="btn"><?= $this->t('More'); ?></button>
+
+
+
+
 
 <? if(isset($this->userId)): ?>
 <div class="invisible" id="userId">
     <?= $this->userId; ?>
 </div>
+
+
+
+
 <? endif; ?>

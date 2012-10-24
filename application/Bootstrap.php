@@ -63,6 +63,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'bootstrap-modal.js';
         $js[] = $domainJs . 'jquery.bootstrapLoadModal.js';
         $js[] = $domainJs . 'jquery.url.js';
+        $js[] = $domainJs . 'bootstrap-slide.js';
         $js[] = $domainJs . 'default.js';
         $js[] = $domainJs . 'incboard-cell.js';
         $js[] = $domainJs . 'incboard-board.js';
@@ -81,6 +82,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $css[] = $domainCss . 'default.css';
         $css[] = $domainCss . 'incboard.css';
         $css[] = $domainCss . 'jquery.subtitle.css';
+        $css[] = $domainCss . 'bootstrap-slide.css';
 
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');

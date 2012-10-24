@@ -539,5 +539,7 @@
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
             $(this).jPlayer("play");
         });
+
+        $.slideInit();
     });
 //})(jQuery);
