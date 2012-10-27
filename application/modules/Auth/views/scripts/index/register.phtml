@@ -1,5 +1,7 @@
-<?
-if(isset($this->message) && null !== $this->message)
-    echo $this->statusMessage($this->message);
-?>
-<?= $this->form; ?>
+<div class="container regular">
+    <?
+    if(isset($this->message) && null !== $this->message)
+        echo $this->statusMessage($this->message);
+    ?>
+    <?= $this->form; ?>
+</div>

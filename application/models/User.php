@@ -147,8 +147,8 @@ class User extends DZend_Model
             "Hi %s,<br/><br/>Someone, hopefully you, requested a new "
             . "password on AMUZI. To make a new password, please click "
             . "the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>"
-            . "Best regards,<br/>",
-            "AMUZI Team",
+            . "Best regards,<br/>"
+            . "AMUZI Team",
             $userRow->name,
             $userRow->getForgotPasswordUrl(),
             $userRow->getForgotPasswordUrl()

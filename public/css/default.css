@@ -14,7 +14,7 @@ body {
 }
 
 .container.regular {
-    margin-top: 70px;
+    margin-top: 100px;
 }
 
 input[type=button]:hover, input[type=submit]:hover {
