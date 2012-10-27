@@ -1,6 +1,9 @@
+<div class="container regular">
+
 <?
 if(isset($this->message))
     echo $this->statusMessage($this->message);
 ?>
 <?= $this->form; ?>
-<?= $this->render('index/login-complement.phtml');
+<?= $this->render('index/login-complement.phtml'); ?>
+</div>

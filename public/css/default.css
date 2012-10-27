@@ -13,6 +13,10 @@ body {
     margin-left: 23px;
 }
 
+.container.regular {
+    margin-top: 70px;
+}
+
 input[type=button]:hover, input[type=submit]:hover {
     cursor: pointer;
 }
