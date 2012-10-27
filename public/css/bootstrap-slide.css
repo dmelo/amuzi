@@ -1,8 +1,32 @@
 .slide {
     position: absolute;
-    top: 48px;
+    top: 48px !important;
+
 }
 
 .slidegroup {
     position: absolute;
+}
+
+.slide-next {
+    left: 100%;
+    margin-left: -100px;
+    width: 100px;
+}
+
+.screen {
+    display: inline;
+}
+
+.screen img {
+    height: 30px;
+    margin-top: 5px;
+}
+
+.screen:hover {
+    cursor: pointer;
+}
+
+.screens {
+    margin-left:50px;
 }
