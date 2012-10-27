@@ -160,7 +160,7 @@
         if($('#jp_container_1').length > 0) {
             if(!jPlaylistTop)
                 jPlaylistTop = $('.jp-playlist').first().offset().top;
-            var maxHeight = $(window).height() - jPlaylistTop - 29;
+            var maxHeight = $(window).height() - jPlaylistTop - 45;
             $('.jp-playlist').css('max-height', maxHeight);
         }
     }
