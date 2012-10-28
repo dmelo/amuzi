@@ -222,6 +222,16 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    public function tracksettingsAction()
+    {
+        $trackId = $this->_request->getParam('track_id');
+        $artistMusicTitleId = $this->_request->getParam('artist_music_title_id');
+        $trackRow = $this->_trackModel->findRowById($trackId);
+
+        $this->view->trackId = $trackId;
+        $this->view->artistMusicTitleId = $artistMusicTitleId;
+    }
+
     /**
      * postDispatch Make it easier to output Json.
      *

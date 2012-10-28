@@ -486,7 +486,8 @@
             applyOverPlaylist();
         });
 
-        $('.loadModal').bootstrapLoadModal();
+        //$('.loadModal').bootstrapLoadModal();
+        $.bootstrapLoadModalInit();
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('initAmuzi();', 1500);

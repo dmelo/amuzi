@@ -257,12 +257,12 @@ ul.ui-autocomplete {
     filter: alpha(opacity=0);
 }
 
-span.vote {
-    margin-right: 3px;
-}
-
 .jp-free-media {
     opacity: 0.0;
     -moz-opacity: 0.0;
     filter: alpha(opacity=0);
+}
+
+.vote img {
+    height: 100px;
 }

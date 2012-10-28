@@ -199,6 +199,8 @@ class PlaylistController extends DZend_Controller_Action
             else
                 $this->view->playlist = null;
         }
+
+        $this->_logger->debug(print_r($this->view->playlist, true));
     }
 
     public function setrepeatAction()

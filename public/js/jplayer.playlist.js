@@ -226,7 +226,9 @@
 
             // Create share link
             if(media.id) {
-                listItem += "<span class=\"jp-free-media share\"><a href=\"" + $("#domain").html() + "/#!t" + media.id + "\">(share)</a></span>";
+                listItem += "<span class=\"jp-free-media menu\"><a title=\"Track Settings\" class=\"loadModal\" href=\"/api/tracksettings/track_id/" + media.id + "/artist_music_title_id/" + media.artist_music_title_id + "\"><img src=\"/img/settings.png\"/></a></span>";
+                // TODO: put this on the list
+                // listItem += "<span class=\"jp-free-media share\"><a href=\"" + $("#domain").html() + "/#!t" + media.id + "\">(share)</a></span>";
             }
 
 

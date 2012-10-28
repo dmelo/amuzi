@@ -43,14 +43,19 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
 
     public function __get($name)
     {
+        $extensionList = array('mp3', 'flv');
+        if (in_array($name, $extensionList) || 'url' === $name) {
+            $url = Zend_Registry::get('domain') . '/api/' . $this->duration
+                . '/' . $this->fid . '/' . urlencode($this->title);
+        }
+
         if ('url' === $name) {
-            // For now it's prepared for youtube only.
-            return Zend_Registry::get('domain') . '/api/' . $this->duration
-                . '/' . $this->fid . '/' . urlencode($this->title) . '.flv';
+            return $url . '.flv';
+        } elseif (in_array($name, $extensionList)) {
+            return $url . '.' . $name;
         } elseif ('youtubeUrl' === $name)
             return 'http://www.youtube.com/embed/' . $this->fid . '?autoplay=1&rel=0';
         else
             return parent::__get($name);
     }
-
 }

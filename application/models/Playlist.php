@@ -99,12 +99,15 @@ class Playlist extends DZend_Model
                 $this->_userListenPlaylistModel->addUserPlaylist($playlistRow);
         }
 
+        $this->_logger->debug($playlistRow->id);
+
         $ret = null;
         if (null !== $playlistRow) {
             $ret = array();
             $user->currentPlaylistId = $playlistRow->id;
             $user->save();
             $trackList = $playlistRow->getTrackListAsArray();
+            $this->_logger->debug(count($trackList));
             $ret = array(
                 $trackList,
                 $playlistRow->name,
@@ -113,6 +116,8 @@ class Playlist extends DZend_Model
                 $playlistRow->currentTrack
             );
         }
+
+        $this->_logger->debug(print_r($ret, true));
 
         return $ret;
     }
