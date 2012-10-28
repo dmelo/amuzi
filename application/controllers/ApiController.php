@@ -228,8 +228,12 @@ class ApiController extends DZend_Controller_Action
         $artistMusicTitleId = $this->_request->getParam('artist_music_title_id');
         $trackRow = $this->_trackModel->findRowById($trackId);
 
+        $this->view->trackTitle = $trackRow->title;
         $this->view->trackId = $trackId;
         $this->view->artistMusicTitleId = $artistMusicTitleId;
+        $this->view->mp3 = $trackRow->mp3;
+        $this->view->flv = $trackRow->flv;
+        $this->view->youtubeUrl = $trackRow->youtubeUrl;
     }
 
     /**

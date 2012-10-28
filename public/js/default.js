@@ -342,13 +342,18 @@
     }
 
     function prepareMusicTrackVote() {
-        $('.bond a').live('click', function(e) {
+        var modalWrapper = '#load-modal-wrapper';
+        $('.vote').live('click', function(e) {
             e.preventDefault();
-            $.bootstrapMessageLoading();
             $.get($(this).attr('href'), function(data) {
-                $.bootstrapMessageAuto(data[0], data[1])
-            }, 'json');
+                $.bootstrapMessageAuto(data[0], data[1]);
+                $(modalWrapper).modal('hide');
+            }, 'json').error(function(e) {
+                $.bootstrapMessageAuto('Error registering vote', 'error');
+                $(modalWrapper).modal('hide');
+            });
         });
+
     }
 
     function verifyView() {
@@ -374,6 +379,9 @@
         artist = $('#artist').val();
         musicTitle = $('#musicTitle').val();
         addTrack(trackId, artist, musicTitle);
+    }
+
+    function prepareVoteButton() {
     }
 
     $(document).ready(function() {
@@ -537,6 +545,7 @@
         preparePlaylistEditName();
         preparePlaylistActions();
         prepareMusicTrackVote();
+
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
             $(this).jPlayer("play");
         });

@@ -224,38 +224,10 @@
 			// Create remove control
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
 
-            // Create share link
+            // Create settings link
             if(media.id) {
                 listItem += "<span class=\"jp-free-media menu\"><a title=\"Track Settings\" class=\"loadModal\" href=\"/api/tracksettings/track_id/" + media.id + "/artist_music_title_id/" + media.artist_music_title_id + "\"><img src=\"/img/settings.png\"/></a></span>";
-                // TODO: put this on the list
-                // listItem += "<span class=\"jp-free-media share\"><a href=\"" + $("#domain").html() + "/#!t" + media.id + "\">(share)</a></span>";
             }
-
-
-			// Create links to free media
-			if(media.free) {
-				var first = true;
-				listItem += "<span class='" + this.options.playlistOptions.freeGroupClass + "'>";
-				$.each(media, function(property,value) {
-					if($.jPlayer.prototype.format[property]) { // Check property is a media format.
-						if(first) {
-							first = false;
-						} else {
-							listItem += " | ";
-						}
-						listItem += "<a trackId=\"" + media.id + "\" class='" + self.options.playlistOptions.freeItemClass + "' href='" + value + "' tabindex='1'>(" + property + ")</a>";
-					}
-				});
-				listItem += "</span>";
-			}
-
-            if(media.id && media.artist_music_title_id) {
-                var itemMask = "<span class=\"jp-free-media bond vote_DIRECTION\"><a href=\"" + $("#domain").html() + "/playlist/vote/track_id/" + media.id + "/artist_music_title_id/" + media.artist_music_title_id + "/bond/vote_DIRECTION\"><img src=\"/img/emotion_DIRECTION_16.png\"/></a></span>";
-                listItem += itemMask.replace(/DIRECTION/g, "down");
-                listItem += itemMask.replace(/DIRECTION/g, "up");
-            }
-
-
 
 			// The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='1'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";

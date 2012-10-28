@@ -264,5 +264,11 @@ ul.ui-autocomplete {
 }
 
 .vote img {
-    height: 100px;
+    height: 60px;
+    padding-right: 10px;
+}
+
+.download-large img {
+    height: 60px;
+    padding-right: 10px;
 }

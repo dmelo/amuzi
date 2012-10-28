@@ -1,6 +1,15 @@
-<table>
-<tr><td><?= $this->t('Quality'); ?></td><td><?= $this->vote($this->trackId, $this->artistMusicTitleId, 'up') . $this->vote($this->trackId, $this->artistMusicTitleId, 'down'); ?></td></tr>
+<h4><?= $this->trackTitle; ?></h4>
 
-<tr><td>Download</td><td></td></tr>
+<table class="table table-striped">
+<tbody>
+<tr><td><?= $this->t('Assess Quality'); ?></td><td><?= $this->vote($this->trackId, $this->artistMusicTitleId, 'up') . $this->vote($this->trackId, $this->artistMusicTitleId, 'down'); ?></td></tr>
+
+<tr><td><?= $this->t('Download'); ?></td><td>
+    <a target="_blank" class="download-large" href="<?= $this->mp3; ?>"><img src="/img/music_icon.png"/></a>
+    <a target="_blank" class="download-large" href="<?= $this->flv; ?>"><img src="/img/video_icon.png"/></a>
+</td></tr>
+
+<tr><td><?= $this->t('Watch it'); ?></td><td><a target="_blank" class="download-large" href="<?= $this->youtubeUrl; ?>"><img src="/img/youtube_icon.png"/></a></td></tr>
+</tbody>
 
 </table>
