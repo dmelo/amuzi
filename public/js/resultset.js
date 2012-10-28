@@ -133,7 +133,13 @@ ResultSet.prototype.getSimilarTracks = function(artist, musicTitle) {
     }, 'json');
 }
 
-
+function removePlaylistSquareCallback(playlistId) {
+    $('.playlist-square').forEach(function(e) {
+        if ($(this).attr('playlistid') == playlistId) {
+            $(this).remove();
+        }
+    });
+}
 
 $(document).ready(function() {
     $('.music-large').live({mouseenter: function() {
@@ -172,5 +178,17 @@ $(document).ready(function() {
     $('.playlist-square .play').live('click', function(e) {
         e.preventDefault();
         loadPlaylist($(this).parent().attr('playlistid'));
+    });
+
+    $('.playlist-square .remove').live('click', function(e) {
+        e.preventDefault();
+        if (confirm('Are you sure')) {
+            var name = $(this).parent().find('.name').html();
+            var playlistId = $(this).parent().attr('playlistid');
+            rmPlaylist(name, removePlaylistSquareCallback);
+            if (name == myPlaylist.name) {
+                loadPlaylist('');
+            }
+        }
     });
 });

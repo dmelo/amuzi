@@ -87,7 +87,6 @@
 }
 
 .item-square .button.play img {
-    position: absolute;
     width: 30px;
     opacity: 0.65;
 }
@@ -101,6 +100,26 @@
 .item-square .button.play img:hover {
     opacity: 1.0;
 }
+
+.item-square .button.remove img {
+    width: 15px;
+    opacity: 0.65;
+}
+
+.item-square .button.remove {
+    top: -10px;
+    left: 100%;
+    margin-left: -10px;
+    width: 15px;
+    position: absolute;
+}
+
+.item-square .button.remove img:hover {
+    opacity: 1.0;
+}
+
+
+
 
 .music-manager-group {
     width: 100%;

@@ -29,6 +29,7 @@ class View_Helper_PlaylistSquare extends Zend_View_Helper_Abstract
             . '<div class="cover"><img src="' . $playlistRow->getCover() . '"/></div>'
             . '<div class="name">' . $playlistRow->name . '</div>'
             . '<a href="#" class="play button"><img src="/img/play_icon_square.png"/></a>'
+            . '<a href="#" class="remove button"><img src="/img/remove_icon_square.png"/></a>'
             . '</div>';
     }
 }
