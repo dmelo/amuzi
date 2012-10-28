@@ -12,7 +12,19 @@
     </div>
 
     <div class="slide" id="slide-music-manager">
-    <?= $this->jPlayer(); ?>
+        <div class="music-manager-group">
+            <div class="music-manager" id="transfer"></div>
+            <div class="music-manager" id="playlists">
+                <h5><?= $this->t("Your playlists"); ?></h5>
+<?php
+                foreach ($this->playlistRowSet as $playlistRow) {
+                    echo $this->playlistSquare($playlistRow);
+                }
+?>
+            </div>
+            <div class="music-manager" id="edit-playlist"></div>
+        </div>
+        <?= $this->jPlayer(); ?>
     </div>
 
 </div>

@@ -1,4 +1,4 @@
-.music-large {
+.music-large, .playlist-square {
     float: left;
     width: 250px;
     min-height: 60px;
@@ -11,11 +11,15 @@
     box-shadow: 0px 0px 5px #3a3e41;
 }
 
-.music-large.object-track {
+.object-track {
     background-color: #ccc;
 }
-.music-large.object-music {
+.object-music {
     background-color: #beb;
+}
+
+.object-playlist {
+    background-color: #ffcd54;
 }
 
 .music-large a {
@@ -28,7 +32,7 @@
     border: 0px;
 }
 
-.music-large:hover {
+.music-large:hover, .playlist-square:hover {
     background-color: #f40c42;
     cursor: pointer;
     color: white;
@@ -78,3 +82,42 @@
     width: 812px;
     opacity: 0.0;
 }
+
+.item-square {
+}
+
+.item-square .button.play img {
+    position: absolute;
+    width: 30px;
+    opacity: 0.65;
+}
+
+.item-square .button.play {
+    top: 22.5px;
+    margin-left: -15px;
+    left: 50%;
+    position: absolute;
+}
+.item-square .button.play img:hover {
+    opacity: 1.0;
+}
+
+.music-manager-group {
+    width: 100%;
+}
+
+.music-manager {
+    margin-right: 480px;
+}
+
+.playlist-square {
+    width: 100px;
+}
+
+.playlist-square .cover img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+
+

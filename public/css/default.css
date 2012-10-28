@@ -44,11 +44,11 @@ dd {
 }
 
 #jp_container_1 {
-    position: relative;
+    position: absolute;
     right: 1px;
     left: 100%;
     margin-left: -482px;
-    top: -27px;
+    top: -58px;
 }
 
 /*
@@ -74,7 +74,7 @@ dd {
 
 form.search {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .wrapper {

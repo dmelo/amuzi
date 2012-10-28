@@ -168,4 +168,9 @@ $(document).ready(function() {
     $('#more-results').click(function(e) {
         resultSet.searchMore();
     });
+
+    $('.playlist-square .play').live('click', function(e) {
+        e.preventDefault();
+        loadPlaylist($(this).parent().attr('playlistid'));
+    });
 });

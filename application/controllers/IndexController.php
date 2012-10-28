@@ -43,8 +43,7 @@ class IndexController extends DZend_Controller_Action
 
     public function indexAction()
     {
-        if(!isset($this->_session->user))
-            $this->_forward('login', 'index', 'Auth');
+        $this->view->playlistRowSet = $this->_playlistModel->fetchAllUsers();
     }
 
     public function incboardAction()

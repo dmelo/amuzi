@@ -128,19 +128,6 @@
         name = name || 'default';
     }
 
-    /**
-     * When the playlist have more than 8 items it retracts on mouseleave and
-     * restore on mouseover.
-     */
-    function retractablePlaylist() {
-        $(jplayerCss).mouseover(function(e) {
-            $('.jp-playlist').fadeIn();
-        }).mouseleave(function(e) {
-            if($('.jp-playlist li').length > 8)
-                $('.jp-playlist').fadeOut();
-        });
-    }
-
     function callbackPlay(current) {
         $.post('/playlist/setcurrent', {
             name: myPlaylist.name,
@@ -485,7 +472,6 @@
             }
         });
 
-        retractablePlaylist();
         applyOverPlaylist();
         applyRepeatTriggers();
         applyShuffleTriggers();

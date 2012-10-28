@@ -80,16 +80,20 @@ class Playlist extends DZend_Model
      */
     public function export($name)
     {
+        $this->_logger->debug("export: " . $name);
+        $this->_logger->debug("export: " . gettype($name));
         $user = $this->_session->user;
+        $this->_logger->debug("export: " . $user->currentPlaylistId);
         if (gettype($name) === 'string') {
-            if ('' === $name)
+            if ('' === $name) {
                 $playlistRow = $this->_playlistDb->findRowById(
                     $user->currentPlaylistId
                 );
-            else
+            } else {
                 $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
                     $user->id, $name
                 );
+            }
         } elseif (gettype($name) === 'integer') {
             $playlistRow = $this->_playlistDb->findRowById($name);
             if ($playlistRow->userId !== $user->id
@@ -99,6 +103,7 @@ class Playlist extends DZend_Model
                 $this->_userListenPlaylistModel->addUserPlaylist($playlistRow);
         }
 
+        $this->_logger->debug(print_r($playlistRow, true));
         $this->_logger->debug($playlistRow->id);
 
         $ret = null;
