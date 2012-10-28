@@ -133,9 +133,9 @@ ResultSet.prototype.getSimilarTracks = function(artist, musicTitle) {
     }, 'json');
 }
 
-function removePlaylistSquareCallback(playlistId) {
-    $('.playlist-square').forEach(function(e) {
-        if ($(this).attr('playlistid') == playlistId) {
+function removePlaylistSquareCallback(name) {
+    $('.playlist-square').each(function(e) {
+        if ($(this).find('.name').html() === name) {
             $(this).remove();
         }
     });
@@ -165,7 +165,6 @@ $(document).ready(function() {
         beforeSubmit: function() {
             resultSet.cleanTable();
             resultSet.searchString = $('#q').val();
-            console.log($('#q').val());
             resultSet.searchPage = 1;
             $.bootstrapMessage('Loading...', 'info');
         }

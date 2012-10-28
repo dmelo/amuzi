@@ -274,13 +274,17 @@ class Playlist extends DZend_Model
             );
 
             if (null !== $playlistRow) {
-                // If it going to delete the current playlist, then it must
+                // If its going to delete the current playlist, then it must
                 // first be removed from user->current_playlist_id
                 if ($this->_session->user->currentPlaylistId ===
                         $playlistRow->id) {
                     $this->_session->user->currentPlaylistId = null;
                     $this->_session->user->save();
                 }
+
+                // If there is users who listen to this playlist, those records 
+                // must be deleted first.
+                $this->_userListenPlaylistModel->deleteByPlaylistId($playlistRow->id);
 
                 $this->_playlistHasTrackDb->deleteByPlaylistId(
                     $playlistRow->id

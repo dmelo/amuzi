@@ -70,4 +70,9 @@ class UserListenPlaylist extends DZend_Model
 
         return false;
     }
+
+    public function deleteByPlaylistId($playlistId)
+    {
+        $this->_userListenPlaylistDb->deleteByPlaylistId($playlistId);
+    }
 }

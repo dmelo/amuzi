@@ -118,6 +118,12 @@
     opacity: 1.0;
 }
 
+.item-square .cover {
+    text-align: center;
+    height: 75px;
+    width: 100px;
+}
+
 
 
 

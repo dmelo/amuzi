@@ -105,11 +105,14 @@
         myPlaylist.removeAll();
     }
 
-    function rmPlaylist(name) {
+    function rmPlaylist(name, callback) {
         $.bootstrapMessageLoading();
         $.post('/playlist/remove', {
             name: name
         }, function(data) {
+            if ('success' === data[1] && 'function' === typeof callback) {
+                callback(name);
+            }
             $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json');
     }
@@ -379,7 +382,6 @@
 
         $('.music-large').live('click', function(e) {
             e.preventDefault();
-            console.log('kkkkk');
             addToPlaylist($(this).attr('trackId'));
         });
 
