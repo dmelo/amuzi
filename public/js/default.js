@@ -20,6 +20,10 @@
         });
     }
 
+    function playlistRollBottom() {
+        $('.jp-playlist').scrollTop($('.jp-playlist').prop('scrollHeight'));
+    }
+
     function addTrack(trackId, artist, musicTitle) {
         var options;
         var playNow = false;
@@ -37,7 +41,7 @@
                 loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
-                var pOpt = {title: v.title, flv: v.url, free: true, id: v.fid, trackId: v.trackId}; // TODO: verify this.
+                var pOpt = {title: v.title, flv: v.url, free: true, id: v.fid, trackId: v.trackId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
                 myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
@@ -365,13 +369,33 @@
         verifyView();
     }
 
-    function addToPlaylist(trackId) {
+    function addToPlaylist(e) {
+
+        trackId = e.attr('trackId')
         artist = $('#artist').val();
         musicTitle = $('#musicTitle').val();
         addTrack(trackId, artist, musicTitle);
+        e.animate({top: 0, left: $(window).width()}, {
+            complete: function() {
+                e.remove();
+            }
+        });
     }
 
     function prepareVoteButton() {
+    }
+
+    function loadPlaylistSet() {
+        $.get('/playlist/list', function(data) {
+            $('.music-manager#playlists .stripe').html(data);
+        }).error(function(data) {
+        });
+    }
+
+    function prepareNewTracks() {
+        $('.jp-playlist .new').live('hover', function(e) {
+            $(this).removeClass('new');
+        });
     }
 
     $(document).ready(function() {
@@ -382,7 +406,7 @@
 
         $('.music-large').live('click', function(e) {
             e.preventDefault();
-            addToPlaylist($(this).attr('trackId'));
+            addToPlaylist($(this));
         });
 
         $('.youtube-link, .download').live('click', function(e) {
@@ -533,11 +557,13 @@
         preparePlaylistEditName();
         preparePlaylistActions();
         prepareMusicTrackVote();
+        prepareNewTracks();
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
             $(this).jPlayer("play");
         });
 
         $.slideInit();
+        loadPlaylistSet();
     });
 //})(jQuery);

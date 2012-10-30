@@ -346,4 +346,9 @@ class PlaylistController extends DZend_Controller_Action
 
         $this->view->message = $message;
     }
+
+    public function listAction()
+    {
+        $this->view->playlistRowSet = $this->_playlistModel->fetchAllUsers();
+    }
 }

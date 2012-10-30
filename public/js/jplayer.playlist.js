@@ -219,7 +219,12 @@
 			var self = this;
 
 			// Wrap the <li> contents in a <div>
-			var listItem = "<li name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\" artist_music_title_id=\"" + media.artist_music_title_id + "\"><div>";
+            var attrClass = "";
+            if ('string' === typeof media.attrClass) {
+                attrClass = ' class="' + media.attrClass + '" ';
+            }
+
+			var listItem = "<li" + attrClass + " name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\" artist_music_title_id=\"" + media.artist_music_title_id + "\"><div>";
 
 			// Create remove control
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
@@ -290,7 +295,7 @@
 			this._init();
 		},
 		add: function(media, playNow) {
-			$(this.cssSelector.playlist + " ul").append(this._createListItem(media)).find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
+			$(this.cssSelector.playlist + " ul").append(this._createListItem(media)).find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime, media.callback);
 			this._updateControls();
 			this.original.push(media);
 			this.playlist.push(media); // Both array elements share the same object pointer. Comforms with _initPlaylist(p) system.

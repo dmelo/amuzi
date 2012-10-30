@@ -16,11 +16,8 @@
             <div class="music-manager" id="transfer"></div>
             <div class="music-manager" id="playlists">
                 <h5><?= $this->t("Your playlists"); ?></h5>
-<?php
-                foreach ($this->playlistRowSet as $playlistRow) {
-                    echo $this->playlistSquare($playlistRow);
-                }
-?>
+                <div class="stripe">
+                </div>
             </div>
             <div class="music-manager" id="edit-playlist"></div>
         </div>

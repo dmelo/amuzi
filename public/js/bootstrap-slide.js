@@ -17,7 +17,6 @@
 
         $(document).keyup(function (e) {
             var code = e.keyCode;
-            console.log(code);
             switch (code) {
                 case 37:
                     $('.slide-prev').trigger('click');

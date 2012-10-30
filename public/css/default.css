@@ -85,6 +85,53 @@ form.search {
     display: block !important;
 }
 
+.jp-playlist li.new {
+    animation:playlistnewitem 2s;
+    animation-iteration-count: infinite;
+
+    -moz-animation:playlistnewitem 2s; /* Firefox */
+    -moz-animation-iteration-count: infinite;
+
+    -webkit-animation:playlistnewitem 2s; /* Safari and Chrome */
+    -webkit-animation-iteration-count: infinite;
+
+    -o-animation:playlistnewitem 2s; /* Opera */
+    -o-animation-iteration-count: infinite;
+}
+
+@keyframes playlistnewitem
+{
+    0% {background: #282828;}
+    50% {background:#530;}
+    100% {background:#282828;}
+}
+
+@-moz-keyframes playlistnewitem
+{
+    0% {background: #282828;}
+    50% {background:#530;}
+    100% {background:#282828;}
+}
+
+@-webkit-keyframes playlistnewitem
+{
+    0% {background: #282828;}
+    50% {background:#530;}
+    100% {background:#282828;}
+}
+
+@-o-keyframes playlistnewitem
+{
+    0% {background: #282828;}
+    50% {background:#530;}
+    100% {background:#282828;}
+}
+
+
+
+
+
+
 dd#submit-element {
     margin-left: -2px;
 }
@@ -272,3 +319,5 @@ ul.ui-autocomplete {
     height: 60px;
     padding-right: 10px;
 }
+
+
