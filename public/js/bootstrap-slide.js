@@ -1,6 +1,6 @@
 (function($, undefined) {
 
-    $.slideInit = function() {
+    $.slideResize = function() {
         var slideWidth = $('body').width();
         $('.slide').width(slideWidth);
 
@@ -11,6 +11,19 @@
             $(this).css('left', left);
             left += slideWidth;
         });
+
+        $('.slide-prev').removeClass('active');
+        $('.slide-next').addClass('active');
+        $('#screen-search img').attr('src', '/img/search.png');
+        $('#screen-music img').attr('src', '/img/music-dark.png');
+
+
+    };
+
+    $.slideInit = function() {
+        $.slideResize();
+
+        $(window).bind('resize', $.slideResize);
 
         $('.slidegroup').append('<div class="slide-next slide-button active"></div>');
         $('.slidegroup').append('<div class="slide-prev slide-button"></div>');
@@ -51,6 +64,7 @@
 
         $('#screen-search').html('<img src="/img/search.png"/>');
         $('#screen-music').html('<img src="/img/music-dark.png"/>');
+
 
     };
 
