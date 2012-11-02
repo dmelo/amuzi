@@ -87,7 +87,7 @@ class ApiController extends DZend_Controller_Action
                     $artist = $this->_request->getParam('artist');
                     $musicTitle = $this->_request->getParam('musicTitle');
                     $complement = null !== $artist && null !== $musicTitle ?
-                        array('artist' => $artist, 'musicTitle' => $musicTitle):
+                        array('artist' => $artist, 'musicTitle' => $musicTitle, 'artistMusicTitleId' => $this->_artistMusicTitleModel->insert($artist, $musicTitle)):
                         array();
                     $resultSet = $this->_youtubeModel->search(
                         $q, $limit, $offset, $complement

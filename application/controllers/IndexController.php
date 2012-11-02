@@ -37,8 +37,9 @@ class IndexController extends DZend_Controller_Action
         parent::__construct($request, $response, $invokeArgs);
 
         $this->view->form = new Form_Search();
-        if(isset($this->_session->user))
+        if(isset($this->_session->user)) {
             $this->view->userId = $this->_session->user->id;
+        }
     }
 
     public function indexAction()

@@ -43,7 +43,7 @@ class YoutubeEntry extends AbstractEntry
     {
         $this->fcode = 'y';
         $this->_fields = array(
-            'id', 'title', 'fid', 'cover', 'duration', 'artist', 'musicTitle'
+            'id', 'title', 'fid', 'cover', 'duration', 'artist', 'musicTitle', 'artistMusicTitleId'
         );
         $this->_data = array();
 

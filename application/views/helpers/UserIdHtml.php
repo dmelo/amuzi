@@ -23,10 +23,12 @@
  */
 class View_Helper_UserIdHtml extends Zend_View_Helper_Abstract
 {
+    public $view;
+
     public function userIdHtml()
     {
-        $ret = isset($this->userId) ?  '<div class="invisible" id="userId">'
-            . $this->userId . '</div>' : '';
+        $ret = isset($this->view->userId) ?  '<div class="invisible" id="userId">'
+            . $this->view->userId . '</div>' : '';
 
         return $ret;
     }
