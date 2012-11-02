@@ -41,7 +41,7 @@
                 loadPlaylist(myPlaylist.name);
             else if('success' === data[1]) {
                 var v = data[2];
-                var pOpt = {title: v.title, flv: v.url, free: true, id: v.fid, trackId: v.trackId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                var pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
                 myPlaylist.add(pOpt, playNow);
             }
         }, 'json');
@@ -370,7 +370,6 @@
     }
 
     function addToPlaylist(e) {
-
         trackId = e.attr('trackId')
         artist = $('#artist').val();
         musicTitle = $('#musicTitle').val();

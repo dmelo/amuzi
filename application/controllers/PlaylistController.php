@@ -121,22 +121,30 @@ class PlaylistController extends DZend_Controller_Action
                 'PlaylistController::addtrackAction -- ' .
                 print_r($trackInfo, true)
             );
+
             try {
                 $trackRow = $this->_playlistModel->addTrack(
                     $trackInfo,
                     $this->_request->getPost('playlist')
                 );
 
-                if (isset($artistMusicTitleId))
+                if (isset($artistMusicTitleId)) {
                     $this->_musicTrackLinkModel->bond(
                         $artistMusicTitleId,
                         $trackRow->id,
                         $this->_bondModel->insert_playlist
                     );
+                }
+
+                $trackArray = $trackRow->getArray();
+                if (isset($artistMusicTitleId)) {
+                    $trackArray['artistMusicTitleId'] = $artistMusicTitleId;
+                }
+
                 $message = array(
                     $this->view->t('Track added'),
                     'success',
-                    $trackRow->getArray()
+                    $trackArray
                 );
             } catch(Zend_Exception $e) {
                 $message = array(
