@@ -38,6 +38,7 @@ class ApiController extends DZend_Controller_Action
     {
         $artistMusicTitleId = $this->_artistMusicTitleModel
             ->insert($artist, $musicTitle);
+        $ret = array();
 
         foreach ($resultSet as $result) {
             $data = array(

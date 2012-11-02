@@ -33,7 +33,9 @@ class Youtube extends DZend_Model
                 'start-index=' . (int) $offset
                 );
 
-        $xml = file_get_contents($this->_baseUrl . implode('&', $args));
+        $url = $this->_baseUrl . implode('&', $args);
+        $this->_logger->debug("Youtube::search - url: $url");
+        $xml = file_get_contents($url);
         $xml = str_replace(
             array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
         );
