@@ -1,5 +1,3 @@
-
-
 <div class="slidegroup">
 
     <div class="slide" id="slide-search">
@@ -11,31 +9,8 @@
         </div>
     </div>
 
-    <div class="slide" id="slide-music-manager">
-        <div class="music-manager-group">
-            <div class="music-manager" id="transfer"></div>
-            <div class="music-manager" id="playlists">
-                <h5><?= $this->t("Your playlists"); ?></h5>
-                <div class="stripe">
-                </div>
-            </div>
-            <div class="music-manager" id="edit-playlist"></div>
-        </div>
-        <?= $this->jPlayer(); ?>
-    </div>
+    <?= $this->render('index/slide-music-manager.phtml'); ?>
 
 </div>
 
-
-
-
-
-<? if(isset($this->userId)): ?>
-<div class="invisible" id="userId">
-    <?= $this->userId; ?>
-</div>
-
-
-
-
-<? endif; ?>
+<?= $this->userIdHtml() ?>

@@ -1,14 +1,16 @@
-<?= $this->form; ?>
+<div class="slidegroup">
 
-<?= $this->jPlayer(); ?>
+    <div class="slide" id="slide-search">
+        <div class="container">
+            <?= $this->form; ?>
+            <div id="subtitle"></div>
+            <div id="incboard-result">
+            </div>
+        </div>
+    </div>
 
-<div id="subtitle"></div>
+    <?= $this->render('index/slide-music-manager.phtml'); ?>
 
-<div id="incboard-result">
 </div>
 
-<? if(isset($this->userId)): ?>
-<div class="invisible" id="userId">
-    <?= $this->userId; ?>
-</div>
-<? endif; ?>
+<?= $this->userIdHtml() ?>
