@@ -57,6 +57,12 @@ IncBoardCell.prototype.getContent = function() {
     return this.content;
 }
 
+IncBoardCell.prototype.getInnerHtml = function() {
+    var v = this.content;
+    var resultSet = new ResultSet();
+    return img + resultSet.getMusicLarge(v, 'music');
+}
+
 IncBoardCell.prototype.getHtml = function() {
     var v = this.content;
     var resultSet = new ResultSet();
@@ -66,7 +72,7 @@ IncBoardCell.prototype.getHtml = function() {
     duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
     info = '<div class="incboard-info">' + title + duration + '</div>';
     control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
-    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSizeY) + 'px; left: ' + (this.col * this.cellSizeX) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>');
+    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSizeY) + 'px; left: ' + (this.col * this.cellSizeX) + 'px;">' + this.getInnerHtml() + '</div>');
 }
 
 IncBoardCell.prototype.toString = function() {
@@ -75,10 +81,19 @@ IncBoardCell.prototype.toString = function() {
 
 IncBoardCell.prototype.draw = function() {
     var v = this.content;
-    $('#' + v.artistMusicTitleId).remove();
-    cellHtml = this.getHtml();
-    $('#subtitle').subtitleAdd(v.artist);
-    cellHtml.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
-    console.log('set bg-color to ' + $('#subtitle').subtitleGetColor(v.artist));
-    $('#incboard-result #incboard').append(cellHtml);
+    var e = $('#' + v.artistMusicTitleId);
+    var sty = 'width: ' + this.cellSizeX + 'px; height: ' + this.cellSizeY + 'px; ';
+    
+    // If the element already exists then the only attribute that can chage is the position.
+    if (e.length !== 0) {
+        e.css('width', this.cellSizeX + 'px');
+        e.css('height', this.cellSizeY + 'px');
+        e.css('top', (this.row * this.cellSizeY) + 'px');
+        e.css('left', (this.col * this.cellSizeX) + 'px');
+    } else {
+        e = this.getHtml();
+        $('#subtitle').subtitleAdd(v.artist);
+        e.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
+        $('#incboard-result #incboard').append(e);
+    }
 }

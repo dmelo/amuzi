@@ -269,7 +269,7 @@ IncBoard.prototype.insert = function(v) {
     this.ibb.flushDraw();
 }
 
-IncBoard.prototype.searchMusic = function(artist, musicTitle) {
+IncBoard.prototype.searchMusic = function(artist, musicTitle, callback) {
     var self = this;
 
     $.get('/api/searchmusic', {
@@ -282,6 +282,9 @@ IncBoard.prototype.searchMusic = function(artist, musicTitle) {
                 self.insert(v);
                 var end = new Date().getTime();
                 // console.log((end - start) + "ms to insert " + v.artistMusicTitleId);
+                if ('function' === typeof callback) {
+                    callback(v);
+                }
             } catch(e) {
                 console.log(e.stack);
                 console.log(e);
@@ -299,6 +302,13 @@ IncBoard.prototype.posToString = function (pos) {
 };
 
 var incBoard = new IncBoard();
+
+function searchMusicCallbackCenter(v) {
+    console.log(v);
+    console.log(v.artistMusicTitleId);
+
+    $('#' + v.artistMusicTitleId).addClass('center');
+};
 
 $(document).ready(function() {
     $('#incboard-search').ajaxForm({
@@ -319,7 +329,7 @@ $(document).ready(function() {
             incBoard.searchString = $('#q').val();
             $.bootstrapMessage('Loading...', 'info');
             incBoard.clean();
-            incBoard.searchMusic($('#artist').val(), $('#musicTitle').val(), 0);
+            incBoard.searchMusic($('#artist').val(), $('#musicTitle').val(), searchMusicCallbackCenter);
         }
     });
 });

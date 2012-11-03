@@ -30,7 +30,12 @@
     margin: 5px;
 }
 
-.incboard-cell.focus {
+.incboard-cell.focus, .incboard-cell.center {
+    margin-left: -2px;
+    margin-top: -2px;
+    border: 2px solid black;
+    z-index: 10;
+
     animation:incboardcellfocus 1s;
     animation-iteration-count: infinite;
 
@@ -46,32 +51,37 @@
 
 @keyframes incboardcellfocus
 {
-    0% {background: #f00;}
-    50% {background:#00f;}
-    100% {background:#f00;}
+    0% {background:#f00; border-color:#f00;}
+    50% {background:#00f; border-color:#00f;}
+    100% {background:#f00; border-color:#f00;}
 }
 
 @-moz-keyframes incboardcellfocus
 {
-    0% {background: #f00;}
-    50% {background:#00f;}
-    100% {background:#f00;}
+    0% {background:#f00; border-color:#f00;}
+    50% {background:#00f; border-color:#00f;}
+    100% {background:#f00; border-color:#f00;}
 }
 
 @-webkit-keyframes incboardcellfocus
 {
-    0% {background: #f00;}
-    50% {background:#00f;}
-    100% {background:#f00;}
+    0% {background:#f00; border-color:#f00;}
+    50% {background:#00f; border-color:#00f;}
+    100% {background:#f00; border-color:#f00;}
 }
 
 @-o-keyframes incboardcellfocus
 {
-    0% {background: #f00;}
-    50% {background:#00f;}
-    100% {background:#f00;}
+    0% {background:#f00; border-color:#f00;}
+    50% {background:#00f; border-color:#00f;}
+    100% {background:#f00; border-color:#f00;}
 }
 
+/*
+.incboard-cell.center {
+    animat
+}
+    */
 
 
 
