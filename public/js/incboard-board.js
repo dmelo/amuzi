@@ -26,16 +26,27 @@
 function IncBoardBoard() {
     this.rows = 7;
     this.cols = 14;
-    this.listByAMTId = [];
-    this.listByPos = [];
-    this.size = 0;
-    this.drawList = [];
+    this.init();
 }
 
 IncBoardBoard.prototype.init = function () {
     this.clean();
     this.animateCells();
 };
+
+IncBoardBoard.prototype.clean = function () {
+    var table = $('<div id="incboard"></div>');
+    table.css('width', this.cols * this.cellSizeX);
+    table.css('height', this.rows * this.cellSizeY);
+    this.l = [];
+    $('#incboard-result').html(table);
+    this.listByAMTId = [];
+    this.listByPos = [];
+    this.size = 0;
+    this.drawList = [];
+};
+
+
 
 IncBoardBoard.prototype.getCols = function () {
     return this.cols;
@@ -135,14 +146,6 @@ IncBoardBoard.prototype.getByPos = function(pos) {
     }
 
     return list;
-};
-
-IncBoardBoard.prototype.clean = function () {
-    var table = $('<div id="incboard"></div>');
-    table.css('width', this.cols * this.cellSizeX);
-    table.css('height', this.rows * this.cellSizeY);
-    this.l = [];
-    $('#incboard-result').html(table);
 };
 
 IncBoardBoard.prototype.getAllMusic = function () {

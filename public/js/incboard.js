@@ -23,14 +23,18 @@
 "use strict";
 
 function  IncBoard() {
-    this.pos = 0;
-    this.ibb = new IncBoardBoard();
-    this.ibb.init();
     this.shiftList = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+    this.ibb = new IncBoardBoard();
+    this.stochasticLength = 15;
+    this.clean();
+}
+
+IncBoard.prototype.clean = function () {
+    this.pos = 0;
     this.similarity = null;
     this.error = false;
-    this.stochasticLength = 15;
-}
+    this.ibb.clean();
+};
 
 IncBoard.prototype.posGreaterThan = function(posA, posB) {
     var maxA = Math.max(Math.abs(posA[0]), Math.abs(posA[1])),
@@ -293,9 +297,6 @@ IncBoard.prototype.searchMusic = function(artist, musicTitle, callback) {
         }
     }, 'json');
 }
-
-IncBoard.prototype.clean = function () {
-};
 
 IncBoard.prototype.posToString = function (pos) {
     return "(" + pos[0] + "," + pos[1] + ")";
