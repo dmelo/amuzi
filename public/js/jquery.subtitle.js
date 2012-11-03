@@ -1,8 +1,26 @@
 (function($, undefined) {
-    var colors = ['green', 'red', 'yellow', 'gray', 'pink', 'black', '#0ff', '#f0f'];
+
+
+    var colors = [
+        '#ff0000',
+        '#00ff00',
+        '#ff8000',
+        '#d800ff',
+        '#ffff00',
+        '#00ffff',
+        '#ff00ff',
+        '#a0ff00',
+        '#ff00a0',
+    ];
     var subtitles = [];
     var counter = [];
     $.fn.extend({
+        getRandomColor: function() {
+            function c() {
+                return Math.floor(Math.random()*256).toString(16)
+            }
+            return "#"+c()+c()+c();
+        },
         subtitleInit: function(sTop, sLeft) {
             var ul = $('<ul class="subtitle"></ul>');
             if(typeof sTop !== 'undefined')
@@ -32,7 +50,14 @@
 
         },
         subtitleGetColor: function(subtitle) {
-            return colors[subtitles.indexOf(subtitle)];
+            var i = subtitles.indexOf(subtitle);
+            if (typeof colors[i] === 'undefined') {
+                colors[i] = this.getRandomColor();
+            }
+
+            if ($('.subtitle').offset().top + $('.subtitle').height() + 26 < $(window).height() - 30) {
+                return colors[i];
+            }
         },
         subtitleCounter: function() {
             return counter;
