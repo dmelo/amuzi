@@ -33,7 +33,8 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
             'url',
             'cover',
             'duration',
-            'youtubeUrl'
+            'youtubeUrl',
+            'youtubeUrlEmbedded'
         );
         $ret = array();
         foreach ($columns as $column)
@@ -53,9 +54,12 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
             return $url . '.flv';
         } elseif (in_array($name, $extensionList)) {
             return $url . '.' . $name;
-        } elseif ('youtubeUrl' === $name)
+        } elseif ('youtubeUrl' === $name) {
+            return 'http://www.youtube.com/watch?v=' . $this->fid;
+        } elseif ('youtubeUrlEmbedded' === $name) {
             return 'http://www.youtube.com/embed/' . $this->fid . '?autoplay=1&rel=0';
-        else
+        } else {
             return parent::__get($name);
+        }
     }
 }

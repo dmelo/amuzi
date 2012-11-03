@@ -105,8 +105,9 @@ class ApiController extends DZend_Controller_Action
 
                 $this->view->output = $list;
             }
-            else
+            else {
                 $this->view->output = $this->_error;
+            }
         } catch(Exception $e) {
             $this->view->exception = $e;
         }

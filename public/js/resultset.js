@@ -85,7 +85,7 @@ ResultSet.prototype.cleanTable = function() {
 }
 
 ResultSet.prototype.getControl = function(v) {
-    var aYoutube = '<a target="_blank" href="' + v.youtubeUrl + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
+    var aYoutube = '<a target="_blank" href="' + v.youtubeUrlEmbedded + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
     var aDownload = '<a target="_blank" href="' + v.url + '"title="download ' + v.title + '" class="download"><img src="/img/download_icon.png"/></a>';
     var aPlay = '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
 
