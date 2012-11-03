@@ -371,9 +371,18 @@
     }
 
     function addToPlaylist(e) {
-        trackId = e.attr('trackId')
-        artist = $('#artist').val();
-        musicTitle = $('#musicTitle').val();
+        var trackId = e.attr('trackId')
+
+        var artist = e.parent().attr('artist'); 
+        if ('undefined' === typeof artist) {
+            artist = $('#artist').val();
+        }
+
+        var musicTitle = e.parent().attr('musicTitle');
+        if ('undefined' === typeof musicTitle) {
+            musicTitle = $('#musicTitle').val();
+        }
+
         addTrack(trackId, artist, musicTitle);
         e.animate({top: 0, left: $(window).width()}, {
             complete: function() {

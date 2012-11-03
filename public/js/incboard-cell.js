@@ -66,7 +66,7 @@ IncBoardCell.prototype.getHtml = function() {
     duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
     info = '<div class="incboard-info">' + title + duration + '</div>';
     control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
-    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSizeY) + 'px; left: ' + (this.col * this.cellSizeX) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>');
+    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSizeY) + 'px; left: ' + (this.col * this.cellSizeX) + 'px;">' + img + resultSet.getMusicLarge(v, 'music') + '</div>');
 }
 
 IncBoardCell.prototype.toString = function() {
