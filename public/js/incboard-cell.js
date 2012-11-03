@@ -86,8 +86,6 @@ IncBoardCell.prototype.draw = function() {
     
     // If the element already exists then the only attribute that can chage is the position.
     if (e.length !== 0) {
-        e.css('width', this.cellSizeX + 'px');
-        e.css('height', this.cellSizeY + 'px');
         e.css('top', (this.row * this.cellSizeY) + 'px');
         e.css('left', (this.col * this.cellSizeX) + 'px');
     } else {
