@@ -58,7 +58,9 @@
             $.bootstrapMessageAuto(data[0], data[1]);
             if('error' === data[1])
                 loadPlaylist(playlistName);
-        }, 'json');
+        }, 'json').error(function(e) {
+            $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
+        });
     }
 
     /**
@@ -433,7 +435,7 @@
         });
 
         $('.jp-playlist-item-remove').live('click', function(e) {
-            trackId = $(this).parent().parent().find('.jp-playlist-item-free').attr('trackId');
+            trackId = $(this).parent().parent().attr('track_id');
             rmTrack(trackId, myPlaylist.name);
         });
 
