@@ -13,14 +13,6 @@
         <div class="container">
             <a class="brand" href="/">Amuzi</a>
             <ul class="nav">
-                <li class="dropdown">
-                    <a href="#" class="loginRequired dropdown-toggle" data-toggle="dropdown" title="Playlist Manager"><?= $this->t('Playlist'); ?> <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/playlist/new" class="loadModal loginRequired noForm" name="newPlaylist" title="<?= $this->t('Create'); ?>"><?= $this->t('Create'); ?></a></li>
-                        <li><a href="/playlist" class="loadModal loginRequired noForm" name="playlist" title="<?= $this->t('List'); ?>"><?= $this->t('List'); ?></a></li>
-                        <li><a href="/playlist/remove" class="loadModal loginRequired noForm" name="delPlaylist" title="<?= $this->t('Remove'); ?>"><?= $this->t('Remove'); ?></a></li>
-                    </ul>
-                </li>
                 <li><a href="/user" class="loadModal loginRequired" title="User Settings" id="userSettings"><?= $this->t('Settings'); ?></a></li>
                 <li><a href="/docs" title="Docs" target="_blank"><?= $this->t("Docs"); ?></a></li>
                 <li><a href="/index/about" class="loadModal" title="About Amuzi"><?= $this->t('About'); ?></a></li>

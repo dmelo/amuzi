@@ -301,8 +301,6 @@ class PlaylistController extends DZend_Controller_Action
                 );
 
             $this->view->message = $message;
-        } else {
-            $this->view->playlists = $this->_playlistModel->fetchAllUsers();
         }
     }
 

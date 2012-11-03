@@ -1,22 +1,3 @@
 <? if (isset($this->message)): ?>
     <?= Zend_Json::encode($this->message); ?>
-<? else: ?>
-<table id="playlistsettings-result">
-    <thead>
-        <tr class="topic">
-            <th><?= $this->t('Cover'); ?></th>
-            <th><?= $this->t('Name'); ?></th>
-            <th><?= $this->t('Remove'); ?></th>
-        </tr>
-    </thead>
-    <tbody>
-    <? foreach($this->playlists as $playlist): ?>
-        <tr>
-            <td><img src="<?= $playlist->getCover(); ?>" alt="<?= $playlist->name; ?>"/></td>
-            <td class="name"><?= $playlist->name; ?></td>
-            <td><img class="remove" src="/img/remove.png" alt="<?= $this->t('Remove Playlist'); ?>"/></td>
-        </tr>
-    <? endforeach; ?>
-    </tbody>
-</table>
 <? endif; ?>

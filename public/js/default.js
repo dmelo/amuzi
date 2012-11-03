@@ -249,6 +249,7 @@
                 loadPlaylist($('input[name=name]').val());
                 $.bootstrapMessageAuto(data[0], data[1]);
                 $(modalWrapper).modal('hide');
+                loadPlaylistSet();
             },
             error: function(data) {
                 $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');

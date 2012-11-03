@@ -320,4 +320,12 @@ ul.ui-autocomplete {
     padding-right: 10px;
 }
 
+.stripe {
+    min-height: 115px;
+}
 
+.music-manager#playlists a.loadModal img {
+    padding-top: 25.5px;
+    padding-right: 28px;
+    padding-left: 28px;
+}
