@@ -1,4 +1,4 @@
-<?php
+<?php;
 
 /**
  * Bootstrap
@@ -40,6 +40,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
      */
     protected function _initView()
     {
+        $version = file_get_contents('../version.txt');
         $this->bootstrap('domain');
         $domainJs = $this->getResource('domain') . '/js/';
         $domainCss = $this->getResource('domain') . '/css/';
@@ -98,10 +99,10 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->headTitle('AMUZI');
 
         foreach($js as $item)
-            $view->lightningPackerScript()->appendFile($item);
+            $view->lightningPackerScript()->appendFile("$item?v=$version");
 
         foreach($css as $item)
-            $view->lightningPackerLink()->appendStylesheet($item);
+            $view->lightningPackerLink()->appendStylesheet("$item?v=$version");
 
         $this->bootstrap('translate');
         $view->translate = Zend_Registry::get('translate');
