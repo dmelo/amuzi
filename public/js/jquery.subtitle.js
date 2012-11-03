@@ -14,6 +14,7 @@
     ];
     var subtitles = [];
     var counter = [];
+    var colorLimit = 0;
     $.fn.extend({
         getRandomColor: function() {
             function c() {
@@ -31,6 +32,7 @@
             $(this).html(ul);
             subtitles = [];
             counter = [];
+            colorLimit = 0;
         },
         subtitleAdd: function(subtitle) {
             if(subtitles.indexOf(subtitle) == -1) {
@@ -47,7 +49,6 @@
                 counter[subtitles.indexOf(subtitle)] = 1;
             else
                 counter[subtitles.indexOf(subtitle)]++;
-
         },
         subtitleGetColor: function(subtitle) {
             var i = subtitles.indexOf(subtitle);
@@ -55,7 +56,11 @@
                 colors[i] = this.getRandomColor();
             }
 
-            if ($('.subtitle').offset().top + $('.subtitle').height() + 26 < $(window).height() - 30) {
+            if (i > colorLimit && $('.subtitle').offset().top + $('.subtitle').height() + 26 < $(window).height() - 30) {
+                colorLimit = i;
+            }
+
+            if (colorLimit >= i) {
                 return colors[i];
             }
         },

@@ -89,7 +89,7 @@ IncBoard.prototype.stochasticItems = function(center) {
 
     var end = new Date().getTime();
 
-    console.log('stochasticItems ' + (end - start));
+    // console.log('stochasticItems ' + (end - start));
 
     return list;
 }
@@ -182,7 +182,7 @@ IncBoard.prototype.calcError = function(v, musicList) {
 IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCells) {
     var self = this;
     if ('undefined' === typeof mostSimilar || 'undefined' === typeof newMusic) {
-        console.log(visitedCells);
+        // console.log(visitedCells);
     }
 
     var ncPos = this.ibb.getPos(newMusic.artistMusicTitleId),
@@ -236,7 +236,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
 
             this.resolveConflict(first, second, visitedCells);
         } else {
-            console.log('DONE WITH: ' + newMusic);
+            // console.log('DONE WITH: ' + newMusic);
         }
     } else { // the cell is trapped.
         // TODO: cry.
@@ -251,7 +251,7 @@ IncBoard.prototype.insert = function(v) {
         self = this;
 
     this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
-        console.log('insert: ' + artistMusicTitleId + "#" + v.artistMusicTitleId);
+        // console.log('insert: ' + artistMusicTitleId + "#" + v.artistMusicTitleId);
         if(maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
             maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
             mostSimilar = e;
@@ -281,7 +281,7 @@ IncBoard.prototype.searchMusic = function(artist, musicTitle) {
                 var start = new Date().getTime();
                 self.insert(v);
                 var end = new Date().getTime();
-                console.log((end - start) + "ms to insert " + v.artistMusicTitleId);
+                // console.log((end - start) + "ms to insert " + v.artistMusicTitleId);
             } catch(e) {
                 console.log(e.stack);
                 console.log(e);

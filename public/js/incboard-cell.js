@@ -79,5 +79,6 @@ IncBoardCell.prototype.draw = function() {
     cellHtml = this.getHtml();
     $('#subtitle').subtitleAdd(v.artist);
     cellHtml.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
+    console.log('set bg-color to ' + $('#subtitle').subtitleGetColor(v.artist));
     $('#incboard-result #incboard').append(cellHtml);
 }
