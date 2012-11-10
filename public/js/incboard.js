@@ -282,29 +282,35 @@ IncBoard.prototype.insert = function(v) {
     return true;
 }
 
-IncBoard.prototype.searchMusic = function(artist, musicTitle, callback) {
-    var self = this;
+IncBoard.prototype.searchMusic = function(set, num, callback) {
+    var self = this,
+        m = set.shift();
 
-    $.get('/api/searchmusic', {
-        'artist': artist,
-        'musicTitle': musicTitle
-    }, function(v) {
-        if (false === false  /* this.error */) {
-            try {
-                var start = new Date().getTime();
-                self.insert(v);
-                var end = new Date().getTime();
-                // console.log((end - start) + "ms to insert " + v.artistMusicTitleId);
-                if ('function' === typeof callback) {
-                    callback(v);
+    if (num > 0 && 'undefined' !== typeof m) {
+        $.get('/api/searchmusic', {
+            'artist': m.artist,
+            'musicTitle': m.musicTitle
+        }, function(v) {
+            if (false === false  /* this.error */) {
+                try {
+                    var start = new Date().getTime();
+                    if (true === self.insert(v)) {
+                        if ('function' === typeof callback) {
+                            callback(v);
+                        }
+                        self.searchMusic(set, num - 1);
+                    } else {
+                        self.searchMusic(set, num);
+                    }
+                    var end = new Date().getTime();
+                } catch(e) {
+                    console.log(e.stack);
+                    console.log(e);
+                    this.error = true;
                 }
-            } catch(e) {
-                console.log(e.stack);
-                console.log(e);
-                this.error = true;
             }
-        }
-    }, 'json');
+        }, 'json');
+    }
 }
 
 IncBoard.prototype.posToString = function (pos) {
@@ -324,12 +330,7 @@ function loadSimilarMusic(data, num) {
     $.bootstrapMessageOff();
     var total = 0;
     incBoard.similarity = data[1];
-    $.each(data[0], function(i, s) {
-        if(total < num) {
-            incBoard.searchMusic(s.artist, s.musicTitle);
-            total++;
-        }
-    });
+    incBoard.searchMusic(data[0], num);
 }
 
 $(document).ready(function() {
@@ -358,7 +359,10 @@ $(document).ready(function() {
             incBoard.searchString = $('#q').val();
             $.bootstrapMessage('Loading...', 'info');
             incBoard.clean();
-            incBoard.searchMusic($('#artist').val(), $('#musicTitle').val(), searchMusicCallbackCenter);
+            var obj = new Object();
+            obj.artist = $('#artist').val();
+            obj.musicTitle = $('#musicTitle').val();
+            incBoard.searchMusic([obj], 1, searchMusicCallbackCenter);
         }
     });
 });

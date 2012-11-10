@@ -148,6 +148,9 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
     return ret;
 };
 
+/**
+ * Safely remove an element from the board.
+ */
 IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
     var pos = this.listByAMTId[artistMusicTitleId].getPos();
 
@@ -158,14 +161,14 @@ IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
     this.size--;
 
     // listByAMTId
-    this.listByAMTId[artistMusicTitleId] = null;
+    this.listByAMTId.splice(artistMusicTitleId, 1);
 
     // listByPos
     this.listByPos[this.posToInt(pos)].splice(artistMusicTitleId, 1);
 
     // drawList
     if (-1 !== this.drawList.indexOf(artistMusicTitleId)) {
-        this.drawList[this.drawList.indexOf(artistMusicTitleId)] = null;
+        this.drawList.splice(this.drawList.indexOf(artistMusicTitleId), 1);
     }
 };
 
