@@ -4,6 +4,7 @@
     min-height: 60px;
     margin: 10px;
     position: relative;
+    z-index: 20;
     -webkit-transition: background 300ms ease-in 0ms;
     -moz-transition: background 300ms ease-in 0ms;
     -o-transition: background 300ms ease-in 0ms;

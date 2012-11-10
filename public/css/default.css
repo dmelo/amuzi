@@ -233,6 +233,8 @@ ul.ui-autocomplete {
     border-top-left-radius: 0px;
     box-shadow: 0px 1px 5px #3a3e41;
     border: 0px;
+
+    z-index: 30;
 }
 
 ul.ui-autocomplete li {

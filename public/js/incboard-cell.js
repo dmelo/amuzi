@@ -83,7 +83,7 @@ IncBoardCell.prototype.draw = function() {
     var v = this.content;
     var e = $('#' + v.artistMusicTitleId);
     var sty = 'width: ' + this.cellSizeX + 'px; height: ' + this.cellSizeY + 'px; ';
-    
+
     // If the element already exists then the only attribute that can chage is the position.
     if (e.length !== 0) {
         e.css('top', (this.row * this.cellSizeY) + 'px');
