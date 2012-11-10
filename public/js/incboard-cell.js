@@ -95,3 +95,10 @@ IncBoardCell.prototype.draw = function() {
         $('#incboard-result #incboard').append(e);
     }
 }
+
+/**
+ * Remove itself from the HTML.
+ */
+IncBoardCell.prototype.remove = function() {
+    $('#' + this.content.artistMusicTitleId).remove();
+}

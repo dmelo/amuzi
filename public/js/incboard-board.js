@@ -148,6 +148,41 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
     return ret;
 };
 
+IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
+    var pos = this.listByAMTId[artistMusicTitleId].getPos();
+
+    // cell.remove()
+    this.listByAMTId[artistMusicTitleId].remove();
+
+    // size
+    this.size--;
+
+    // listByAMTId
+    this.listByAMTId[artistMusicTitleId] = null;
+
+    // listByPos
+    this.listByPos[this.posToInt(pos)].splice(artistMusicTitleId, 1);
+
+    // drawList
+    if (-1 !== this.drawList.indexOf(artistMusicTitleId)) {
+        this.drawList[this.drawList.indexOf(artistMusicTitleId)] = null;
+    }
+};
+
+/**
+ * Remove elements that are out of the border.
+ */
+IncBoardBoard.prototype.removeOutOfBorder = function() {
+    var self = this;
+
+    this.listByAMTId.forEach(function (cell) {
+        var pos = cell.getPos();
+        if (pos[0] < 0 || pos[0] >= self.cols || pos[1] < 0 || pos[1] >= self.rows) {
+            self.remove(cell.getContent().artistMusicTitleId);
+        }
+    });
+};
+
 /**
  * Shifts the elements in order to keep then at the center.
  */
@@ -189,7 +224,7 @@ IncBoardBoard.prototype.centralizeItems = function() {
     } else {
         console.log("shift: (" + shiftX + ", " + shiftY + ")");
     }
-}
+};
 
 IncBoardBoard.prototype.flushDraw = function() {
     var self = this;

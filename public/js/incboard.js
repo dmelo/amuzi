@@ -201,7 +201,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
     [0, 1].forEach(function(state) {
         self.shiftList.forEach(function(shift) {
             var pos = [ncPos[0] + shift[0], ncPos[1] + shift[1]];
-            if (-1 === visitedCells.indexOf(self.ibb.posToInt(pos)) && pos[0] >= 0 && pos[0] < self.ibb.cols && pos[1] >= 0 && pos[1] < self.ibb.rows) {
+            if (-1 === visitedCells.indexOf(self.ibb.posToInt(pos))) {
                 if(0 == state) {
                     self.ibb.setPos(mostSimilar.artistMusicTitleId, ncPos);
                     self.ibb.setPos(newMusic.artistMusicTitleId, pos);
@@ -275,6 +275,7 @@ IncBoard.prototype.insert = function(v) {
     }
 
     console.log("inserted " + v.artistMusicTitleId);
+    this.ibb.removeOutOfBorder();
     this.ibb.centralizeItems();
     this.ibb.flushDraw();
 
