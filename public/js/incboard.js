@@ -249,7 +249,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
 
 IncBoard.prototype.insert = function(v) {
     if (this.ibb.getByAMTId(v.artistMusicTitleId) !== undefined) {
-        console.log("Trying to insert " + v.artistMusicTitleId + " that is already on incBoard. Discarding it...");
+        console.log("Trying to insert " + v.artistMusicTitleId + " that already is on incBoard. Discarding it...");
         return false;
     }
 
@@ -260,7 +260,6 @@ IncBoard.prototype.insert = function(v) {
         self = this;
 
     this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
-        console.log('insert: ' + artistMusicTitleId + "#" + v.artistMusicTitleId);
         if(maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
             maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
             mostSimilar = e;
@@ -275,6 +274,8 @@ IncBoard.prototype.insert = function(v) {
         this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
     }
 
+    console.log("inserted " + v.artistMusicTitleId);
+    this.ibb.centralizeItems();
     this.ibb.flushDraw();
 
     return true;

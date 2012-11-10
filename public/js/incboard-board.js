@@ -96,6 +96,9 @@ IncBoardBoard.prototype.insert = function (music, pos) {
     return ret;
 };
 
+/**
+ * Safe way to set IncBoardCell position.
+ */
 IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
     var ret,
         cell,
@@ -122,7 +125,21 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
 
         ret = true;
     } else {
-        throw new Error('Invalid parameter given');
+        var errMsg = "";
+
+        if ('undefined' === typeof artistMusicTitleId) {
+            errMsg += 'artistMusicTitleId is undefined. ';
+        }
+
+        if ('object' !== typeof pos) {
+            errMsg += 'pos is not the type object. ';
+        }
+
+        if (!(artistMusicTitleId in this.listByAMTId)) {
+            errMsg += 'artistMusicTitleId is not in listByAMTId. ';
+        }
+
+        throw new Error('Invalid parameter given: ' + errMsg);
         ret = false;
     }
 
@@ -130,6 +147,49 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
 
     return ret;
 };
+
+/**
+ * Shifts the elements in order to keep then at the center.
+ */
+IncBoardBoard.prototype.centralizeItems = function() {
+    var minX = 1000,
+        maxX = 0,
+        minY = 1000,
+        maxY = 0,
+        self = this;
+    this.listByAMTId.forEach(function (cell) {
+        if (cell.row < minY) {
+            minY = cell.row;
+        }
+
+        if (cell.row > maxY) {
+            maxY = cell.row;
+        }
+
+        if (cell.col < minX) {
+            minX = cell.col;
+        }
+
+        if (cell.col > maxX) {
+            maxX = cell.col;
+        }
+    });
+
+    var shiftX = parseInt(((this.cols - maxX - 1) - minX) / 2);
+    var shiftY = parseInt(((this.rows - maxY - 1) - minY) / 2);
+
+    if (0 !== shiftX || 0 !== shiftY) {
+        console.log("Applying shift (" + shiftX + ", " + shiftY + ")");
+        this.listByAMTId.forEach(function (cell) {
+            var pos = cell.getPos();
+            pos[0] += shiftX;
+            pos[1] += shiftY;
+            self.setPos(cell.getContent().artistMusicTitleId, pos);
+        });
+    } else {
+        console.log("shift: (" + shiftX + ", " + shiftY + ")");
+    }
+}
 
 IncBoardBoard.prototype.flushDraw = function() {
     var self = this;
