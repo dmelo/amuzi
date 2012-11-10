@@ -127,9 +127,10 @@ class ApiController extends DZend_Controller_Action
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
+            $artistMusicTitleIdList = $this->_request->getParam('artistMusicTitleIdList', array());
 
             $this->view->output = $this->_musicSimilarityModel
-                ->getSimilar($artist, $musicTitle);
+                ->getSimilar($artist, $musicTitle, $artistMusicTitleIdList);
 
             $this->_logger->debug('ApiController::searchsimilarAction md5 ' . md5(Zend_Json::encode($this->view->output)));
         } else

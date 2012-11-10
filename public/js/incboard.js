@@ -248,6 +248,11 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
 }
 
 IncBoard.prototype.insert = function(v) {
+    if (this.ibb.getByAMTId(v.artistMusicTitleId) !== undefined) {
+        console.log("Trying to insert " + v.artistMusicTitleId + " that is already on incBoard. Discarding it...");
+        return false;
+    }
+
     // Find the most similar element already on incBoard.
     var maxSimilarity = 0,
         mostSimilar = null,
@@ -255,7 +260,7 @@ IncBoard.prototype.insert = function(v) {
         self = this;
 
     this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
-        // console.log('insert: ' + artistMusicTitleId + "#" + v.artistMusicTitleId);
+        console.log('insert: ' + artistMusicTitleId + "#" + v.artistMusicTitleId);
         if(maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
             maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
             mostSimilar = e;
@@ -271,6 +276,8 @@ IncBoard.prototype.insert = function(v) {
     }
 
     this.ibb.flushDraw();
+
+    return true;
 }
 
 IncBoard.prototype.searchMusic = function(artist, musicTitle, callback) {
@@ -311,19 +318,38 @@ function searchMusicCallbackCenter(v) {
     $('#' + v.artistMusicTitleId).addClass('center');
 };
 
+function loadSimilarMusic(data, num) {
+    $.bootstrapMessageOff();
+    var total = 0;
+    incBoard.similarity = data[1];
+    $.each(data[0], function(i, s) {
+        if(total < num) {
+            incBoard.searchMusic(s.artist, s.musicTitle);
+            total++;
+        }
+    });
+}
+
 $(document).ready(function() {
+    if (1 === $('#incboard-search').length) {
+        $('.music-large').live('click', function(e) {
+            var artist = $(this).parent().attr('artist');
+            var musicTitle = $(this).parent().attr('musicTitle');
+            $.post('/api/searchsimilar', {
+                q: artist + ' - ' + musicTitle,
+                artist: artist,
+                musicTitle: musicTitle,
+                artistMusicTitleIdList: incBoard.ibb.getIdsList()
+            }, function(data) {
+                loadSimilarMusic(data, 10);
+            }, 'json');
+        });
+    }
+
     $('#incboard-search').ajaxForm({
         dataType: 'json',
         success: function (data) {
-            $.bootstrapMessageOff();
-            var total = 60;
-            incBoard.similarity = data[1];
-            $.each(data[0], function(i, s) {
-                if(total < 100) {
-                    incBoard.searchMusic(s.artist, s.musicTitle);
-                    total++;
-                }
-            });
+            loadSimilarMusic(data, 40);
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();

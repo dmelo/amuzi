@@ -35,9 +35,15 @@ IncBoardBoard.prototype.init = function () {
 };
 
 IncBoardBoard.prototype.clean = function () {
+    var cell = new IncBoardCell();
+    this.cols = parseInt( ( $(window).width() - 250 ) / cell.cellSizeX );
+    this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('.navbar').height() - $('.footer').height() - $('.alert').height() - $('.alert').offset().top ) / cell.cellSizeY );
+    console.log("COLS: " + this.cols);
+    console.log("ROWS: " + this.rows);
+
     var table = $('<div id="incboard"></div>');
-    table.css('width', this.cols * this.cellSizeX);
-    table.css('height', this.rows * this.cellSizeY);
+    table.css('width', this.cols * cell.cellSizeX);
+    table.css('height', this.rows * cell.cellSizeY);
     this.l = [];
     $('#incboard-result').html(table);
     this.listByAMTId = [];
@@ -85,7 +91,7 @@ IncBoardBoard.prototype.insert = function (music, pos) {
         ret = false;
     }
 
-    // this.fsck();
+    this.fsck();
 
     return ret;
 };
@@ -146,6 +152,10 @@ IncBoardBoard.prototype.getByPos = function(pos) {
     }
 
     return list;
+};
+
+IncBoardBoard.prototype.getByAMTId = function (artistMusicTitleId) {
+    return this.listByAMTId[artistMusicTitleId];
 };
 
 IncBoardBoard.prototype.getAllMusic = function () {
@@ -247,7 +257,24 @@ IncBoardBoard.prototype.fsck = function () {
         counter[id] = 1;
     });
 
+    var conflictedCells = 0;
     this.listByPos.forEach(function (posList, pos) {
+        var count = 0;
+        posList.forEach(function (item, id) {
+            count++;
+        });
+
+        if (count > 1) {
+            conflictedCells++;
+            if (conflictedCells >= 2) {
+                var str = "There is " + conflictedCells + " conflicted cells. There is " + count + " elements on pos " + pos + ": ";
+                posList.forEach(function (item, id) {
+                    str += ", " + id;
+                });
+                console.log(str);
+            }
+        }
+
         posList.forEach(function (item, id) {
             if (id !== item.getContent().artistMusicTitleId) {
                 throw new Error("artistMusicTitleId on listByPos index doesn't match the content id: " + id + ". contentid: " + item.getContent().artistMusicTitleId);
@@ -281,6 +308,7 @@ IncBoardBoard.prototype.fsck = function () {
             throw new Error("merda 2");
         }
     });
+
 
     return true;
 };

@@ -189,7 +189,7 @@ class MusicSimilarity extends DZend_Model
      * elements, each element containing artist and musicTitle. The second
      * element is the similarity matrix.
      */
-    public function getSimilar($artist, $musicTitle)
+    public function getSimilar($artist, $musicTitle, $artistMusicTitleIdList = array())
     {
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
             $artist, $musicTitle
@@ -202,13 +202,19 @@ class MusicSimilarity extends DZend_Model
             $idsList[] = $entry['artist_music_title_id'];
         }
 
+
         if (empty($idsList)) {
             $this->_logger->debug("MusicSimilarity::getSimilar local empty");
-            return $this->searchSimilarSync($artist, $musicTitle);
-
+            return $this->searchSimilarSync($artist, $musicTitle, $artistMusicTitleIdList);
         }
 
-        $similarityMatrixResponse = $this->getSimilarityMatrix($idsList);
+        $completeIdsList = array();
+        foreach ($artistMusicTitleIdList as $artistMusicTitleId) {
+            $completeIdsList[] = $artistMusicTitleId;
+        }
+        $completeIdsList = array_merge($completeIdsList, $idsList);
+
+        $similarityMatrixResponse = $this->getSimilarityMatrix($completeIdsList);
 
         $this->_logger->debug("MusicSimilarity::getSimilar local quality{ size: " . $similarityMatrixResponse[1] . ". non-zero: " . $similarityMatrixResponse[2]);
 
@@ -216,7 +222,7 @@ class MusicSimilarity extends DZend_Model
             $similarityMatrixResponse[1] < 20 ||
             $similarityMatrixResponse[2] < 0.03
         ) {
-            return $this->searchSimilarSync($artist, $musicTitle);
+            return $this->searchSimilarSync($artist, $musicTitle, $artistMusicTitleIdList);
         }
 
         $artistAndMusicTitleList = $this->_artistMusicTitleModel
@@ -234,13 +240,13 @@ class MusicSimilarity extends DZend_Model
         );
     }
 
-    public function searchSimilarSync($artist, $musicTitle)
+    public function searchSimilarSync($artist, $musicTitle, $artistMusicTitleIdList = array())
     {
         $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
             $artist, $musicTitle
         );
-        $artistMusicTitleIdList = array($artistMusicTitleId);
+        $artistMusicTitleIdList[] = $artistMusicTitleId;
         $list = array(
             'artist' => $artist,
             'musicTitle' => $musicTitle,
