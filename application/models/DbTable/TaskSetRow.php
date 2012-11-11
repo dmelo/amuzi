@@ -23,4 +23,20 @@
  */
 class DbTable_TaskSetRow extends DZend_Db_Table_Row
 {
+    public function __get($name) {
+        $taskParameterDb = new DbTable_TaskParameter();
+        if (0 === strpos($name, 'param')) {
+            $num = str_replace('param', '', $name);
+            $paramsRowSet = $taskParameterDb->findByTaskSetId($this->id);
+            foreach ($paramsRowSet as $paramRow) {
+                if ($num == $paramRow->order) {
+                    return $paramRow->param;
+                }
+            }
+
+            return parent::__get($name);
+        } else {
+            return parent::__get($name);
+        }
+    }
 }

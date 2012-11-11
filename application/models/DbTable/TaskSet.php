@@ -23,6 +23,13 @@
  */
 class DbTable_TaskSet extends DZend_Db_Table
 {
+    /**
+     * Find tasks not accomplished yet.
+     *
+     * @param $name Task type
+     *
+     * @return Returns a list of task sets.
+     */
     public function findOpenTasks($taskTypeId)
     {
         $db = $this->getAdapter();

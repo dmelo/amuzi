@@ -71,10 +71,17 @@ class TaskSet extends DZend_Model
         return $taskSetId;
     }
 
+    /**
+     * Find tasks not accomplished yet.
+     *
+     * @param $name Task type
+     *
+     * @return Returns a list of task sets.
+     */
     public function findOpenTasks($name)
     {
         $taskTypeRow = $this->_taskTypeModel->findRowByName($name);
-        return $this->_taskTypeDb->findOpenTasks($taskTypeRow->id);
+        return $this->_taskSetDb->findOpenTasks($taskTypeRow->id);
     }
 
     public function closeTask($id)
