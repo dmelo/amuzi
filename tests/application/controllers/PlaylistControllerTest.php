@@ -169,10 +169,12 @@ class PlaylistControllerTest extends AbstractControllerTest
             'title' => 'The Rolling Stones- Paint it Black',
             'fid' => 'Q9DDpmyPZZA',
             'fcode' => 'y',
-            'url' => '/api/255/Q9DDpmyPZZA/The+Rolling+Stones-+Paint+it+Black.mp3',
+            'url' => '/api/255/Q9DDpmyPZZA/The+Rolling+Stones-+Paint+it+Black.flv',
             'cover' => 'null',
             'duration' => '255',
-            'youtubeUrl' => 'http://www.youtube.com/watch?v=Q9DDpmyPZZA'
+            'youtubeUrl' => 'http://www.youtube.com/watch?v=Q9DDpmyPZZA',
+            'youtubeUrlEmbedded' => 'http://www.youtube.com/embed/Q9DDpmyPZZA?autoplay=1&rel=0',
+            'artistMusicTitleId' => '20001'
         ));
         $this->assertJsonMessage($ret);
     }
