@@ -210,10 +210,11 @@ class PlaylistControllerTest extends AbstractControllerTest
             'title' => 'Angie - The Rolling Stones',
             'fid' => 'JMkFjYRWM4M',
             'fcode' => 'y',
-            'url' => '/api/277/JMkFjYRWM4M/Angie+-+The+Rolling+Stones.mp3',
+            'url' => '/api/277/JMkFjYRWM4M/Angie+-+The+Rolling+Stones.flv',
             'cover' => 'null',
             'duration' => '277',
-            'youtubeUrl' => 'http://www.youtube.com/watch?v=JMkFjYRWM4M'
+            'youtubeUrl' => 'http://www.youtube.com/watch?v=JMkFjYRWM4M',
+            'youtubeUrlEmbedded' => 'http://www.youtube.com/embed/JMkFjYRWM4M?autoplay=1&rel=0'
         )
         )
         );
