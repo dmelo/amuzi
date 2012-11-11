@@ -204,10 +204,11 @@ class ApiController extends DZend_Controller_Action
     {
         if (($id = $this->_request->getParam('id')) !== null) {
             $track = $this->_trackModel->findRowById($id);
-            if (null !== $track)
+            if (null !== $track) {
                 $this->view->output = $track->toArray();
-            else
+            } else {
                 $this->view->output = null;
+            }
         }
     }
 

@@ -106,7 +106,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         $this->bootstrap('translate');
         $view->translate = Zend_Registry::get('translate');
-        header('X-Frame-Options: GOFORIT');
     }
 
     public function _initCache()

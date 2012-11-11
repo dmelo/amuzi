@@ -119,26 +119,25 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     {
         $this->request->setMethod('GET');
         $this->setAjaxHeader();
-        $this->request->setParams(array('id' => 9));
+        $this->request->setParams(array('id' => 4));
         $this->dispatch('/api/gettrack');
         $this->assertResponseCode(200);
         $obj = Zend_Json::decode($this->getResponse()->getBody());
         $this->assertInternalType('array', $obj);
         $this->assertTrue(array_key_exists('id', $obj));
         $this->assertTrue(array_key_exists('title', $obj));
-        $this->assertTrue(array_key_exists('url', $obj));
+        $this->assertTrue(array_key_exists('fcode', $obj));
+        $this->assertTrue(array_key_exists('fid', $obj));
         $this->assertTrue(array_key_exists('cover', $obj));
         $this->assertTrue(array_key_exists('duration', $obj));
 
-        $title = "Motion City Soundtrack - My Dinosaur Life - 08 - Pulp " .
-            "Fiction";
-        $this->assertEquals($obj['id'], 9);
+        $title = "we will rock you by QUEEN with lyrics";
+        $this->assertEquals($obj['id'], 4);
         $this->assertEquals($obj['title'], $title);
-        $this->assertEquals($obj['url'], $title);
-        $this->assertEquals(
-            $obj['cover'], "http://i.ytimg.com/vi/BaTSyGfxh5w/3.jpg"
-        );
-        $this->assertEquals($obj['duration'], 0);
+        $this->assertEquals($obj['fcode'], 'y');
+        $this->assertEquals($obj['fid'], 'qGaOlfmX8rQ');
+        $this->assertEquals($obj['duration'], 125);
+        $this->assertEquals($obj['cover'], 'null');
     }
 
     public function testSearchsimilarAction()
