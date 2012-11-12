@@ -20,7 +20,6 @@ class UserTest extends DZend_Test_PHPUnit_DatabaseTestCase
             $this->getConnection()
         );
         $ds->addTable('user', 'SELECT * FROM user');
-        echo dirname(__FILE__) . PHP_EOL;
 
         $this->assertDataSetsEqual(
             $this->createXMLDataSet(

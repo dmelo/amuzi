@@ -29,4 +29,6 @@
     <bond id="2" name="insert_playlist" priority="8" comment="The track was chosen to go to the playlist"/>
     <bond id="3" name="vote_up" priority="16" comment="The user gave a positive vote to the track"/>
     <bond id="4" name="vote_down" priority="16" comment="The user gave a negative vote to the track"/>
+
+    <task_type id="i" name="SearchSimilar"/>
 </dataset>
