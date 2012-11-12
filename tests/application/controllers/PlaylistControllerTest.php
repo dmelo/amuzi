@@ -31,9 +31,8 @@ class PlaylistControllerTest extends AbstractControllerTest
      * @var array
      */
     private $_postRmtrack = array(
-        'url' =>
-            'http://amuzi.localhost/api/271/1MwjX4dG72s/Coldplay - Yellow.mp3',
-        'playlist' => 'default'
+        'trackId' => '2',
+        'playlist' => 'newOne'
     );
 
     /**
@@ -42,7 +41,7 @@ class PlaylistControllerTest extends AbstractControllerTest
      * @var array
      */
     private $_postEditname = array(
-        'name' => 'default',
+        'name' => 'Diogo Melo',
         'newname' => 'New name'
     );
 
