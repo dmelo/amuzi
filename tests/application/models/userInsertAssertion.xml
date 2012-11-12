@@ -12,7 +12,7 @@
         <column>privacy</column>
         <column>current_playlist_id</column>
         <row>
-            <value>2</value>
+            <value>1</value>
             <null/>
             <value>Diogo Melo</value>
             <value>dmelo87@gmail.com</value>
@@ -20,10 +20,10 @@
             <value></value>
             <value></value>
             <value>public</value>
-            <null/>
+            <value>1</value>
         </row>
         <row>
-            <value>3</value>
+            <value>2</value>
             <null/>
             <value>Test Test</value>
             <value>test@test.com</value>
@@ -31,7 +31,7 @@
             <value></value>
             <value></value>
             <value>public</value>
-            <value>5</value>
+            <value>4</value>
         </row>
     </table>
 </dataset>
