@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for file in $@
+FILES="`find application | grep '\.php$'` `find scripts | grep '\.php$'` `find tests/application | grep '\.php$'` tests/bootstrap.php"
+
+for file in $FILES
 do
     grep "* This program is free software:" $file
     if [ 1 -eq $? ]
