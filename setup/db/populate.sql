@@ -9,4 +9,4 @@ INSERT INTO `user`(`name`, `email`, `password`)
 
 INSERT INTO `playlist`(user_id, name) VALUES(last_insert_id(), 'Diogo Melo');
 
-INSERT INTO `task_type`(`name`) values('SearchSimilar');
+INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24 * 30);

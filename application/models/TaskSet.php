@@ -86,8 +86,14 @@ class TaskSet extends DZend_Model
 
     public function closeTask($id)
     {
+        $now = date('Y-m-d H:i:s', time());
         $row = $this->findRowById($id);
         $row->done = date('Y-m-d H:i:s');
+        $taskTypeRow = $row->type;
+        $row->expiration = date(
+            'Y-m-d H:i:s',
+            strtotime($now . ' + ' . $taskTypeRow->duration .  ' seconds')
+        );
         return $row->save();
     }
 }

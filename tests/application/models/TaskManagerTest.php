@@ -25,24 +25,71 @@ require_once 'bootstrap.php';
 
 class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
 {
-    public function testCreateTaskRequest()
+    private $_taskRequestModel;
+
+    private function _addTaskSet()
     {
         $taskRequestModel = new TaskRequest();
         $taskRequestModel->addTask('SearchSimilar', 'U2', 'One');
 
+        $this->_taskRequestModel = $taskRequestModel;
+    }
+
+    private function _getTaskTables()
+    {
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
             $this->getConnection()
         );
+        $ds->addTable('task_type', 'SELECT * FROM task_type');
         $ds->addTable('task_set', 'SELECT * FROM task_set');
         $ds->addTable('task_request', 'SELECT * FROM task_request');
         $ds->addTable('task_parameter', 'SELECT * FROM task_parameter');
+
+        return $this->filterTable(
+            array('task_type', 'task_set', 'task_request', 'task_parameter'), $ds
+        );
+    }
+
+    public function testCreateTaskRequest()
+    {
+        $this->_addTaskSet();
+
 
         $dsFlat = $this->createXMLDataSet(
             dirname(__FILE__) . '/taskRequestInsertAssertion.xml'
         );
 
         $this->assertDataSetsEqual(
-            $dsFlat, $this->filterTable(array('task_set', 'task_request', 'task_parameter'), $ds)
+            $dsFlat, $this->_getTaskTables()
+        );
+    }
+
+    public function testCloseTaskRequest()
+    {
+        $this->_addTaskSet();
+        $rowSet = $this->_taskRequestModel->findOpenTasks('SearchSimilar');
+        foreach ($rowSet as $row) {
+            $this->_taskRequestModel->closeTask($row->id);
+        }
+
+        $dbTables = $this->_getTaskTables();
+        $done = $dbTables->getTable('task_set')->getValue(0, 'done');
+        $duration = $dbTables->getTable('task_type')->getValue(0, 'duration');
+
+        $dsFlat = $this->createXMLDataSet(
+            dirname(__FILE__) . '/taskRequestInsertAssertion.xml'
+        );
+
+        $dsFlat->getTable('task_set')->setValue(
+            0, 'done', $done
+        );
+        $dsFlat->getTable('task_set')->setValue(
+            0, 'expiration', date('Y-m-d H:i:s', strtotime("$done + $duration seconds"))
+        );
+
+
+        $this->assertDataSetsEqual(
+            $dsFlat, $dbTables
         );
     }
 }

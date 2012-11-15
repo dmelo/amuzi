@@ -60,6 +60,6 @@ class TaskRequest extends DZend_Model
 
     public function closeTask($taskSetId)
     {
-        return $ths->_taskSetModel->closeTask($taskSetId);
+        return $this->_taskSetModel->closeTask($taskSetId);
     }
 }

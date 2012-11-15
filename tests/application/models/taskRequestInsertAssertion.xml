@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <dataset>
+    <table name="task_type">
+        <column>id</column>
+        <column>name</column>
+        <column>duration</column>
+        <row>
+            <value>1</value>
+            <value>SearchSimilar</value>
+            <value>2592000</value>
+        </row>
+    </table>
+
     <table name="task_set">
         <column>id</column>
         <column>task_type_id</column>
