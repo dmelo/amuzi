@@ -25,14 +25,14 @@ require_once 'bootstrap.php';
 
 class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
 {
-    private $_taskRequestModel;
+    private $_taskRequestModel = null;
 
     private function _addTaskSet()
     {
-        $taskRequestModel = new TaskRequest();
-        $taskRequestModel->addTask('SearchSimilar', 'U2', 'One');
-
-        $this->_taskRequestModel = $taskRequestModel;
+        if (null === $this->_taskRequestModel) {
+            $this->_taskRequestModel = new TaskRequest();
+        }
+        $this->_taskRequestModel->addTask('SearchSimilar', 'U2', 'One');
     }
 
     private function _getTaskTables()
@@ -53,8 +53,6 @@ class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
     public function testCreateTaskRequest()
     {
         $this->_addTaskSet();
-
-
         $dsFlat = $this->createXMLDataSet(
             dirname(__FILE__) . '/taskRequestInsertAssertion.xml'
         );
@@ -62,6 +60,25 @@ class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
         $this->assertDataSetsEqual(
             $dsFlat, $this->_getTaskTables()
         );
+    }
+
+    public function testCreateMultipleTaskRequests()
+    {
+        $this->_addTaskSet();
+        $this->_addTaskSet();
+        $this->_addTaskSet();
+        $this->_addTaskSet();
+        $dsFlat = $this->createXMLDataSet(
+            dirname(__FILE__) . '/taskRequestInsertAssertion.xml'
+        );
+        $dsFlat->getTable('task_request')->addRow(array('id' => 2, 'task_set_id' => 1));
+        $dsFlat->getTable('task_request')->addRow(array('id' => 3, 'task_set_id' => 1));
+        $dsFlat->getTable('task_request')->addRow(array('id' => 4, 'task_set_id' => 1));
+
+        $this->assertDataSetsEqual(
+            $dsFlat, $this->_getTaskTables()
+        );
+
     }
 
     public function testCloseTaskRequest()
