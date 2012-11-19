@@ -243,7 +243,9 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
             // console.log('DONE WITH: ' + newMusic);
         }
     } else { // the cell is trapped.
-        // TODO: cry.
+        console.log("Cell is trapped: ");
+        console.log(newMusic);
+        console.log(mostSimilar);
     }
 }
 

@@ -91,7 +91,7 @@ IncBoardBoard.prototype.insert = function (music, pos) {
         ret = false;
     }
 
-    this.fsck();
+    this.fsckReport();
 
     return ret;
 };
@@ -142,8 +142,6 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
         throw new Error('Invalid parameter given: ' + errMsg);
         ret = false;
     }
-
-    // this.fsck();
 
     return ret;
 };
@@ -346,6 +344,18 @@ IncBoardBoard.prototype.getIdsList = function() {
 
     return list;
 };
+
+IncBoardBoard.prototype.fsckReport = function() {
+    try {
+        this.fsck();
+    } catch (err) {
+        $.post('/api/reporterror', {
+            origin: 'incBoardBoard',
+            err: err,
+            obj: this
+        });
+    }
+}
 
 IncBoardBoard.prototype.fsck = function () {
     var counter = [],

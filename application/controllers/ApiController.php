@@ -256,4 +256,18 @@ class ApiController extends DZend_Controller_Action
     {
         $this->_taskRequestModel->addTask('SearchSimilar', 'Coldplay', 'Bla');
     }
+
+    public function reporterrorAction()
+    {
+        $message = array('Wrong parameters/method', 'error');
+        if ($this->_request->isPost()) {
+            $origin = $this->_request->getParam('origin');
+            $err = $this->_request->getParam('err');
+            $obj = $this->_request->getParam('obj');
+            $this->_logger->err("ApiController::reporterrorAction -> origin: $origin. err: $err. obj: $obj");
+            $message = array('Error reported successfully', 'success');
+        }
+
+        $this->view->message = $message;
+    }
 }
