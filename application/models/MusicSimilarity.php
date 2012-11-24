@@ -247,11 +247,11 @@ class MusicSimilarity extends DZend_Model
             $artist, $musicTitle
         );
         $artistMusicTitleIdList[] = $artistMusicTitleId;
-        $list = array(
+        $list = array(array(
             'artist' => $artist,
             'musicTitle' => $musicTitle,
             'artistMusicTitleId' => $artistMusicTitleId
-        );
+        ));
 
         foreach ($rowSet as $row) {
             $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
