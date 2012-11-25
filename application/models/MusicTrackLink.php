@@ -31,7 +31,8 @@ class MusicTrackLink extends DZend_Model
                 findRowByArtistMusicTitleIdAndTrackIdAndUserId(
                     $artistMusicTitleId,
                     $trackId,
-                    isset($this->_session->user) ? $this->_session->user->id : null
+                    isset($this->_session->user) ?
+                    $this->_session->user->id : null
                 );
 
             $currentBondRow = null;
@@ -51,7 +52,8 @@ class MusicTrackLink extends DZend_Model
             $data = array(
                 'artist_music_title_id' => $artistMusicTitleId,
                 'track_id' => $trackId,
-                'user_id' => isset($this->_session->user) ? $this->_session->user->id : null,
+                'user_id' => isset($this->_session->user) ?
+                    $this->_session->user->id : null,
                 'bond_id' => $bondRow->id
             );
 

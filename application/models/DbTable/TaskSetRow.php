@@ -23,7 +23,8 @@
  */
 class DbTable_TaskSetRow extends DZend_Db_Table_Row
 {
-    public function __get($name) {
+    public function __get($name)
+    {
         $taskParameterDb = new DbTable_TaskParameter();
         if (0 === strpos($name, 'param')) {
             $num = str_replace('param', '', $name);
@@ -37,7 +38,7 @@ class DbTable_TaskSetRow extends DZend_Db_Table_Row
             return parent::__get($name);
         } elseif ('type' === $name) {
             $taskTypeDb = new DbTable_TaskType();
-            return $taskTypeDb->findRowById($this->task_type_id);
+            return $taskTypeDb->findRowById($this->taskTypeId);
         } else {
             return parent::__get($name);
         }

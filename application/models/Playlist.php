@@ -284,7 +284,9 @@ class Playlist extends DZend_Model
 
                 // If there is users who listen to this playlist, those records 
                 // must be deleted first.
-                $this->_userListenPlaylistModel->deleteByPlaylistId($playlistRow->id);
+                $this->_userListenPlaylistModel->deleteByPlaylistId(
+                    $playlistRow->id
+                );
 
                 $this->_playlistHasTrackDb->deleteByPlaylistId(
                     $playlistRow->id

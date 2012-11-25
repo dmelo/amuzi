@@ -57,7 +57,8 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
         } elseif ('youtubeUrl' === $name) {
             return 'http://www.youtube.com/watch?v=' . $this->fid;
         } elseif ('youtubeUrlEmbedded' === $name) {
-            return 'http://www.youtube.com/embed/' . $this->fid . '?autoplay=1&rel=0';
+            return 'http://www.youtube.com/embed/' . $this->fid
+                . '?autoplay=1&rel=0';
         } else {
             return parent::__get($name);
         }

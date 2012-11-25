@@ -122,7 +122,8 @@ class MusicSimilarity extends DZend_Model
         for ($i = 0; $i < count($ids); $i++) {
             for ($j = $i + 1; $j < count($ids); $j++) {
                 if (($similarity =
-                        ($similarities[$i] * $similarities[$j]) / 10000) >= 20) {
+                        ($similarities[$i] * $similarities[$j]) / 10000) >= 20
+                ) {
                     $newRows[] = $this->packData(
                         $ids[$i], $ids[$j], $similarity, $degree
                     );
@@ -189,7 +190,9 @@ class MusicSimilarity extends DZend_Model
      * elements, each element containing artist and musicTitle. The second
      * element is the similarity matrix.
      */
-    public function getSimilar($artist, $musicTitle, $artistMusicTitleIdList = array())
+    public function getSimilar(
+        $artist, $musicTitle, $artistMusicTitleIdList = array()
+    )
     {
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
             $artist, $musicTitle
@@ -205,7 +208,9 @@ class MusicSimilarity extends DZend_Model
 
         if (empty($idsList)) {
             $this->_logger->debug("MusicSimilarity::getSimilar local empty");
-            return $this->searchSimilarSync($artist, $musicTitle, $artistMusicTitleIdList);
+            return $this->searchSimilarSync(
+                $artist, $musicTitle, $artistMusicTitleIdList
+            );
         }
 
         $completeIdsList = array();
@@ -214,15 +219,23 @@ class MusicSimilarity extends DZend_Model
         }
         $completeIdsList = array_merge($completeIdsList, $idsList);
 
-        $similarityMatrixResponse = $this->getSimilarityMatrix($completeIdsList);
+        $similarityMatrixResponse = $this->getSimilarityMatrix(
+            $completeIdsList
+        );
 
-        $this->_logger->debug("MusicSimilarity::getSimilar local quality{ size: " . $similarityMatrixResponse[1] . ". non-zero: " . $similarityMatrixResponse[2]);
+        $this->_logger->debug(
+            "MusicSimilarity::getSimilar local quality{ size: "
+            . $similarityMatrixResponse[1] . ". non-zero: "
+            . $similarityMatrixResponse[2]
+        );
 
         if (
             $similarityMatrixResponse[1] < 20 ||
             $similarityMatrixResponse[2] < 0.03
         ) {
-            return $this->searchSimilarSync($artist, $musicTitle, $artistMusicTitleIdList);
+            return $this->searchSimilarSync(
+                $artist, $musicTitle, $artistMusicTitleIdList
+            );
         }
 
         $artistAndMusicTitleList = $this->_artistMusicTitleModel
@@ -240,7 +253,9 @@ class MusicSimilarity extends DZend_Model
         );
     }
 
-    public function searchSimilarSync($artist, $musicTitle, $artistMusicTitleIdList = array())
+    public function searchSimilarSync(
+        $artist, $musicTitle, $artistMusicTitleIdList = array()
+    )
     {
         $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
@@ -266,7 +281,11 @@ class MusicSimilarity extends DZend_Model
                 );
             }
 
-            if (array_search($sArtistMusicTitleId, $artistMusicTitleIdList) === false) {
+            if (
+                array_search(
+                    $sArtistMusicTitleId, $artistMusicTitleIdList
+                ) === false
+            ) {
                 $list[] = array(
                     'artist' => $row->artist,
                     'musicTitle' => $row->musicTitle,
@@ -282,10 +301,9 @@ class MusicSimilarity extends DZend_Model
         );
 
         $similarityMatrixResponse = $this->_musicSimilarityModel
-            ->getSimilarityMatrix(
+        ->getSimilarityMatrix(
             $artistMusicTitleIdList
         );
-
 
         return array(
             $list,
