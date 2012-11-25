@@ -263,7 +263,7 @@ IncBoard.prototype.insert = function(v) {
         self = this;
 
     this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
-        if(maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
+        if(artistMusicTitleId in self.similarity && v.artistMusicTitleId in self.similarity[artistMusicTitleId] && maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
             maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
             mostSimilar = e;
             nSwitches++;
