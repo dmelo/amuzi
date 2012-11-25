@@ -43,7 +43,8 @@ class YoutubeEntry extends AbstractEntry
     {
         $this->fcode = 'y';
         $this->_fields = array(
-            'id', 'title', 'fid', 'cover', 'duration', 'artist', 'musicTitle', 'artistMusicTitleId'
+            'id', 'title', 'fid', 'cover', 'duration', 'artist', 'musicTitle',
+            'artistMusicTitleId'
         );
         $this->_data = array();
 
@@ -52,6 +53,13 @@ class YoutubeEntry extends AbstractEntry
                 $this->_data[$key] = $value;
     }
 
+    /**
+     * __set Set attribute value.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return void
+     */
     public function __set($key, $value)
     {
         parent::__set($key, $value);
@@ -64,7 +72,7 @@ class YoutubeEntry extends AbstractEntry
 
 
     /**
-     * getArray
+     * getArray Get the youtube entry on array format.
      *
      * @return void
      */

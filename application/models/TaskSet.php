@@ -45,7 +45,9 @@ class TaskSet extends DZend_Model
         }
 
         if (0 !== count($rowSet)) {
-            return $this->_taskParameterModel->findMostRecentTaskSetId($ids, $args);
+            return $this->_taskParameterModel->findMostRecentTaskSetId(
+                $ids, $args
+            );
         }
 
         return false;

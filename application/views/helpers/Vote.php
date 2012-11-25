@@ -26,6 +26,8 @@ class View_Helper_Vote extends Zend_View_Helper_Abstract
     public function vote($trackId, $artistMusicTitleId, $bond)
     {
         $face = 'up' === $bond ? 'happy' : 'sad';
-        return "<a class=\"vote vote-$bond\" href=\"/playlist/vote/track_id/$trackId/artist_music_title_id/$artistMusicTitleId/bond/vote_$bond\"><img src=\"/img/emotion_${face}_big.png\"/></a>";
+        return "<a class=\"vote vote-$bond\" href=\"/playlist/vote/track_id/"
+            . "$trackId/artist_music_title_id/$artistMusicTitleId/bond/vote_"
+            . "$bond\"><img src=\"/img/emotion_${face}_big.png\"/></a>";
     }
 }

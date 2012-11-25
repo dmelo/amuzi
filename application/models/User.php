@@ -130,7 +130,9 @@ class User extends DZend_Model
 
         try {
             $mail->send();
-            $this->_logger->debug('User::sendActivateAccountEmail sending ok. --> ' . $msg);
+            $this->_logger->debug(
+                'User::sendActivateAccountEmail sending ok. --> ' . $msg
+            );
         } catch(Zend_Mail_Transport_Exception $e) {
             $this->_logger->error($e);
             return false;
@@ -163,9 +165,14 @@ class User extends DZend_Model
 
         try {
             $mail->send();
-            $this->_logger->debug('User::sendForgotPasswordEmail sending ok. --> ' . $msg);
+            $this->_logger->debug(
+                'User::sendForgotPasswordEmail sending ok. --> ' . $msg
+            );
         } catch(Zend_Mail_Transport_Exception $e) {
-            $this->_logger->error('User::sendForgotPasswordEmail error while sending email to user: ' . $userRow->email);
+            $this->_logger->error(
+                'User::sendForgotPasswordEmail error while sending email'
+                . ' to user: ' . $userRow->email
+            );
             return false;
         }
 
