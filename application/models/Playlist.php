@@ -319,9 +319,9 @@ class Playlist extends DZend_Model
      * @param int $id Row ID
      * @return Returns the asked row.
      */
-    public function findRowById(int $id)
+    public function findRowById($id)
     {
-        return $this->_playlistDb->findById($id);
+        return $this->_playlistDb->findRowById($id);
     }
 
     /**

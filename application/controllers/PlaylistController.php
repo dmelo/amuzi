@@ -357,4 +357,18 @@ class PlaylistController extends DZend_Controller_Action
     {
         $this->view->playlistRowSet = $this->_playlistModel->fetchAllUsers();
     }
+
+    /**
+     * infoAction fetch detailed information about an specific playlist.
+     *
+     * @return void
+     */
+    public function infoAction()
+    {
+        if (($playlistId = $this->_request->getParam('playlistId')) !== null) {
+            $this->view->playlistRow = $this->_playlistModel->findRowById($playlistId);
+        } else {
+            $this->view->message = array('Wrong call', 'error');
+        }
+    }
 }

@@ -1,0 +1,9 @@
+<?
+
+if (isset($this->playlistRow)) {
+    echo $this->playlistInfo($this->playlistRow);
+} elseif (isset($this->message)) {
+    echo Zend_Json::encode($this->message);
+}
+
+?>
