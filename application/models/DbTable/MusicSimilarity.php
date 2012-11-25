@@ -59,7 +59,7 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
         return $row->$column;
     }
 
-    public function getSimilar($artist, $musicTitle)
+    public function getSimilar($artist, $musicTitle, $artistMusicTitleIdList)
     {
         $artistMusicTitleModel = new ArtistMusicTitle();
         $artistMusicTitleId = $artistMusicTitleModel->insert(
@@ -68,8 +68,15 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
 
         $db = $this->getAdapter();
 
-        $where = "f_artist_music_title_id = $artistMusicTitleId " .
-            "or s_artist_music_title_id = $artistMusicTitleId";
+        $where = "( f_artist_music_title_id = $artistMusicTitleId " .
+            "or s_artist_music_title_id = $artistMusicTitleId ) ";
+        foreach ($artistMusicTitleIdList as $amtId) {
+            if ($amtId != $artistMusicTitleId) {
+            $where .= " AND f_artist_music_title_id != $amtId "
+                . "AND s_artist_music_title_id != $amtId ";
+            }
+        }
+
         $rowSet = $this->fetchAll($where, 'similarity desc');
         $ret = array();
         foreach ($rowSet as $row) {

@@ -195,7 +195,7 @@ class MusicSimilarity extends DZend_Model
             $artist, $musicTitle
         );
         $similarList = $this->_musicSimilarityDb->getSimilar(
-            $artist, $musicTitle
+            $artist, $musicTitle, $artistMusicTitleIdList
         );
         $idsList = array($artistMusicTitleId);
         foreach ($similarList as $entry) {
@@ -258,20 +258,23 @@ class MusicSimilarity extends DZend_Model
                 $row->artist, $row->musicTitle
             );
 
-            if (null !== $sArtistMusicTitleId)
+            if (null !== $sArtistMusicTitleId) {
                 $this->_musicSimilarityModel->insert(
                     $artistMusicTitleId,
                     $sArtistMusicTitleId,
                     $row->similarity
                 );
+            }
 
-            $list[] = array(
-                'artist' => $row->artist,
-                'musicTitle' => $row->musicTitle,
-                'artistMusicTitleId' => $sArtistMusicTitleId
-            );
+            if (array_search($sArtistMusicTitleId, $artistMusicTitleIdList) === false) {
+                $list[] = array(
+                    'artist' => $row->artist,
+                    'musicTitle' => $row->musicTitle,
+                    'artistMusicTitleId' => $sArtistMusicTitleId
+                );
 
-            $artistMusicTitleIdList[] = $sArtistMusicTitleId;
+                $artistMusicTitleIdList[] = $sArtistMusicTitleId;
+            }
         }
 
         $this->_musicSimilarityModel->calcSimilarityDegree(
