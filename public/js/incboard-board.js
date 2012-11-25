@@ -217,6 +217,11 @@ IncBoardBoard.prototype.centralizeItems = function() {
         }
     });
 
+    if (1000 === minX && 0 === maxX && 1000 === minY && 0 === maxY) {
+        console.log("Nothing to centralize");
+        return;
+    }
+
     var shiftX = parseInt(((this.cols - maxX - 1) - minX) / 2);
     var shiftY = parseInt(((this.rows - maxY - 1) - minY) / 2);
 

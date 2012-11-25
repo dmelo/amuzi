@@ -45,10 +45,11 @@
                 }
             }
 
-            if(typeof(counter[subtitles.indexOf(subtitle)]) == 'undefined')
-                counter[subtitles.indexOf(subtitle)] = 1;
-            else
+            if (subtitles.indexOf(subtitles) in counter) {
                 counter[subtitles.indexOf(subtitle)]++;
+            } else {
+                counter[subtitles.indexOf(subtitle)] = 1;
+            }
         },
         subtitleGetColor: function(subtitle) {
             var i = subtitles.indexOf(subtitle);
