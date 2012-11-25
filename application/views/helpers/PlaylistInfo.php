@@ -28,8 +28,7 @@ class View_Helper_PlaylistInfo extends View_Helper_T
     public function playlistInfo($playlistRow)
     {
         $trackList = $playlistRow->getTrackListAsArray();
-        $ret = '<div class="playlist-info">'
-            . '<div class="head">'
+        $ret = '<div class="head">'
             . '<p>' . $this->t('Name') . ': ' . $playlistRow->name . '</p>'
             . '<p>' . $this->t('Nro Tracks') . ': ' . count($trackList) . '</p>'
             . '<p>' . $this->t('Play time') . ': ' . $this->_secsToTime($playlistRow->playTime())
@@ -39,7 +38,7 @@ class View_Helper_PlaylistInfo extends View_Helper_T
         foreach ($trackList as $trackRow) {
             $ret .= $this->_trackRow($trackRow);
         }
-        $ret .= '</ul></div></div>';
+        $ret .= '</ul></div>';
 
         return $ret;
     }

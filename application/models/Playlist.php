@@ -172,6 +172,21 @@ class Playlist extends DZend_Model
     }
 
     /**
+     * findRowByName Find playlist by the given name, owner by the current
+     * logged in user.
+     *
+     * @param string $name Playlist's name.
+     * @return void Return the corresponding Zend_Db_Table_Row or null, if none
+     * is found.
+     */
+    public function findRowByName($name)
+    {
+        return $this->_playlistDb->findRowByUserIdAndName(
+            $this->_session->user->id, $name
+        );
+    }
+
+    /**
      * setNewName
      *
      * @param string $name Current playlist's name.
@@ -182,9 +197,7 @@ class Playlist extends DZend_Model
     public function setNewName($name, $newName)
     {
         try {
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id, $name
-            );
+            $playlistRow = $this->findRowByName($name);
             if(null === $playlistRow)
                 return false;
             $playlistRow->name = $newName;

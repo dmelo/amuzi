@@ -366,7 +366,15 @@ class PlaylistController extends DZend_Controller_Action
     public function infoAction()
     {
         if (($playlistId = $this->_request->getParam('playlistId')) !== null) {
-            $this->view->playlistRow = $this->_playlistModel->findRowById($playlistId);
+            $this->view->playlistRow = $this->_playlistModel->findRowById(
+                $playlistId
+            );
+        } elseif (
+            ($playlistName = $this->_request->getParam('playlistName')) !== null
+        ) {
+            $this->view->playlistRow = $this->_playlistModel->findRowByName(
+                $playlistName
+            );
         } else {
             $this->view->message = array('Wrong call', 'error');
         }

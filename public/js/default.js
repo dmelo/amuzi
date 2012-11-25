@@ -260,7 +260,6 @@
         });
     }
 
-
     function shareLink(e) {
         e.preventDefault();
         $.post('/share', {
@@ -429,6 +428,19 @@
 
     function playlistSquareHover(ele) {
         $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
+        $('#edit-playlist .stripe').attr('playlistid', $(this).attr('playlistid'));
+    }
+
+    function reloadPlaylistInfo(name) {
+        $.get('/playlist/info', {
+            playlistName: name
+        }, function(data) {
+            $('div[playlistid=' + data[0] + '] .playlist-info').html(data[1]);
+            var editDiv = $('#edit-playlist .stripe[playlistid=' + data[0] + ']');
+            if (1 === editDiv.length) {
+                editDiv.html(data[1]);
+            }
+        }, 'json');
     }
 
     $(document).ready(function() {
@@ -459,6 +471,7 @@
         $('.jp-playlist-item-remove').live('click', function(e) {
             trackId = $(this).parent().parent().attr('track_id');
             rmTrack(trackId, myPlaylist.name);
+            reloadPlaylistInfo(myPlaylist.name);
         });
 
         // placeholder on the search input.
@@ -528,6 +541,7 @@
             update: function() {
                 myPlaylist.scan();
                 savePlaylist();
+                reloadPlaylistInfo(myPlaylist.name);
             }
         });
 

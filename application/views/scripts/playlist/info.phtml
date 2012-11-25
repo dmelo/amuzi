@@ -1,7 +1,12 @@
 <?
 
 if (isset($this->playlistRow)) {
-    echo $this->playlistInfo($this->playlistRow);
+    echo Zend_Json::encode(
+        array(
+            $this->playlistRow->id,
+            $this->playlistInfo($this->playlistRow)
+        )
+    );
 } elseif (isset($this->message)) {
     echo Zend_Json::encode($this->message);
 }
