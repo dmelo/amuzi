@@ -32,8 +32,9 @@ function  IncBoard() {
 IncBoard.prototype.clean = function () {
     this.pos = 0;
     this.similarity = null;
-    this.error = false;
     this.ibb.clean();
+    this.searchSimilarList = [];
+    this.incrementSimilarRunning = false;
 };
 
 IncBoard.prototype.posGreaterThan = function(posA, posB) {
@@ -293,23 +294,20 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
             'artist': m.artist,
             'musicTitle': m.musicTitle
         }, function(v) {
-            if (false === false  /* this.error */) {
-                try {
-                    var start = new Date().getTime();
-                    if (true === self.insert(v)) {
-                        if ('function' === typeof callback) {
-                            callback(v);
-                        }
-                        self.searchMusic(set, num - 1);
-                    } else {
-                        self.searchMusic(set, num);
+            try {
+                var start = new Date().getTime();
+                if (true === self.insert(v)) {
+                    if ('function' === typeof callback) {
+                        callback(v, set, num);
                     }
-                    var end = new Date().getTime();
-                } catch(e) {
-                    console.log(e.stack);
-                    console.log(e);
-                    this.error = true;
+                    self.searchMusic(set, num - 1);
+                } else {
+                    self.searchMusic(set, num);
                 }
+                var end = new Date().getTime();
+            } catch(e) {
+                console.log(e.stack);
+                console.log(e);
             }
         }, 'json');
     }
@@ -317,6 +315,35 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
 
 IncBoard.prototype.posToString = function (pos) {
     return "(" + pos[0] + "," + pos[1] + ")";
+};
+
+IncBoard.prototype.incrementSimilar = function() {
+    var self = this;
+
+    if (true === this.incrementSimilarRunning) {
+        setTimeout(1000, this.incrementSimilar);
+    } else {
+        if (this.searchSimilarList.length > 0) {
+            var obj = this.searchSimilarList.shift(),
+                artist = obj[0],
+                musicTitle = obj[1];
+
+            console.log('INCREMENTING ' + artist + " - " + musicTitle);
+            this.incrementSimilarRunning = true;
+            $.post('/api/searchsimilar', {
+                q: artist + ' - ' + musicTitle,
+                artist: artist,
+                musicTitle: musicTitle,
+                artistMusicTitleIdList: incBoard.ibb.getIdsList()
+            }, function(data) {
+                loadSimilarMusic(data, 10);
+                self.incrementSimilarRunning = false;
+                self.incrementSimilar();
+            }, 'json').error(function() {
+                self.incrementSimilarRunning = false;
+            });
+        }
+    }
 };
 
 var incBoard = new IncBoard();
@@ -328,11 +355,11 @@ function searchMusicCallbackCenter(v) {
     $('#' + v.artistMusicTitleId).addClass('center');
 };
 
-function loadSimilarMusic(data, num) {
+function loadSimilarMusic(data, num, callback) {
     $.bootstrapMessageOff();
     var total = 0;
     incBoard.similarity = data[1];
-    incBoard.searchMusic(data[0], num);
+    incBoard.searchMusic(data[0], num, callback);
 }
 
 $(document).ready(function() {
@@ -340,14 +367,8 @@ $(document).ready(function() {
         $('.music-large').live('click', function(e) {
             var artist = $(this).parent().attr('artist');
             var musicTitle = $(this).parent().attr('musicTitle');
-            $.post('/api/searchsimilar', {
-                q: artist + ' - ' + musicTitle,
-                artist: artist,
-                musicTitle: musicTitle,
-                artistMusicTitleIdList: incBoard.ibb.getIdsList()
-            }, function(data) {
-                loadSimilarMusic(data, 10);
-            }, 'json');
+            incBoard.searchSimilarList.push([artist, musicTitle]);
+            incBoard.incrementSimilar();
         });
     }
 
