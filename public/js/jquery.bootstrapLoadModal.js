@@ -59,6 +59,9 @@
                     $(modalWrapper + ' .modal-body').html(data);
                     $(modalWrapper + ' h3').html(title);
                     $(modalWrapper).modal('show');
+                    if ('undefined' !== typeof(callback) && 'function' === typeof(eval('rendered_' + callback))) {
+                        eval('rendered_' + callback)();
+                    }
                     if(!noForm) {
                         $(modalWrapper + ' form').ajaxForm({
                             dataType: 'json',

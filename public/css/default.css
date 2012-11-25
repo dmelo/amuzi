@@ -331,3 +331,13 @@ ul.ui-autocomplete {
     padding-right: 28px;
     padding-left: 28px;
 }
+
+.side-view-thumb {
+    position: relative;
+    float: right;
+    margin-top: -64px;
+}
+
+.side-view-thumb img {
+    width: 200px;
+}

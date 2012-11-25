@@ -372,10 +372,28 @@
         verifyView();
     }
 
+    function refreshViewThumbnail() {
+        var src = '';
+        if ('default' === $('#view').val()) {
+            src = '/img/thumb_classic.png';
+        } else if ('incboard' === $('#view').val()) {
+            src = '/img/thumb_incboard.png';
+        }
+
+        $('.side-view-thumb img').attr('src', src);
+    }
+
+    function rendered_userSettings() {
+        console.log('Just renedered settings');
+        $('#view').parent().append('<div class="side-view-thumb"><img src=""/></div>');
+        refreshViewThumbnail();
+        $('#view').change(refreshViewThumbnail);
+    }
+
     function addToPlaylist(e) {
         var trackId = e.attr('trackId')
 
-        var artist = e.parent().attr('artist'); 
+        var artist = e.parent().attr('artist');
         if ('undefined' === typeof artist) {
             artist = $('#artist').val();
         }
