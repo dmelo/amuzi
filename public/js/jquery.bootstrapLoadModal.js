@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /**
  * Usage: $('a.identifier').loadModal();
  *
@@ -28,6 +29,11 @@
  *
  * If the element have the class "noForm" then the ajaxForm is not instantiated
  * for it.
+ *
+ * Considering ID to be the id attribute of the identifier link, if rendered_ID
+ * is defined as a function, then it will be called after the modal is rendered.
+ * If callback_ID is defined as a function, it will be called after confirm
+ * button is clicked.
  *
  * Author: Diogo Oliveira de Melo
  */
