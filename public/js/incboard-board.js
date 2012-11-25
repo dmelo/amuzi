@@ -150,6 +150,7 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
  * Safely remove an element from the board.
  */
 IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
+    console.log("removing " + artistMusicTitleId);
     var pos = this.listByAMTId[artistMusicTitleId].getPos();
 
     // cell.remove()
@@ -159,14 +160,14 @@ IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
     this.size--;
 
     // listByAMTId
-    this.listByAMTId.splice(artistMusicTitleId, 1);
+    delete this.listByAMTId[artistMusicTitleId];
 
     // listByPos
-    this.listByPos[this.posToInt(pos)].splice(artistMusicTitleId, 1);
+    delete this.listByPos[this.posToInt(pos)][artistMusicTitleId];
 
     // drawList
     if (-1 !== this.drawList.indexOf(artistMusicTitleId)) {
-        this.drawList.splice(this.drawList.indexOf(artistMusicTitleId), 1);
+        delete this.drawList[this.drawList.indexOf(artistMusicTitleId)];
     }
 };
 
