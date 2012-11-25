@@ -36,23 +36,19 @@ IncBoardBoard.prototype.init = function () {
 
 IncBoardBoard.prototype.clean = function () {
     var cell = new IncBoardCell();
-    this.cols = parseInt( ( $(window).width() - 250 ) / cell.cellSizeX );
-    this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('.navbar').height() - $('.footer').height() - $('.alert').height() - $('.alert').offset().top ) / cell.cellSizeY );
-    console.log("COLS: " + this.cols);
-    console.log("ROWS: " + this.rows);
-
-    var table = $('<div id="incboard"></div>');
-    table.css('width', this.cols * cell.cellSizeX);
-    table.css('height', this.rows * cell.cellSizeY);
-    this.l = [];
-    $('#incboard-result').html(table);
     this.listByAMTId = [];
     this.listByPos = [];
     this.size = 0;
     this.drawList = [];
+
+    this.resize();
+    console.log("COLS: " + this.cols);
+    console.log("ROWS: " + this.rows);
+
+    var table = $('<div id="incboard"></div>');
+    this.l = [];
+    $('#incboard-result').html(table);
 };
-
-
 
 IncBoardBoard.prototype.getCols = function () {
     return this.cols;
@@ -183,6 +179,15 @@ IncBoardBoard.prototype.removeOutOfBorder = function() {
             self.remove(cell.getContent().artistMusicTitleId);
         }
     });
+};
+
+IncBoardBoard.prototype.resize = function() {
+    var cell = new IncBoardCell();
+    this.cols = parseInt( ( $(window).width() - 250 ) / cell.cellSizeX );
+    this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('.navbar').height() - $('.footer').height() - $('.alert').height() - $('.alert').offset().top ) / cell.cellSizeY );
+    this.removeOutOfBorder();
+    this.centralizeItems();
+    this.flushDraw();
 };
 
 /**

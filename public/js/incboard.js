@@ -388,4 +388,6 @@ $(document).ready(function() {
             incBoard.searchMusic([obj], 1, searchMusicCallbackCenter);
         }
     });
+
+    $(window).bind('resize', $.proxy(incBoard.ibb, 'resize'));
 });
