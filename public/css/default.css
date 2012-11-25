@@ -341,3 +341,21 @@ ul.ui-autocomplete {
 .side-view-thumb img {
     width: 200px;
 }
+
+.playlist-info {
+    display: none;
+}
+
+#edit-playlist {
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-left: 10px;
+}
+
+#edit-playlist li {
+    list-style: none;
+}
+
+#edit-playlist img {
+    width: 50px;
+}

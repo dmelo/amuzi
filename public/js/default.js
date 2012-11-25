@@ -427,6 +427,10 @@
         });
     }
 
+    function playlistSquareHover(ele) {
+        $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
+    }
+
     $(document).ready(function() {
         verifyView();
 
@@ -591,6 +595,9 @@
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
             $(this).jPlayer("play");
         });
+
+        $('.playlist-square').live('hover', playlistSquareHover);
+        $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
 
         $.slideInit();
         loadPlaylistSet();
