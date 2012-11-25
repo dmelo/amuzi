@@ -32,26 +32,57 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
     {
         $db = $this->getAdapter();
         $select = $db->select();
-        $select->from(array('amt' => 'artist_music_title'), array('artistMusicTitleId' => 'id'))
-            ->join(array('a' => 'artist'), 'a.id = amt.artist_id', array('artist' => 'name'))
-            ->join(array('m' => 'music_title'), 'm.id = amt.music_title_id', array('musicTitle' => 'name'))
-            ->where('amt.id in ( ' . implode(', ', $idsList) . ')');
-        $this->_logger->debug("-----> select: " . $select);
+        $select->from(
+            array('amt' => 'artist_music_title'),
+            array('artistMusicTitleId' => 'id')
+        )->join(
+            array('a' => 'artist'),
+            'a.id = amt.artist_id',
+            array('artist' => 'name')
+        )->join(
+            array('m' => 'music_title'),
+            'm.id = amt.music_title_id',
+            array('musicTitle' => 'name')
+        )->where('amt.id in ( ' . implode(', ', $idsList) . ')');
+
         return $db->fetchAll($select);
     }
 
+    /**
+     * autocomplete Search on database for rows that fits the query.
+     *
+     * @param mixed $q
+     * @param int $limit
+     * @return Zend_Db_Table_RowSet
+     */
     public function autocomplete($q, $limit = 10)
     {
         $db = $this->getAdapter();
         $select = $db->select();
-        $select->from(array('a' => 'artist'), array('name' => 'concat(a.name, " - ", mt.name)', 'cover' => 't.cover', 'artist' => 'name', 'musicTitle' => 'mt.name'))
-            ->join(array('amt' => 'artist_music_title'), 'amt.artist_id = a.id', array())
-            ->join(array('mt' => 'music_title'), 'mt.id = amt.music_title_id', array())
-            ->join(array('mtl' => 'music_track_link'), 'mtl.artist_music_title_id = amt.id', array())
-            ->join(array('t' => 'track'), 't.id = mtl.track_id', array())
-            ->where('concat(a.name, " - ", mt.name) like ?', '%' . $q . '%')
-            ->group('amt.id')
-            ->limit($limit);
+        $select->from(
+            array('a' => 'artist'),
+            array(
+                'name' => 'concat(a.name, " - ", mt.name)',
+                'cover' => 't.cover',
+                'artist' => 'name',
+                'musicTitle' => 'mt.name'
+                )
+        )->join(
+            array('amt' => 'artist_music_title'),
+            'amt.artist_id = a.id',
+            array()
+        )->join(
+            array('mt' => 'music_title'),
+            'mt.id = amt.music_title_id',
+            array()
+        )->join(
+            array('mtl' => 'music_track_link'),
+            'mtl.artist_music_title_id = amt.id',
+            array()
+        )->join(array('t' => 'track'), 't.id = mtl.track_id', array())
+        ->where('concat(a.name, " - ", mt.name) like ?', '%' . $q . '%')
+        ->group('amt.id')
+        ->limit($limit);
 
         $this->_logger->debug("-----> select: " . $select);
         return $db->fetchAll($select);

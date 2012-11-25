@@ -88,7 +88,14 @@ class ApiController extends DZend_Controller_Action
                     $artist = $this->_request->getParam('artist');
                     $musicTitle = $this->_request->getParam('musicTitle');
                     $complement = null !== $artist && null !== $musicTitle ?
-                        array('artist' => $artist, 'musicTitle' => $musicTitle, 'artistMusicTitleId' => $this->_artistMusicTitleModel->insert($artist, $musicTitle)):
+                        array(
+                            'artist' => $artist,
+                            'musicTitle' => $musicTitle,
+                            'artistMusicTitleId' => $this->
+                                _artistMusicTitleModel->insert(
+                                    $artist, $musicTitle
+                                )
+                        ):
                         array();
                     $resultSet = $this->_youtubeModel->search(
                         $q, $limit, $offset, $complement
@@ -104,8 +111,7 @@ class ApiController extends DZend_Controller_Action
                 //}
 
                 $this->view->output = $list;
-            }
-            else {
+            } else {
                 $this->view->output = $this->_error;
             }
         } catch(Exception $e) {
@@ -127,16 +133,22 @@ class ApiController extends DZend_Controller_Action
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
-            $artistMusicTitleIdList = $this->_request->getParam('artistMusicTitleIdList', array());
+            $artistMusicTitleIdList = $this->_request->getParam(
+                'artistMusicTitleIdList', array()
+            );
 
             $this->view->output = $this->_musicSimilarityModel
                 ->getSimilar($artist, $musicTitle, $artistMusicTitleIdList);
-
-            $this->_logger->debug('ApiController::searchsimilarAction md5 ' . md5(Zend_Json::encode($this->view->output)));
         } else
             $this->view->output = $this->_error;
     }
 
+    /**
+     * searchmusicAction Given the artist and musicTitle parameters, find all
+     * necessary information of the given music.
+     *
+     * @return void
+     */
     public function searchmusicAction()
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
@@ -229,7 +241,9 @@ class ApiController extends DZend_Controller_Action
     public function tracksettingsAction()
     {
         $trackId = $this->_request->getParam('track_id');
-        $artistMusicTitleId = $this->_request->getParam('artist_music_title_id');
+        $artistMusicTitleId = $this->_request->getParam(
+            'artist_music_title_id'
+        );
         $trackRow = $this->_trackModel->findRowById($trackId);
 
         $this->view->trackTitle = $trackRow->title;
@@ -257,6 +271,12 @@ class ApiController extends DZend_Controller_Action
         $this->_taskRequestModel->addTask('SearchSimilar', 'Coldplay', 'Bla');
     }
 
+    /**
+     * reporterrorAction In case of JS error, the default procedure must be
+     * call this action to report it.
+     *
+     * @return void
+     */
     public function reporterrorAction()
     {
         $message = array('Wrong parameters/method', 'error');
@@ -264,7 +284,10 @@ class ApiController extends DZend_Controller_Action
             $origin = $this->_request->getParam('origin');
             $err = $this->_request->getParam('err');
             $obj = $this->_request->getParam('obj');
-            $this->_logger->err("ApiController::reporterrorAction -> origin: $origin. err: $err. obj: $obj");
+            $this->_logger->err(
+                "ApiController::reporterrorAction -> origin: $origin. "
+                . "err: $err. obj: $obj"
+            );
             $message = array('Error reported successfully', 'success');
         }
 

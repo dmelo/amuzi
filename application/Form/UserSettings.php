@@ -46,19 +46,21 @@ class Form_UserSettings extends DZend_Form
             )
         );
 
-        $element = new Zend_Form_Element_Select('view', array(
-            'label' => 'View',
-            'required' => true
-        ));
+        $element = new Zend_Form_Element_Select(
+            'view', array(
+                'label' => 'View',
+                'required' => true
+            )
+        );
 
-        $element->addMultiOptions(array(
-            'default' => 'Classic View',
-            'incboard' => 'IncBoard'
-        ));
+        $element->addMultiOptions(
+            array(
+                'default' => 'Classic View',
+                'incboard' => 'IncBoard'
+            )
+        );
 
         $this->addElement($element);
-
-
 
         $element = new Zend_Form_Element_Submit('submit');
         $element->setLabel($this->_t('Save'));

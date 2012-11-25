@@ -50,10 +50,14 @@ class Form_Search extends DZend_Form
         $this->_useBootstrap = false;
 
         $this->setDecorators(
-array(
-'FormElements',
-array('HtmlTag', array('tag' => 'dl', 'class' => 'input-append')),
-'Form'
-));
+            array(
+                'FormElements',
+                array(
+                    'HtmlTag',
+                    array('tag' => 'dl', 'class' => 'input-append')
+                ),
+                'Form'
+            )
+        );
     }
 }

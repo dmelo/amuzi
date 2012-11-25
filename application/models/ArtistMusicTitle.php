@@ -26,9 +26,7 @@ class ArtistMusicTitle extends DZend_Model
     public function insert($artist, $musicTitle)
     {
         $artistId = $this->_artistModel->insert($artist);
-        $this->_logger->debug('ArtistMusicTitle::insert artist -> ' . $artistId);
         $musicTitleId = $this->_musicTitleModel->insert($musicTitle);
-        $this->_logger->debug('ArtistMusicTitle::insert musicTitle -> ' . $musicTitleId);
 
         return $this->_artistMusicTitleDb->insert(
             array(
@@ -41,14 +39,20 @@ class ArtistMusicTitle extends DZend_Model
     public function findByArtistAndMusicTitle($artist, $musicTitle)
     {
         $db = $this->_artistMusicTitleDb->getAdapter();
-        $where = $db->quoteInto('artist_id in (select id from artist where name = ?)', $artist);
-        $where .= $db->quoteInto(' AND music_title_id in (select id from music_title where name = ?)', $musicTitle);
+        $where = $db->quoteInto(
+            'artist_id in (select id from artist where name = ?)', $artist
+        ) . $db->quoteInto(
+            ' AND music_title_id in (select id from music_title where '
+            . 'name = ?)', $musicTitle
+        );
         return $this->_artistMusicTitleDb->fetchRow($where);
     }
 
     public function fetchAllArtistAndMusicTitle($idsList)
     {
-        return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle($idsList);
+        return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle(
+            $idsList
+        );
     }
 
     public function autocomplete($q)

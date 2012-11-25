@@ -62,7 +62,9 @@ class DbTable_TaskParameter extends DZend_Db_Table
             } else {
                 $sql .= " OR ";
             }
-            $sql .= $db->quoteInto(" ( $sqlAux AND `order` = ?", $order) . $db->quoteInto(" AND `param` = ? ) ", $param);
+            $sql .= $db->quoteInto(
+                " ( $sqlAux AND `order` = ?", $order
+            ) . $db->quoteInto(" AND `param` = ? ) ", $param);
         }
 
         $rowSet = $this->fetchAll($sql);

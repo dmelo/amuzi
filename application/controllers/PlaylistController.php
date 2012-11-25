@@ -68,7 +68,7 @@ class PlaylistController extends DZend_Controller_Action
             $playlist = $this->_request->getPost('playlist');
             $trackSet = array();
 
-            for($i = 0; $i < count($playlist); $i++) {
+            for ($i = 0; $i < count($playlist); $i++) {
                 $trackSet[$i]['id'] = $playlist[$i]['id'];
             }
 
