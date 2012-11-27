@@ -416,7 +416,9 @@
     function loadPlaylistSet() {
         $.get('/playlist/list', function(data) {
             $('.music-manager#playlists .stripe').html(data);
+            resizeEditPlaylist();
         }).error(function(data) {
+            resizeEditPlaylist();
         });
     }
 
@@ -441,6 +443,10 @@
                 editDiv.html(data[1]);
             }
         }, 'json');
+    }
+
+    function resizeEditPlaylist() {
+        $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
     }
 
     $(document).ready(function() {
@@ -611,7 +617,7 @@
         });
 
         $('.playlist-square').live('hover', playlistSquareHover);
-        $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
+        resizeEditPlaylist();
 
         $.slideInit();
         loadPlaylistSet();

@@ -137,6 +137,7 @@ function removePlaylistSquareCallback(name) {
     $('.playlist-square').each(function(e) {
         if ($(this).find('.name').html() === name) {
             $(this).remove();
+            resizeEditPlaylist();
         }
     });
 }
