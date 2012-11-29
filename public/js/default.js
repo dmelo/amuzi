@@ -620,6 +620,10 @@
         resizeEditPlaylist();
 
         $.slideInit();
+
+        if ($('div.container.regular').length > 0) {
+            $('body').css('overflow', 'auto');
+        }
         loadPlaylistSet();
     });
 //})(jQuery);
