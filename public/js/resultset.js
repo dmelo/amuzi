@@ -182,7 +182,7 @@ $(document).ready(function() {
 
     $('.playlist-square .remove').live('click', function(e) {
         e.preventDefault();
-        if (confirm('Are you sure')) {
+        if (confirm('Are you sure?')) {
             var name = $(this).parent().find('.name').html();
             var playlistId = $(this).parent().attr('playlistid');
             rmPlaylist(name, removePlaylistSquareCallback);

@@ -281,42 +281,6 @@
         element.removeClass('opacity-full');
     }
 
-    function preparePlaylistEditName() {
-        $('#playlistsettings-result tr').live('mouseover', function(e) {
-            $('.playlist-edit-name img').css('opacity', '0.0');
-            $(this).find('.playlist-edit-name img').css('opacity', '1.0');
-        });
-
-        $('#playlistsettings-result tr').live('mouseout', function(e) {
-            $('.playlist-edit-name img').css('opacity', '0.0');
-        });
-
-        $('.playlist-edit-name a').live('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var td = $(this).parent().parent();
-            td.find("span.playlist-name").css('display', 'none');
-            td.find(".playlist-form-name").css('display', 'block');
-            td.find("input#newname").val(td.find(".playlist-name").html());
-            td.find("input#name").val(td.find(".playlist-name").html());
-            td.find('.playlist-edit-name').css('display', 'none');
-            $.bootstrapMessageLoading();
-            td.find("form").ajaxForm({dataType: 'json', success: function(data) {
-                $.bootstrapMessageAuto(data[0], data[1]);
-                if('success' === data[1]) {
-                    td.find('.playlist-name').html(td.find("input#newname").val());
-                }
-                td.find("span.playlist-name").css('display', 'block');
-                td.find(".playlist-form-name").css('display', 'none');
-                td.find('.playlist-edit-name').css('display', 'block');
-            }});
-        });
-
-        $('.playlist-form-name').live('click', function(e) {
-            e.stopPropagation();
-        });
-    }
-
     function handleAutocompleteChoice(ui) {
         if(ui.item.value != latestSearch) {
             $('#q').val(ui.item.value);
@@ -568,38 +532,6 @@
         if(isLoggedIn())
             $('.loginRequired').fadeTo('slow', 1.0);
 
-        // playlistsettings -> list
-        $('#playlistsettings-result tbody tr.load').live('click', function(e) {
-            loadPlaylist($(this).find('.name .playlist-name').html());
-            $('#load-modal-wrapper').modal('hide');
-        });
-
-        $('#playlistsettings-result tbody tr .public').live('click', function(e) {
-            var pub = $(this).val();
-            e.stopPropagation();
-            var name = $(this).parent().parent().find('.name').html();
-            $.bootstrapMessageLoading();
-            $.post('/playlist/privacy', {
-                name: name,
-                public: ($(this).attr('checked') === 'checked' ? 'public' : 'private')
-            }, function(data) {
-                $.bootstrapMessageAuto(data[0], data[1])
-                $('#load-modal-wrapper').modal('hide');
-            }, 'json');
-        });
-
-        // playlistsettings -> remove
-        $('#playlistsettings-result tbody tr .remove').live('click', function(e) {
-            e.stopPropagation();
-            if(confirm('Are you sure?')) {
-                var name = $(this).parent().parent().find('.name').html();
-                rmPlaylist(name);
-                if(name == myPlaylist.name)
-                    loadPlaylist('');
-                $('#load-modal-wrapper').modal('hide');
-            }
-        });
-
         $('#toc').tableOfContents(null, {startLevel:2});
 
         if('msie' === $.browser.name) {
@@ -607,7 +539,6 @@
         }
 
         $('.share a').live('click', shareLink);
-        preparePlaylistEditName();
         preparePlaylistActions();
         prepareMusicTrackVote();
         prepareNewTracks();
