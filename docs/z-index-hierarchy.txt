@@ -1,0 +1,9 @@
+This text contains the z-index css values used for different kinds of elements,
+in order to produce the right overlapping effect.
+
+1050 - Modal windows
+  30 - Autocomplete result list
+  25 - .music-large results
+  20 - incboard squares center or in focus
+  10 - regular incboard squares
+   3 - .alert messages
