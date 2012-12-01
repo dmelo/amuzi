@@ -16,7 +16,6 @@
 
 .incboard-cell .object-music {
     display: none;
-    z-index: 100;
 }
 
 .incboard-cell .incboard-img img {
@@ -34,7 +33,7 @@
     margin-left: -2px;
     margin-top: -2px;
     border: 2px solid black;
-    z-index: 10;
+    z-index: 20;
 
     animation:incboardcellfocus 1s;
     animation-iteration-count: infinite;
