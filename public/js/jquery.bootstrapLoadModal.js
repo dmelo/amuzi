@@ -65,19 +65,22 @@
                     $(modalWrapper + ' .modal-body').html(data);
                     $(modalWrapper + ' h3').html(title);
                     $(modalWrapper).modal('show');
-                    if ('undefined' !== typeof(callback) && 'function' === typeof(eval('rendered_' + callback))) {
+                    try {
                         eval('rendered_' + callback)();
+                    } catch (err) {
+                        console.log('function ' + 'rendered_' + callback + ' is undefined');
                     }
+
                     if(!noForm) {
                         $(modalWrapper + ' form').ajaxForm({
                             dataType: 'json',
                             success: function (data) {
-                                $.bootstrapMessageAuto('Saved');
-                                if ('undefined' !== typeof(callback)) {
-                                    callback = "callback_" + callback;
-                                    if ('function' === typeof(eval(callback))) {
-                                        eval(callback)(data);
-                                    }
+                                callback = "callback_" + callback;
+                                $.bootstrapMessageAuto(data[0], data[1]);
+                                try {
+                                    eval(callback)(data);
+                                } catch (err) {
+                                    console.log('Error trying to run ' + callback + '(data);');
                                 }
                             },
                             error: function(data) {

@@ -37,7 +37,7 @@ class UserController extends DZend_Controller_Action
         $params = $this->_request->getParams();
         if ($this->_request->isGet() && $form->isValid($params)) {
             $this->_userModel->setSettings($this->_request->getParams());
-            $this->view->message = true;
+            $this->view->message = array('Saved', 'success');
         } else {
             $form->populate($this->_userModel->getSettings());
         }
