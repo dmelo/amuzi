@@ -208,3 +208,15 @@ CREATE TABLE `task_parameter` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `task_parameter_created_trigger` BEFORE INSERT ON `task_parameter` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `feedback` (
+    `id` int(11) NOT NULL auto_increment,
+    `user_id` int(11),
+    `subject` varchar(255) NOT NULL,
+    `comment` text,
+    PRIMARY KEY(`id`),
+    CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `feedback_created_trigger` BEFORE INSERT ON `feedback` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
