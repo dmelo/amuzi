@@ -118,13 +118,13 @@ class User extends DZend_Model
         $msg = $this->_translate->_(
             "Hi %s,<br/><br/>Welcome to AMUZI. To activate your account "
             . "just click on the link bellow:<br/><a href=\"%s\">%s</a>"
-            . "<br/><br/>Enjoy!!<p>Best regards,<br/>AMUZI Team",
+            . "<br/><br/>Enjoy!!<p>Best regards,<br/>Diogo Oliveira de Melo",
             $userRow->name,
             $userRow->getUrlToken(),
             $userRow->getUrlToken()
         );
         $mail->setBodyHtml($msg);
-        $mail->setFrom('support@amuzi.net', 'AMUZI Team');
+        $mail->setFrom('support@amuzi.net', 'Diogo Oliveira de Melo');
         $mail->addTo($userRow->email);
         $mail->setSubject($this->_translate->_("AMUZI -- Account activation"));
 
@@ -150,14 +150,14 @@ class User extends DZend_Model
             . "password on AMUZI. To make a new password, please click "
             . "the link bellow:<br/><br/><a href=\"%s\">%s</a><br/><br/>"
             . "Best regards,<br/>"
-            . "AMUZI Team",
+            . "Diogo Oliveira de Melo",
             $userRow->name,
             $userRow->getForgotPasswordUrl(),
             $userRow->getForgotPasswordUrl()
         );
 
         $mail->setBodyHtml($msg);
-        $mail->setFrom('support@amuzi.net', 'AMUZI Team');
+        $mail->setFrom('support@amuzi.net', 'Diogo Oliveira de Melo');
         $mail->addTo($userRow->email);
         $mail->setSubject(
             $this->_translate->_("AMUZI -- New password request")
