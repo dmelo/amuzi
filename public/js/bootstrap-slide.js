@@ -1,4 +1,5 @@
 (function($, undefined) {
+    $.slideLock = false;
 
     $.slideResize = function() {
         var slideWidth = $('body').width();
@@ -38,6 +39,8 @@
                 case 39:
                     $('.slide-next').trigger('click');
                     break;
+                case 32:
+
             }
         });
 
@@ -51,16 +54,14 @@
 
         $('.slide-prev.active').live('click', function(e) {
             e.preventDefault();
-            $('#screen-search img').attr('src', '/img/search.png');
-            $('#screen-music img').attr('src', '/img/music-dark.png');
-            $.slidePrev();
+            console.log('prev');
+            $.slideMove(-1);
         });
 
         $('.slide-next.active').live('click', function(e) {
             e.preventDefault();
-            $('#screen-search img').attr('src', '/img/search-dark.png');
-            $('#screen-music img').attr('src', '/img/music.png');
-            $.slideNext();
+            console.log('next');
+            $.slideMove(1);
         });
 
         $('#screen-search').html('<img src="/img/search.png"/>');
@@ -69,26 +70,22 @@
 
     };
 
-    $.slideNext = function() {
+    $.slideMove = function(dir) {
         var slideWidth = $('body').width();
-        $('.slide').each(function() {
-            var offset = $(this).offset();
-            offset.left -= slideWidth;
-            $('.slide-next').removeClass('active');
-            $('.slide-prev').addClass('active');
-            $(this).animate(offset);
-        });
-    };
+        if (false === $.slideLock) {
+            $.slideLock = true;
+            $('.slide').each(function() {
+                var offset = $(this).offset();
+                offset.left -= dir * slideWidth;
+                $('#screen-search img').attr('src', '/img/search' + (1 === dir ? '-dark' : '') + '.png');
+                $('#screen-music img').attr('src', '/img/music' + (1 === dir ? '' : '-dark') + '.png');
 
-    $.slidePrev = function() {
-        var slideWidth = $('body').width();
-        $('.slide').each(function() {
-            var offset = $(this).offset();
-            offset.left += slideWidth;
-            $('.slide-prev').removeClass('active');
-            $('.slide-next').addClass('active');
-            $(this).animate(offset);
-        });
+                $(this).animate(offset, function() {
+                    $('.slide-' + (1 === dir ? 'next' : 'prev')).removeClass('active');
+                    $('.slide-' + (1 === dir ? 'prev' : 'next')).addClass('active');
+                    $.slideLock = false;
+                });
+            });
+        }
     };
-
 })(jQuery);
