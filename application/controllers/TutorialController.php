@@ -25,6 +25,24 @@ class TutorialController extends DZend_Controller_Action
 {
     public function getlistAction()
     {
+        $list = $this->_tutorialModel->fetchAll();
+        $accomplishedList = $this->_tutorialAccomplishedModel->fetchAllByUser();
+        $ret = array();
+        foreach ($list as $item) {
+            $accomplished = false;
+            foreach ($accomplishedList as $itemAccomplished) {
+                if ($item->id === $itemAccomplished->tutorialId) {
+                    $accomplished = true;
+                    break;
+                }
+            }
+
+            if (!$accomplished) {
+                $ret[] = $item->name;
+            }
+        }
+
+        $this->view->output = $ret;
     }
 
     public function setaccomplishedAction()
