@@ -131,16 +131,25 @@ class ApiController extends DZend_Controller_Action
      */
     public function searchsimilarAction()
     {
-        if (($artist = $this->_request->getParam('artist')) !== null &&
-            ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
-            $artistMusicTitleIdList = $this->_request->getParam(
-                'artistMusicTitleIdList', array()
-            );
+        $artistMusicTitleIdList = $this->_request->getParam(
+            'artistMusicTitleIdList', array()
+        );
+
+        if (($artist = $this->_request->getParam('artist')) != null &&
+            ($musicTitle = $this->_request->getParam('musicTitle')) != null) {
 
             $this->view->output = $this->_musicSimilarityModel
                 ->getSimilar($artist, $musicTitle, $artistMusicTitleIdList);
-        } else
+        } elseif (($q = $this->_request->getParam('q')) != null) {
+            $item = $this->_artistMusicTitleModel->getBestGuess($q);
+            $this->view->output = null === $item ?
+                $this->_error :
+                $this->_musicSimilarityModel->getSimilar(
+                    $item['artist'], $item['musicTitle'], $artistMusicTitleIdList
+                );
+        } else {
             $this->view->output = $this->_error;
+        }
     }
 
     /**

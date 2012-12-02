@@ -385,7 +385,9 @@ $(document).ready(function() {
             var obj = new Object();
             obj.artist = $('#artist').val();
             obj.musicTitle = $('#musicTitle').val();
-            incBoard.searchMusic([obj], 1, searchMusicCallbackCenter);
+            if (isSearchFormValid()) {
+                incBoard.searchMusic([obj], 1, searchMusicCallbackCenter);
+            }
         }
     });
 

@@ -282,7 +282,7 @@
     }
 
     function handleAutocompleteChoice(ui) {
-        if(ui.item.value != latestSearch) {
+        if(ui.item !== null && ui.item.value != latestSearch) {
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
@@ -411,6 +411,21 @@
 
     function resizeEditPlaylist() {
         $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
+    }
+
+    function isSearchFormValid() {
+        var artist = $('#artist').val(),
+            musicTitle = $('#musicTitle').val();
+
+        if (
+            '' != artist
+            && '' != musicTitle
+            && $('#q').val() === artist + ' - ' + musicTitle
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     $(document).ready(function() {

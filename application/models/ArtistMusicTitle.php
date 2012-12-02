@@ -59,4 +59,14 @@ class ArtistMusicTitle extends DZend_Model
     {
         return $this->_artistMusicTitleDb->autocomplete($q);
     }
+
+    public function getBestGuess($q)
+    {
+        $list = $this->autocomplete($q);
+        foreach ($list as $item) {
+            return $item;
+        }
+
+        return null;
+    }
 }
