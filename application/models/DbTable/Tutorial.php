@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Feedback
+ * DbTable_Tutorial
  *
  * @package Amuzi
  * @version 1.0
@@ -21,22 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class Feedback extends DZend_Model
+class DbTable_Tutorial extends DZend_Db_Table
 {
-    public function insert($subject, $anonymous, $comment)
-    {
-        if (isset($this->_session->user)) {
-            $data = array(
-                'user_id' => $anonymous ? null : $this->_session->user->id,
-                'subject' => $subject,
-                'comment' => $comment
-            );
-
-            try {
-                return $this->_feedbackDb->insert($data);
-            } catch (Zend_Db_Statement_Exception $e) {
-                return $e;
-            }
-        }
-    }
 }

@@ -220,3 +220,22 @@ CREATE TABLE `feedback` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `feedback_created_trigger` BEFORE INSERT ON `feedback` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `tutorial` (
+    `id` int(11) NOT NULL auto_increment,
+    `name` varchar(31) NOT NULL,
+    PRIMARY KEY(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `tutorial_created_trigger` BEFORE INSERT ON `tutorial` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `tutorial_accomplished` (
+    `id` int(11) NOT NULL auto_increment,
+    `user_id` int(11) NOT NULL,
+    `tutorial_id` int(11) NOT NULL,
+    PRIMARY KEY(`id`),
+    CONSTRAINT `tutorial_accomplished_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    CONSTRAINT `tutorial_accomplished_ibfk_2` FOREIGN KEY (`tutorial_id`) REFERENCES `tutorial`(`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `tutorial_accomplished_created_trigger` BEFORE INSERT ON `tutorial_accomplished` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
