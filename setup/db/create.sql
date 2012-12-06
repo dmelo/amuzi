@@ -235,6 +235,7 @@ CREATE TABLE `tutorial_accomplished` (
     `user_id` int(11) NOT NULL,
     `tutorial_id` int(11) NOT NULL,
     PRIMARY KEY(`id`),
+    UNIQUE(`user_id`, `tutorial_id`),
     CONSTRAINT `tutorial_accomplished_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
     CONSTRAINT `tutorial_accomplished_ibfk_2` FOREIGN KEY (`tutorial_id`) REFERENCES `tutorial`(`id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',

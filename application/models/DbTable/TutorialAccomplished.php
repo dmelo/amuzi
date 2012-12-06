@@ -23,4 +23,13 @@
  */
 class DbTable_TutorialAccomplished extends DZend_Db_Table
 {
+    public function setAccomplished($tutorialId, $userId)
+    {
+        return $this->insert(
+            array(
+                'tutorial_id' => $tutorialId,
+                'user_id' => $userId
+            )
+        );
+    }
 }

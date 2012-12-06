@@ -23,7 +23,7 @@
  */
 class Tutorial extends DZend_Model
 {
-    public function fetchAllByUser()
+    public function fetchAll()
     {
         return $this->_tutorialDb->fetchAll();
     }

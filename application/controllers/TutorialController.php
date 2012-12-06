@@ -47,5 +47,12 @@ class TutorialController extends DZend_Controller_Action
 
     public function setaccomplishedAction()
     {
+        if (($name = $this->_request->getParam('name')) !== null) {
+            $this->_tutorialAccomplishedModel->setAccomplished($name);
+        }
+    }
+
+    public function welcomeAction()
+    {
     }
 }
