@@ -46,6 +46,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $domainCss = $this->getResource('domain') . '/css/';
         $js = array();
         $js[] = $domainJs . 'jquery.js';
+        $js[] = $domainJs . 'bootstrap.js';
         $js[] = $domainJs . 'jquery.browser.min.js';
         $js[] = $domainJs . 'jquery.jplayer.js';
         $js[] = $domainJs . 'jplayer.playlist.js';
@@ -58,10 +59,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.tableofcontents.js';
         $js[] = $domainJs . 'resultset.js';
         $js[] = $domainJs . 'commands.js';
-        $js[] = $domainJs . 'bootstrap-dropdown.js';
-        $js[] = $domainJs . 'bootstrap-alert.js';
         $js[] = $domainJs . 'jquery.bootstrapMessage.js';
-        $js[] = $domainJs . 'bootstrap-modal.js';
         $js[] = $domainJs . 'jquery.bootstrapLoadModal.js';
         $js[] = $domainJs . 'jquery.url.js';
         $js[] = $domainJs . 'bootstrap-slide.js';
