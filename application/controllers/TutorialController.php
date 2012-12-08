@@ -74,4 +74,8 @@ class TutorialController extends DZend_Controller_Action
     public function welcomeAction()
     {
     }
+
+    public function slideAction()
+    {
+    }
 }

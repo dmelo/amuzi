@@ -18,6 +18,21 @@ Tutorial.prototype.welcome = function() {
 }
 
 Tutorial.prototype.slide = function() {
+    var self = this;
+    $.get('/tutorial/slide', function(data) {
+        $('.screens').attr('data-content', data);
+        $('.screens').popover({placement: 'bottom'});
+        $('.screens').popover('show');
+        $('.screens').click(function(e) {
+            $('.screens').popover('hide');
+            $('.screens').unbind('click');
+            $.get('/tutorial/setaccomplished', {
+                name: 'slide'
+            }, function() {
+                self.apply();
+            });
+        });
+    });
 }
 
 Tutorial.prototype.apply = function() {
