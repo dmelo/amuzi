@@ -18,6 +18,24 @@ Tutorial.prototype.welcome = function() {
     }, 'json');
 }
 
+Tutorial.prototype.search = function() {
+    var self = this;
+    $.get('/tutorial/search', function(data) {
+        var e = '#search .input-append';
+        $(e).attr('data-content', data);
+        $(e).popover({placement: 'top'});
+        $(e).popover('show');
+        window.tutorialCloseSearch = function() {
+            $(e).popover('hide');
+            $.get('/tutorial/setaccomplished', {
+                name: 'search'
+            }, function() {
+                self.apply();
+            });
+        }
+    });
+}
+
 Tutorial.prototype.slide = function() {
     var self = this;
     $.get('/tutorial/slide', function(data) {

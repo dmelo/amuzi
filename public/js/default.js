@@ -288,6 +288,9 @@
             $('#musicTitle').val(ui.item.musicTitle);
             $('form.search').submit();
             latestSearch = ui.item.value;
+            if ('function' === typeof (window.tutorialCloseSearch)) {
+                window.tutorialCloseSearch();
+            }
         }
     }
 

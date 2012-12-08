@@ -11,5 +11,5 @@ INSERT INTO `playlist`(user_id, name) VALUES(last_insert_id(), 'Diogo Melo');
 
 INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24 * 30);
 
-INSERT INTO `tutorial`(`name`) values('welcome'), ('slide');
+INSERT INTO `tutorial`(`name`) values('welcome'), ('search'), ('slide');
 
