@@ -25,6 +25,10 @@ class DbTable_MusicTitle extends DZend_Db_Table
 {
     public function insert($data)
     {
+        if (array_key_exists('name', $data)) {
+            $data['name'] = substr($data['name'], 0, 62);
+        }
+
         return $this->insertCachedWithoutException($data);
     }
 }
