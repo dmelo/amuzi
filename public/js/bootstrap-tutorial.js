@@ -8,6 +8,7 @@ Tutorial.prototype.welcome = function() {
     $.get('/tutorial/welcome', function(data) {
         $.bootstrapLoadModalDisplay(data[0], data[1]);
         $('.modal').bind('hide', function() {
+            $('.modal').unbind('hide');
             $.get('/tutorial/setaccomplished', {
                 name: 'welcome'
             }, function() {
