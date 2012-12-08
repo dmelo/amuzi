@@ -23,7 +23,7 @@
  */
 class TutorialController extends DZend_Controller_Action
 {
-    public function getlistAction()
+    protected function _getList()
     {
         $list = $this->_tutorialModel->fetchAll();
         $accomplishedList = $this->_tutorialAccomplishedModel->fetchAllByUser();
@@ -42,14 +42,33 @@ class TutorialController extends DZend_Controller_Action
             }
         }
 
-        $this->view->output = $ret;
+        return $ret;
     }
 
+    /**
+     * getlistAction Outputs, on JSON format, the list of tutorials not
+     * followed by the user yet.
+     *
+     * @return void
+     */
+    public function getlistAction()
+    {
+        $this->view->output = $this->_getList();
+    }
+
+    /**
+     * setaccomplishedAction Set a tutorial as accomplished and outputs the
+     * list of the remaining tutorials.
+     *
+     * @return void
+     */
     public function setaccomplishedAction()
     {
         if (($name = $this->_request->getParam('name')) !== null) {
             $this->_tutorialAccomplishedModel->setAccomplished($name);
         }
+
+        $this->view->output = $this->_getList();
     }
 
     public function welcomeAction()

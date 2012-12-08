@@ -67,6 +67,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'incboard-cell.js';
         $js[] = $domainJs . 'incboard-board.js';
         $js[] = $domainJs . 'incboard.js';
+        $js[] = $domainJs . 'bootstrap-tutorial.js';
         $js[] = $domainJs . 'jquery.subtitle.js';
 
         $css = array();
