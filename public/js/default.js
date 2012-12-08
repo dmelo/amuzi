@@ -473,7 +473,7 @@
             return a;
         };
 
-        $('#q').autocomplete({
+        var ac = $('#q').autocomplete({
             source: function(request, response) {
                 $.get('/api/autocomplete', {
                     q: request.term,
