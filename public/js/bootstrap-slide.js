@@ -31,16 +31,18 @@
         $('.slidegroup').append('<div class="slide-prev slide-button"></div>');
 
         $(document).keyup(function (e) {
-            var code = e.keyCode;
-            switch (code) {
-                case 37:
-                    $('.slide-prev').trigger('click');
-                    break;
-                case 39:
-                    $('.slide-next').trigger('click');
-                    break;
-                case 32:
+            if (false === $('form.search input[type=text]').is(':focus')) {
+                var code = e.keyCode;
+                switch (code) {
+                    case 37:
+                        $('.slide-prev').trigger('click');
+                        break;
+                    case 39:
+                        $('.slide-next').trigger('click');
+                        break;
+                    case 32:
 
+                }
             }
         });
 
