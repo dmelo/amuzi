@@ -289,6 +289,7 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
     var self = this,
         m = set.shift();
 
+    console.log('searchMusic -- num: ' + num + '. length: ' + set.length);
     if (num > 0 && 'undefined' !== typeof m) {
         $.get('/api/searchmusic', {
             'artist': m.artist,
@@ -296,7 +297,7 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
         }, function(v) {
             try {
                 var start = new Date().getTime();
-                if (true === self.insert(v)) {
+                if (null !== v && true === self.insert(v)) {
                     if ('function' === typeof callback) {
                         callback(v, set, num);
                     }
@@ -353,7 +354,7 @@ function searchMusicCallbackCenter(v) {
     console.log(v.artistMusicTitleId);
 
     $('#' + v.artistMusicTitleId).addClass('center');
-};
+}
 
 function loadSimilarMusic(data, num, callback) {
     $.bootstrapMessageOff();

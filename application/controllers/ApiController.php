@@ -170,8 +170,7 @@ class ApiController extends DZend_Controller_Action
                 $resultSet = $this->_youtubeModel->search(
                     "${artist} - ${musicTitle}", 5, 1, array(
                         'artist' => $artist,
-                        'musicTitle' => $musicTitle,
-
+                        'musicTitle' => $musicTitle
                     )
                 );
                 $this->_registerTracks(
@@ -182,15 +181,19 @@ class ApiController extends DZend_Controller_Action
                 );
             }
 
-            $this->view->output = array_merge(
-                $trackRow->getArray(),
-                array(
-                    'artist' => $artist,
-                    'musicTitle' => $musicTitle,
-                    'artistMusicTitleId' => $this->_artistMusicTitleModel
-                        ->insert($artist, $musicTitle)
-                )
-            );
+            if (null === $trackRow) {
+                $this->view->output = null;
+            } else {
+                $this->view->output = array_merge(
+                    $trackRow->getArray(),
+                    array(
+                        'artist' => $artist,
+                        'musicTitle' => $musicTitle,
+                        'artistMusicTitleId' => $this->_artistMusicTitleModel
+                            ->insert($artist, $musicTitle)
+                    )
+                );
+            }
         }
     }
 
