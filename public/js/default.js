@@ -244,7 +244,6 @@
     }
 
     function newPlaylistCallback() {
-        $.bootstrapMessageLoading();
         $('form#newPlaylist').ajaxForm({
             dataType: 'json',
             success: function (data) {
