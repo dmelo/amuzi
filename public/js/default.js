@@ -433,6 +433,11 @@
     $(document).ready(function() {
         verifyView();
 
+        $('a.brand').click(function(e) {
+            e.preventDefault();
+            $('.slide-prev').trigger('click');
+        });
+
         // topbar menu
         $('.topbar').dropdown();
 
