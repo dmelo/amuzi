@@ -31,7 +31,7 @@
         $('.slidegroup').append('<div class="slide-prev slide-button"></div>');
 
         $(document).keyup(function (e) {
-            if (false === $('form.search input[type=text]').is(':focus')) {
+            if (false === $('input[type=text], textarea').is(':focus')) {
                 var code = e.keyCode;
                 switch (code) {
                     case 37:
