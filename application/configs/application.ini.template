@@ -18,13 +18,13 @@ resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
 resources.db.adapter = 'pdo_mysql'
 resources.db.params.host = '127.0.0.1'
 resources.db.params.username = 'youbetter'
-resources.db.params.password = 'youbetter'
+resources.db.params.password = 'XXXXXXXXX'
 resources.db.params.dbname = 'youbetter'
 
-lastfm.key = 'c1aa86eac308f8cc254b27a84ecc2a8d'
-lastfm.secret = '983770e8ab14ac989d6ee19fc7ff1d8b'
+lastfm.key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+lastfm.secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-salt = 'ad9f36a916d22c5cbdaf14c2606b1447685f59e8'
+salt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
 resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 [staging : production]
