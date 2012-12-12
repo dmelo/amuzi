@@ -278,11 +278,6 @@ class ApiController extends DZend_Controller_Action
             echo Zend_Json::encode($this->view->output);
     }
 
-    public function testAction()
-    {
-        $this->_taskRequestModel->addTask('SearchSimilar', 'Coldplay', 'Bla');
-    }
-
     /**
      * reporterrorAction In case of JS error, the default procedure must be
      * call this action to report it.

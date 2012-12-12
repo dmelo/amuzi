@@ -74,7 +74,11 @@ class IndexController extends DZend_Controller_Action
 
     public function testAction()
     {
-        $musicSimilarityModel =  new MusicSimilarity();
-        $musicSimilarityModel->test();
+        echo "<br/>";
+        echo "<br/>";
+        echo "<br/>";
+        echo "<br/>";
+        echo "<br/>";
+        var_dump($_SERVER);
     }
 }
