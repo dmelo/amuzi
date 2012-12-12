@@ -259,17 +259,6 @@
         });
     }
 
-    function shareLink(e) {
-        e.preventDefault();
-        $.post('/share', {
-            url: $(this).attr('href')
-        }, function(data) {
-            $(modalWrapper + ' .modal-body').html(data);
-            $(modalWrapper + ' h3').html('Share'); // TODO: translation
-            $(modalWrapper).modal('show');
-        });
-    }
-
     function opacityFull(element) {
         element.addClass('opacity-full');
         element.removeClass('opacity-none');
