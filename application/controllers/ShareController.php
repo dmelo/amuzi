@@ -25,5 +25,23 @@ class ShareController extends DZend_Controller_Action
 {
     public function indexAction()
     {
+        $version = file_get_contents('../version.txt');
+
+        if (($command = $this->_request->getParam('command')) !== NULL
+            && ($param = $this->_request->getParam('param')) !== NULL) {
+            $this->_helper->layout->disableLayout();
+            $this->view->command = $command;
+            if ('t' === $command) {
+                $this->view->data = $this->_trackModel->findRowById($param);
+                $this->view->url = '/index/index/#t' . $param;
+            }
+            $this->view->lightningPackerScript()->exchangeArray(array());
+            $this->view->lightningPackerLink()->exchangeArray(array());
+
+            $this->view->lightningPackerScript()->appendFile("/js/jquery.js?v=$version");
+            $this->view->lightningPackerScript()->appendFile("/js/share.js?v=$version");
+            $this->view->lightningPackerLink()->appendStylesheet("/css/share.css?v=$version");
+
+        }
     }
 }

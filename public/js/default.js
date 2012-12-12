@@ -549,7 +549,6 @@
             $.bootstrapMessage('Please upgrade to a better browser', 'error');
         }
 
-        $('.share a').live('click', shareLink);
         preparePlaylistActions();
         prepareMusicTrackVote();
         prepareNewTracks();

@@ -1,0 +1,28 @@
+body {
+    text-align: center;
+}
+
+.content {
+    border: 1px solid black;
+    width: 600px;
+    margin: auto;
+}
+
+p {
+    font-size: 20px;
+    vertical-align: middle;
+    line-height: 90px;
+}
+
+img {
+    vertical-align: middle;
+}
+
+h1 {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+#url {
+    display: none;
+}

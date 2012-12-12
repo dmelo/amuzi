@@ -1,1 +1,15 @@
+<html>
+    <head>
+        <title>Amuzi :: <?= $this->data->title; ?></title>
+        <?= $this->headLink(); ?>
+    <head>
+    <body>
+        <div class="content">
+            <h1>Amuzi :: <?= $this->data->title; ?></h1>
+            <p><img src="<?= $this->data->cover; ?>" alt="cover"/> <?= $this->data->title; ?></p>
+        </div> <!-- .content -->
+        <div id="url"><?= $this->url; ?></div>
 
+        <?= $this->headScript(); ?>
+    </body>
+</html>
