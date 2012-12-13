@@ -33,28 +33,20 @@
     <a href="https://github.com/dmelo/amuzi" target="_blank">Fork me on GitHub</a>
   </div>
 
+<div class="alert visibility" data-alert="true">
+    <a href="#" class="close">&times;</a>
+    <p>#</p>
+</div>
+
+
 <div id="wrapper">
 
     <div id="logo">
         <h2><a href="#"><?= $this->t('amazingly free'); ?></a></h2>
     </div>
 
-    <div class="alert visibility" data-alert="true">
-        <a href="#" class="close">&times;</a>
-        <p>#</p>
-    </div>
 
     <div id="domain" style="display:none"><?= Zend_Registry::get('domain'); ?></div>
-
-    <div id="user" style="visibility: hidden">
-        <img id="image"/>
-        <div id="name"></div>
-    </div>
-
-
-
-
-
 
     <section id="content">
         <?= $this->layout()->content; ?>

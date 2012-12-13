@@ -308,12 +308,12 @@
     }
 
     function verifyView() {
-        var viewPaths = ['/', '/index/incboard'];
+        var viewPaths = ['/', '/index', '/index/', '/index/index', '/index/index/', '/index/incboard', '/index/incboard/'];
         var pathname = window.location.pathname;
 
         if (-1 !== viewPaths.indexOf(pathname)) {
             $.get('/user/getview', function(data) {
-                if ('incboard' === data && '/index/incboard' !== pathname) {
+                if ('incboard' === data && '/index/incboard' !== pathname && 'index/incboard/' !== pathname) {
                     window.location.pathname = '/index/incboard';
                 } else if ('default' === data && '/' !== pathname) {
                     window.location.pathname = '/';

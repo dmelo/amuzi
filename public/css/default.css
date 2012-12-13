@@ -154,9 +154,8 @@ dd#submit-element {
     width: 600px !important;
     opacity: 0;
     position: fixed;
-    margin-top: 48px;
-
-
+    margin-top: 0px;
+    top: 52px;
 }
 
 .loginRequired {

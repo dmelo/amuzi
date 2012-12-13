@@ -33,6 +33,7 @@ function Commands() {
 }
 
 Commands.prototype.runCommand = function(command) {
+    console.log('I GOT CALLED');
     if('t' === command[0]) {
         id = command.substr(1);
         $.get('/api/gettrack', {
@@ -49,16 +50,47 @@ Commands.prototype.runCommand = function(command) {
     }
 }
 
-// Interpret and run commands
-// The separator for the commands is "&&::&&"
-Commands.prototype.runProgram = function() {
-    this.isRunCommand = false;
+Commands.prototype.getCommandOnFragment = function() {
+    var ret;
     url = $.url(window.location.href);
     program = url.attr('fragment');
     index = program.indexOf("!");
     program = program.substr(index + 1);
 
-    if('string' === typeof(program)) {
-        this.runCommand(program);
+    if ('' === program) {
+        ret = null;
+    } else {
+        ret = program;
+    }
+
+    console.log('getCommandOnFragment returning #' + ret + '#');
+    return ret;
+};
+
+// Only one command is allowed.
+Commands.prototype.runProgram = function() {
+    this.isRunCommand = false;
+    if (1 === $('#userId').length) { // User is logged in.
+        console.log('command - logged in');
+        if (null !== $.cookie('commandc') && 'nnn' !== $.cookie('commandc')) {
+            console.log('command - command on cookie');
+            program = $.cookie('commandc');
+            $.cookie('commandc', 'nnn', {path: '/'});
+        } else {
+            console.log('command - trying to find command on fragment.');
+            program = this.getCommandOnFragment();
+        }
+
+        if ('string' === typeof(program)) {
+            console.log('command - running command ' + program);
+            this.runCommand(program);
+        }
+    } else { // User is logged out.
+        console.log('command - logged off');
+        program = this.getCommandOnFragment();
+        if ('string' === typeof(program)) {
+            console.log('command - storing command on cookie.');
+            $.cookie('commandc', program, {path: '/'});
+        }
     }
 }
