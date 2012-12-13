@@ -16,7 +16,7 @@
   window.fbAsyncInit = function() {
     FB.init({
       appId      : '305246529586146', // App ID
-      channelUrl : '//amuzi.net/channel.html', // Channel File
+      channelUrl : 'amuzi.net/channel.html', // Channel File
       status     : true, // check login status
       cookie     : true, // enable cookies to allow the server to access the session
       xfbml      : true  // parse XFBML
@@ -24,15 +24,19 @@
 
     // Additional init code here
     FB.getLoginStatus(function(response) {
+	console.log(response);
         if (response.status === 'connected') {
             // connected
-            testAPI();
+	    console.log("calling testAPI");
+            // testAPI();
         } else if (response.status === 'not_authorized') {
             // not_authorized
-            login();
+	    console.log("calling login");
+            // login();
         } else {
             // not_logged_in
-            login();
+	    console.log("calling login");
+            // login();
         }
     });
 
@@ -41,7 +45,7 @@
     function testAPI() {
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function(response) {
-            console.log('Good to see you, ' + response.name + '.');
+            console.log('Good to see you, ' + response.name + '.' + response.email);
         });
     }
 
@@ -52,7 +56,7 @@
             } else {
                 // cancelled
             }
-        });
+        }, {scope: 'email'});
     }
 
   // Load the SDK Asynchronously
