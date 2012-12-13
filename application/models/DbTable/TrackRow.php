@@ -34,7 +34,9 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
             'cover',
             'duration',
             'youtubeUrl',
-            'youtubeUrlEmbedded'
+            'youtubeUrlEmbedded',
+            'facebookUrl',
+            'shareUrl'
         );
         $ret = array();
         foreach ($columns as $column)
@@ -44,9 +46,10 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
 
     public function __get($name)
     {
+        $domain = Zend_Registry::get('domain');
         $extensionList = array('mp3', 'flv');
         if (in_array($name, $extensionList) || 'url' === $name) {
-            $url = Zend_Registry::get('domain') . '/api/' . $this->duration
+            $url = $domain . '/api/' . $this->duration
                 . '/' . $this->fid . '/' . urlencode($this->title);
         }
 
@@ -59,6 +62,10 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
         } elseif ('youtubeUrlEmbedded' === $name) {
             return 'http://www.youtube.com/embed/' . $this->fid
                 . '?autoplay=1&rel=0';
+        } elseif ('facebookUrl' === $name) {
+            return 'http://facebook.com/share.php?u=' . urlencode($this->shareUrl);
+        } elseif ('shareUrl' === $name || 'share_url' === $name) {
+            return $domain . '/index/index/command/t/param/' . $this->id;
         } else {
             return parent::__get($name);
         }

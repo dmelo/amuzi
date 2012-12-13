@@ -419,6 +419,13 @@
         return false;
     }
 
+    function prepareShareFacebook() {
+        $('.share-facebook').live('click', function(e) {
+            e.preventDefault();
+            window.open($(this).attr('href'),'Share on Facebook','toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
+        });
+    }
+
     $(document).ready(function() {
         verifyView();
 
@@ -552,6 +559,7 @@
         preparePlaylistActions();
         prepareMusicTrackVote();
         prepareNewTracks();
+        prepareShareFacebook();
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
             $(this).jPlayer("play");

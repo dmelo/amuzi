@@ -264,6 +264,8 @@ class ApiController extends DZend_Controller_Action
         $this->view->mp3 = $trackRow->mp3;
         $this->view->flv = $trackRow->flv;
         $this->view->youtubeUrl = $trackRow->youtubeUrl;
+        $this->view->facebookUrl = $trackRow->facebookUrl;
+        $this->view->shareUrl = $trackRow->shareUrl;
     }
 
     /**
