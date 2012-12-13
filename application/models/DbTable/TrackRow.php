@@ -65,7 +65,7 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
         } elseif ('facebookUrl' === $name) {
             return 'http://facebook.com/share.php?u=' . urlencode($this->shareUrl);
         } elseif ('shareUrl' === $name || 'share_url' === $name) {
-            return $domain . '/index/index/command/t/param/' . $this->id;
+            return $domain . '/share/index/command/t/param/' . $this->id;
         } else {
             return parent::__get($name);
         }
