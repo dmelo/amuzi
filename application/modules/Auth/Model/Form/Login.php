@@ -33,6 +33,9 @@ class Auth_Model_Form_Login extends DZend_Form
         $e->setValue('db');
         $this->addElement($e);
 
+        $e = new Zend_Form_Element_Hidden('name');
+        $this->addElement($e);
+
         $this->setMethod('post');
         $this->setName('login');
         $this->setAction('/Auth/index/login');

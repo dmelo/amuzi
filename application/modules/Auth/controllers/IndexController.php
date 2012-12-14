@@ -51,6 +51,7 @@ class Auth_IndexController extends DZend_Controller_Action
             if (
                 ($userRow =
                     $this->_userModel->findByEmail($params['email'])) === null
+                && 'db' === $authority
             ) {
                 $message = array(
                     $this->view->t("Email not found. Are you new here?"),
@@ -72,7 +73,7 @@ class Auth_IndexController extends DZend_Controller_Action
                         $params['email'], $params['password']
                     );
                 } elseif ('facebook' === $authority) {
-                    $result = $this->_authModel->authenticateFacebook($params['email']);
+                    $result = $this->_authModel->authenticateFacebook($params['email'], $params['name']);
                 }
 
                 $this->_logger->debug('IndexController::login ' . Zend_Auth::getInstance()->getIdentity());

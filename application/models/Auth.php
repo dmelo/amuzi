@@ -16,8 +16,15 @@ class Auth extends DZend_Model
         return $auth->authenticate($authAdapter);
     }
 
-    public function authenticateFacebook($email)
+    public function authenticateFacebook($email, $name)
     {
+
+        if (null === $this->_userModel->findByEmail($email)) {
+            $this->_userModel->register($name, $email, '');
+            $userRow = $this->_userModel->findByEmail($email);
+            $userRow->postRegister();
+        }
+
         $authAdapter = new DZend_Auth_Adapter_Facebook();
         $authAdapter->setIdentity($email);
 

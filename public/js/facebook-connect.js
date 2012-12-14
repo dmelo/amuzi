@@ -3,11 +3,10 @@
 function authenticate() {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
-        console.log("---> " + typeof response);
-        console.log("---> " + response.status);
         if ('undefined' !== typeof response) {
             console.log('redirecting');
             $('#email').val(response.email);
+            $('#name').val(response.name);
             $('#authority').val('facebook');
             $('#submit').click();
         }
