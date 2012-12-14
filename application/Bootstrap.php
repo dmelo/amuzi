@@ -114,7 +114,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         $view->facebookId = $config->facebook->id;
         $view->facebookSecret = $config->facebook->secret;
-        $view->facebookChannel = $this->getResource('domain') . '/channel';
+        $view->facebookChannel = $this->getResource('domain') . '/channel.html';
 
     }
 
