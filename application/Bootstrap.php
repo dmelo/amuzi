@@ -46,6 +46,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $domainCss = $this->getResource('domain') . '/css/';
         $js = array();
         $js[] = $domainJs . 'jquery.js';
+        $js[] = $domainJs . 'facebook-connect.js';
         $js[] = $domainJs . 'bootstrap.js';
         $js[] = $domainJs . 'jquery.browser.min.js';
         $js[] = $domainJs . 'jquery.jplayer.js';
@@ -106,6 +107,15 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         $this->bootstrap('translate');
         $view->translate = Zend_Registry::get('translate');
+
+        $config = new Zend_Config_Ini(
+            APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV
+        );
+
+        $view->facebookId = $config->facebook->id;
+        $view->facebookSecret = $config->facebook->secret;
+        $view->facebookChannel = $this->getResource('domain') . '/channel';
+
     }
 
     public function _initCache()

@@ -10,6 +10,7 @@
     var current;
     var modalWrapper = "#load-modal-wrapper";
     var latestSearch;
+    var popup;
 
     // Soon to be deprecated.
     function savePlaylist() {

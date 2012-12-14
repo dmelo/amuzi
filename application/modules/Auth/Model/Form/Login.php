@@ -29,7 +29,12 @@ class Auth_Model_Form_Login extends DZend_Form
         $this->addPassword();
         $this->addSubmit($this->_t('Login'));
 
+        $e = new Zend_Form_Element_Hidden('authority');
+        $e->setValue('db');
+        $this->addElement($e);
+
         $this->setMethod('post');
+        $this->setName('login');
         $this->setAction('/Auth/index/login');
     }
 }

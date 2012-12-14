@@ -40,6 +40,8 @@ class Auth_IndexController extends DZend_Controller_Action
     {
         $form = new Auth_Model_Form_Login();
         $params = $this->_request->getParams();
+        $authority = array_key_exists('authority', $params) ?
+            $params['authority'] : 'db';
         $message = null;
 
         if (
@@ -63,14 +65,18 @@ class Auth_IndexController extends DZend_Controller_Action
                     'error'
                 );
             } else {
-                $authAdapter = Zend_Registry::get('authAdapter');
-                $authAdapter->setIdentity($params['email']);
-                $authAdapter->setCredential($params['password']);
-                $auth = Zend_Auth::getInstance();
-                if($auth->hasIdentity())
-                    $auth->getIdentity();
-                $result = $auth->authenticate($authAdapter);
                 $this->_logger->info("out of the IF");
+                $result = null;
+                if ('db' === $authority) {
+                    $result = $this->_authModel->authenticate(
+                        $params['email'], $params['password']
+                    );
+                } elseif ('facebook' === $authority) {
+                    $result = $this->_authModel->authenticateFacebook($params['email']);
+                }
+
+                $this->_logger->debug('IndexController::login ' . Zend_Auth::getInstance()->getIdentity());
+
                 if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
                     $this->_helper->redirector('index', 'index', 'default');
                 } else {
@@ -121,7 +127,7 @@ class Auth_IndexController extends DZend_Controller_Action
                 $message = array(
                     $this->view->t('Password doesn\'t match'), 'error'
                 );
-            elseif (($userRow 
+            elseif (($userRow
                 = $this->_userModel->findByEmail($params['email'])) !== null)
                 $message = array(
                     $this->view->t('Email is already registered'), 'error'
