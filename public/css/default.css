@@ -74,7 +74,14 @@ dd {
 
 form.search {
     text-align: center;
-    margin-top: 20px;
+}
+
+form.search input.search {
+    margin-top: 4px;
+}
+
+form.search input[type=submit] {
+    height: 30px !important;
 }
 
 .wrapper {
@@ -133,7 +140,8 @@ form.search {
 
 
 dd#submit-element {
-    margin-left: -2px;
+    margin-left: 0px;
+    margin-top: -2px;
 }
 
 .footer {

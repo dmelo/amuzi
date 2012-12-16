@@ -10,3 +10,6 @@
 [submodule "library/Zend"]
 	path = library/Zend
 	url = git@github.com:dmelo/Zend-1.11.git
+[submodule "external/EasyBib"]
+	path = external/EasyBib
+	url = git://github.com/easybib/EasyBib_Form_Decorator.git
