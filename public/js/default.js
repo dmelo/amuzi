@@ -439,8 +439,10 @@
         });
 
         $('a.brand').click(function(e) {
-            e.preventDefault();
-            $('.slide-prev').trigger('click');
+            if ($('#userId').length > 0) {
+                e.preventDefault();
+                $('.slide-prev').trigger('click');
+            }
         });
 
         // topbar menu
