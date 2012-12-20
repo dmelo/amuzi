@@ -27,8 +27,17 @@ class View_Helper_UserIdHtml extends Zend_View_Helper_Abstract
 
     public function userIdHtml()
     {
-        $ret = isset($this->view->userId) ? '<div class="invisible" '
-            . 'id="userId">' . $this->view->userId . '</div>' : '';
+        $ret = '';
+        if (isset($this->view->user)) {
+            $data = array(
+                'id' => 'userId',
+                'email' => 'email'
+            );
+
+            foreach ($data as $key => $value) {
+                $ret .= "<div class=\"invisible\" id=\"$value\">{$this->view->user->$key}</div>";
+            }
+        }
 
         return $ret;
     }

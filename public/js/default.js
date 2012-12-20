@@ -430,6 +430,14 @@
     $(document).ready(function() {
         verifyView();
 
+        if ($('#email').length === 1) {
+            $('#userEmail').html($('#email').html());
+        }
+
+        $('a#email').click(function(e) {
+            e.preventDefault();
+        });
+
         $('a.brand').click(function(e) {
             e.preventDefault();
             $('.slide-prev').trigger('click');

@@ -48,7 +48,7 @@ dd {
     right: 1px;
     left: 100%;
     margin-left: -482px;
-    top: -58px;
+    top: -75px;
 }
 
 /*
@@ -267,7 +267,7 @@ ul.ui-autocomplete li a img {
 
 ul.ui-autocomplete {
     position: absolute !important;
-    top: 164px !important;
+    top: 149px !important;
     width: 300px !important;
 }
 
