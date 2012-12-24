@@ -1,7 +1,7 @@
 <?php
 
 /**
- * IndexControllerTestTestTestTestTest
+ * IndexControllerTest
  *
  * @package Amuzi
  * @version 1.0
