@@ -40,8 +40,6 @@
                     case 39:
                         $('.slide-next').trigger('click');
                         break;
-                    case 32:
-
                 }
             }
         });
@@ -89,5 +87,10 @@
                 });
             });
         }
+    };
+
+    $.slideGetCurrent = function() {
+        return $('.slidegroup .active').hasClass('slide-prev') ?
+            'search' : 'music';
     };
 })(jQuery);

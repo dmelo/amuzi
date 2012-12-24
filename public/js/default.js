@@ -427,6 +427,23 @@
         });
     }
 
+    function prepareShortcuts() {
+        $(document).keyup(function (e) {
+            if (false === $('input[type=text], textarea').is(':focus')) {
+                var code = e.keyCode;
+                switch (code) {
+                    case 32:
+                        if ($('#jquery_jplayer_1').data("jPlayer").status.paused) {
+                            myPlaylist.play();
+                        } else {
+                            myPlaylist.pause();
+                        }
+                        break;
+                }
+            }
+        });
+    }
+
     $(document).ready(function() {
         verifyView();
 
@@ -571,6 +588,7 @@
         prepareMusicTrackVote();
         prepareNewTracks();
         prepareShareFacebook();
+        prepareShortcuts();
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
             $(this).jPlayer("play");
