@@ -4,6 +4,10 @@
 
 }
 
+.msie .slide, .opera .slide {
+    margin-top: 37px;
+}
+
 .slidegroup {
     position: absolute;
 }
