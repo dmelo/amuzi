@@ -15,7 +15,7 @@
 }
 
 .screen {
-    display: inline;
+    float: right;
 }
 
 .screen img {

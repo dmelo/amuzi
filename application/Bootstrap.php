@@ -45,6 +45,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $domainJs = $this->getResource('domain') . '/js/';
         $domainCss = $this->getResource('domain') . '/css/';
         $js = array();
+        $js[] = $domainJs . 'ie-compatibility.js';
         $js[] = $domainJs . 'jquery.js';
         $js[] = $domainJs . 'facebook-connect.js';
         $js[] = $domainJs . 'bootstrap.js';

@@ -125,6 +125,8 @@
         $(modalWrapper).bind('hidden', function(e) {
             $(modalWrapper + ' .modal-body').html(' ');
         });
+
+        return modalWrapper;
     };
 
     $.bootstrapLoadModalLoading = function() {
