@@ -60,12 +60,13 @@ Tutorial.prototype.search = function() {
 Tutorial.prototype.slide = function() {
     var self = this;
     $.get('/tutorial/slide', function(data) {
-        $('.screens').attr('data-content', data);
-        $('.screens').popover({placement: 'bottom'});
-        $('.screens').popover('show');
-        $('.screens').click(function(e) {
-            $('.screens').popover('hide');
-            $('.screens').unbind('click');
+        var ele = $('.screens .screen img:first');
+        ele.attr('data-content', data);
+        ele.popover({placement: 'bottom'});
+        ele.popover('show');
+        ele.click(function(e) {
+            ele.popover('hide');
+            ele.unbind('click');
             $.get('/tutorial/setaccomplished', {
                 name: 'slide'
             }, function() {
