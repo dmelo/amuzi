@@ -75,4 +75,21 @@ class DbTable_UserRow extends DZend_Db_Table_Row
             $this->save();
         }
     }
+
+    /**
+     * countPlaylists Count playlists owned/seen by the user.
+     *
+     * @return void
+     */
+    public function countPlaylists()
+    {
+        $playlistDb = new DbTable_Playlist();
+        $playlistRowSet = $playlistDb->findByUserId($this->id);
+        $count = 0;
+        foreach ($playlistRowSet as $row) {
+            $count++;
+        }
+
+        return $count;
+    }
 }

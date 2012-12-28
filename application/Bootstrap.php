@@ -99,7 +99,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         $view->doctype('HTML5');
         $view->headMeta()->setCharset('UTF-8');
-        $view->headTitle('AMUZI');
+        $view->headTitle('AMUZI - Online music player');
 
         foreach($js as $item)
             $view->lightningPackerScript()->appendFile("$item?v=$version");

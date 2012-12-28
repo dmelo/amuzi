@@ -90,6 +90,7 @@
 .item-square .button.play img {
     width: 30px;
     opacity: 0.65;
+    z-index: 100000;
 }
 
 .item-square .button.play {
