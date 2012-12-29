@@ -46,6 +46,7 @@
         $('div.alert').addClass('alert-' + messageCode);
 
         $('div.alert p').html(text);
+        $('div.alert').css('display', 'block');
         $('div.alert').fadeTo('fast', 1.0);
     }
 
@@ -54,7 +55,9 @@
     }
 
     $.bootstrapMessageOff = function() {
-        $('div.alert').fadeTo('slow', 0.0);
+        $('div.alert').fadeTo('slow', 0.0, function() {
+            $('div.alert').css('display', 'none');
+        });
     }
 
     $.bootstrapMessageAuto = function(text, messageCode) {

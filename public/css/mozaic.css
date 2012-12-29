@@ -11,17 +11,19 @@
     height: 300px;
 }
 
-.mozaic .music-square .description {
-    background-color: rgba(255, 255, 255, 0.5);
+.mozaic .music-square .description, .mozaic .music-square .play {
     z-index: 1;
     position: relative;
     bottom: 100%
 }
 
+.mozaic .music-square .description {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
 .mozaic .music-square .play {
-    position: relative;
-    z-index: 1;
-    bottom: 100%
+    float:right;
+    margin-top: -26px;
 }
 
 .music-square:hover {
