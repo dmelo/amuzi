@@ -47,8 +47,22 @@ class Lastfm extends DZend_Model
 
     protected function _getCover($track)
     {
+        $sizes = array('extralarge', 'large', 'medium', 'small');
+        $currentSize = null;
+        $cover = '';
         $covers = $track->getElementsByTagName('image');
-        return $covers->length > 0 ? $covers->item(0)->nodeValue : '';
+
+        for ($i = 0; $i < $covers->length; $i++) {
+            $size = $covers->item($i)->attributes->getNamedItem('size')->nodeValue;
+            if (null === $currentSize
+                || array_search($currentSize, $sizes) > array_search($size, $sizes)
+            ) {
+                $currentSize = $size;
+                $cover = $covers->item($i)->nodeValue;
+            }
+        }
+
+        return $cover;
     }
 
     protected function _processResponseSearch($track)
@@ -66,16 +80,7 @@ class Lastfm extends DZend_Model
 
     protected function _processResponseSimilar($track)
     {
-        $artist = $track->getElementsByTagName('artist')
-            ->item(0)
-            ->getElementsByTagName('name')
-            ->item(0)
-            ->nodeValue;
-        $musicTitle = $track->getElementsByTagName('name')
-            ->item(0)
-            ->nodeValue;
-        $name = $this->_calcName($artist, $musicTitle);
-        $cover = $this->_getCover($track);
+        $entry = $this->_processResponseGetTop($track);
         $this->_logger->debug(
             'Lastfm::_processResponseSimilar 0 nodeValue'
             . $track->getElementsByTagName('match')->item(0)->nodeValue
@@ -93,9 +98,25 @@ class Lastfm extends DZend_Model
         $this->_logger->debug(
             'Lastfm::_processResponseSimilar 2 nodeValue' . ((int)$similarity)
         );
-        return new LastfmEntry(
-            $name, $cover, $artist, $musicTitle, (int) $similarity
-        );
+        $entry->similarity = (int) $similarity;
+
+        return $entry;
+    }
+
+    public function _processResponseGetTop($track)
+    {
+        $artist = $track->getElementsByTagName('artist')
+            ->item(0)
+            ->getElementsByTagName('name')
+            ->item(0)
+            ->nodeValue;
+        $musicTitle = $track->getElementsByTagName('name')
+            ->item(0)
+            ->nodeValue;
+        $name = $this->_calcName($artist, $musicTitle);
+        $cover = $this->_getCover($track);
+
+        return new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
 
     public function _exploreDOM($xml, $func, $limit = null)
@@ -173,5 +194,25 @@ class Lastfm extends DZend_Model
         $this->_logger->debug('Lastfm::getSimilar C ' . microtime(true));
 
         return $this->_exploreDOM($xml, '_processResponseSimilar', 200);
+    }
+
+    public function getTop($limit = 50)
+    {
+        $date = date('Ymd');
+        $key = sha1("Lastfm::getTop#$limit#$date");
+
+        if (($xml = $this->_cache->load($key)) === false) {
+            $resultSet = array();
+            $args = array(
+                'method' => 'geo.gettoptracks',
+                'country' => 'united states'
+            );
+
+            $xml = $this->_request($args);
+            $this->_logger->debug("Lastfm::getTop -> xml: " . $xml);
+            $this->_cache->save($xml, $key);
+        }
+
+        return $this->_exploreDOM($xml, '_processResponseGetTop', $limit);
     }
 }

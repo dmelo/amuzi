@@ -33,7 +33,8 @@ class LastfmEntry extends AbstractEntry
         $cover,
         $artist,
         $musicTitle,
-        $similarity = null
+        $similarity = null,
+        $rank = null
     )
     {
         $this->_fields = array(
@@ -41,7 +42,8 @@ class LastfmEntry extends AbstractEntry
             'cover',
             'artist',
             'musicTitle',
-            'similarity'
+            'similarity',
+            'rank'
         );
         $this->_data = array('name' => $name, 'cover' => $cover);
         foreach($this->_fields as $field)
@@ -59,4 +61,3 @@ class LastfmEntry extends AbstractEntry
         return $this->_data;
     }
 }
-

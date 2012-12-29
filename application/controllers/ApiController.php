@@ -302,4 +302,15 @@ class ApiController extends DZend_Controller_Action
 
         $this->view->message = $message;
     }
+
+    public function gettopAction()
+    {
+        $resultSet = $this->_lastfmModel->getTop();
+        $ret = array();
+        foreach ($resultSet as $row) {
+            $ret[] = $row->getArray();
+        }
+
+        $this->view->resultSet = $ret;
+    }
 }
