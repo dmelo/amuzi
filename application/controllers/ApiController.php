@@ -152,6 +152,45 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    public function _getMusic($artist, $musicTitle)
+    {
+        $ret = null;
+
+        $trackRow = $this->_musicTrackLinkModel->getTrack(
+            $artist, $musicTitle
+        );
+        if (null === $trackRow) {
+            // Look for it on Youtube.
+            $resultSet = $this->_youtubeModel->search(
+                "${artist} - ${musicTitle}", 5, 1, array(
+                    'artist' => $artist,
+                    'musicTitle' => $musicTitle
+                )
+            );
+            $this->_registerTracks(
+                $resultSet, $artist, $musicTitle
+            );
+            $trackRow = $this->_musicTrackLinkModel->getTrack(
+                $artist, $musicTitle
+            );
+        }
+
+        if (null !== $trackRow) {
+            $ret = array_merge(
+                $trackRow->getArray(),
+                array(
+                    'artist' => $artist,
+                    'musicTitle' => $musicTitle,
+                    'artistMusicTitleId' => $this->_artistMusicTitleModel
+                        ->insert($artist, $musicTitle)
+                )
+            );
+        }
+
+        return $ret;
+    }
+
+
     /**
      * searchmusicAction Given the artist and musicTitle parameters, find all
      * necessary information of the given music.
@@ -162,38 +201,7 @@ class ApiController extends DZend_Controller_Action
     {
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
-            $trackRow = $this->_musicTrackLinkModel->getTrack(
-                $artist, $musicTitle
-            );
-            if (null === $trackRow) {
-                // Look for it on Youtube.
-                $resultSet = $this->_youtubeModel->search(
-                    "${artist} - ${musicTitle}", 5, 1, array(
-                        'artist' => $artist,
-                        'musicTitle' => $musicTitle
-                    )
-                );
-                $this->_registerTracks(
-                    $resultSet, $artist, $musicTitle
-                );
-                $trackRow = $this->_musicTrackLinkModel->getTrack(
-                    $artist, $musicTitle
-                );
-            }
-
-            if (null === $trackRow) {
-                $this->view->output = null;
-            } else {
-                $this->view->output = array_merge(
-                    $trackRow->getArray(),
-                    array(
-                        'artist' => $artist,
-                        'musicTitle' => $musicTitle,
-                        'artistMusicTitleId' => $this->_artistMusicTitleModel
-                            ->insert($artist, $musicTitle)
-                    )
-                );
-            }
+            $this->view->output = $this->_getMusic($artist, $musicTitle);
         }
     }
 
@@ -308,7 +316,9 @@ class ApiController extends DZend_Controller_Action
         $resultSet = $this->_lastfmModel->getTop();
         $ret = array();
         foreach ($resultSet as $row) {
-            $ret[] = $row->getArray();
+            $track = $this->_getMusic($row->artist, $row->musicTitle);
+            $track['cover'] = $row->cover;
+            $ret[] = $track;
         }
 
         $this->view->resultSet = $ret;

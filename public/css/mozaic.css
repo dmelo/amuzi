@@ -1,0 +1,33 @@
+.mozaic {
+    float: left;
+    position: absolute;
+    top: -74px;
+    left: 0px;
+}
+
+.mozaic .music-square {
+    float: left;
+    width: 300px;
+    height: 300px;
+}
+
+.mozaic .music-square .description {
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 1;
+    position: relative;
+    bottom: 100%
+}
+
+.mozaic .music-square .play {
+    position: relative;
+    z-index: 1;
+    bottom: 100%
+}
+
+.music-square:hover {
+    cursor: pointer;
+}
+
+.music-square .description, .music-square .play {
+    display: none;
+}

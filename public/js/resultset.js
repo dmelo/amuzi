@@ -85,16 +85,20 @@ ResultSet.prototype.cleanTable = function() {
 }
 
 ResultSet.prototype.getControl = function(v) {
-    var aYoutube = '<a target="_blank" href="' + v.youtubeUrlEmbedded + '" title="Youtube video" class="youtube-link"><img src="/img/youtube_icon.png"/></a>';
-    var aDownload = '<a target="_blank" href="' + v.url + '"title="download ' + v.title + '" class="download"><img src="/img/download_icon.png"/></a>';
-    var aPlay = '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+    return '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+}
 
-    return aYoutube + aDownload + aPlay;
+ResultSet.prototype.getDescription = function(v) {
+    return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div>';
 }
 
 ResultSet.prototype.getMusicLarge = function(v, objectType) {
     duration = this.secondsToHMS(v.duration);
     return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + this.getControl(v) + '</div>';
+}
+
+ResultSet.prototype.getMusicSquare = function(v) {
+    return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div>' + this.getDescription(v) + '</div><div class="play">' + this.getControl(v) + '</div>';
 }
 
 ResultSet.prototype.appendTable = function(v, objectType) {
@@ -191,4 +195,16 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('.music-square').live('click', function(e) {
+        e.preventDefault();
+        addToPlaylist($(this));
+    });
+
+    $('.music-square').live({mouseenter: function() {
+        $(this).find('.description, .play').css('display', 'block');
+    }, mouseleave: function() {
+        $(this).find('.description, .play').css('display', 'none');
+    }});
+
 });

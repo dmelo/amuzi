@@ -87,6 +87,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $css[] = $domainCss . 'incboard.css';
         $css[] = $domainCss . 'jquery.subtitle.css';
         $css[] = $domainCss . 'bootstrap-slide.css';
+        $css[] = $domainCss . 'mozaic.css';
 
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');

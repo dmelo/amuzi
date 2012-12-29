@@ -369,14 +369,20 @@
     function addToPlaylist(e) {
         var trackId = e.attr('trackId')
 
-        var artist = e.parent().attr('artist');
+        var artist = e.attr('artist');
         if ('undefined' === typeof artist) {
-            artist = $('#artist').val();
+            artist = e.parent().attr('artist');
+            if ('undefined' === typeof artist) {
+                artist = $('#artist').val();
+            }
         }
 
-        var musicTitle = e.parent().attr('musicTitle');
+        var musicTitle = e.attr('musicTitle');
         if ('undefined' === typeof musicTitle) {
-            musicTitle = $('#musicTitle').val();
+            musicTitle = e.parent().attr('musicTitle');
+            if ('undefined' === typeof musicTitle) {
+                musicTitle = $('#musicTitle').val();
+            }
         }
 
         addTrack(trackId, artist, musicTitle);
