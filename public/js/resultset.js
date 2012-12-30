@@ -98,7 +98,7 @@ ResultSet.prototype.getMusicLarge = function(v, objectType) {
 }
 
 ResultSet.prototype.getMusicSquare = function(v) {
-    return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div>' + this.getDescription(v) + '</div><div class="play">' + this.getControl(v) + '</div>';
+    return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div><div class="overlay"></div>' + this.getDescription(v) + '</div><div class="play">' + this.getControl(v) + '</div>';
 }
 
 ResultSet.prototype.appendTable = function(v, objectType) {
@@ -203,8 +203,10 @@ $(document).ready(function() {
 
     $('.music-square').live({mouseenter: function() {
         $(this).find('.description, .play').css('display', 'block');
+        $(this).find('.overlay').css('display', 'none');
     }, mouseleave: function() {
         $(this).find('.description, .play').css('display', 'none');
+        $(this).find('.overlay').css('display', 'block');
     }});
 
 });

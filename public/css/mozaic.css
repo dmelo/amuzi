@@ -18,7 +18,7 @@
 }
 
 .mozaic .music-square .description {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.85);
 }
 
 .mozaic .music-square .play {
@@ -32,4 +32,15 @@
 
 .music-square .description, .music-square .play {
     display: none;
+}
+
+.music-square .cover {
+    opacity: 0.5;
+    filter: alpha (opacity = 50);
+    background-color: white;
+}
+
+.music-square .cover:hover {
+    opacity: 1.0;
+    filter: alpha (opacity = 100);
 }

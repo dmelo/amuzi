@@ -91,3 +91,8 @@ if (!('some' in Array.prototype)) {
         return false;
     };
 }
+
+if (!('console' in window)) {
+    window.console = function() {};
+    window.console.log = function() {};
+}

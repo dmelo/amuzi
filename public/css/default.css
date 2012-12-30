@@ -159,6 +159,7 @@ dd#submit-element {
     bottom: 0px;
     width: 100%;
     text-align: center;
+    z-index: 3;
 }
 
 .ac_input {
