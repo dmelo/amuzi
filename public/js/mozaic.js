@@ -2,6 +2,8 @@ function calculateMusicSquareSize() {
     var musicSquareWidth;
     for (var i = 1; (musicSquareWidth = $('html').width() / i) > 300; i++);
 
+    musicSquareWidth--;
+
     $('.music-square').css('width', musicSquareWidth);
     $('.music-square').css('height', musicSquareWidth);
 }

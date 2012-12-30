@@ -82,6 +82,7 @@ ResultSet.prototype.secondsToHMS = function(time) {
 ResultSet.prototype.cleanTable = function() {
     $('#result .music-large').remove();
     $('#more-results').css('opacity', '0.0');
+    $('#more-results').css('filter', 'alpha (opacity = 100)');
 }
 
 ResultSet.prototype.getControl = function(v) {
@@ -105,6 +106,7 @@ ResultSet.prototype.appendTable = function(v, objectType) {
     if($('[trackId=' + v.id + ']').length == 0)
         $('#result').append(this.getMusicLarge(v, objectType));
     $('#more-results').css('opacity', '1.0');
+    $('#more-results').css('filter', 'alpha (opacity = 100)');
 }
 
 ResultSet.prototype.searchMore = function() {

@@ -616,8 +616,11 @@
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
         setTimeout('initAmuzi();', 1500);
 
-        if(isLoggedIn())
-            $('.loginRequired').fadeTo('slow', 1.0);
+        if(isLoggedIn()) {
+            $('.loginRequired').fadeTo('slow', 1.0, function() {
+                $(this).css('filter', 'alpha (opacity = 100)');
+            });
+        }
 
         $('#toc').tableOfContents(null, {startLevel:2});
 

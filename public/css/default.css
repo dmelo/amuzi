@@ -80,6 +80,10 @@ dd {
     cursor: pointer;
 }
 
+form {
+    text-align: left;
+}
+
 form.search {
     text-align: center;
 }
@@ -179,6 +183,7 @@ dd#submit-element {
 
 .loginRequired {
     opacity: 0;
+    filter: alpha (opacity = 0);
 }
 
 .invisible {
