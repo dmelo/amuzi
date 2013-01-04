@@ -511,6 +511,13 @@
             addToPlaylist($(this));
         });
 
+        $('.incboard-cell').live('click', function(e) {
+            console.log('CLICK: ');
+            console.log($(this));
+            console.log($(this).find('.music-large'));
+            addToPlaylist($(this).find('.music-large'));
+        });
+
         $('.youtube-link, .download').live('click', function(e) {
             e.stopPropagation();
             myPlaylist.pause();
