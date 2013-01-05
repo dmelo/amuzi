@@ -376,7 +376,7 @@ $(document).ready(function() {
     $('#incboard-search').ajaxForm({
         dataType: 'json',
         success: function (data) {
-            loadSimilarMusic(data, 10);
+            loadSimilarMusic(data, 40);
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();

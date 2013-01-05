@@ -261,8 +261,8 @@ IncBoardBoard.prototype.flushDraw = function() {
         self.listByAMTId[id].draw();
     });
 
-    realHeight = this.maxY - (this.minY - 1);
-    realWidth = this.maxX - (this.minX - 1);
+    realHeight = this.maxY - (this.minY - 1) + 1;
+    realWidth = this.maxX - (this.minX - 1) + 1;
     factorY = this.rows / realHeight;
     factorX = this.cols / realWidth;
     console.log('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ')');
@@ -277,8 +277,8 @@ IncBoardBoard.prototype.flushDraw = function() {
         newCellSizeY = factor * this.cellSizeY;
     }
 
-    newTop = -1 * this.minY * newCellSizeY;
-    newLeft = -1 * this.minX * newCellSizeX;
+    newTop = (1 - factor) * this.cellSizeY * this.rows * 0.5;
+    newLeft = (1 - factor) * this.cellSizeX * this.cols * 0.5;
 
     sheet = document.styleSheets[document.styleSheets.length - 1];
     sheet.addRule('.incboard-cell', 'width: ' + newCellSizeX + 'px; height: ' + newCellSizeY + 'px;');
