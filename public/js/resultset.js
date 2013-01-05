@@ -23,192 +23,164 @@
  * Set of functions to manage the list of results.
  */
 
-var resultSet = new ResultSet();
+
+(function ($, undefined) {
+    'use strict';
+
+    $.ResultSet = function () {
+        this.searchString = "";
+        this.searchPage = 1;
+    };
+
+    var resultSet = new $.ResultSet();
 
 
-function ResultSet() {
-    this.searchString = "";
-    this.searchPage = 1;
-}
-
-
-/**
- * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
- *
- * @param num Number to be transformed.
- * @return Returns the two digit leading 0 number.
- */
-ResultSet.prototype.twoDigit = function(num) {
-    var str = '';
-    if(num < 10) {
-        str += '0';
-    }
-
-    return str + num;
-}
-
-/**
- * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
- *
- * @param time Time, in seconds.
- * @return Returns a string represening time in HH:MM:SS or MM:SS format.
- */
-ResultSet.prototype.secondsToHMS = function(time) {
-    var h = 0;
-    var m = 0;
-    var s = 0;
-
-    h = Math.floor(time / 3600);
-    time -= 3600 * h;
-    m = Math.floor(time / 60);
-    time -= 60 * m;
-    s = time;
-
-    var str = '';
-
-    if(h > 0) {
-        str = this.twoDigit(h);
-    }
-
-    str += this.twoDigit(m) + ':';
-    str += this.twoDigit(s);
-
-    return str;
-}
-
-/**
- * Cleans the table of results and let it ready to a search.
- */
-ResultSet.prototype.cleanTable = function() {
-    $('#result .music-large').remove();
-    $('#more-results').css('opacity', '0.0');
-    $('#more-results').css('filter', 'alpha (opacity = 100)');
-}
-
-ResultSet.prototype.getControl = function(v) {
-    return '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
-}
-
-ResultSet.prototype.getDescription = function(v) {
-    return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div>';
-}
-
-ResultSet.prototype.getMusicLarge = function(v, objectType) {
-    duration = this.secondsToHMS(v.duration);
-    return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + duration + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + this.getControl(v) + '</div>';
-}
-
-ResultSet.prototype.getMusicSquare = function(v) {
-    return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div><div class="overlay"></div>' + this.getDescription(v) + '</div><div class="play">' + this.getControl(v) + '</div>';
-}
-
-ResultSet.prototype.appendTable = function(v, objectType) {
-    if($('[trackId=' + v.id + ']').length == 0)
-        $('#result').append(this.getMusicLarge(v, objectType));
-    $('#more-results').css('opacity', '1.0');
-    $('#more-results').css('filter', 'alpha (opacity = 100)');
-}
-
-ResultSet.prototype.searchMore = function() {
-    $.bootstrapMessage('Loading...', 'info');
-    this.searchPage++;
-    $.get('/api/search',{
-        q: this.searchString,
-        artist: $('#artist').val(),
-        musicTitle: $('#musicTitle').val(),
-        limit: 9,
-        offset: 1 + (9 * (this.searchPage - 1))
-    }, function (data) {
-        $.bootstrapMessageOff();
-        $.each(data, function(i, v) {
-            resultSet.appendTable(v, 'track');
-        });
-    }, 'json').error(function(data) {
-        $.bootstrapMessageAuto('An error occured', 'error');
-    });
-}
-
-ResultSet.prototype.getSimilarTracks = function(artist, musicTitle) {
-    $.get('/api/searchsimilar', {
-        artist: artist,
-        musicTitle: musicTitle
-    }, function(data) {
-        $.each(data, function(i, v) {
-            resultSet.appendTable(v, 'music');
-        });
-    }, 'json');
-}
-
-function removePlaylistSquareCallback(name) {
-    $('.playlist-square').each(function(e) {
-        if ($(this).find('.name').html() === name) {
-            $(this).remove();
-            resizeEditPlaylist();
+    /**
+     * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
+     *
+     * @param num Number to be transformed.
+     * @return Returns the two digit leading 0 number.
+     */
+    $.ResultSet.prototype.twoDigit = function (num) {
+        var str = '';
+        if (num < 10) {
+            str += '0';
         }
-    });
-}
 
-$(document).ready(function() {
-    $('.music-large').live({mouseenter: function() {
-        $(this).find('a').css('color', 'white');
-        $(this).find('.play').css('display', 'block');
-    },mouseleave: function() {
-        $(this).find('a').css('color', 'black');
-        $(this).find('.play').css('display', 'none');
-    }});
+        return str + num;
+    };
 
-    // query youtube for videos and fill the result table.
-    $('#search').ajaxForm({
-        dataType: 'json',
-        success: function (data) {
+    /**
+     * Put number of seconds into HH:MM:SS format when time is more than or equals to 3600 (one hour) or MM:SS, otherwise.
+     *
+     * @param time Time, in seconds.
+     * @return Returns a string represening time in HH:MM:SS or MM:SS format.
+     */
+    $.ResultSet.prototype.secondsToHMS = function (time) {
+        var h = 0,
+            m = 0,
+            s = 0,
+            str = '';
+
+        h = Math.floor(time / 3600);
+        time -= 3600 * h;
+        m = Math.floor(time / 60);
+        time -= 60 * m;
+        s = time;
+
+        if (h > 0) {
+            str = this.twoDigit(h);
+        }
+
+        str += this.twoDigit(m) + ':';
+        str += this.twoDigit(s);
+
+        return str;
+    };
+
+    /**
+     * Cleans the table of results and let it ready to a search.
+     */
+    $.ResultSet.prototype.cleanTable = function () {
+        $('#result .music-large').remove();
+        $('#more-results').css('opacity', '0.0');
+        $('#more-results').css('filter', 'alpha (opacity = 100)');
+    };
+
+    $.ResultSet.prototype.getControl = function (v) {
+        return '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+    };
+
+    $.ResultSet.prototype.getDescription = function (v) {
+        return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div>';
+    };
+
+    $.ResultSet.prototype.getMusicLarge = function (v, objectType) {
+        return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + this.secondsToHMS(v.duration) + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + this.getControl(v) + '</div>';
+    };
+
+    $.ResultSet.prototype.getMusicSquare = function (v) {
+        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div><div class="overlay"></div>' + this.getDescription(v) + '</div><div class="play">' + this.getControl(v) + '</div>';
+    };
+
+    $.ResultSet.prototype.appendTable = function (v, objectType) {
+        if (0 === $('[trackId=' + v.id + ']').length) {
+            $('#result').append(this.getMusicLarge(v, objectType));
+        }
+        $('#more-results').css('opacity', '1.0');
+        $('#more-results').css('filter', 'alpha (opacity = 100)');
+    };
+
+    $.ResultSet.prototype.searchMore = function () {
+        $.bootstrapMessage('Loading...', 'info');
+        this.searchPage += 1;
+        $.get('/api/search', {
+            q: this.searchString,
+            artist: $('#artist').val(),
+            musicTitle: $('#musicTitle').val(),
+            limit: 9,
+            offset: 1 + (9 * (this.searchPage - 1))
+        }, function (data) {
             $.bootstrapMessageOff();
-            $.each(data, function(i, v) {
+            $.each(data, function (i, v) {
                 resultSet.appendTable(v, 'track');
             });
-        },
-        error: function (data) {
-            $.bootstrapMessageAuto('Error searching for music', 'error');
-        },
-        beforeSubmit: function() {
-            resultSet.cleanTable();
-            resultSet.searchString = $('#q').val();
-            resultSet.searchPage = 1;
-            $.bootstrapMessage('Loading...', 'info');
-        }
-    });
+        }, 'json').error(function (data) {
+            $.bootstrapMessageAuto('An error occured', 'error');
+        });
+    };
 
-    $('#more-results').click(function(e) {
-        resultSet.searchMore();
-    });
+    $.ResultSet.prototype.getSimilarTracks = function (artist, musicTitle) {
+        $.get('/api/searchsimilar', {
+            artist: artist,
+            musicTitle: musicTitle
+        }, function (data) {
+            $.each(data, function (i, v) {
+                resultSet.appendTable(v, 'music');
+            });
+        }, 'json');
+    };
 
-    $('.playlist-square .play').live('click', function(e) {
-        e.preventDefault();
-        loadPlaylist($(this).parent().attr('playlistid'));
-    });
+    $(document).ready(function () {
+        $('.music-large').live({mouseenter: function () {
+            $(this).find('a').css('color', 'white');
+            $(this).find('.play').css('display', 'block');
+        }, mouseleave: function () {
+            $(this).find('a').css('color', 'black');
+            $(this).find('.play').css('display', 'none');
+        }});
 
-    $('.playlist-square .remove').live('click', function(e) {
-        e.preventDefault();
-        if (confirm('Are you sure?')) {
-            var name = $(this).parent().find('.name').html();
-            var playlistId = $(this).parent().attr('playlistid');
-            rmPlaylist(name, removePlaylistSquareCallback);
-            if (name == myPlaylist.name) {
-                loadPlaylist('');
+        // query youtube for videos and fill the result table.
+        $('#search').ajaxForm({
+            dataType: 'json',
+            success: function (data) {
+                $.bootstrapMessageOff();
+                $.each(data, function (i, v) {
+                    resultSet.appendTable(v, 'track');
+                });
+            },
+            error: function (data) {
+                $.bootstrapMessageAuto('Error searching for music', 'error');
+            },
+            beforeSubmit: function () {
+                resultSet.cleanTable();
+                resultSet.searchString = $('#q').val();
+                resultSet.searchPage = 1;
+                $.bootstrapMessage('Loading...', 'info');
             }
-        }
+        });
+
+        $('#more-results').click(function (e) {
+            resultSet.searchMore();
+        });
+
+        $('.music-square').live({mouseenter: function () {
+            $(this).find('.description, .play').css('display', 'block');
+            $(this).find('.overlay').css('display', 'none');
+        }, mouseleave: function () {
+            $(this).find('.description, .play').css('display', 'none');
+            $(this).find('.overlay').css('display', 'block');
+        }});
+
     });
-
-    $('.music-square').live('click', function(e) {
-        e.preventDefault();
-        addToPlaylist($(this));
-    });
-
-    $('.music-square').live({mouseenter: function() {
-        $(this).find('.description, .play').css('display', 'block');
-        $(this).find('.overlay').css('display', 'none');
-    }, mouseleave: function() {
-        $(this).find('.description, .play').css('display', 'none');
-        $(this).find('.overlay').css('display', 'block');
-    }});
-
-});
+}(jQuery, undefined));

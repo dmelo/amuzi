@@ -185,12 +185,14 @@ IncBoardBoard.prototype.removeOutOfBorder = function() {
 };
 
 IncBoardBoard.prototype.resize = function() {
-    var cell = new IncBoardCell();
-    this.cols = parseInt( ( $(window).width() - 250 ) / this.cellSizeX );
-    this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('form.search').offset().top - $('.footer').height() ) / this.cellSizeY );
-    this.removeOutOfBorder();
-    this.centralizeItems();
-    this.flushDraw();
+    if ($('form.search').length > 0) {
+        var cell = new IncBoardCell();
+        this.cols = parseInt( ( $(window).width() - 250 ) / this.cellSizeX );
+        this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('form.search').offset().top - $('.footer').height() ) / this.cellSizeY );
+        this.removeOutOfBorder();
+        this.centralizeItems();
+        this.flushDraw();
+    }
 };
 
 /**

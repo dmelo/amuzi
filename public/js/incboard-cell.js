@@ -59,13 +59,13 @@ IncBoardCell.prototype.getContent = function() {
 
 IncBoardCell.prototype.getInnerHtml = function() {
     var v = this.content;
-    var resultSet = new ResultSet();
+    var resultSet = new $.ResultSet();
     return img + resultSet.getMusicLarge(v, 'music');
 }
 
 IncBoardCell.prototype.getHtml = function() {
     var v = this.content;
-    var resultSet = new ResultSet();
+    var resultSet = new $.ResultSet();
     img = '<div class="incboard-img"><img src="' + v.cover + '"/></div>';
     title = '<span class="title">' + v.artist + ' - ' + v.musicTitle + '</span>';
     duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
