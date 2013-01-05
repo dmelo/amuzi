@@ -66,6 +66,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.bootstrapLoadModal.js';
         $js[] = $domainJs . 'jquery.url.js';
         $js[] = $domainJs . 'bootstrap-slide.js';
+        $js[] = $domainJs . 'cssrule.js';
         $js[] = $domainJs . 'default.js';
         $js[] = $domainJs . 'mozaic.js';
         $js[] = $domainJs . 'incboard-cell.js';

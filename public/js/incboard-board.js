@@ -280,17 +280,18 @@ IncBoardBoard.prototype.flushDraw = function() {
     newTop = (1 - factor) * this.cellSizeY * this.rows * 0.5;
     newLeft = (1 - factor) * this.cellSizeX * this.cols * 0.5;
 
-    sheet = document.styleSheets[document.styleSheets.length - 1];
-    sheet.addRule('.incboard-cell', 'width: ' + newCellSizeX + 'px; height: ' + newCellSizeY + 'px;');
-    sheet.addRule('#incboard', 'top: ' + newTop + 'px; left: ' + newLeft + 'px;');
-    console.log('incboard: ' + 'top: ' + newTop + 'px; left: ' + newLeft + 'px;');
+    $.cssRule('.incboard-cell', 'width', newCellSizeX + 'px');
+    $.cssRule('.incboard-cell', 'height', newCellSizeY + 'px');
+
+    $.cssRule('#incboard', 'top', newTop + 'px');
+    $.cssRule('#incboard', 'left', newLeft + 'px');
 
     for (var i = 0; i < this.rows; i++) {
-        sheet.addRule('.incboard-row-' + i, 'top: ' + (i * newCellSizeY) + "px");
+        $.cssRule('.incboard-row-' + i, 'top', (i * newCellSizeY) + "px");
     }
 
     for (var i = 0; i < this.cols; i++) {
-        sheet.addRule('.incboard-col-' + i, 'left: ' + (i * newCellSizeX) + "px");
+        $.cssRule('.incboard-col-' + i, 'left', (i * newCellSizeX) + "px");
     }
 
     this.drawList = [];
