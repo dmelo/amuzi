@@ -26,6 +26,9 @@
 function IncBoardBoard() {
     this.rows = 7;
     this.cols = 14;
+    this.cellSizeX = 56;
+    this.cellSizeY = 44;
+
     this.init();
 }
 
@@ -183,8 +186,8 @@ IncBoardBoard.prototype.removeOutOfBorder = function() {
 
 IncBoardBoard.prototype.resize = function() {
     var cell = new IncBoardCell();
-    this.cols = parseInt( ( $(window).width() - 250 ) / cell.cellSizeX );
-    this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('.navbar').height() - $('.footer').height() - $('.alert').height() - $('.alert').offset().top ) / cell.cellSizeY );
+    this.cols = parseInt( ( $(window).width() - 250 ) / this.cellSizeX );
+    this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('form.search').offset().top - $('.footer').height() ) / this.cellSizeY );
     this.removeOutOfBorder();
     this.centralizeItems();
     this.flushDraw();
@@ -194,56 +197,101 @@ IncBoardBoard.prototype.resize = function() {
  * Shifts the elements in order to keep then at the center.
  */
 IncBoardBoard.prototype.centralizeItems = function() {
-    var minX = 1000,
-        maxX = 0,
-        minY = 1000,
-        maxY = 0,
-        self = this;
+    var  self = this,
+         isEmpty = true;
+
+    this.minX = this.minY = 1000;
+    this.maxX = this.maxY = 0;
+
     this.listByAMTId.forEach(function (cell) {
-        if (cell.row < minY) {
-            minY = cell.row;
+        isEmpty = false;
+        if (cell.row < self.minY) {
+            self.minY = cell.row;
         }
 
-        if (cell.row > maxY) {
-            maxY = cell.row;
+        if (cell.row > self.maxY) {
+            self.maxY = cell.row;
         }
 
-        if (cell.col < minX) {
-            minX = cell.col;
+        if (cell.col < self.minX) {
+            self.minX = cell.col;
         }
 
-        if (cell.col > maxX) {
-            maxX = cell.col;
+        if (cell.col > self.maxX) {
+            self.maxX = cell.col;
         }
     });
 
-    if (1000 === minX && 0 === maxX && 1000 === minY && 0 === maxY) {
+    if (isEmpty) {
         console.log("Nothing to centralize");
         return;
-    }
-
-    var shiftX = parseInt(((this.cols - maxX - 1) - minX) / 2);
-    var shiftY = parseInt(((this.rows - maxY - 1) - minY) / 2);
-
-    if (0 !== shiftX || 0 !== shiftY) {
-        console.log("Applying shift (" + shiftX + ", " + shiftY + ")");
-        this.listByAMTId.forEach(function (cell) {
-            var pos = cell.getPos();
-            pos[0] += shiftX;
-            pos[1] += shiftY;
-            self.setPos(cell.getContent().artistMusicTitleId, pos);
-        });
     } else {
-        console.log("shift: (" + shiftX + ", " + shiftY + ")");
+        var shiftX = parseInt(((this.cols - this.maxX - 1) - this.minX) / 2);
+        var shiftY = parseInt(((this.rows - this.maxY - 1) - this.minY) / 2);
+
+        if (0 !== shiftX || 0 !== shiftY) {
+            console.log("Applying shift (" + shiftX + ", " + shiftY + ")");
+            this.listByAMTId.forEach(function (cell) {
+                var pos = cell.getPos();
+                pos[0] += shiftX;
+                pos[1] += shiftY;
+                self.setPos(cell.getContent().artistMusicTitleId, pos);
+            });
+        } else {
+            console.log("shift: (" + shiftX + ", " + shiftY + ")");
+        }
     }
 };
 
 IncBoardBoard.prototype.flushDraw = function() {
-    var self = this;
+    var self = this,
+        newCellSizeX,
+        newCellSizeY,
+        sheet,
+        realHeight,
+        realWidth,
+        factorX,
+        factorY,
+        factor,
+        marginFactor,
+        newTop,
+        newLeft;
 
     this.drawList.forEach(function(id) {
         self.listByAMTId[id].draw();
     });
+
+    realHeight = this.maxY - (this.minY - 1);
+    realWidth = this.maxX - (this.minX - 1);
+    factorY = this.rows / realHeight;
+    factorX = this.cols / realWidth;
+    console.log('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ')');
+    factor = Math.min(factorX, factorY);
+
+    if (factor * this.cellSizeX > 120 || factor * this.cellSizeY > 90 || factor < 0) {
+        newCellSizeX = 120;
+        newCellSizeY = 90;
+        factor =  120 / this.cellSizeX;
+    } else {
+        newCellSizeX = factor * this.cellSizeX;
+        newCellSizeY = factor * this.cellSizeY;
+    }
+
+    newTop = -1 * this.minY * newCellSizeY;
+    newLeft = -1 * this.minX * newCellSizeX;
+
+    sheet = document.styleSheets[document.styleSheets.length - 1];
+    sheet.addRule('.incboard-cell', 'width: ' + newCellSizeX + 'px; height: ' + newCellSizeY + 'px;');
+    sheet.addRule('#incboard', 'top: ' + newTop + 'px; left: ' + newLeft + 'px;');
+    console.log('incboard: ' + 'top: ' + newTop + 'px; left: ' + newLeft + 'px;');
+
+    for (var i = 0; i < this.rows; i++) {
+        sheet.addRule('.incboard-row-' + i, 'top: ' + (i * newCellSizeY) + "px");
+    }
+
+    for (var i = 0; i < this.cols; i++) {
+        sheet.addRule('.incboard-col-' + i, 'left: ' + (i * newCellSizeX) + "px");
+    }
 
     this.drawList = [];
 };

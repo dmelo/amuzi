@@ -66,13 +66,12 @@ IncBoardCell.prototype.getInnerHtml = function() {
 IncBoardCell.prototype.getHtml = function() {
     var v = this.content;
     var resultSet = new ResultSet();
-    sty = 'width: ' + this.cellSizeX + 'px; height: ' + this.cellSizeY + 'px; ';
     img = '<div class="incboard-img"><img src="' + v.cover + '"/></div>';
     title = '<span class="title">' + v.artist + ' - ' + v.musicTitle + '</span>';
     duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
     info = '<div class="incboard-info">' + title + duration + '</div>';
     control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
-    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '" class="incboard-cell" style="' + sty + 'top: ' + (this.row * this.cellSizeY) + 'px; left: ' + (this.col * this.cellSizeX) + 'px;">' + this.getInnerHtml() + '</div>');
+    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '" class="incboard-cell incboard-col-' + this.col + ' incboard-row-' + this.row + '">' + this.getInnerHtml() + '</div>');
 }
 
 IncBoardCell.prototype.toString = function() {
@@ -86,8 +85,8 @@ IncBoardCell.prototype.draw = function() {
 
     // If the element already exists then the only attribute that can chage is the position.
     if (e.length !== 0) {
-        e.css('top', (this.row * this.cellSizeY) + 'px');
-        e.css('left', (this.col * this.cellSizeX) + 'px');
+        e.removeClass();
+        e.addClass('incboard-cell incboard-row-' + this.row + ' incboard-col-' + this.col);
     } else {
         e = this.getHtml();
         $('#subtitle').subtitleAdd(v.artist);
