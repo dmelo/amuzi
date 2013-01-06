@@ -21,24 +21,27 @@
  */
 /*global  jPlayerPlaylist: false, jQuery:false */
 
-//(function($, undefined) {
-//    'use strict';
+(function ($, undefined) {
+    'use strict';
 
-    var myPlaylist;
-    var jplayerCss;
-    var jPlaylistTop = null;
-    var repeat;
-    var current;
-    var modalWrapper = "#load-modal-wrapper";
-    var latestSearch;
-    var popup;
+    /* global window */
+    /* global commands */
+    var jplayerCss,
+        jPlaylistTop = null,
+        repeat,
+        current,
+        latestSearch,
+        popup;
 
+    window.myPlaylist = null;
+
+    $.modalWrapper = "#load-modal-wrapper";
     // Soon to be deprecated.
     function savePlaylist() {
         $.post('/playlist/save', {
-            playlist: myPlaylist.original,
-            name: myPlaylist.name
-        }, function(data) {
+            playlist: window.myPlaylist.original,
+            name: window.myPlaylist.name
+        }, function (data) {
         });
     }
 
@@ -46,43 +49,30 @@
         $('.jp-playlist').scrollTop($('.jp-playlist').prop('scrollHeight'));
     }
 
-    function addTrack(trackId, artist, musicTitle) {
-        var options;
-        var playNow = false;
-        options = {
-            id: trackId,
-            playlist: myPlaylist.name,
-            artist: artist,
-            musicTitle: musicTitle
-        };
-
-        $.bootstrapMessageLoading();
-        $.post('/playlist/addtrack', options, function(data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
-            if('error' === data[1])
-                loadPlaylist(myPlaylist.name);
-            else if('success' === data[1]) {
-                var v = data[2];
-                var pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
-                myPlaylist.add(pOpt, playNow);
-            }
-        }, 'json');
+    function setInterfaceShuffle(shuffle) {
+        window.myPlaylist.shuffle(shuffle);
+        $('.jp-shuffle-off').css('display', shuffle ? 'block' : 'none');
+        $('.jp-shuffle').css('display', shuffle ? 'none' : 'block');
     }
 
-    // TODO: take away the playlistName
-    function rmTrack(trackId, playlistName) {
-        playlistName = playlistName || 'default';
-        $.bootstrapMessageLoading();
-        $.post('/playlist/rmtrack', {
-            playlist: playlistName,
-            trackId: trackId
-        }, function(data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
-            if('error' === data[1])
-                loadPlaylist(playlistName);
-        }, 'json').error(function(e) {
-            $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
-        });
+    function setRepeatAndCurrent(repeat, current) {
+        window.myPlaylist.loop = repeat;
+        window.myPlaylist.newCurrent = current;
+    }
+
+    function setInterfaceRepeat(repeat) {
+        $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
+        $('.jp-repeat').css('display', repeat ? 'none' : 'block');
+    }
+
+    function callbackShuffle() {
+        window.myPlaylist.setCurrent(window.myPlaylist.newCurrent);
+        setInterfaceRepeat(window.myPlaylist.loop);
+    }
+
+    function unloadPlaylist() {
+        window.myPlaylist.name = null;
+        window.myPlaylist.removeAll();
     }
 
     /**
@@ -95,49 +85,85 @@
      */
     function loadPlaylist(name) {
         name = name || '';
-        myPlaylist.removeAll();
+        window.myPlaylist.removeAll();
         var options;
 
-        if(typeof(name) == 'number' || (typeof(name) == 'string' && parseInt(name) >= 0)) {
+        if (typeof (name) === 'number' || (typeof (name) === 'string' && parseInt(name, 10) >= 0)) {
             // It's an ID
-            if(typeof(name) == 'string')
-                name = parseInt(name);
+            if (typeof (name) === 'string') {
+                name = parseInt(name, 10);
+            }
             options = { id: name };
-        }
-        else {
+        } else {
             // It's a name
             options = { name: name };
         }
 
 
-        $.post('/playlist/load', options, function(data) {
-            if(data != null) {
+        $.post('/playlist/load', options, function (data) {
+            if (null !== data) {
                 $('.jp-title').css('display', 'block');
-                $.each(data[0], function(i, v) {
-                    myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id});
+                $.each(data[0], function (i, v) {
+                    window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id});
                 });
-                myPlaylist.name = data[1];
-                setRepeatAndCurrent(parseInt(data[2]), parseInt(data[4]));
-                setInterfaceShuffle(parseInt(data[3]));
+                window.myPlaylist.name = data[1];
+                setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
+                setInterfaceShuffle(parseInt(data[3], 10));
                 setTimeout(callbackShuffle, 1500);
             }
-        }, 'json').complete(function() {
-            if(commands.isRunCommand)
-                setTimeout("commands.runProgram()", 1500);
-        }).error(function(e) {
+        }, 'json').complete(function () {
+            if (commands.isRunCommand) {
+                setTimeout('commands.runProgram()', 1500);
+            }
+        }).error(function (e) {
         });
     }
 
-    function unloadPlaylist() {
-        myPlaylist.name = null;
-        myPlaylist.removeAll();
+    function addTrack(trackId, artist, musicTitle) {
+        var options,
+            playNow = false;
+        options = {
+            id: trackId,
+            playlist: window.myPlaylist.name,
+            artist: artist,
+            musicTitle: musicTitle
+        };
+
+        $.bootstrapMessageLoading();
+        $.post('/playlist/addtrack', options, function (data) {
+            $.bootstrapMessageAuto(data[0], data[1]);
+            if ('error' === data[1]) {
+                loadPlaylist(window.myPlaylist.name);
+            } else if ('success' === data[1]) {
+                var v = data[2],
+                    pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                window.myPlaylist.add(pOpt, playNow);
+            }
+        }, 'json');
+    }
+
+    // TODO: take away the playlistName
+    function rmTrack(trackId, playlistName) {
+        playlistName = playlistName || 'default';
+        $.bootstrapMessageLoading();
+        $.post('/playlist/rmtrack', {
+            playlist: playlistName,
+            trackId: trackId
+        }, function (data) {
+            $.bootstrapMessageAuto(data[0], data[1]);
+            if ('error' === data[1]) {
+                loadPlaylist(playlistName);
+            }
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
+        });
     }
 
     function rmPlaylist(name, callback) {
         $.bootstrapMessageLoading();
         $.post('/playlist/remove', {
             name: name
-        }, function(data) {
+        }, function (data) {
             if ('success' === data[1] && 'function' === typeof callback) {
                 callback(name);
             }
@@ -145,15 +171,10 @@
         }, 'json');
     }
 
-    function initAmuzi() {
+    $.initAmuzi = function () {
         commands.isRunCommand = true;
         loadPlaylist();
-    }
-
-    function setRepeatAndCurrent(repeat, current) {
-        myPlaylist.loop = repeat;
-        myPlaylist.newCurrent = current;
-    }
+    };
 
     function setPlaylistRepeat(name, repeat) {
         name = name || 'default';
@@ -161,23 +182,20 @@
 
     function callbackPlay(current) {
         $.post('/playlist/setcurrent', {
-            name: myPlaylist.name,
+            name: window.myPlaylist.name,
             current: current
-        }, function(data) {
-            if('error' == data[1])
+        }, function (data) {
+            if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
+            }
         }, 'json');
     }
 
-    function callbackShuffle() {
-        myPlaylist.setCurrent(myPlaylist.newCurrent);
-        setInterfaceRepeat(myPlaylist.loop);
-    }
-
     function applyOverPlaylist() {
-        if($('#jp_container_1').length > 0) {
-            if(!jPlaylistTop)
+        if ($('#jp_container_1').length > 0) {
+            if (!jPlaylistTop) {
                 jPlaylistTop = $('.jp-playlist').first().offset().top;
+            }
             var maxHeight = $(window).height() - jPlaylistTop - 45;
             $('.jp-playlist').css('max-height', maxHeight);
         }
@@ -187,26 +205,21 @@
     function setRepeat(repeat) {
         setInterfaceRepeat(repeat);
         $.post('/playlist/setrepeat', {
-            name: myPlaylist.name,
+            name: window.myPlaylist.name,
             repeat: repeat
-        }, function(data) {
-            if('error' == data[1])
+        }, function (data) {
+            if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
+            }
         }, 'json');
     }
 
-    function setInterfaceRepeat(repeat) {
-        $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
-        $('.jp-repeat').css('display', repeat ? 'none' : 'block');
-    }
-
-
     function applyRepeatTriggers() {
-        $('.jp-repeat').click(function(e) {
+        $('.jp-repeat').click(function (e) {
             setRepeat(true);
         });
 
-        $('.jp-repeat-off').click(function(e) {
+        $('.jp-repeat-off').click(function (e) {
             setRepeat(false);
         });
     }
@@ -214,26 +227,21 @@
     // Shuffle
     function setShuffle(shuffle) {
         $.post('/playlist/setshuffle', {
-            name: myPlaylist.name,
+            name: window.myPlaylist.name,
             shuffle: shuffle
-        }, function(data) {
-            if('error' == data[1])
+        }, function (data) {
+            if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
+            }
         }, 'json');
     }
 
-    function setInterfaceShuffle(shuffle) {
-        myPlaylist.shuffle(shuffle);
-        $('.jp-shuffle-off').css('display', shuffle ? 'block' : 'none');
-        $('.jp-shuffle').css('display', shuffle ? 'none' : 'block');
-    }
-
     function applyShuffleTriggers() {
-        $('.jp-shuffle').click(function(e) {
+        $('.jp-shuffle').click(function (e) {
             setShuffle(true);
         });
 
-        $('.jp-shuffle-off').click(function(e) {
+        $('.jp-shuffle-off').click(function (e) {
             setShuffle(false);
         });
     }
@@ -243,43 +251,50 @@
             dataType: 'json',
             success: function (data) {
             },
-            beforeSubmit: function() {
+            beforeSubmit: function () {
             }
         });
     }
 
     function isLoggedIn() {
-        if($('#userId').length)
-            return $('#userId').html();
-        return false;
+        return $('#userId').length > 0 ? $('#userId').html() : false;
     }
 
     function playlistCallback() {
         $('#playlistsettings').ajaxForm({
-            success: function(data) {
+            success: function (data) {
                 $('#playlistsettings-result tbody').html(data);
             },
-            error: function(data) {
+            error: function (data) {
                 $.bootstrapMessageAuto(data, 'error');
             }
         });
     }
 
-    function newPlaylistCallback() {
+    function loadPlaylistSet() {
+        $.get('/playlist/list', function (data) {
+            $('.music-manager#playlists .stripe').html(data);
+            $.resizeEditPlaylist();
+        }).error(function (data) {
+            $.resizeEditPlaylist();
+        });
+    }
+
+    $.rendered_newPlaylist = function () {
         $('form#newPlaylist').ajaxForm({
             dataType: 'json',
             success: function (data) {
                 loadPlaylist($('input[name=name]').val());
                 $.bootstrapMessageAuto(data[0], data[1]);
-                $(modalWrapper).modal('hide');
+                $($.modalWrapper).modal('hide');
                 loadPlaylistSet();
             },
-            error: function(data) {
+            error: function (data) {
                 $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
                 $('#load-modal-wrapper').modal('hide');
             }
         });
-    }
+    };
 
     function opacityFull(element) {
         element.addClass('opacity-full');
@@ -292,7 +307,7 @@
     }
 
     function handleAutocompleteChoice(ui) {
-        if(ui.item !== null && ui.item.value != latestSearch) {
+        if (ui.item !== null && ui.item.value !== latestSearch) {
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
@@ -305,36 +320,35 @@
     }
 
     function preparePlaylistActions() {
-        $('.jp-playlist ul li div').live('mouseover', function(e) {
+        $('.jp-playlist ul li div').live('mouseover', function (e) {
             $(this).find('.jp-free-media').css('opacity', '1.0').css('-moz-opacity', '1.0').css('filter', 'alpha(opacity=100)');
         });
 
-        $('.jp-playlist ul li div').live('mouseleave', function(e) {
+        $('.jp-playlist ul li div').live('mouseleave', function (e) {
             $(this).find('.jp-free-media').css('opacity', '0.0').css('-moz-opacity', '0.0').css('filter', 'alpha(opacity=0)');
         });
     }
 
     function prepareMusicTrackVote() {
-        var modalWrapper = '#load-modal-wrapper';
-        $('.vote').live('click', function(e) {
+        $('.vote').live('click', function (e) {
             e.preventDefault();
-            $.get($(this).attr('href'), function(data) {
+            $.get($(this).attr('href'), function (data) {
                 $.bootstrapMessageAuto(data[0], data[1]);
-                $(modalWrapper).modal('hide');
-            }, 'json').error(function(e) {
+                $($.modalWrapper).modal('hide');
+            }, 'json').error(function (e) {
                 $.bootstrapMessageAuto('Error registering vote', 'error');
-                $(modalWrapper).modal('hide');
+                $($.modalWrapper).modal('hide');
             });
         });
 
     }
 
     function verifyView() {
-        var viewPaths = ['/', '/index', '/index/', '/index/index', '/index/index/', '/index/incboard', '/index/incboard/'];
-        var pathname = window.location.pathname;
+        var viewPaths = ['/', '/index', '/index/', '/index/index', '/index/index/', '/index/incboard', '/index/incboard/'],
+            pathname = window.location.pathname;
 
         if (-1 !== viewPaths.indexOf(pathname)) {
-            $.get('/user/getview', function(data) {
+            $.get('/user/getview', function (data) {
                 if ('incboard' === data && '/index/incboard' !== pathname && 'index/incboard/' !== pathname) {
                     window.location.pathname = '/index/incboard';
                 } else if ('default' === data && '/' !== pathname) {
@@ -344,9 +358,9 @@
         }
     }
 
-    function callback_userSettings(data) {
+    $.callback_userSettings = function (data) {
         verifyView();
-    }
+    };
 
     function refreshViewThumbnail() {
         var src = '';
@@ -359,17 +373,18 @@
         $('.side-view-thumb img').attr('src', src);
     }
 
-    function rendered_userSettings() {
+    $.rendered_userSettings = function () {
         console.log('Just renedered settings');
         $('#view').parent().append('<div class="side-view-thumb"><img src=""/></div>');
         refreshViewThumbnail();
         $('#view').change(refreshViewThumbnail);
-    }
+    };
 
     function addToPlaylist(e) {
-        var trackId = e.attr('trackId')
+        var trackId = e.attr('trackId'),
+            artist = e.attr('artist'),
+            musicTitle = e.attr('musicTitle');
 
-        var artist = e.attr('artist');
         if ('undefined' === typeof artist) {
             artist = e.parent().attr('artist');
             if ('undefined' === typeof artist) {
@@ -377,7 +392,6 @@
             }
         }
 
-        var musicTitle = e.attr('musicTitle');
         if ('undefined' === typeof musicTitle) {
             musicTitle = e.parent().attr('musicTitle');
             if ('undefined' === typeof musicTitle) {
@@ -387,7 +401,7 @@
 
         addTrack(trackId, artist, musicTitle);
         e.animate({top: 0, left: $(window).width()}, {
-            complete: function() {
+            complete: function () {
                 e.remove();
             }
         });
@@ -396,30 +410,16 @@
     function prepareVoteButton() {
     }
 
-    function loadPlaylistSet() {
-        $.get('/playlist/list', function(data) {
-            $('.music-manager#playlists .stripe').html(data);
-            resizeEditPlaylist();
-        }).error(function(data) {
-            resizeEditPlaylist();
-        });
-    }
-
     function prepareNewTracks() {
-        $('.jp-playlist .new').live('hover', function(e) {
+        $('.jp-playlist .new').live('hover', function (e) {
             $(this).removeClass('new');
         });
-    }
-
-    function playlistSquareHover(ele) {
-        $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
-        $('#edit-playlist .stripe').attr('playlistid', $(this).attr('playlistid'));
     }
 
     function reloadPlaylistInfo(name) {
         $.get('/playlist/info', {
             playlistName: name
-        }, function(data) {
+        }, function (data) {
             $('div[playlistid=' + data[0] + '] .playlist-info').html(data[1]);
             var editDiv = $('#edit-playlist .stripe[playlistid=' + data[0] + ']');
             if (1 === editDiv.length) {
@@ -428,29 +428,29 @@
         }, 'json');
     }
 
-    function resizeEditPlaylist() {
+    $.resizeEditPlaylist = function () {
         $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
-    }
+    };
 
-    function isSearchFormValid() {
+    $.isSearchFormValid = function () {
         var artist = $('#artist').val(),
             musicTitle = $('#musicTitle').val();
 
         if (
-            '' != artist
-            && '' != musicTitle
-            && $('#q').val() === artist + ' - ' + musicTitle
+            '' !== artist
+                && '' !== musicTitle
+                && $('#q').val() === artist + ' - ' + musicTitle
         ) {
             return true;
         }
 
         return false;
-    }
+    };
 
     function prepareShareFacebook() {
-        $('.share-facebook').live('click', function(e) {
+        $('.share-facebook').live('click', function (e) {
             e.preventDefault();
-            window.open($(this).attr('href'),'Share on Facebook','toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
+            window.open($(this).attr('href'), 'Share on Facebook', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
         });
     }
 
@@ -459,13 +459,13 @@
             if (false === $('input[type=text], textarea').is(':focus')) {
                 var code = e.keyCode;
                 switch (code) {
-                    case 32:
-                        if ($('#jquery_jplayer_1').data("jPlayer").status.paused) {
-                            myPlaylist.play();
-                        } else {
-                            myPlaylist.pause();
-                        }
-                        break;
+                case 32:
+                    if ($('#jquery_jplayer_1').data("jPlayer").status.paused) {
+                        window.myPlaylist.play();
+                    } else {
+                        window.myPlaylist.pause();
+                    }
+                    break;
                 }
             }
         });
@@ -476,14 +476,27 @@
             if ($('html').hasClass('msie')) {
                 var id = $.bootstrapLoadModalDisplay("Upgrade to a better browser", "<div style='border: 1px solid #F7941D; background: #FEEFDA; text-align: center; clear: both; height: 75px; position: relative;'>    <div style='position: absolute; right: 3px; top: 3px; font-family: courier new; font-weight: bold;'><a href='#' onclick='javascript:this.parentNode.parentNode.style.display='none'; return false;'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-cornerx.jpg' style='border: none;' alt='Close this notice'/></a></div>    <div style='margin: 0 auto; text-align: left; padding: 0; overflow: hidden; color: black;'>      <div style='width: 75px; float: left;'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-warning.jpg' alt='Warning!'/></div>      <div style='width: 275px; float: left; font-family: Arial, sans-serif;'>        <div style='font-size: 14px; font-weight: bold; margin-top: 12px;'>You are using an outdated browser</div>        <div style='font-size: 12px; margin-top: 6px; line-height: 12px;'>For a better experience using this site, please upgrade to a modern web browser.</div>      </div>      <div style='width: 75px; float: left;'><a href='http://www.firefox.com' target='_blank'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-firefox.jpg' style='border: none;' alt='Get Firefox 3.5'/></a></div>     <div style='float: left;'><a href='http://www.google.com/chrome' target='_blank'><img src='http://www.ie6nomore.com/files/theme/ie6nomore-chrome.jpg' style='border: none;' alt='Get Google Chrome'/></a></div>    </div>  </div>");
 
-                $(id).bind('hidden', function() {
+                $(id).bind('hidden', function () {
                     $.cookie('browser_compatibility', 1);
                 });
             }
         }
     }
 
-    $(document).ready(function() {
+    function removePlaylistSquareCallback(name) {
+        $('.playlist-square').each(function (e) {
+            if ($(this).find('.name').html() === name) {
+                $(this).remove();
+                $.resizeEditPlaylist();
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var ac,
+            message,
+            st;
+
         verifyView();
 
         checkBrowserCompatibility();
@@ -492,11 +505,11 @@
             $('#userEmail').html($('#email').html());
         }
 
-        $('a#email').click(function(e) {
+        $('a#email').click(function (e) {
             e.preventDefault();
         });
 
-        $('a.brand').click(function(e) {
+        $('a.brand').click(function (e) {
             if ($('#userId').length > 0) {
                 e.preventDefault();
                 $('.slide-prev').trigger('click');
@@ -506,7 +519,7 @@
         // topbar menu
         $('.topbar').dropdown();
 
-        $('.music-large').live('click', function(e) {
+        $('.music-large').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             addToPlaylist($(this));
@@ -517,12 +530,12 @@
             addToPlaylist($(this).find('.music-large'));
         });
 
-        $('.youtube-link, .download').live('click', function(e) {
+        $('.youtube-link, .download').live('click', function (e) {
             e.stopPropagation();
-            myPlaylist.pause();
+            window.myPlaylist.pause();
         });
 
-        $('.youtube-link').live('click', function(e) {
+        $('.youtube-link').live('click', function (e) {
             e.preventDefault();
             $.bootstrapLoadModalDisplay(
                 'Youtube',
@@ -531,16 +544,16 @@
             );
         });
 
-        $('.jp-playlist-item-remove').live('click', function(e) {
-            trackId = $(this).parent().parent().attr('track_id');
-            rmTrack(trackId, myPlaylist.name);
-            reloadPlaylistInfo(myPlaylist.name);
+        $('.jp-playlist-item-remove').live('click', function (e) {
+            var trackId = $(this).parent().parent().attr('track_id');
+            rmTrack(trackId, window.myPlaylist.name);
+            reloadPlaylistInfo(window.myPlaylist.name);
         });
 
         // placeholder on the search input.
         $('#q').placeholder();
         // autocomplete the search input from last.fm.
-        $.ui.autocomplete.prototype._renderItem = function(ul, row) {
+        $.ui.autocomplete.prototype._renderItem = function (ul, row) {
             var a = $('<li></li>')
                 .data('item.autocomplete', row)
                 .append('<a>' + row.label + '</a>')
@@ -548,12 +561,12 @@
             return a;
         };
 
-        var ac = $('#q').autocomplete({
-            source: function(request, response) {
+        ac = $('#q').autocomplete({
+            source: function (request, response) {
                 $.get('/api/autocomplete', {
                     q: request.term,
-                }, function(data) {
-                    var a =  $.map(data, function(row) {
+                }, function (data) {
+                    var a =  $.map(data, function (row) {
                         return {
                             data: row,
                             label: '<img src="' + row.cover + '"/> <span>' + row.name + '</span>',
@@ -566,45 +579,46 @@
                     response(a);
                 }, 'json');
             },
-            change: function(e, ui) {
+            change: function (e, ui) {
                 handleAutocompleteChoice(ui);
             },
-            select: function(e, ui) {
+            select: function (e, ui) {
                 handleAutocompleteChoice(ui);
             },
-            focus: function(e, ui) {
+            focus: function (e, ui) {
                 $('#q').val(ui.item.value);
             },
-            close: function(e, ui) {
+            close: function (e, ui) {
             },
-            open: function() {
+            open: function () {
                 var left = $('.ui-autocomplete').position().left;
                 $('.ui-autocomplete').css('left', (left + 15) + 'px');
             }
         });
 
-        if($('#status-message').length > 0) {
-            var message = $('#status-message p').html();
-            var st = $('#status-message span.status').html();
+        if ($('#status-message').length > 0) {
+            message = $('#status-message p').html();
+            st = $('#status-message span.status').html();
 
-            if($('#status-message').attr('noauto') === 'noauto')
+            if ($('#status-message').attr('noauto') === 'noauto') {
                 $.bootstrapMessage(message, st);
-            else
+            } else {
                 $.bootstrapMessageAuto(message, st);
+            }
         }
 
         // start the jplayer.
         jplayerCss = "#jp_container_1";
-        myPlaylist = new jPlayerPlaylist({
+        window.myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: jplayerCss
         }, [], {supplied: 'flv', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
 
         $(jplayerCss + ' ul:last').sortable({
-            update: function() {
-                myPlaylist.scan();
+            update: function () {
+                window.myPlaylist.scan();
                 savePlaylist();
-                reloadPlaylistInfo(myPlaylist.name);
+                reloadPlaylistInfo(window.myPlaylist.name);
             }
         });
 
@@ -612,7 +626,7 @@
         applyRepeatTriggers();
         applyShuffleTriggers();
         applyPlaylistSettings();
-        $(window).resize(function(e) {
+        $(window).resize(function (e) {
             applyOverPlaylist();
         });
 
@@ -620,15 +634,15 @@
         $.bootstrapLoadModalInit();
 
         // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
-        setTimeout('initAmuzi();', 1500);
+        setTimeout($.initAmuzi, 1500);
 
-        if(isLoggedIn()) {
-            $('.loginRequired').fadeTo('slow', 1.0, function() {
+        if (isLoggedIn()) {
+            $('.loginRequired').fadeTo('slow', 1.0, function () {
                 $(this).css('filter', 'alpha (opacity = 100)');
             });
         }
 
-        $('#toc').tableOfContents(null, {startLevel:2});
+        $('#toc').tableOfContents(null, {startLevel: 2});
 
         preparePlaylistActions();
         prepareMusicTrackVote();
@@ -636,18 +650,44 @@
         prepareShareFacebook();
         prepareShortcuts();
 
-        $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function() {
+        $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function () {
             $(this).jPlayer("play");
         });
 
-        $('.playlist-square').live('hover', playlistSquareHover);
-        resizeEditPlaylist();
+        $('.playlist-square').live('hover', function (e) {
+            $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
+            $('#edit-playlist .stripe').attr('playlistid', $(this).attr('playlistid'));
+        });
+
+        $.resizeEditPlaylist();
 
         $.slideInit();
+
+        $('.playlist-square .play').live('click', function (e) {
+            e.preventDefault();
+            loadPlaylist($(this).parent().attr('playlistid'));
+        });
+
+        $('.playlist-square .remove').live('click', function (e) {
+            e.preventDefault();
+            if (confirm('Are you sure?')) {
+                var name = $(this).parent().find('.name').html().
+                    playlistId = $(this).parent().attr('playlistid');
+                rmPlaylist(name, removePlaylistSquareCallback);
+                if (name === window.myPlaylist.name) {
+                    loadPlaylist('');
+                }
+            }
+        });
+
+        $('.music-square').live('click', function (e) {
+            e.preventDefault();
+            addToPlaylist($(this));
+        });
 
         if ($('div.container.regular').length > 0) {
             $('body').css('overflow', 'auto');
         }
         loadPlaylistSet();
     });
-//})(jQuery);
+}(jQuery, undefined));
