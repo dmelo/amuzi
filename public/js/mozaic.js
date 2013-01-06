@@ -9,7 +9,7 @@ function calculateMusicSquareSize() {
 }
 
 $(document).ready(function() {
-    var resultSet = new ResultSet();
+    var resultSet = new $.ResultSet();
 
     $(window).bind('resize', calculateMusicSquareSize);
     if ($('.mozaic').length > 0) {

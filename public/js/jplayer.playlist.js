@@ -224,7 +224,7 @@
                 attrClass = ' class="' + media.attrClass + '" ';
             }
 
-			var listItem = "<li" + attrClass + " name=\"" + $(myPlaylist.cssSelector.playlist + " ul li").length + "\" track_id=\"" + media.id + "\" artist_music_title_id=\"" + media.artist_music_title_id + "\"><div>";
+			var listItem = "<li" + attrClass + " name=\"" + $(this.cssSelector.playlist + " ul li").length + "\" track_id=\"" + media.id + "\" artist_music_title_id=\"" + media.artist_music_title_id + "\"><div>";
 
 			// Create remove control
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
