@@ -5,9 +5,9 @@
         var sheet = document.styleSheets[document.styleSheets.length - 1],
             i;
 
-        if ('function' === typeof sheet.addRule) {
+        if ('addRule' in sheet) {
             sheet.addRule(selector, property + ': ' + value);
-        } else if ('function' === typeof sheet.insertRule) {
+        } else if ('insertRule' in sheet) {
             i = sheet.cssRules.length;
             sheet.insertRule(selector + '{ ' + property + ': ' + value + '}', i);
         }
