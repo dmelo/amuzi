@@ -1153,7 +1153,7 @@ var kkl = null;
 						this._trigger(eventType);
 
                         if (status.currentPercentAbsolute >= 100.0) {
-                            myPlaylist.next();
+                            window.myPlaylist.next();
                         }
 
 						break;
