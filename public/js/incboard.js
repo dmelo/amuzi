@@ -363,13 +363,19 @@ function loadSimilarMusic(data, num, callback) {
     incBoard.searchMusic(data[0], num, callback);
 }
 
+function searchSimilar(ele) {
+    incBoard.searchSimilarList.push([ele.attr('artist'), ele.attr('musicTitle')]);
+    incBoard.incrementSimilar();
+}
+
 $(document).ready(function() {
     if (1 === $('#incboard-search').length) {
-        $('.music-large').live('click', function(e) {
-            var artist = $(this).parent().attr('artist');
-            var musicTitle = $(this).parent().attr('musicTitle');
-            incBoard.searchSimilarList.push([artist, musicTitle]);
-            incBoard.incrementSimilar();
+        $('.music-large').live('click', function (e) {
+            searchSimilar($(this).parent());
+        });
+
+        $('.incboard-cell').live('click', function (e) {
+            searchSimilar($(this));
         });
     }
 

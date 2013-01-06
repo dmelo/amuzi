@@ -520,13 +520,13 @@
 
         $('.music-large').live('click', function (e) {
             e.preventDefault();
+            e.stopPropagation();
             addToPlaylist($(this));
         });
 
         $('.incboard-cell').live('click', function (e) {
+            e.stopPropagation();
             console.log('CLICK: ');
-            console.log($(this));
-            console.log($(this).find('.music-large'));
             addToPlaylist($(this).find('.music-large'));
         });
 
