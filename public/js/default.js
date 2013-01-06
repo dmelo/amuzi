@@ -526,7 +526,6 @@
 
         $('.incboard-cell').live('click', function (e) {
             e.stopPropagation();
-            console.log('CLICK: ');
             addToPlaylist($(this).find('.music-large'));
         });
 
