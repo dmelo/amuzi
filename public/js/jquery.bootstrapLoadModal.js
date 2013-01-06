@@ -62,23 +62,17 @@
 
                 $.post($(this).attr('href'), {
                 }, function(data) {
-                    $($.modalWrapper + ' .modal-body').html(data);
-                    $($.modalWrapper + ' h3').html(title);
-                    $($.modalWrapper).modal('show');
-                    var funcName = 'rendered_' + callback;
-
+                    $(modalWrapper + ' .modal-body').html(data);
+                    $(modalWrapper + ' h3').html(title);
+                    $(modalWrapper).modal('show');
                     try {
-                        eval(funcName)();
+                        eval('rendered_' + callback)();
                     } catch (err) {
-                        if ('function' === typeof $[funcName]) {
-                            $[funcName]();
-                        } else {
-                            console.log('function ' + funcName + ' is undefined');
-                        }
+                        console.log('function ' + 'rendered_' + callback + ' is undefined');
                     }
 
                     if(!noForm) {
-                        $($.modalWrapper + ' form').ajaxForm({
+                        $(modalWrapper + ' form').ajaxForm({
                             dataType: 'json',
                             success: function (data) {
                                 callback = "callback_" + callback;
@@ -86,18 +80,14 @@
                                 try {
                                     eval(callback)(data);
                                 } catch (err) {
-                                    if ('function' === typeof $[callback]) {
-                                        $[callback](data);
-                                    } else {
-                                        console.log('Error trying to run ' + callback + '(data);');
-                                    }
+                                    console.log('Error trying to run ' + callback + '(data);');
                                 }
                             },
                             error: function(data) {
                                 $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
                             },
                             beforeSubmit: function() {
-                                $($.modalWrapper).modal('hide');
+                                $(modalWrapper).modal('hide');
                                 $.bootstrapMessage('Saving...');
                             }
                         });
@@ -108,13 +98,13 @@
                     lock--;
                 }).error(function (e) {
                     $.bootstrapMessageAuto('Error loading page content.', 'error');
-                    $($.modalWrapper).modal('hide');
+                    $(modalWrapper).modal('hide');
                 });
             }
         });
 
         $('#cancel').live('click', function(e) {
-            $($.modalWrapper).modal('hide');
+            $(modalWrapper).modal('hide');
         });
 
 
@@ -123,19 +113,20 @@
     };
 
     $.bootstrapLoadModalDisplay = function(title, content, addClass) {
+        var modalWrapper = '#load-modal-wrapper';
         $.bootstrapLoadModalInit();
-        $($.modalWrapper + ' .modal-body').html(content);
-        $($.modalWrapper + ' h3').html(title);
-        $($.modalWrapper).modal('show');
+        $(modalWrapper + ' .modal-body').html(content);
+        $(modalWrapper + ' h3').html(title);
+        $(modalWrapper).modal('show');
         if ('undefined' !== typeof addClass) {
-            $($.modalWrapper).addClass(addClass);
+            $(modalWrapper).addClass(addClass);
         }
 
-        $($.modalWrapper).bind('hidden', function(e) {
-            $($.modalWrapper + ' .modal-body').html(' ');
+        $(modalWrapper).bind('hidden', function(e) {
+            $(modalWrapper + ' .modal-body').html(' ');
         });
 
-        return $.modalWrapper;
+        return modalWrapper;
     };
 
     $.bootstrapLoadModalLoading = function() {
@@ -146,10 +137,11 @@
         bootstrapLoadModalLock: 0,
 
         bootstrapLoadModal: function() {
+            var modalWrapper = '#load-modal-wrapper';
 
             $.bootstrapLoadModalInit();
 
-            $($.modalWrapper).modal({
+            $(modalWrapper).modal({
                 backdrop: true,
                 keyboard: true,
                 show: false});

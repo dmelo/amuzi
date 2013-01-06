@@ -392,7 +392,7 @@ $(document).ready(function() {
             var obj = new Object();
             obj.artist = $('#artist').val();
             obj.musicTitle = $('#musicTitle').val();
-            if ($.isSearchFormValid()) {
+            if (isSearchFormValid()) {
                 incBoard.searchMusic([obj], 1, searchMusicCallbackCenter);
             }
         }

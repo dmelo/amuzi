@@ -20,8 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function($, undefined) {
-    'use strict';
-
     $.slideLock = false;
 
     $.slideResize = function() {
@@ -40,7 +38,9 @@
         $('.slide-next').addClass('active');
         $('#screen-search img').attr('src', '/img/search.png');
         $('#screen-music img').attr('src', '/img/music-dark.png');
-        $.resizeEditPlaylist();
+        resizeEditPlaylist();
+
+
     };
 
     $.slideInit = function() {
