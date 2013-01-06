@@ -77,7 +77,7 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
             }
         }
 
-        $rowSet = $this->fetchAll($where, 'similarity desc');
+        $rowSet = $this->fetchAll($where, 'similarity desc', 100);
         $ret = array();
         foreach ($rowSet as $row) {
             $id = $artistMusicTitleId == $row->fArtistMusicTitleId ?
