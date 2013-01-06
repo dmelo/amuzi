@@ -34,3 +34,7 @@
 .screens {
     margin-left:50px;
 }
+
+#slide-music-manager {
+    z-index: 3;
+}

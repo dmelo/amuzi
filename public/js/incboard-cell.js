@@ -64,14 +64,18 @@ IncBoardCell.prototype.getInnerHtml = function() {
 }
 
 IncBoardCell.prototype.getHtml = function() {
-    var v = this.content;
-    var resultSet = new $.ResultSet();
-    img = '<div class="incboard-img"><img src="' + v.cover + '"/></div>';
-    title = '<span class="title">' + v.artist + ' - ' + v.musicTitle + '</span>';
-    duration = '<p>' + resultSet.secondsToHMS(v.duration) + '</p>';
-    info = '<div class="incboard-info">' + title + duration + '</div>';
-    control = '<div class="incboard-control play">' + resultSet.getControl(v) + '</div>';
-    return $('<div id="' + v.artistMusicTitleId + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '" class="incboard-cell incboard-col-' + this.col + ' incboard-row-' + this.row + '">' + this.getInnerHtml() + '</div>');
+    var v = this.content,
+        resultSet = new $.ResultSet(),
+        ret = $(resultSet.getMusicSquare(v));
+
+    ret.addClass('incboard-cell incboard-col-' + this.col + ' incboard-row-' + this.row);
+    ret.find('.cover').addClass('incboard-img');
+    ret.attr('data-content', v.title + ' (' + resultSet.secondsToHMS(v.duration) + ')');
+    ret.attr('data-trigger', 'hover');
+    ret.attr('id', v.artistMusicTitleId);
+    ret.find('.description').remove();
+    ret.popover({placement: 'top'})
+    return ret;
 }
 
 IncBoardCell.prototype.toString = function() {
@@ -86,7 +90,7 @@ IncBoardCell.prototype.draw = function() {
     // If the element already exists then the only attribute that can chage is the position.
     if (e.length !== 0) {
         e.removeClass();
-        e.addClass('incboard-cell incboard-row-' + this.row + ' incboard-col-' + this.col);
+        e.addClass('music-square incboard-cell incboard-row-' + this.row + ' incboard-col-' + this.col);
     } else {
         e = this.getHtml();
         $('#subtitle').subtitleAdd(v.artist);

@@ -383,7 +383,8 @@
     function addToPlaylist(e) {
         var trackId = e.attr('trackId'),
             artist = e.attr('artist'),
-            musicTitle = e.attr('musicTitle');
+            musicTitle = e.attr('musicTitle'),
+            clone = e.clone();
 
         if ('undefined' === typeof artist) {
             artist = e.parent().attr('artist');
@@ -400,9 +401,12 @@
         }
 
         addTrack(trackId, artist, musicTitle);
-        e.animate({top: 0, left: $(window).width()}, {
+
+
+        e.parent().append(clone);
+        clone.animate({top: 0, left: $(window).width()}, {
             complete: function () {
-                e.remove();
+                clone.remove();
             }
         });
     }

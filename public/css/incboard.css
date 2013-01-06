@@ -10,6 +10,20 @@
     display: none;
 }
 
+.incboard-cell.music-square .cover {
+    opacity: 1.0;
+    filter: alpha (opacity = 100);
+    background-color: transparent;
+}
+
+.incboard-cell.music-square .play {
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    left: 50%;
+    margin-left: -12px;
+}
+
 .incboard-cell .incboard-control {
     display: none;
 }
