@@ -523,15 +523,10 @@
         // topbar menu
         $('.topbar').dropdown();
 
-        $('.music-large').live('click', function (e) {
+        $('.music-large, .music-square').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             addToPlaylist($(this));
-        });
-
-        $('.incboard-cell').live('click', function (e) {
-            e.stopPropagation();
-            addToPlaylist($(this).find('.music-large'));
         });
 
         $('.youtube-link, .download').live('click', function (e) {
@@ -682,11 +677,6 @@
                     loadPlaylist('');
                 }
             }
-        });
-
-        $('.music-square').live('click', function (e) {
-            e.preventDefault();
-            addToPlaylist($(this));
         });
 
         if ($('div.container.regular').length > 0) {
