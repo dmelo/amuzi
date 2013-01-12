@@ -13,3 +13,6 @@
 [submodule "external/EasyBib"]
 	path = external/EasyBib
 	url = git://github.com/easybib/EasyBib_Form_Decorator.git
+[submodule "external/jPlayer"]
+	path = external/jPlayer
+	url = git://github.com/happyworm/jPlayer.git
