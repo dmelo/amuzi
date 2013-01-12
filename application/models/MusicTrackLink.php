@@ -23,9 +23,28 @@
  */
 class MusicTrackLink extends DZend_Model
 {
+    private function _getCacheKey($artist, $musicTitle)
+    {
+        return sha1('MusicTrackLink' . $artist . $musicTitle);
+    }
+
     public function bond($artistMusicTitleId, $trackId, $bondName)
     {
         try {
+            $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById(
+                $artistMusicTitleId
+            );
+            $artistRow = $this->_artistDb->findRowById(
+                $artistMusicTitleRow->artistId
+            );
+            $musicTitleRow = $this->_musicTitleDb->findRowById(
+                $artistMusicTitleRow->musicTitleId
+            );
+            $cacheKey = $this->_getCacheKey(
+                $artistRow->name, $musicTitleRow->name
+            );
+
+            Zend_Registry::get('cache')->remove($cacheKey);
             $bondRow = $this->_bondModel->findRowByName($bondName);
             $currentMusicTrackLinkRow = $this->_musicTrackLinkDb->
                 findRowByArtistMusicTitleIdAndTrackIdAndUserId(
@@ -65,45 +84,60 @@ class MusicTrackLink extends DZend_Model
 
     public function getTrack($artist, $musicTitle)
     {
-        $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
-            $artist, $musicTitle
-        );
-        $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
-            $artistMusicTitleId
-        );
-        $points = array();
-        foreach ($rowSet as $row) {
-            if (!array_key_exists($row->trackId, $points))
-                $points[$row->trackId] = 0;
+        $c = new DZend_Chronometer();
+        $c->start();
 
-            switch ($row->bondId) {
-                case 0: // search
-                    $points[$row->trackId] += 1;
-                    break;
-                case 1: // insert_playlist
-                    $points[$row->trackId] += 4;
-                    break;
-                case 2: // vote_up
-                    $points[$row->trackId] += 16;
-                    break;
-                case 3:
-                    $points[$row->trackId] -= 16;
-                    break;
+        $cacheKey = $this->_getCacheKey($artist, $musicTitle);
+        $cache = Zend_Registry::get('cache');
+        $ret = null;
+
+        if (false === ($ret = $cache->load($cacheKey))) {
+            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+                $artist, $musicTitle
+            );
+            $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
+                $artistMusicTitleId
+            );
+            $points = array();
+            foreach ($rowSet as $row) {
+                if (!array_key_exists($row->trackId, $points))
+                    $points[$row->trackId] = 0;
+
+                switch ($row->bondId) {
+                    case 0: // search
+                        $points[$row->trackId] += 1;
+                        break;
+                    case 1: // insert_playlist
+                        $points[$row->trackId] += 4;
+                        break;
+                    case 2: // vote_up
+                        $points[$row->trackId] += 16;
+                        break;
+                    case 3:
+                        $points[$row->trackId] -= 16;
+                        break;
+                }
             }
-        }
 
-        $trackId = 0;
-        $maxPoints = -10000;
-        foreach ($points as $key => $value) {
-            if ($maxPoints < $value) {
-                $maxPoints = $value;
-                $trackId = $key;
+            $trackId = 0;
+            $maxPoints = -10000;
+            foreach ($points as $key => $value) {
+                if ($maxPoints < $value) {
+                    $maxPoints = $value;
+                    $trackId = $key;
+                }
             }
-        }
 
-        if ($trackId !== 0)
-            return $this->_trackModel->findRowById($trackId);
-        else
-            return null;
+            $ret = 0 !== $trackId ? $this->_trackModel->findRowById($trackId) : null;
+
+            if (null !== $ret) {
+                $cache->save($ret, $cacheKey);
+            }
+
+        }
+        $c->stop();
+        $this->_logger->debug('MusicTrackLink::getTrack time ' . $c->get());
+
+        return $ret;
     }
 }
