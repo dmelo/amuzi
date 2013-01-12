@@ -53,7 +53,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.jplayer.js';
         $js[] = $domainJs . 'jplayer.playlist.js';
         $js[] = $domainJs . 'jplayer.playlist.ext.js';
-        $js[] = $domainJs . 'jquery.jplayer.inspector.js';
         $js[] = $domainJs . 'themeswitcher.js';
         $js[] = $domainJs . 'jquery-ui-1.9.2.custom.js';
         $js[] = $domainJs . 'jquery.progressbar.js';

@@ -656,6 +656,13 @@
             $(this).jPlayer("play");
         });
 
+        $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function () {
+            if ($('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute >= 100) {
+                window.myPlaylist.next();
+            }
+        });
+
+
         $('.playlist-square').live('hover', function (e) {
             $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
             $('#edit-playlist .stripe').attr('playlistid', $(this).attr('playlistid'));
