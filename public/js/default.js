@@ -45,6 +45,9 @@
         });
     }
 
+    /**
+     * Scroll to the bottom of the playlist.
+     */
     function playlistRollBottom() {
         $('.jp-playlist').scrollTop($('.jp-playlist').prop('scrollHeight'));
     }
