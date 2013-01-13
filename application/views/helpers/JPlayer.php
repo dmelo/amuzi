@@ -79,6 +79,7 @@ class View_Helper_JPlayer extends View_Helper_T
                 <div class="jp-title">
                     <ul>
                         <li></li>
+                        <li></li>
                     </ul>
                 </div>
                 <div class="jp-controls-holder">
