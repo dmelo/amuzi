@@ -113,6 +113,8 @@
                 setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
                 setInterfaceShuffle(parseInt(data[3], 10));
                 setTimeout(callbackShuffle, 1500);
+                applyOverPlaylist();
+
             }
         }, 'json').complete(function () {
             if (commands.isRunCommand) {
@@ -199,7 +201,7 @@
             if (!jPlaylistTop) {
                 jPlaylistTop = $('.jp-playlist').first().offset().top;
             }
-            var maxHeight = $(window).height() - jPlaylistTop - 45;
+            var maxHeight = $(window).height() - jPlaylistTop - 65;
             $('.jp-playlist').css('max-height', maxHeight);
         }
     }
@@ -661,7 +663,6 @@
                 window.myPlaylist.next();
             }
         });
-
 
         $('.playlist-square').live('hover', function (e) {
             $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
