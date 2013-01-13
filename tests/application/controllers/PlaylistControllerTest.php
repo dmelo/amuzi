@@ -182,10 +182,14 @@ class PlaylistControllerTest extends AbstractControllerTest
         $this->testLogin();
         $this->request->setPost($this->_postAddtrack);
         $this->request->setMethod('post');
+        $domain = Zend_Registry::get('domain');
+        $id = '8';
+        $shareUrl = $domain . '/share/index/command/t/param/' . $id;
+        $facebookUrl = 'http://facebook.com/share.php?u=' . urlencode($shareUrl);
 
         $this->assertAjaxWorks('/playlist/addtrack');
         $ret = array('Track added', 'success', array(
-            'id' => '8',
+            'id' => $id,
             'title' => 'The Rolling Stones- Paint it Black',
             'fid' => 'Q9DDpmyPZZA',
             'fcode' => 'y',
@@ -194,6 +198,8 @@ class PlaylistControllerTest extends AbstractControllerTest
             'duration' => '255',
             'youtubeUrl' => 'http://www.youtube.com/watch?v=Q9DDpmyPZZA',
             'youtubeUrlEmbedded' => 'http://www.youtube.com/embed/Q9DDpmyPZZA?autoplay=1&rel=0',
+            'facebookUrl' => $facebookUrl,
+            'shareUrl' => $shareUrl,
             'artistMusicTitleId' => '20001'
         ));
         $this->assertJsonMessage($ret);
@@ -217,8 +223,13 @@ class PlaylistControllerTest extends AbstractControllerTest
      */
     public function testAddtrackAction3()
     {
+        $domain = Zend_Registry::get('domain');
+        $id = '7';
+        $shareUrl = $domain . '/share/index/command/t/param/' . $id;
+        $facebookUrl = 'http://facebook.com/share.php?u=' . urlencode($shareUrl);
+
         $this->testLogin();
-        $this->request->setPost(array('id' => 7, 'playlist' => 'default'));
+        $this->request->setPost(array('id' => $id, 'playlist' => 'default'));
         $this->request->setMethod('post');
 
         $this->assertAjaxWorks('/playlist/addtrack');
@@ -234,7 +245,9 @@ class PlaylistControllerTest extends AbstractControllerTest
             'cover' => 'null',
             'duration' => '277',
             'youtubeUrl' => 'http://www.youtube.com/watch?v=JMkFjYRWM4M',
-            'youtubeUrlEmbedded' => 'http://www.youtube.com/embed/JMkFjYRWM4M?autoplay=1&rel=0'
+            'youtubeUrlEmbedded' => 'http://www.youtube.com/embed/JMkFjYRWM4M?autoplay=1&rel=0',
+            'facebookUrl' => $facebookUrl,
+            'shareUrl' => $shareUrl,
         )
         )
         );
