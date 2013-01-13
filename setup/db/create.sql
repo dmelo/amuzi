@@ -242,3 +242,29 @@ CREATE TABLE `tutorial_accomplished` (
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `tutorial_accomplished_created_trigger` BEFORE INSERT ON `tutorial_accomplished` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `album` (
+    `id` int(11) NOT NULL auto_increment,
+    `name` varchar(255) NOT NULL,
+    `artist_id` int(11), -- In case there is many artist ("Various Artists" from last.fm) then this info is not recorded.
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(`id`),
+    UNIQUE(`name`, `artist_id`),
+    CONSTRAINT `album_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `album_created_trigger` BEFORE INSERT ON `album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `album_has_artist_music_title` (
+    `id` int(11) NOT NULL auto_increment,
+    `album_id` int(11) NOT NULL,
+    `artist_music_title_id` int(11) NOT NULL,
+    `sort` int(11) NOT NULL,
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(`id`),
+    UNIQUE(`album_id`, `sort`),
+    CONSTRAINT `album_has_artist_music_title_ibfk_1` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
+    CONSTRAINT `album_has_artist_music_title_ibfk_2` FOREIGN KEY (`artist_music_title_id`) REFERENCES `artist_music_title`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `album_has_artist_music_title_created_trigger` BEFORE INSERT ON `album_has_artist_music_title` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
