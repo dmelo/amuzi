@@ -124,7 +124,7 @@
         });
     }
 
-    function addTrack(trackId, artist, musicTitle) {
+    $.addTrack = function(trackId, artist, musicTitle) {
         var options,
             playNow = false;
         options = {
@@ -411,7 +411,7 @@
             }
         }
 
-        addTrack(trackId, artist, musicTitle);
+        $.addTrack(trackId, artist, musicTitle);
 
 
         e.parent().append(clone);

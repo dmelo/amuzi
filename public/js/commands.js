@@ -39,7 +39,7 @@ Commands.prototype.runCommand = function(command) {
         $.get('/api/gettrack', {
             id: id
         }, function(data) {
-            addTrack(data.id);
+            $.addTrack(data.id);
 
         }, 'json');
 
