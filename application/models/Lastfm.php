@@ -156,22 +156,32 @@ class Lastfm extends DZend_Model
 
     public function search($q, $limit = 10, $offset = 1)
     {
-        $key = sha1("Lastfm::search#$q");
+        $keyTrack = sha1("Lastfm::searchTrack#$q");
+        $keyAlbum = sha1("Lastfm::searchAlbum#$q");
 
-        $this->_logger->debug('Lastfm::search A ' . microtime(true));
-        if (($xml = $this->_cache->load($key)) === false) {
+        if (($xmlTrack = $this->_cache->load($keyTrack)) === false) {
             $args = array(
                 'method' => 'track.search',
                 'track' => $q
                 );
 
-            $xml = $this->_request($args);
-            $this->_cache->save($xml, $key);
-            $this->_logger->debug('Lastfm::search B ' . microtime(true));
+            $xmlTrack = $this->_request($args);
+            $this->_cache->save($xmlTrack, $keyTrack);
         }
-        $this->_logger->debug('Lastfm::search C ' . microtime(true));
 
-        return $this->_exploreDOM($xml, '_processResponseSearch', $limit);
+        if (($xmlAlbum = $this->_cache->load($keyAlbum)) === false) {
+            $args = array(
+                'method' => 'album.search',
+                'album' => $q
+            );
+            $xmlAlbum = $this->_request($args);
+            $this->_cache->save($xmlAlbum, $keyAlbum);
+        }
+
+        return array_merge(
+            $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit),
+            $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit)
+        );
     }
 
     public function getSimilar($artist, $music)
