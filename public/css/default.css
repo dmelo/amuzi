@@ -267,6 +267,22 @@ ul.ui-autocomplete li {
     transition: background 300ms ease-in 0ms;
 }
 
+ul.ui-autocomplete li.album {
+    background-color: #ccc;
+}
+
+ul.ui-autocomplete li small {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+ul.ui-autocomplete li div.description {
+    height: 50px;
+    margin-top: -50px;
+    margin-left: 54px;
+    width: 246px;
+}
+
 ul.ui-autocomplete li:hover {
     cursor: pointer;
     background-color: #F40C42;
@@ -386,4 +402,3 @@ ul.ui-autocomplete {
 dd {
     margin-left: 0px;
 }
-

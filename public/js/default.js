@@ -316,6 +316,7 @@
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
+            $('#type').val(ui.item.type);
             $('form.search').submit();
             latestSearch = ui.item.value;
             if ('function' === typeof (window.tutorialCloseSearch)) {
@@ -566,10 +567,12 @@
         $('#q').placeholder();
         // autocomplete the search input from last.fm.
         $.ui.autocomplete.prototype._renderItem = function (ul, row) {
+            console.log(row);
             var a = $('<li></li>')
                 .data('item.autocomplete', row)
                 .append('<a>' + row.label + '</a>')
-                .appendTo(ul);
+                .appendTo(ul)
+                .addClass(row.type);
             return a;
         };
 
@@ -581,10 +584,11 @@
                     var a =  $.map(data, function (row) {
                         return {
                             data: row,
-                            label: '<img src="' + row.cover + '"/> <span>' + row.name + '</span>',
+                            label: '<img src="' + row.cover + '"/> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',
                             value: row.name,
                             artist: row.artist,
-                            musicTitle: row.musicTitle
+                            musicTitle: row.musicTitle,
+                            type: row.type
                         };
                     }, 'json');
 

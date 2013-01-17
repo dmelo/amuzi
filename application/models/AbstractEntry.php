@@ -62,4 +62,14 @@ abstract class AbstractEntry
         if (in_array($key, $this->_fields))
             $this->_data[$key] = $value;
     }
+
+    public function __toString()
+    {
+        $ret = '';
+        foreach ($this->_fields as $field) {
+            $ret .= $field . ': ' . $this->$field . PHP_EOL;
+        }
+
+        return $ret;
+    }
 }

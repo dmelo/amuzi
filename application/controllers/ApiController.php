@@ -59,6 +59,7 @@ class ApiController extends DZend_Controller_Action
             $row = $trackRow->getArray();
             $row['artist'] = $artist;
             $row['musicTitle'] = $musicTitle;
+            $row['type'] = 'track';
 
             $ret[] = $row;
         }
@@ -80,35 +81,36 @@ class ApiController extends DZend_Controller_Action
             if (null !== $q) {
                 $limit = $this->_request->getParam('limit', 9);
                 $offset = $this->_request->getParam('offset', 1);
-                $cache = Zend_Registry::get('cache');
-                $key = sha1($q . $limit . $offset);
-                // TODO: UNCOMMENT CACHE.
-                // if (($list = $cache->load($key)) === false) {
-                    $complement = array();
-                    $artist = $this->_request->getParam('artist');
-                    $musicTitle = $this->_request->getParam('musicTitle');
-                    $complement = null !== $artist && null !== $musicTitle ?
-                        array(
-                            'artist' => $artist,
-                            'musicTitle' => $musicTitle,
-                            'artistMusicTitleId' => $this->
-                                _artistMusicTitleModel->insert(
-                                    $artist, $musicTitle
-                                )
-                        ):
-                        array();
-                    $resultSet = $this->_youtubeModel->search(
-                        $q, $limit, $offset, $complement
+                $complement = array();
+                $artist = $this->_request->getParam('artist');
+                $musicTitle = $this->_request->getParam('musicTitle');
+                $complement = null !== $artist && null !== $musicTitle ?
+                    array(
+                        'artist' => $artist,
+                        'musicTitle' => $musicTitle,
+                        'artistMusicTitleId' => $this->
+                            _artistMusicTitleModel->insert(
+                                $artist, $musicTitle
+                            )
+                    ): array();
+
+                $resultSet = $this->_youtubeModel->search(
+                    $q, $limit, $offset, $complement
+                );
+                if (!empty($complement)) {
+                    $list = $this->_registerTracks(
+                        $resultSet, $artist, $musicTitle
                     );
-                    if (!empty($complement))
-                        $list = $this->_registerTracks(
-                            $resultSet, $artist, $musicTitle
-                        );
-                    else
-                        foreach ($resultSet as $result)
-                            $list[] = $result->getArray();
-                //    $cache->save($list, $key);
-                //}
+                } else {
+                    foreach ($resultSet as $result) {
+                        $list[] = $result->getArray();
+                    }
+                }
+
+                if (!empty($complement)) {
+                    $resultSet = $this->_albumModel->search($q);
+                    $list = array_merge($list, $resultSet);
+                }
 
                 $this->view->output = $list;
             } else {
@@ -145,7 +147,9 @@ class ApiController extends DZend_Controller_Action
             $this->view->output = null === $item ?
                 $this->_error :
                 $this->_musicSimilarityModel->getSimilar(
-                    $item['artist'], $item['musicTitle'], $artistMusicTitleIdList
+                    $item['artist'],
+                    $item['musicTitle'],
+                    $artistMusicTitleIdList
                 );
         } else {
             $this->view->output = $this->_error;
@@ -215,11 +219,12 @@ class ApiController extends DZend_Controller_Action
         $q = $this->_request->getParam('q');
         $list = array();
         if (null !== $q) {
-            $list = $this->_artistMusicTitleModel->autocomplete($q);
+            $list = array(); // $this->_artistMusicTitleModel->autocomplete($q);
             if (count($list) < 5) {
                 $resultSet = $this->_lastfmModel->search($q);
-                foreach ($resultSet as $result)
+                foreach ($resultSet as $result) {
                     $list[] = $result->getArray();
+                }
             }
             $this->view->output = $list;
         }
