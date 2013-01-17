@@ -121,13 +121,20 @@ class Lastfm extends DZend_Model
 
     public function _exploreDOM($xml, $func, $limit = null)
     {
+        $type = 'track';
         $resultSet = array();
         $xmlDoc = new DOMDocument();
         $i = 0;
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
-            foreach ($xmlDoc->getElementsByTagName('track') as $track) {
-                $resultSet[] = $this->$func($track);
+            if ($xmlDoc->getElementsByTagName('track')->length === 0) {
+                $type = 'album';
+            }
+
+            foreach ($xmlDoc->getElementsByTagName($type) as $track) {
+                $item = $this->$func($track);
+                $item->type = $type;
+                $resultSet[] = $item;
 
                 if (null !== $limit) {
                     $i++;
@@ -138,7 +145,6 @@ class Lastfm extends DZend_Model
         }
 
         return $resultSet;
-
     }
 
     public function __construct()
@@ -154,10 +160,9 @@ class Lastfm extends DZend_Model
         $this->_cache = Zend_Registry::get('cache');
     }
 
-    public function search($q, $limit = 10, $offset = 1)
+    public function searchTrack($q, $limit = 10, $offset = 1)
     {
         $keyTrack = sha1("Lastfm::searchTrack#$q");
-        $keyAlbum = sha1("Lastfm::searchAlbum#$q");
 
         if (($xmlTrack = $this->_cache->load($keyTrack)) === false) {
             $args = array(
@@ -169,6 +174,13 @@ class Lastfm extends DZend_Model
             $this->_cache->save($xmlTrack, $keyTrack);
         }
 
+        return $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit);
+    }
+
+    public function searchAlbum($q, $limit = 10, $offset = 1)
+    {
+        $keyAlbum = sha1("Lastfm::searchAlbum#$q");
+
         if (($xmlAlbum = $this->_cache->load($keyAlbum)) === false) {
             $args = array(
                 'method' => 'album.search',
@@ -178,10 +190,60 @@ class Lastfm extends DZend_Model
             $this->_cache->save($xmlAlbum, $keyAlbum);
         }
 
+        return $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit);
+    }
+
+    public function search($q, $limit = 10, $offset = 1)
+    {
         return array_merge(
-            $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit),
-            $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit)
+            $this->searchTrack($q, $limit / 2),
+            $this->searchAlbum($q, $limit / 2)
         );
+    }
+
+    public function getAlbum($album, $artist)
+    {
+        $key = sha1('Lastfm::getAlbum' . $album . $artist);
+
+        if (($xml = $this->_cache->load($key)) === false) {
+            $args = array(
+                'method' => 'album.getInfo',
+                'album' => $album,
+                'artist' => $artist,
+                'autocorrect' => 0
+            );
+            $xml = $this->_request($args);
+            $this->_cache->save($xml, $key);
+        }
+
+        $albumName = $artist = $cover = '';
+        $xmlDoc = new DOMDocument();
+        if ('' !== $xml) {
+            $xmlDoc->loadXML($xml);
+            $album = $xmlDoc->getElementsByTagName('album');
+            for ($i = 0; $i < $album->length; $i++) {
+                $value = $album->item($i)->nodeValue;
+                switch ($album->item($i)->nodeName) {
+                    case 'name':
+                        $albumName = $value;
+                        break;
+                    case 'artist':
+                        $artist = $value;
+                        break;
+                    case 'image':
+                        $cover = $value;
+                        break;
+                }
+            }
+        }
+
+        $trackList = $this->_exploreDOM($xml, '_processResponseSearch', 1000);
+
+        $albumRow = new LastfmAlbum($albumName, $cover, $artist, $trackList);
+
+        $this->_logger->debug('Lastfm::getAlbum - ' . $albumRow);
+
+        return $albumRow;
     }
 
     public function getSimilar($artist, $music)
@@ -194,7 +256,7 @@ class Lastfm extends DZend_Model
             $args = array(
                 'method' => 'track.getsimilar',
                 'artist' => $artist,
-                'track' => $music
+                'track' => $music,
                 );
 
             $xml = $this->_request($args);

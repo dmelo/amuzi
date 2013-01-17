@@ -23,4 +23,29 @@
  */
 class Album extends DZend_Model
 {
+    public function search($q)
+    {
+        $list = $this->_lastfmModel->searchAlbum($q);
+        $ret = [];
+
+        foreach ($list as $item) {
+            $album = $this->_lastfmModel->getAlbum(
+                $item['musicTitle'], $item['artist']
+            );
+
+            $this->_albumDb->insert(
+                array(
+                    'name' => $album->musicTitle,
+                    'cover' => $album->cover,
+                    'artist_id'=> $this->_artistModel->insert($album->artist),
+                )
+            );
+
+
+
+            $ret[] = $album;
+        }
+
+        return array();
+    }
 }

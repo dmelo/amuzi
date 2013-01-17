@@ -34,11 +34,9 @@ class Form_Search extends DZend_Form
         $element->setAttrib('class', 'search search-query span4');
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Hidden('artist');
-        $this->addElement($element);
-
-        $element = new Zend_Form_Element_Hidden('musicTitle');
-        $this->addElement($element);
+        foreach (array('artist', 'musicTitle', 'type') as $item) {
+            $this->addElement(new Zend_Form_Element_Hidden($item));
+        }
 
         $element = new Zend_Form_Element_Submit('submit');
         $element->setLabel('Search');

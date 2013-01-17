@@ -23,4 +23,9 @@
  */
 class DbTable_Album extends DZend_Db_Table
 {
+    public function insert($data)
+    {
+        // TODO: trim name and cover.
+        return $this->insertCachedWithoutException($data);
+    }
 }
