@@ -481,6 +481,8 @@
                         window.myPlaylist.pause();
                     }
                     break;
+                case 27: // Esc
+                    $('.modal').modal('hide');
                 }
             }
         });
