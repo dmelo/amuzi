@@ -179,4 +179,3 @@ class User extends DZend_Model
         return true;
     }
 }
-

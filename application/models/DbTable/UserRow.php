@@ -92,4 +92,16 @@ class DbTable_UserRow extends DZend_Db_Table_Row
 
         return $count;
     }
+
+    public function getAction()
+    {
+        $action = '';
+        if ('default' === $this->view) {
+            $action = 'index';
+        } elseif ('incboard' === $this->view) {
+            $action = 'incboard';
+        }
+
+        return $action;
+    }
 }

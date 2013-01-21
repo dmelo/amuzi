@@ -79,7 +79,7 @@ class Auth_IndexController extends DZend_Controller_Action
                 $this->_logger->debug('IndexController::login ' . Zend_Auth::getInstance()->getIdentity());
 
                 if (Zend_Auth_Result::SUCCESS === $result->getCode()) {
-                    $this->_helper->redirector('index', 'index', 'default');
+                    $this->_helper->redirector($this->_userModel->findByEmail(Zend_Auth::getInstance()->getIdentity())->getAction(), 'index', 'default');
                 } else {
                     $message = array(
                         $this->view->t("Wrong password."), "error"
