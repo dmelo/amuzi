@@ -187,7 +187,7 @@ IncBoardBoard.prototype.removeOutOfBorder = function() {
 IncBoardBoard.prototype.resize = function() {
     if ($('form.search').length > 0) {
         var cell = new IncBoardCell();
-        this.cols = parseInt( ( $(window).width() - 250 ) / this.cellSizeX );
+        this.cols = parseInt( ( $(window).width() - 296 ) / this.cellSizeX );
         this.rows = parseInt( ( $(window).height() - $('form.search').height() - $('form.search').offset().top - $('.footer').height() ) / this.cellSizeY );
         this.removeOutOfBorder();
         this.centralizeItems();
@@ -280,13 +280,14 @@ IncBoardBoard.prototype.flushDraw = function() {
     }
 
     newTop = (1 - factor) * this.cellSizeY * this.rows * 0.5;
-    newLeft = (1 - factor) * this.cellSizeX * this.cols * 0.5;
+    newLeft = ((1 - factor) * this.cellSizeX * this.cols * 0.5) + 269;
 
     $.cssRule('.incboard-cell', 'width', newCellSizeX + 'px');
     $.cssRule('.incboard-cell', 'height', newCellSizeY + 'px');
 
     $.cssRule('#incboard', 'top', newTop + 'px');
     $.cssRule('#incboard', 'left', newLeft + 'px');
+    console.log("newLeft: " + newLeft);
 
     for (var i = 0; i < this.rows; i++) {
         $.cssRule('.incboard-row-' + i, 'top', (i * newCellSizeY) + "px");
