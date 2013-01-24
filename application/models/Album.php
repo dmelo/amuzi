@@ -59,11 +59,12 @@ class Album extends DZend_Model
 
     public function insert(LastfmAlbum $album)
     {
+        $artistRow = $this->_artistDb->findRowByName($album->artist);
         $id = $this->_albumDb->insert(
             array(
-                'name',
-                'cover',
-                'artist_id'
+                'name' => $album->name,
+                'cover' => $album->cover,
+                'artist_id' => $artistRow->id
             )
         );
 
@@ -84,5 +85,10 @@ class Album extends DZend_Model
         }
 
         return $id;
+    }
+
+    public function findRowById($id)
+    {
+        return $this->_albumDb->findRowById($id);
     }
 }

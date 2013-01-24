@@ -45,15 +45,16 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
     {
         if ('artist' === $name) {
             $artistDb = new DbTable_Artist();
-            return $artistDb->findRowById($this->artistId);
+            $artistRow = $artistDb->findRowById($this->artistId);
+            return $artistRow->name;
         } elseif ('trackList' === $name) {
-            $musicTrackLinkModel = new MusitTrackLink();
+            $musicTrackLinkModel = new MusicTrackLink();
             $ret = array();
             $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
             $ahamtRowset = $albumHasArtistMusicTitleDb->findByAlbumId($this->id);
 
             // TODO: for each artist_music_title, use
-            // MusitTrackLink->getTrackById to get the track. If it returns
+            // MusicTrackLink->getTrackById to get the track. If it returns
             // null, use youtube search.
 
             foreach ($ahamtRowset as $row) {
@@ -62,10 +63,12 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
                     // TODO: search on youtube.
                 }
 
-                $ret[] = $trackRow->getArray();
+                $ret[] = null === $trackRow ? array() : $trackRow->getArray();
             }
 
             return $ret;
+        } else {
+            return parent::__get($name);
         }
     }
 }

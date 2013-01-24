@@ -96,8 +96,10 @@ class MusicTrackLink extends DZend_Model
         $cache = Zend_Registry::get('cache');
 
         if (false === ($ret = $cache->load($cacheKey))) {
-            $row = $this->_musicTrackLinkDb->findRowById($artistMusicTitleId);
-            return $this->getTrack($row->artist, $row->musicTitle);
+            $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById($artistMusicTitleId);
+            $artistRow = $this->_artistDb->findRowById($artistMusicTitleRow->artistId);
+            $musicTitleRow = $this->_musicTitleDb->findRowById($artistMusicTitleRow->musicTitleId);
+            return $this->getTrack($artistRow->name, $musicTitleRow->name);
         }
     }
 
