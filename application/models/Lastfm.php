@@ -67,14 +67,20 @@ class Lastfm extends DZend_Model
 
     protected function _processResponseSearch($track)
     {
-        $artist = $track->getElementsByTagName('artist')
-            ->item(0)
-            ->nodeValue;
+        $artist = $track->getElementsByTagName('artist')->item(0);
+
+        if (($name = $artist->getElementsByTagName('name')) !== null) {
+            $artist = $name->item(0)->nodeValue;
+        } else {
+            $artist =  $artist->nodeValue;
+        }
+
         $musicTitle = $track->getElementsByTagName('name')
             ->item(0)
             ->nodeValue;
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
+
         return  new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
 
@@ -201,7 +207,7 @@ class Lastfm extends DZend_Model
         );
     }
 
-    public function getAlbum($album, $artist)
+    public function getAlbum($artist, $album)
     {
         $key = sha1('Lastfm::getAlbum' . $album . $artist);
 
@@ -220,10 +226,11 @@ class Lastfm extends DZend_Model
         $xmlDoc = new DOMDocument();
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
+            $this->_logger->debug("XML: " . $xml);
             $album = $xmlDoc->getElementsByTagName('album');
-            for ($i = 0; $i < $album->length; $i++) {
-                $value = $album->item($i)->nodeValue;
-                switch ($album->item($i)->nodeName) {
+            for ($e = $album->item(0)->firstChild; null !== $e; $e = $e->nextSibling) {
+                $value = $e->nodeValue;
+                switch ($e->nodeName) {
                     case 'name':
                         $albumName = $value;
                         break;

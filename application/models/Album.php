@@ -48,4 +48,41 @@ class Album extends DZend_Model
 
         return array();
     }
+
+    public function get($artist, $album)
+    {
+        $artistId = $this->_artistModel->insert($artist);
+        $albumRow = $this->_albumDb->findRowByNameAndArtistId($album, $artistId);
+
+        return $albumRow;
+    }
+
+    public function insert(LastfmAlbum $album)
+    {
+        $id = $this->_albumDb->insert(
+            array(
+                'name',
+                'cover',
+                'artist_id'
+            )
+        );
+
+        $sort = 0;
+        foreach ($album->trackList as $track) {
+            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+                $track->artist, $track->musicTitle
+            );
+
+            $this->_albumHasArtistMusicTitleDb->insert(
+                array(
+                    'album_id' => $id,
+                    'artist_music_title_id' => $artistMusicTitleId,
+                    'sort' => $sort
+                )
+            );
+            $sort++;
+        }
+
+        return $id;
+    }
 }

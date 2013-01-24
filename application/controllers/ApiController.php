@@ -156,6 +156,18 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    public function _getAlbum($artist, $album)
+    {
+        $albumRow = null;
+        if (($albumRow = $this->_albumModel->get($artist, $album)) === null) {
+            $album = $this->_lastfmModel->getAlbum($artist, $album);
+            $albumId = $this->_albumModel->insert($album);
+            $albumRow = $this->_albumDb->findRowById($albumId);
+        }
+
+        return $albumRow->getArray();
+    }
+
     public function _getMusic($artist, $musicTitle)
     {
         $ret = null;
@@ -206,6 +218,14 @@ class ApiController extends DZend_Controller_Action
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
             $this->view->output = $this->_getMusic($artist, $musicTitle);
+        }
+    }
+
+    public function searchalbumAction()
+    {
+        if (($artist = $this->_request->getParam('artist')) !== null &&
+            ($album = $this->_request->getParam('album')) !== null) {
+            $this->view->output = $this->_getAlbum($artist, $album)->getArray();
         }
     }
 

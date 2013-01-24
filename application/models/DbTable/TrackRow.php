@@ -39,8 +39,10 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
             'shareUrl'
         );
         $ret = array();
-        foreach ($columns as $column)
+        foreach ($columns as $column) {
             $ret[$column] = $this->$column;
+        }
+
         return $ret;
     }
 

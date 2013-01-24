@@ -28,6 +28,11 @@ class MusicTrackLink extends DZend_Model
         return sha1('MusicTrackLink' . $artist . $musicTitle);
     }
 
+    private function _getCacheIdKey($artistMusicTitleId)
+    {
+        return sha1('MusicTrackLinkID' . $artistMusicTitleId);
+    }
+
     public function bond($artistMusicTitleId, $trackId, $bondName)
     {
         try {
@@ -43,8 +48,11 @@ class MusicTrackLink extends DZend_Model
             $cacheKey = $this->_getCacheKey(
                 $artistRow->name, $musicTitleRow->name
             );
+            $cacheIdKey = $this->_getCacheIdKey($artistMusicTitleRow->id);
 
-            Zend_Registry::get('cache')->remove($cacheKey);
+            $cache = Zend_Registry::get('cache');
+            $cache->remove($cacheKey);
+            $cache->remove($cacheIdKey);
             $bondRow = $this->_bondModel->findRowByName($bondName);
             $currentMusicTrackLinkRow = $this->_musicTrackLinkDb->
                 findRowByArtistMusicTitleIdAndTrackIdAndUserId(
@@ -82,6 +90,17 @@ class MusicTrackLink extends DZend_Model
         }
     }
 
+    public function getTrackById($artistMusicTitleId)
+    {
+        $cacheKey = $this->_getCacheIdKey($artistMusicTitleId);
+        $cache = Zend_Registry::get('cache');
+
+        if (false === ($ret = $cache->load($cacheKey))) {
+            $row = $this->_musicTrackLinkDb->findRowById($artistMusicTitleId);
+            return $this->getTrack($row->artist, $row->musicTitle);
+        }
+    }
+
     public function getTrack($artist, $musicTitle)
     {
         $c = new DZend_Chronometer();
@@ -95,6 +114,7 @@ class MusicTrackLink extends DZend_Model
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
             );
+            $cacheIdKey = $this->_getCacheIdKey($artistMusicTitleId);
             $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
                 $artistMusicTitleId
             );
@@ -132,6 +152,7 @@ class MusicTrackLink extends DZend_Model
 
             if (null !== $ret) {
                 $cache->save($ret, $cacheKey);
+                $cache->save($ret, $cacheIdKey);
             }
 
         }
