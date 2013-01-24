@@ -17,4 +17,21 @@ class LastfmAlbum extends AbstractEntry
             }
         }
     }
+
+    public function getArray()
+    {
+        $ret = array();
+        foreach ($this->_fields as $field) {
+            if (is_array($this->$field)) {
+                $ret[$field] = array();
+                foreach ($this->$field as $item) {
+                    $ret[$field][] = $item->getArray();
+                }
+            } else {
+                $ret[$field] = $this->$field;
+            }
+        }
+
+        return $ret;
+    }
 }

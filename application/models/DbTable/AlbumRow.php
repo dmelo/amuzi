@@ -23,4 +23,49 @@
  */
 class DbTable_AlbumRow extends DZend_Db_Table_Row
 {
+    public function getArray()
+    {
+        $columns = array(
+            'id',
+            'name',
+            'cover',
+            'artist',
+            'trackList'
+        );
+
+        $ret = array();
+        foreach($columns as $column) {
+            $ret[$column] = $this->$column;
+        }
+
+        return $ret;
+    }
+
+    public function __get($name)
+    {
+        if ('artist' === $name) {
+            $artistDb = new DbTable_Artist();
+            return $artistDb->findRowById($this->artistId);
+        } elseif ('trackList' === $name) {
+            $musicTrackLinkModel = new MusitTrackLink();
+            $ret = array();
+            $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
+            $ahamtRowset = $albumHasArtistMusicTitleDb->findByAlbumId($this->id);
+
+            // TODO: for each artist_music_title, use
+            // MusitTrackLink->getTrackById to get the track. If it returns
+            // null, use youtube search.
+
+            foreach ($ahamtRowset as $row) {
+                $trackRow = $musicTrackLinkModel->getTrackById($row->artistMusicTitleId);
+                if (null === $trackRow) {
+                    // TODO: search on youtube.
+                }
+
+                $ret[] = $trackRow->getArray();
+            }
+
+            return $ret;
+        }
+    }
 }

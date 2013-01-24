@@ -67,7 +67,7 @@ abstract class AbstractEntry
     {
         $ret = '';
         foreach ($this->_fields as $field) {
-            $ret .= $field . ': ' . $this->$field . PHP_EOL;
+            $ret .= $field . ': ' . (is_array($this->$field) ? print_r($this->$field, true) : $this->$field) . PHP_EOL;
         }
 
         return $ret;
