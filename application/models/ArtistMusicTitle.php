@@ -69,4 +69,15 @@ class ArtistMusicTitle extends DZend_Model
 
         return null;
     }
+
+    public function findArtistAndMusicTitleById($id)
+    {
+        $row = $this->_artistMusicTitleDb->findRowById($id);
+        return array(
+            'artist' => $this->_artistDb->findRowById($row->artistId)->name,
+            'musicTitle' => $this->_musicTitleDb
+                ->findRowById($row->musicTitleId)
+                ->name
+        );
+    }
 }

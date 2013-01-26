@@ -52,18 +52,17 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
             $ret = array();
             $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
             $ahamtRowset = $albumHasArtistMusicTitleDb->findByAlbumId($this->id);
-
-            // TODO: for each artist_music_title, use
-            // MusicTrackLink->getTrackById to get the track. If it returns
-            // null, use youtube search.
+            $artistMusicTitleModel = new ArtistMusicTitle();
 
             foreach ($ahamtRowset as $row) {
                 $trackRow = $musicTrackLinkModel->getTrackById($row->artistMusicTitleId);
                 if (null === $trackRow) {
-                    // TODO: search on youtube.
+                    $track = $artistMusicTitleModel->findArtistAndMusicTitleById($row->artistMusicTitleId);
+                } else {
+                    $track = $trackRow->getArray();
                 }
 
-                $ret[] = null === $trackRow ? array() : $trackRow->getArray();
+                $ret[] = $track;
             }
 
             return $ret;
