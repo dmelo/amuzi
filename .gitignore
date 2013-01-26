@@ -5,3 +5,5 @@ tests/tmp
 public/tmp
 tests/report/
 library/EasyBib
+html/
+latex/
