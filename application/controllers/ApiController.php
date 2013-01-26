@@ -311,6 +311,11 @@ class ApiController extends DZend_Controller_Action
         $this->view->message = $message;
     }
 
+    /**
+     * gettopAction Get top music on lastfm.
+     *
+     * @return void
+     */
     public function gettopAction()
     {
         $resultSet = $this->_lastfmModel->getTop();
