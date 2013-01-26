@@ -28,16 +28,30 @@ class Lastfm extends DZend_Model
     private $_secret;
     private $_cache;
 
-    protected function _request($args)
+    /**
+     * _request Perform a request to lastfm.
+     *
+     * @param mixed $args
+     * @return void
+     */
+    protected function _request($args, $useCache = true)
     {
         $args['api_key'] = $this->_key;
-        foreach ($args as $key => $value)
+        foreach ($args as $key => $value) {
             $final[] = $key . '='. urlencode($value);
+        }
 
-        $url = $this->_baseUrl . '?' . implode('&', $final);
-        $this->_logger->debug('Lastfm::_request - ' . $url);
+        $key = sha1('Lastfm::_request' . implode($final));
+        if (($xml = $this->_cache->load($key)) === false) {
+            $url = $this->_baseUrl . '?' . implode('&', $final);
+            $this->_logger->debug('Lastfm::_request - ' . $url);
+            $xml = file_get_contents($url);
+            if ($useCache) {
+                $this->_cache->save($xml, $key);
+            }
+        }
 
-        return file_get_contents($url);
+        return $xml;
     }
 
     protected function _calcName($artist, $musicTitle)
@@ -169,33 +183,22 @@ class Lastfm extends DZend_Model
 
     public function searchTrack($q, $limit = 10, $offset = 1)
     {
-        $keyTrack = sha1("Lastfm::searchTrack#$q");
-
-        if (($xmlTrack = $this->_cache->load($keyTrack)) === false) {
-            $args = array(
-                'method' => 'track.search',
-                'track' => $q
-                );
-
-            $xmlTrack = $this->_request($args);
-            $this->_cache->save($xmlTrack, $keyTrack);
-        }
+        $args = array(
+            'method' => 'track.search',
+            'track' => $q
+            );
+        $xmlTrack = $this->_request($args);
 
         return $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit);
     }
 
     public function searchAlbum($q, $limit = 10, $offset = 1)
     {
-        $keyAlbum = sha1("Lastfm::searchAlbum#$q");
-
-        if (($xmlAlbum = $this->_cache->load($keyAlbum)) === false) {
-            $args = array(
-                'method' => 'album.search',
-                'album' => $q
-            );
-            $xmlAlbum = $this->_request($args);
-            $this->_cache->save($xmlAlbum, $keyAlbum);
-        }
+        $args = array(
+            'method' => 'album.search',
+            'album' => $q
+        );
+        $xmlAlbum = $this->_request($args);
 
         return $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit);
     }
@@ -210,18 +213,13 @@ class Lastfm extends DZend_Model
 
     public function getAlbum($artist, $album)
     {
-        $key = sha1('Lastfm::getAlbum' . $album . $artist);
-
-        if (($xml = $this->_cache->load($key)) === false) {
-            $args = array(
-                'method' => 'album.getInfo',
-                'album' => $album,
-                'artist' => $artist,
-                'autocorrect' => 0
-            );
-            $xml = $this->_request($args);
-            $this->_cache->save($xml, $key);
-        }
+        $args = array(
+            'method' => 'album.getInfo',
+            'album' => $album,
+            'artist' => $artist,
+            'autocorrect' => 0
+        );
+        $xml = $this->_request($args);
 
         $albumName = $artist = $cover = '';
         $xmlDoc = new DOMDocument();
@@ -256,29 +254,22 @@ class Lastfm extends DZend_Model
 
     public function getSimilar($artist, $music)
     {
-        $key = sha1("Lastfm::search#$artist#$music");
-
         $this->_logger->debug('Lastfm::getSimilar A ' . microtime(true));
-        if (($xml = $this->_cache->load($key)) === false) {
-            $resultSet = array();
-            $args = array(
-                'method' => 'track.getsimilar',
-                'artist' => $artist,
-                'track' => $music,
-                );
+        $resultSet = array();
+        $args = array(
+            'method' => 'track.getsimilar',
+            'artist' => $artist,
+            'track' => $music,
+            );
 
-            $xml = $this->_request($args);
-            $this->_cache->save($xml, $key);
-            $this->_logger->debug('Lastfm::getSimilar B ' . microtime(true));
-        }
-        $this->_logger->debug('Lastfm::getSimilar C ' . microtime(true));
+        $xml = $this->_request($args);
+        $this->_logger->debug('Lastfm::getSimilar B ' . microtime(true));
 
         return $this->_exploreDOM($xml, '_processResponseSimilar', 200);
     }
 
     public function getTop($limit = 50)
     {
-        $date = date('Ymd');
         $key = sha1("Lastfm::getTop#$limit#$date");
 
         if (($xml = $this->_cache->load($key)) === false) {
@@ -288,7 +279,7 @@ class Lastfm extends DZend_Model
                 'country' => 'united states'
             );
 
-            $xml = $this->_request($args);
+            $xml = $this->_request($args, false);
             $this->_logger->debug("Lastfm::getTop -> xml: " . $xml);
             $this->_cache->save($xml, $key);
         }
