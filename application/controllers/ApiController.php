@@ -156,6 +156,13 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    /**
+     * _getAlbum Get full information of the requested album.
+     *
+     * @param string $artist
+     * @param string $album
+     * @return array Returns the array conversion of the album row.
+     */
     public function _getAlbum($artist, $album)
     {
         $albumRow = null;
