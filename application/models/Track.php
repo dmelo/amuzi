@@ -45,4 +45,36 @@ class Track extends DZend_Model
         return $this->_trackDb->insert($data);
     }
 
+    public function insertMany(array $resultSet, $artist, $musicTitle)
+    {
+        $artistMusicTitleId = $this->_artistMusicTitleModel
+            ->insert($artist, $musicTitle);
+        $ret = array();
+
+        foreach ($resultSet as $result) {
+            $data = array(
+                'title' => $result->title,
+                'fid' => $result->fid,
+                'fcode' => $result->fcode,
+                'cover' => $result->cover,
+                'duration' => $result->duration
+            );
+            $trackRow = $this->_trackModel->insert($data);
+
+            $this->_musicTrackLinkModel->bond(
+                $artistMusicTitleId,
+                $trackRow->id,
+                $this->_bondModel->search
+            );
+
+            $row = $trackRow->getArray();
+            $row['artist'] = $artist;
+            $row['musicTitle'] = $musicTitle;
+            $row['type'] = 'track';
+
+            $ret[] = $row;
+        }
+
+        return $ret;
+    }
 }

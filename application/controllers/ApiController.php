@@ -27,47 +27,6 @@ class ApiController extends DZend_Controller_Action
             );
 
     /**
-     * _registerTracks Persists track on database.
-     *
-     * @param array $resultSet List of results to persist.
-     * @param mixed $artist Artist related to the results' list.
-     * @param mixed $musicTitle Music title related to the results' list.
-     * @return void Return an array with the list of registered elements.
-     */
-    protected function _registerTracks(array $resultSet, $artist, $musicTitle)
-    {
-        $artistMusicTitleId = $this->_artistMusicTitleModel
-            ->insert($artist, $musicTitle);
-        $ret = array();
-
-        foreach ($resultSet as $result) {
-            $data = array(
-                'title' => $result->title,
-                'fid' => $result->fid,
-                'fcode' => $result->fcode,
-                'cover' => $result->cover,
-                'duration' => $result->duration
-            );
-            $trackRow = $this->_trackModel->insert($data);
-
-            $this->_musicTrackLinkModel->bond(
-                $artistMusicTitleId,
-                $trackRow->id,
-                $this->_bondModel->search
-            );
-
-            $row = $trackRow->getArray();
-            $row['artist'] = $artist;
-            $row['musicTitle'] = $musicTitle;
-            $row['type'] = 'track';
-
-            $ret[] = $row;
-        }
-
-        return $ret;
-    }
-
-    /**
      * searchAction API search call that outputs a list of track objects.
      *
      * @return void
@@ -98,7 +57,7 @@ class ApiController extends DZend_Controller_Action
                     $q, $limit, $offset, $complement
                 );
                 if (!empty($complement)) {
-                    $list = $this->_registerTracks(
+                    $list = $this->_trackModel->insertMany(
                         $resultSet, $artist, $musicTitle
                     );
                 } else {
@@ -182,7 +141,6 @@ class ApiController extends DZend_Controller_Action
 
         $ret['trackList'] = $trackList;
 
-
         return $ret;
     }
 
@@ -201,7 +159,7 @@ class ApiController extends DZend_Controller_Action
                     'musicTitle' => $musicTitle
                 )
             );
-            $this->_registerTracks(
+            $this->_trackModel->insertMany(
                 $resultSet, $artist, $musicTitle
             );
             $trackRow = $this->_musicTrackLinkModel->getTrack(

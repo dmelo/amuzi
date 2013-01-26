@@ -582,9 +582,11 @@
                     q: request.term,
                 }, function (data) {
                     var a =  $.map(data, function (row) {
+                        console.log("kkkkkkkk");
+                        console.log(row.cover);
                         return {
                             data: row,
-                            label: '<img src="' + row.cover + '"/> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',
+                            label: '<img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',
                             value: row.name,
                             artist: row.artist,
                             musicTitle: row.musicTitle,
