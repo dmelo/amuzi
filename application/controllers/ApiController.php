@@ -165,7 +165,18 @@ class ApiController extends DZend_Controller_Action
             $albumRow = $this->_albumModel->findRowById($albumId);
         }
 
-        return $albumRow->getArray();
+        $ret = $albumRow->getArray();
+        $trackList = $albumRow->trackList;
+        foreach ($trackList as $key => $track) {
+            if (count($track) === 2) {
+                $trackList[$key] = $this->_getMusic($track['artist'], $track['musicTitle']);
+            }
+        }
+
+        $ret['trackList'] = $trackList;
+
+
+        return $ret;
     }
 
     public function _getMusic($artist, $musicTitle)
