@@ -23,4 +23,27 @@
  */
 class UserListenAlbum extends DZend_Model
 {
+    public function insert($albumId)
+    {
+        $ret = null;
+        if (($albumRow = $this->_albumDb->findRowById($albumId)) !== null) {
+            try {
+            $ret = $this->_userListenAlbumDb->insert(
+                array(
+                    'album_id' => $albumRow->id,
+                    'user_id' => $this->_session->user->id
+                )
+            );
+            } catch (Zend_Db_Statement_Exception $e) {
+                $row = $this->_userListenAlbumDb->findRowByAlbumIdAndUserId(
+                    $albumRow->id,
+                    $this->_session->user->id
+                );
+
+                $ret = null !== $row ? $row->id : null;
+            }
+        }
+
+        return $ret;
+    }
 }

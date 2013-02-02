@@ -393,7 +393,8 @@
 
 
         e.parent().append(clone);
-        clone.animate({top: 0, left: $(window).width()}, {
+        clone.animate({left: $(window).width()}, {
+            duration: 1500,
             complete: function () {
                 clone.remove();
             }
@@ -426,7 +427,7 @@
 
     function addAlbum(ele) {
         var albumId = ele.attr('albumid');
-        $.get('/album/addalbum', {
+        $.get('/album/add', {
             albumId: albumId
         }, function (data) {
         }, 'json');

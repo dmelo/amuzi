@@ -26,6 +26,12 @@ class ApiController extends DZend_Controller_Action
             'error' => 'Parameter "q" must be specified'
             );
 
+    public function init()
+    {
+        parent::init();
+        $this->_jsonify = true;
+    }
+
     /**
      * searchAction API search call that outputs a list of track objects.
      *
@@ -280,18 +286,6 @@ class ApiController extends DZend_Controller_Action
         $this->view->youtubeUrl = $trackRow->youtubeUrl;
         $this->view->facebookUrl = $trackRow->facebookUrl;
         $this->view->shareUrl = $trackRow->shareUrl;
-    }
-
-    /**
-     * postDispatch Make it easier to output Json.
-     *
-     * @return void
-     *
-     */
-    public function postDispatch()
-    {
-        if (isset( $this->view->output ))
-            echo Zend_Json::encode($this->view->output);
     }
 
     /**
