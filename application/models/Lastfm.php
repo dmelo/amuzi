@@ -82,12 +82,13 @@ class Lastfm extends DZend_Model
     protected function _processResponseSearch($track)
     {
         $artist = $track->getElementsByTagName('artist')->item(0);
+        $name = $artist->getElementsByTagName('name');
+        $this->_logger->debug('Lastfm::_processResponseSearch -- ' . get_class($name));
 
-        $this->_logger->debug('Lastfm::_processResponseSearch -- ' . $artist->getElementsByTagName('name')->item(0));
-        if (($name = $artist->getElementsByTagName('name')->item(0)) !== null) {
+        if (get_class($name) === 'DOMNodeList' && $name->item(0) !== null) {
             $artist = $name->item(0)->nodeValue;
         } else {
-            $artist =  $artist->nodeValue;
+            $artist = $artist->nodeValue;
         }
 
         $musicTitle = $track->getElementsByTagName('name')
@@ -270,6 +271,8 @@ class Lastfm extends DZend_Model
 
     public function getTop($limit = 50)
     {
+        $date = date('Ymd', time(null));
+        $c = new DZend_Chronometer();
         $key = sha1("Lastfm::getTop#$limit#$date");
 
         if (($xml = $this->_cache->load($key)) === false) {

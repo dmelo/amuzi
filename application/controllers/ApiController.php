@@ -133,13 +133,18 @@ class ApiController extends DZend_Controller_Action
 
         $ret = $albumRow->getArray();
         $trackList = $albumRow->trackList;
+        $ret['duration'] = 0;
+        $ret['title'] =  $ret['artist'] . ' - ' . $ret['name'];
         foreach ($trackList as $key => $track) {
             if (count($track) === 2) {
                 $trackList[$key] = $this->_getMusic($track['artist'], $track['musicTitle']);
             }
+            $ret['duration'] += $trackList[$key]['duration'];
+            $this->_logger->debug('ApiController::_getAlbum - ' . $trackList[$key]['duration']);
         }
 
         $ret['trackList'] = $trackList;
+
 
         return $ret;
     }
@@ -223,9 +228,9 @@ class ApiController extends DZend_Controller_Action
                 }
             }
             $this->view->output = $list;
-        }
-        else
+        } else {
             $this->view->output = $this->_error;
+        }
     }
 
     /**

@@ -269,3 +269,16 @@ CREATE TABLE `album_has_artist_music_title` (
     CONSTRAINT `album_has_artist_music_title_ibfk_2` FOREIGN KEY (`artist_music_title_id`) REFERENCES `artist_music_title`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `album_has_artist_music_title_created_trigger` BEFORE INSERT ON `album_has_artist_music_title` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `user_listen_album` (
+    `id` int(11) NOT NULL auto_increment,
+    `album_id` int(11) NOT NULL,
+    `user_id` int(11) NOT NULL,
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(`id`),
+    UNIQUE(`album_id`, `user_id`),
+    CONSTRAINT `user_listen_album_ibfk_1` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
+    CONSTRAINT `user_listen_album_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `user_listen_album_created_trigger` BEFORE INSERT ON `user_listen_album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;

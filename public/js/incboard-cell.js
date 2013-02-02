@@ -66,7 +66,7 @@ IncBoardCell.prototype.getInnerHtml = function() {
 IncBoardCell.prototype.getHtml = function() {
     var v = this.content,
         resultSet = new $.ResultSet(),
-        ret = $(resultSet.getMusicSquare(v));
+        ret = ('trackList' in v) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
 
     ret.addClass('incboard-cell incboard-col-' + this.col + ' incboard-row-' + this.row);
     ret.find('.cover').addClass('incboard-img');
@@ -74,7 +74,7 @@ IncBoardCell.prototype.getHtml = function() {
     ret.attr('data-trigger', 'hover');
     ret.attr('id', v.artistMusicTitleId);
     ret.find('.description').remove();
-    ret.popover({placement: 'top'})
+    ret.popover({placement: 'top'});
     return ret;
 }
 

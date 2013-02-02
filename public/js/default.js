@@ -124,29 +124,6 @@
         });
     }
 
-    $.addTrack = function(trackId, artist, musicTitle) {
-        var options,
-            playNow = false;
-        options = {
-            id: trackId,
-            playlist: window.myPlaylist.name,
-            artist: artist,
-            musicTitle: musicTitle
-        };
-
-        $.bootstrapMessageLoading();
-        $.post('/playlist/addtrack', options, function (data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
-            if ('error' === data[1]) {
-                loadPlaylist(window.myPlaylist.name);
-            } else if ('success' === data[1]) {
-                var v = data[2],
-                    pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
-                window.myPlaylist.add(pOpt, playNow);
-            }
-        }, 'json');
-    }
-
     // TODO: take away the playlistName
     function rmTrack(trackId, playlistName) {
         playlistName = playlistName || 'default';
@@ -423,6 +400,38 @@
         });
     }
 
+    $.addTrack = function(trackId, artist, musicTitle) {
+        var options,
+            playNow = false;
+
+        options = {
+            id: trackId,
+            playlist: window.myPlaylist.name,
+            artist: artist,
+            musicTitle: musicTitle
+        };
+
+        $.bootstrapMessageLoading();
+        $.post('/playlist/addtrack', options, function (data) {
+            $.bootstrapMessageAuto(data[0], data[1]);
+            if ('error' === data[1]) {
+                loadPlaylist(window.myPlaylist.name);
+            } else if ('success' === data[1]) {
+                var v = data[2],
+                    pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                window.myPlaylist.add(pOpt, playNow);
+            }
+        }, 'json');
+    }
+
+    function addAlbum(ele) {
+        var albumId = ele.attr('albumid');
+        $.get('/album/addalbum', {
+            albumId: albumId
+        }, function (data) {
+        }, 'json');
+    }
+
     function prepareVoteButton() {
     }
 
@@ -540,7 +549,11 @@
         $('.music-large, .music-square').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            addToPlaylist($(this));
+            if ($(this).hasClass('album-square')) {
+                addAlbum($(this));
+            } else {
+                addToPlaylist($(this));
+            }
         });
 
         $('.youtube-link, .download').live('click', function (e) {

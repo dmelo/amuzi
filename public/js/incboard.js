@@ -287,14 +287,27 @@ IncBoard.prototype.insert = function(v) {
 
 IncBoard.prototype.searchMusic = function(set, num, callback) {
     var self = this,
-        m = set.shift();
+        m = set.shift(),
+        uri,
+        params;
 
     console.log('searchMusic -- num: ' + num + '. length: ' + set.length);
     if (num > 0 && 'undefined' !== typeof m) {
-        $.get('/api/searchmusic', {
-            'artist': m.artist,
-            'musicTitle': m.musicTitle
-        }, function(v) {
+        if ('type' in m && 'album' === m.type) {
+            uri = '/api/searchalbum';
+            params = {
+               artist: m.artist,
+               album: m.musicTitle
+            };
+        } else {
+            uri = '/api/searchmusic',
+            params = {
+                artist: m.artist,
+                musicTitle: m.musicTitle
+            };
+        }
+
+        $.get(uri, params, function(v) {
             try {
                 var start = new Date().getTime();
                 if (null !== v && true === self.insert(v)) {
@@ -382,7 +395,9 @@ $(document).ready(function() {
     $('#incboard-search').ajaxForm({
         dataType: 'json',
         success: function (data) {
-            loadSimilarMusic(data, 10);
+            if ($('#type').val() === 'track') {
+                loadSimilarMusic(data, 10);
+            }
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();
@@ -392,6 +407,7 @@ $(document).ready(function() {
             var obj = new Object();
             obj.artist = $('#artist').val();
             obj.musicTitle = $('#musicTitle').val();
+            obj.type = $('#type').val();
             if ($.isSearchFormValid()) {
                 incBoard.searchMusic([obj], 1, searchMusicCallbackCenter);
             }

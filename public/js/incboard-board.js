@@ -67,7 +67,10 @@ IncBoardBoard.prototype.insert = function (music, pos) {
         intPos;
 
     if ('object' === typeof pos && 'object' === typeof music && -1 === this.listByAMTId.indexOf(music.artistMusicTitleId)) {
-        music.artistMusicTitleId = parseInt(music.artistMusicTitleId);
+        if (!('artistMusicTitleId' in music)) {
+            music.artistMusicTitleId = -parseInt(music.id);
+        }
+        music.artistMusicTitleId = parseInt(music.artistMusicTitleId, 10);
         intPos = this.posToInt(pos);
         cell.setContent(music);
         cell.setPos(pos);
