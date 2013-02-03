@@ -262,6 +262,9 @@
         $.get('/playlist/list', function (data) {
             $('.music-manager#playlists .stripe').html(data);
             $.resizeEditPlaylist();
+            $('div[playlistid]').each(function(i, item) {
+                $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'hover'});
+            });
         }).error(function (data) {
             $.resizeEditPlaylist();
         });
@@ -706,11 +709,6 @@
             if ($('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute >= 100) {
                 window.myPlaylist.next();
             }
-        });
-
-        $('.playlist-square').live('hover', function (e) {
-            $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
-            $('#edit-playlist .stripe').attr('playlistid', $(this).attr('playlistid'));
         });
 
         $.resizeEditPlaylist();

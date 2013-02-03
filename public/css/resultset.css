@@ -164,13 +164,12 @@
     top: -32px;
 }
 
-#albums .popover {
+#albums .popover, #playlists .popover {
     font-size: 0.7em;
-    max-height: 600px;
     overflow: hidden;
 }
 
 .popover img {
-    max-width: 30px;
+    display: none;
 }
 
