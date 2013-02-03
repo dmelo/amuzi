@@ -68,8 +68,6 @@
         time -= 60 * m;
         s = time;
 
-        console.log("h: " + h + ". m: " + m + ". s: " + s);
-
         if (h > 0) {
             str = this.twoDigit(h) + ":";
         }

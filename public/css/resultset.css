@@ -44,9 +44,7 @@
 }
 
 .music-large:hover, .playlist-square:hover {
-    background-color: #f40c42;
     cursor: pointer;
-    color: white;
 }
 
 .music-large .image {
@@ -97,6 +95,18 @@
 }
 
 .item-square {
+    max-width: 120px;
+}
+
+.item-square[albumid] {
+    max-width: 160px;
+}
+
+.item-square .name {
+    position: relative;
+    bottom: 100%;
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.85);
 }
 
 .item-square .button.play img {
@@ -106,9 +116,10 @@
 }
 
 .item-square .button.play {
-    top: 22.5px;
-    margin-left: -15px;
+    top: 50%;
+    margin-top: -15px;
     left: 50%;
+    margin-left: -15px;
     position: absolute;
 }
 .item-square .button.play img:hover {
@@ -132,12 +143,6 @@
     opacity: 1.0;
 }
 
-.item-square .cover {
-    text-align: center;
-    height: 75px;
-    width: 100px;
-}
-
 .music-manager-group {
     width: 100%;
 }
@@ -146,11 +151,26 @@
     margin-right: 480px;
 }
 
-.playlist-square {
-    width: 100px;
+.createPlaylist {
+    margin-top: 10px;
+    position: absolute;
+    display: inline-block;
 }
 
-.playlist-square .cover img {
-    max-width: 100px;
-    max-height: 100px;
+.createPlaylist .loadModal {
+    width: 64px;
+    height: 64px;
+    margin-top: 50%;
+    top: -32px;
 }
+
+#albums .popover {
+    font-size: 0.7em;
+    max-height: 600px;
+    overflow: hidden;
+}
+
+.popover img {
+    max-width: 30px;
+}
+

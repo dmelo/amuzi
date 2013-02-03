@@ -50,7 +50,9 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
     {
         $time = 0;
         foreach ($this->trackList as $trackRow) {
-            $time += $trackRow['duration'];
+            if (array_key_exists('duration', $trackRow)) {
+                $time += $trackRow['duration'];
+            }
         }
 
         return $time;
@@ -81,13 +83,9 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
             foreach ($ahamtRowset as $row) {
                 $trackRow = $musicTrackLinkModel->getTrackById($row->artistMusicTitleId);
-                if (null === $trackRow) {
-                    $track = $artistMusicTitleModel->findArtistAndMusicTitleById($row->artistMusicTitleId);
-                } else {
-                    $track = $trackRow->getArray();
+                if (null !== $trackRow) {
+                    $ret[] = $trackRow->getArray();
                 }
-
-                $ret[] = $track;
             }
 
             return $ret;

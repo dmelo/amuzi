@@ -270,6 +270,10 @@
     function loadAlbumSet() {
         $.get('/album/list', function(data) {
             $('.music-manager#albums .stripe').html(data);
+            console.log("BLA BLA BLA" + $('div[albumid]').length);
+            $('div[albumid]').each(function(i, item) {
+                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover'});
+            });
         });
     }
 
@@ -368,7 +372,6 @@
     }
 
     $.rendered_userSettings = function () {
-        console.log('Just renedered settings');
         $('#view').parent().append('<div class="side-view-thumb"><img src=""/></div>');
         refreshViewThumbnail();
         $('#view').change(refreshViewThumbnail);
@@ -597,7 +600,6 @@
         $('#q').placeholder();
         // autocomplete the search input from last.fm.
         $.ui.autocomplete.prototype._renderItem = function (ul, row) {
-            console.log(row);
             var a = $('<li></li>')
                 .data('item.autocomplete', row)
                 .append('<a>' + row.label + '</a>')
@@ -612,8 +614,6 @@
                     q: request.term,
                 }, function (data) {
                     var a =  $.map(data, function (row) {
-                        console.log("kkkkkkkk");
-                        console.log(row.cover);
                         return {
                             data: row,
                             label: '<img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',

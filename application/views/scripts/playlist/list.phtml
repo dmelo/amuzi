@@ -1,9 +1,15 @@
 <?php
+$type = '';
 foreach ($this->playlistRowSet as $playlistRow) {
     echo $this->playlistSquare($playlistRow);
+    $type = $playlistRow->getType();
 }
 ?>
 
-<a href="/playlist/new" class="loadModal noForm" name="newPlaylist" id="newPlaylist" title="<?= $this->t('Create'); ?>">
-    <img src="/img/add.png" /><br/>
-</a>
+<? if ('playlist' === $type): ?>
+    <div class="createPlaylist">
+        <div href="/playlist/new" class="loadModal noForm" name="newPlaylist" id="newPlaylist" title="<?= $this->t('Create'); ?>">
+            <img src="/img/add.png" /><br/>
+        </div>
+    </div>
+<? endif; ?>
