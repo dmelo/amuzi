@@ -86,10 +86,12 @@
      * playlist.
      * @return void
      */
-    function loadPlaylist(name) {
+    function loadPlaylist(name, isAlbum) {
         name = name || '';
+        isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
-        var options;
+        var options,
+            uri = isAlbum ? '/album/load' : '/playlist/load';
 
         if (typeof (name) === 'number' || (typeof (name) === 'string' && parseInt(name, 10) >= 0)) {
             // It's an ID
@@ -103,7 +105,8 @@
         }
 
 
-        $.post('/playlist/load', options, function (data) {
+
+        $.post(uri, options, function (data) {
             if (null !== data) {
                 $('.jp-title').css('display', 'block');
                 $.each(data[0], function (i, v) {
@@ -123,6 +126,8 @@
         }).error(function (e) {
         });
     }
+
+    $.loadPlaylist = loadPlaylist;
 
     // TODO: take away the playlistName
     function rmTrack(trackId, playlistName) {
@@ -363,11 +368,22 @@
         $('#view').change(refreshViewThumbnail);
     };
 
+    function addElementAnimation(e) {
+        var clone = e.clone();
+
+        e.parent().append(clone);
+        clone.animate({left: $(window).width()}, {
+            duration: 1500,
+            complete: function () {
+                clone.remove();
+            }
+        });
+    }
+
     function addToPlaylist(e) {
         var trackId = e.attr('trackId'),
             artist = e.attr('artist'),
-            musicTitle = e.attr('musicTitle'),
-            clone = e.clone();
+            musicTitle = e.attr('musicTitle');
 
         if ($('.playlist-row[track_id=' + trackId + ']').length > 0) {
             if (!confirm('You already have this track on your playlist. Are you sure you want to insert it again?')) {
@@ -391,14 +407,7 @@
 
         $.addTrack(trackId, artist, musicTitle);
 
-
-        e.parent().append(clone);
-        clone.animate({left: $(window).width()}, {
-            duration: 1500,
-            complete: function () {
-                clone.remove();
-            }
-        });
+        addElementAnimation(e);
     }
 
     $.addTrack = function(trackId, artist, musicTitle) {
@@ -430,6 +439,7 @@
         $.get('/album/add', {
             albumId: albumId
         }, function (data) {
+            addElementAnimation(ele);
         }, 'json');
     }
 

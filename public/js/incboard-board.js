@@ -287,6 +287,9 @@ IncBoardBoard.prototype.flushDraw = function() {
 
     $.cssRule('.incboard-cell', 'width', newCellSizeX + 'px');
     $.cssRule('.incboard-cell', 'height', newCellSizeY + 'px');
+    $.cssRule('.incboard-cell.album-square .cover img', 'width', newCellSizeY + 'px !important');
+    $.cssRule('.incboard-cell.album-square .side', 'width', (newCellSizeX - newCellSizeY) + 'px');
+    $.cssRule('.incboard-cell.album-square .side', 'height', '100%');
 
     $.cssRule('#incboard', 'top', newTop + 'px');
     $.cssRule('#incboard', 'left', newLeft + 'px');

@@ -26,7 +26,7 @@ require_once('views/helpers/PlaylistInfo.php');
 class View_Helper_PlaylistSquare extends View_Helper_PlaylistInfo
 {
 
-    public function playlistSquare($playlistRow)
+    public function playlistSquare(DbTable_PlaylistRow $playlistRow)
     {
         return '<div class="item-square playlist-square object-playlist" '
             . 'playlistid="' . $playlistRow->id . '">'

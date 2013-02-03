@@ -15,4 +15,19 @@ class AlbumController extends DZend_Controller_Action
                 _userListenAlbumModel->insert($albumId);
         }
     }
+
+    public function loadAction()
+    {
+        if (($id = $this->_request->getParam('id')) !== false) {
+            $albumRow = $this->_albumModel->findRowById($id);
+            $album = $albumRow->getArray();
+            $ret = array($album['trackList'], $album['name'], 0, 0, 0);
+
+            $this->view->output = $ret;
+        }
+    }
+
+    public function listAction()
+    {
+    }
 }

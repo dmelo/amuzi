@@ -24,6 +24,22 @@
     margin-left: -12px;
 }
 
+.incboard-cell.album-square .cover-img {
+    position: relative;
+    margin-top: -100%;
+    margin-left: 25%;
+    left: -3px;
+    top: -2px;
+}
+
+.incboard-cell.album-square .side {
+    background-color: black;
+    position: relative;
+    margin-left: 0px;
+    top: -3px;
+}
+
+
 .incboard-cell .incboard-control {
     display: none;
 }
