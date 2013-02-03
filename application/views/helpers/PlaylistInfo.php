@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('views/helpers/T.php');
 class View_Helper_PlaylistInfo extends View_Helper_T
 {
     private function _secsToTime($secs)

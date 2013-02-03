@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class DbTable_AlbumRow extends DZend_Db_Table_Row
+class DbTable_AlbumRow extends DZend_Db_Table_Row implements iMusicCollection
 {
     public function getArray()
     {
@@ -39,6 +39,26 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
         }
 
         return $ret;
+    }
+
+    public function getTrackListAsArray()
+    {
+        return $this->trackList;
+    }
+
+    public function playTime()
+    {
+        $time = 0;
+        foreach ($this->trackList as $trackRow) {
+            $time += $trackRow['duration'];
+        }
+
+        return $time;
+    }
+
+    public function getCover()
+    {
+        return $this->cover;
     }
 
     public function __get($name)

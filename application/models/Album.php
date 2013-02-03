@@ -91,4 +91,19 @@ class Album extends DZend_Model
     {
         return $this->_albumDb->findRowById($id);
     }
+
+    public function findAllFromUser()
+    {
+        $userListenAlbumRowSet = $this->_userListenAlbumDb
+            ->findByUserId($this->_session->user->id);
+
+        $albumIdSet = array();
+        foreach ($userListenAlbumRowSet as $userListenAlbumRow) {
+            $albumIdSet[] = $userListenAlbumRow->albumId;
+        }
+
+        $this->_logger->debug("Album::findAllFromUser - " . print_r($albumIdSet, true));
+
+        return $this->_albumDb->findById($albumIdSet);
+    }
 }
