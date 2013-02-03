@@ -381,7 +381,7 @@ ul.ui-autocomplete {
     width: 200px;
 }
 
-.playlist-info {
+.playlist-info, .album-info {
     display: none;
 }
 

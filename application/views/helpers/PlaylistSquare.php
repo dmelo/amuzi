@@ -29,13 +29,13 @@ class View_Helper_PlaylistSquare extends View_Helper_PlaylistInfo
     public function playlistSquare(iMusicCollection $playlistRow)
     {
         return '<div class="item-square playlist-square object-playlist" '
-            . 'playlistid="' . $playlistRow->id . '">'
+            . $playlistRow->getType() . 'id="' . $playlistRow->id . '">'
             . '<div class="cover"><img src="' . $playlistRow->getCover()
             . '"/></div>' . '<div class="name">' . $playlistRow->name . '</div>'
             . '<a href="#" class="play button"><img src="/img/play_icon_'
             . 'square.png"/></a>'
             . '<a href="#" class="remove button"><img src="/img/remove_icon_'
-            . 'square.png"/></a><div class="playlist-info">'
+            . 'square.png"/></a><div class="' . $playlistRow->getType() . '-info">'
             . $this->playlistInfo($playlistRow) . '</div>'
             . '</div>';
     }

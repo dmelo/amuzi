@@ -61,6 +61,11 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements iMusicCollection
         return $this->cover;
     }
 
+    public function getType()
+    {
+        return 'album';
+    }
+
     public function __get($name)
     {
         if ('artist' === $name) {

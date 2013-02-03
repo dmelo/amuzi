@@ -148,4 +148,9 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row implements iMusicCollection
         $row = $this->_playlistDb->fetchRow($select);
         return $row ? $row->cover : '/img/playlist64.png';
     }
+
+    public function getType()
+    {
+        return 'playlist';
+    }
 }

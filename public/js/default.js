@@ -267,6 +267,12 @@
         });
     }
 
+    function loadAlbumSet() {
+        $.get('/album/list', function(data) {
+            $('.music-manager#albums .stripe').html(data);
+        });
+    }
+
     $.rendered_newPlaylist = function () {
         $('form#newPlaylist').ajaxForm({
             dataType: 'json',
@@ -711,9 +717,14 @@
 
         $.slideInit();
 
-        $('.playlist-square .play').live('click', function (e) {
+        $('.playlist-square[playlistid] .play').live('click', function (e) {
             e.preventDefault();
             loadPlaylist($(this).parent().attr('playlistid'));
+        });
+
+        $('.playlist-square[albumid] .play').live('click', function (e) {
+            e.preventDefault();
+            loadPlaylist($(this).parent().attr('albumid'), true);
         });
 
         $('.playlist-square .remove').live('click', function (e) {
@@ -732,5 +743,6 @@
             $('body').css('overflow', 'auto');
         }
         loadPlaylistSet();
+        loadAlbumSet();
     });
 }(jQuery, undefined));
