@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class DbTable_PlaylistRow extends DZend_Db_Table_Row implements iMusicCollection
+class DbTable_PlaylistRow extends DZend_Db_Table_Row implements DbTable_iTrackCollectionRow
 {
     protected $_playlistDb;
     protected $_playlistHasTrackDb;

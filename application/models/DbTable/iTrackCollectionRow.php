@@ -1,6 +1,6 @@
 <?php
 
-interface iMusicCollection
+interface DbTable_iTrackCollectionRow
 {
     /**
      * getTrackListAsArray An array containing the tracks collection, with the

@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class DbTable_AlbumRow extends DZend_Db_Table_Row implements iMusicCollection
+class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackCollectionRow
 {
     public function getArray()
     {
