@@ -83,8 +83,14 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
             foreach ($ahamtRowset as $row) {
                 $trackRow = $musicTrackLinkModel->getTrackById($row->artistMusicTitleId);
-                if (null !== $trackRow) {
-                    $ret[] = $trackRow->getArray();
+                if (null === $trackRow) {
+                    $track = $artistMusicTitleModel->findArtistAndMusicTitleById($row->artistMusicTitleId);
+                } else {
+                    $track = $trackRow->getArray();
+                }
+
+                if (null !== $track) {
+                    $ret[] = $track;
                 }
             }
 

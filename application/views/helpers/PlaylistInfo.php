@@ -42,10 +42,13 @@ class View_Helper_PlaylistInfo extends View_Helper_T
 
     private function _trackRow($trackRow)
     {
-        $cover = array_key_exists('cover', $trackRow) ? $trackRow['cover'] : '/img/album.png';
-        return '<li><img src="' . $cover . '"/> <span class="title">'
-            . $trackRow['title'] . '</span> <span class="duration">'
-            . $this->_secsToTime($trackRow['duration']) . '</span></li>';
+        if (count($trackRow) > 2) {
+            return '<li><img src="' . $trackRow['cover'] . '"/> <span class="title">'
+                . $trackRow['title'] . '</span> <span class="duration">'
+                . $this->_secsToTime($trackRow['duration']) . '</span></li>';
+        } else {
+            return '';
+        }
     }
 
     public function playlistInfo($playlistRow)
