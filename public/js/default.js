@@ -273,7 +273,6 @@
     function loadAlbumSet() {
         $.get('/album/list', function(data) {
             $('.music-manager#albums .stripe').html(data);
-            console.log("BLA BLA BLA" + $('div[albumid]').length);
             $('div[albumid]').each(function(i, item) {
                 $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover'});
             });
@@ -452,6 +451,7 @@
             albumId: albumId
         }, function (data) {
             addElementAnimation(ele);
+            loadAlbumSet();
         }, 'json');
     }
 

@@ -87,6 +87,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
                     $track = $artistMusicTitleModel->findArtistAndMusicTitleById($row->artistMusicTitleId);
                 } else {
                     $track = $trackRow->getArray();
+                    $track['artist_music_title_id'] = $row->artistMusicTitleId;
                 }
 
                 if (null !== $track) {

@@ -402,3 +402,9 @@ ul.ui-autocomplete {
 dd {
     margin-left: 0px;
 }
+
+.music-manager-group {
+    position: absolute;
+    overflow-y: scroll;
+    margin-right: 482px;
+}
