@@ -166,6 +166,10 @@ dd#submit-element {
     z-index: 3;
 }
 
+.popover {
+    z-index:5000000;
+}
+
 .ac_input {
     color: black;
 }
@@ -404,7 +408,13 @@ dd {
 }
 
 .music-manager-group {
-    position: absolute;
-    overflow-y: scroll;
+    position: fixed;
+    max-height: 100%;
+    width: 100%;
+}
+
+.music-manager-content {
     margin-right: 482px;
+    overflow-y: scroll;
+
 }

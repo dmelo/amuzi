@@ -143,14 +143,6 @@
     opacity: 1.0;
 }
 
-.music-manager-group {
-    width: 100%;
-}
-
-.music-manager {
-    margin-right: 480px;
-}
-
 .createPlaylist {
     margin-top: 10px;
     position: absolute;

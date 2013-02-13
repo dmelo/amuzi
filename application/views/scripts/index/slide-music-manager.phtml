@@ -1,6 +1,7 @@
 <div class="slide" id="slide-music-manager">
     <div class="music-manager-group">
         <div class="music-manager" id="transfer"></div>
+        <div class="music-manager-content">
         <? foreach (array("playlists", "albums") as $col): ?>
         <div class="music-manager" id="<?= $col; ?>">
             <h5><?= $this->t("Your " . $col); ?></h5>
@@ -8,6 +9,7 @@
             </div>
         </div>
         <? endforeach; ?>
+        </div>
     </div>
     <?= $this->jPlayer(); ?>
 </div>

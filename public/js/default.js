@@ -274,7 +274,7 @@
         $.get('/album/list', function(data) {
             $('.music-manager#albums .stripe').html(data);
             $('div[albumid]').each(function(i, item) {
-                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover'});
+                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover', placement: 'right', selector: '#slide-music-manager'});
             });
         });
     }
@@ -478,6 +478,7 @@
 
     $.resizeEditPlaylist = function () {
         $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
+        $('.music-manager-content').height($(window).height() - $('.music-manager-content').offset().top - $('.footer').height());
     };
 
     $.isSearchFormValid = function () {
