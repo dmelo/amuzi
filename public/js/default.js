@@ -146,13 +146,14 @@
         });
     }
 
-    function rmPlaylist(name, callback) {
+    function rmPlaylist(id, isPlaylist, callback) {
+        var controller = isPlaylist ? 'playlist' : 'album';
         $.bootstrapMessageLoading();
-        $.post('/playlist/remove', {
-            name: name
+        $.post('/' + controller + '/remove', {
+            id: id
         }, function (data) {
             if ('success' === data[1] && 'function' === typeof callback) {
-                callback(name);
+                callback(id, isPlaylist);
             }
             $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json');
@@ -534,13 +535,10 @@
         }
     }
 
-    function removePlaylistSquareCallback(name) {
-        $('.playlist-square').each(function (e) {
-            if ($(this).find('.name').html() === name) {
-                $(this).remove();
-                $.resizeEditPlaylist();
-            }
-        });
+    function removePlaylistSquareCallback(id, isPlaylist) {
+        var attr = isPlaylist ? 'playlistid' : 'albumid';
+        $('.playlist-square[' + attr + '=' + id + ']').remove();
+        $.resizeEditPlaylist();
     }
 
     $(document).ready(function () {
@@ -729,9 +727,11 @@
         $('.playlist-square .remove').live('click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure?')) {
-                var name = $(this).parent().find('.name').html().
-                    playlistId = $(this).parent().attr('playlistid');
-                rmPlaylist(name, removePlaylistSquareCallback);
+                var name = $(this).parent().find('.name').html(),
+                    p = $(this).parent(),
+                    isPlaylist = undefined !== p.attr('playlistid'),
+                    id = $(this).parent().attr(isPlaylist ? 'playlistid' : 'albumid');
+                rmPlaylist(id, isPlaylist, removePlaylistSquareCallback);
                 if (name === window.myPlaylist.name) {
                     loadPlaylist('');
                 }

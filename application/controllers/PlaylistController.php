@@ -292,10 +292,10 @@ class PlaylistController extends DZend_Controller_Action
         $message = array();
 
         if ($this->_request->isPost() &&
-            ($name = $this->_request->getPost('name')) !== null) {
+            ($id = $this->_request->getPost('id')) !== null) {
             if ($this->_session->user->countPlaylists() <= 1) {
                 $message = array($this->view->t('You must have at least one playlist'), 'error');
-            } elseif (($msg = $this->_playlistModel->remove($name)) === true) {
+            } elseif (($msg = $this->_playlistModel->remove($id)) === true) {
                 $message = array($this->view->t('Playlist removed'), 'success');
             } else {
                 $message = array(

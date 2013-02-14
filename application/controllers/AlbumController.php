@@ -32,4 +32,22 @@ class AlbumController extends DZend_Controller_Action
         $this->view->playlistRowSet = $this->_albumModel->findAllFromUser();
         $this->renderScript('playlist/list.phtml');
     }
+
+    public function removeAction()
+    {
+        $message = array();
+
+        if ($this->_request->isPost() &&
+            ($id = $this->_request->getPost('id')) !== null) {
+            if (($msg = $this->_albumModel = $this->_albumModel->remove($id)) === true) {
+                $message = array($this->view->t('Album removed'), 'success');
+            } else {
+                $message = array(
+                    $this->view->t('Could not remove') . ': ' . $msg, 'error'
+                );
+            }
+        }
+
+        $this->view->output = $message;
+    }
 }

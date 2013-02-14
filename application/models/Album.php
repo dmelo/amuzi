@@ -106,4 +106,24 @@ class Album extends DZend_Model
 
         return $this->_albumDb->findById($albumIdSet);
     }
+
+    public function remove($id)
+    {
+        $userListenAlbumRow = $this->_userListenAlbumDb
+            ->findRowByUserIdAndAlbumId(
+            $this->_session->user->id, $id
+            );
+
+        if (null !== $userListenAlbumRow) {
+            try {
+                $userListenAlbumRow->delete();
+            } catch (Zend_Exception $e) {
+                return $e->getMessage();
+            }
+
+            return true;
+        } else {
+            return 'Album was already removed';
+        }
+    }
 }

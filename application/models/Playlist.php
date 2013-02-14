@@ -279,11 +279,11 @@ class Playlist extends DZend_Model
      * @return bool Returns true if the playlist was successfully deleted,
      * the error string otherwise.
      */
-    public function remove($name)
+    public function remove($id)
     {
         try {
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id, $name
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndId(
+                $this->_session->user->id, $id
             );
 
             if (null !== $playlistRow) {
