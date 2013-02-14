@@ -35,8 +35,7 @@ class View_Helper_PlaylistSquare extends View_Helper_PlaylistInfo
             . '<a href="#" class="play button"><img src="/img/play_icon_'
             . 'square.png"/></a>'
             . '<a href="#" class="remove button"><img src="/img/remove_icon_'
-            . 'square.png"/></a><div class="' . $playlistRow->getType() . '-info">'
-            . $this->playlistInfo($playlistRow) . '</div>'
+            . 'square.png"/></a>'
             . '</div>';
     }
 }
