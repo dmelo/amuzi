@@ -105,7 +105,7 @@
     };
 
     $.ResultSet.prototype.getMusicSquare = function (v) {
-        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div><div class="overlay"></div>' + this.getDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
+        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div>' + this.getDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
     };
 
     $.ResultSet.prototype.getAlbumSquare = function (v) {
