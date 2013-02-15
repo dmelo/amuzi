@@ -47,6 +47,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js = array();
         $js[] = $domainJs . 'ie-compatibility.js';
         $js[] = $domainJs . 'jquery.js';
+        $js[] = $domainJs . 'log.js';
         $js[] = $domainJs . 'facebook-connect.js';
         $js[] = $domainJs . 'bootstrap.js';
         $js[] = $domainJs . 'jquery.browser.min.js';

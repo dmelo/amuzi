@@ -28,6 +28,7 @@ function IncBoardBoard() {
     this.cols = 14;
     this.cellSizeX = 56;
     this.cellSizeY = 44;
+    this.log = new Log();
 
     this.init();
 }
@@ -45,8 +46,8 @@ IncBoardBoard.prototype.clean = function () {
     this.drawList = [];
 
     this.resize();
-    console.log("COLS: " + this.cols);
-    console.log("ROWS: " + this.rows);
+    this.log.debug("COLS: " + this.cols);
+    this.log.debug("ROWS: " + this.rows);
 
     var table = $('<div id="incboard"></div>');
     this.l = [];
@@ -152,7 +153,7 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
  * Safely remove an element from the board.
  */
 IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
-    console.log("removing " + artistMusicTitleId);
+    this.log.debug("removing " + artistMusicTitleId);
     var pos = this.listByAMTId[artistMusicTitleId].getPos();
 
     // cell.remove()
@@ -228,14 +229,14 @@ IncBoardBoard.prototype.centralizeItems = function() {
     });
 
     if (isEmpty) {
-        console.log("Nothing to centralize");
+        this.log.debug("Nothing to centralize");
         return;
     } else {
         var shiftX = parseInt(((this.cols - this.maxX - 1) - this.minX) / 2);
         var shiftY = parseInt(((this.rows - this.maxY - 1) - this.minY) / 2);
 
         if (0 !== shiftX || 0 !== shiftY) {
-            console.log("Applying shift (" + shiftX + ", " + shiftY + ")");
+            this.log.debug("Applying shift (" + shiftX + ", " + shiftY + ")");
             this.listByAMTId.forEach(function (cell) {
                 var pos = cell.getPos();
                 pos[0] += shiftX;
@@ -243,7 +244,7 @@ IncBoardBoard.prototype.centralizeItems = function() {
                 self.setPos(cell.getContent().artistMusicTitleId, pos);
             });
         } else {
-            console.log("shift: (" + shiftX + ", " + shiftY + ")");
+            self.log("shift: (" + shiftX + ", " + shiftY + ")");
         }
     }
 };
@@ -270,7 +271,7 @@ IncBoardBoard.prototype.flushDraw = function() {
     realWidth = this.maxX - (this.minX - 1) + 1;
     factorY = this.rows / realHeight;
     factorX = this.cols / realWidth;
-    console.log('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ')');
+    self.log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ')');
     factor = Math.min(factorX, factorY);
 
     if (factor * this.cellSizeX > 120 || factor * this.cellSizeY > 90 || factor < 0) {
@@ -293,7 +294,6 @@ IncBoardBoard.prototype.flushDraw = function() {
 
     $.cssRule('#incboard', 'top', newTop + 'px');
     $.cssRule('#incboard', 'left', newLeft + 'px');
-    console.log("newLeft: " + newLeft);
 
     for (var i = 0; i < this.rows; i++) {
         $.cssRule('.incboard-row-' + i, 'top', (i * newCellSizeY) + "px");
@@ -448,7 +448,7 @@ IncBoardBoard.prototype.fsck = function () {
                 posList.forEach(function (item, id) {
                     str += ", " + id;
                 });
-                console.log(str);
+                this.log.debug(str);
             }
         }
 
@@ -472,20 +472,19 @@ IncBoardBoard.prototype.fsck = function () {
 
         var intPos = self.posToInt(cell.getPos());
         if (!(intPos in self.listByPos)) {
-            console.log("merda 1");
-            console.log(index);
-            console.log(self.listByPos[intPos]);
+            this.log.debug("merda 1");
+            this.log.debug(index);
+            this.log.debug(self.listByPos[intPos]);
             throw new Error("merda 1");
         }
 
         if (!(cell.getContent().artistMusicTitleId in self.listByPos[self.posToInt(cell.getPos())])) {
-            console.log("merda 2");
-            console.log(cell);
-            console.log(self);
+            this.log.debug("merda 2");
+            this.log.debug(cell);
+            this.log.debug(self);
             throw new Error("merda 2");
         }
     });
-
 
     return true;
 };
