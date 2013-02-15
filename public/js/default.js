@@ -738,6 +738,12 @@
             }
         });
 
+        $('.playlist-square').live({mouseenter: function () {
+            $(this).find('.name').css('opacity', '1.0');
+        }, mouseleave: function () {
+            $(this).find('.name').css('opacity', '0.0');
+        }});
+
         if ($('div.container.regular').length > 0) {
             $('body').css('overflow', 'auto');
         }

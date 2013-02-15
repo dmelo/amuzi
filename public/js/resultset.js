@@ -151,14 +151,6 @@
     };
 
     $(document).ready(function () {
-        $('.music-large').live({mouseenter: function () {
-            $(this).find('a').css('color', 'white');
-            $(this).find('.play').css('display', 'block');
-        }, mouseleave: function () {
-            $(this).find('a').css('color', 'black');
-            $(this).find('.play').css('display', 'none');
-        }});
-
         // query youtube for videos and fill the result table.
         $('#search').ajaxForm({
             dataType: 'json',

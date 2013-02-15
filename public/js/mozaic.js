@@ -11,6 +11,14 @@ function calculateMusicSquareSize() {
 $(document).ready(function() {
     var resultSet = new $.ResultSet();
 
+    $('.music-large').live({mouseenter: function () {
+        $(this).find('a').css('color', 'white');
+        $(this).find('.play').css('display', 'block');
+    }, mouseleave: function () {
+        $(this).find('a').css('color', 'black');
+        $(this).find('.play').css('display', 'none');
+    }});
+
     $(window).bind('resize', calculateMusicSquareSize);
     if ($('.mozaic').length > 0) {
         $.get('/api/gettop', {},
