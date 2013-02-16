@@ -134,7 +134,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         );
 
         $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);
-
         Zend_Registry::set('cache', $cache);
     }
 

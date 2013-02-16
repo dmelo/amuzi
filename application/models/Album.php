@@ -87,6 +87,17 @@ class Album extends DZend_Model
         return $id;
     }
 
+    public function insertEmpty($artist, $album)
+    {
+        $artistId = $this->_artistModel->insert($artist);
+        return $this->_albumDb->insert(
+            array(
+                'name' => $album,
+                'artist_id' => $artistId
+            )
+        );
+    }
+
     public function findRowById($id)
     {
         return $this->_albumDb->findRowById($id);
