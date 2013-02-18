@@ -163,4 +163,33 @@ class Album extends DZend_Model
 
         return $id;
     }
+
+    public function autocomplete($q)
+    {
+        $keywords = explode(' - ', $q, 2);
+        $ret = array();
+        if (count($keywords) === 1) {
+            $ret = $this->_albumDb->autocomplete(
+                array(
+                    'album' => $keywords[0]
+                )
+            );
+            if (count($ret) < 5) {
+                $ret = array_merge($ret, $this->_albumDb->autocomplete(
+                    array(
+                        'artist' => $keywords[0]
+                    )
+                ));
+            }
+        } elseif (count($keywords) === 2) {
+            $ret = $this->_artistMusicTitleDb->autocomplete(
+                array(
+                    'artist' => $keywords[0],
+                    'album' => $keywords[1]
+                )
+            );
+        }
+
+        return $ret;
+    }
 }

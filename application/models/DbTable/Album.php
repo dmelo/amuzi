@@ -36,4 +36,45 @@ class DbTable_Album extends DZend_Db_Table
 
         return $this->insertCachedWithoutException($data);
     }
+
+    public function autocomplete($data)
+    {
+        $db = $this->getAdapter();
+        $select = $db->select();
+        $select->from(
+            array('a' => 'artist'),
+            array(
+                'name' => 'album.name',
+                'cover' => 'album.cover',
+                'artist_name' => 'a.name'
+            )
+        )->join(
+            array('album' => 'album'),
+            'album.artist_id = a.id'
+        )->limit(5);
+
+        $where = array();
+        if (array_key_exists('artist', $data)) {
+            $where[] = $db->quoteInto('a.name like ?', '%' . $data['artist'] . '%');
+        }
+
+        if (array_key_exists('album', $data)) {
+            $where[] = $db->quoteInto('album.name like ?', '%' . $data['album'] . '%');
+        }
+
+        $select->where(implode(' AND ', $where));
+        $this->_logger->debug("DbTable_Album::autocomplete " . $select);
+        $rowSet = $db->fetchAll($select);
+        $ret = array();
+        foreach ($rowSet as $row) {
+            $ret[] = new AutocompleteEntry(
+                $row['artist_name'],
+                $row['name'],
+                $row['cover'],
+                'album'
+            );
+        }
+
+        return $ret;
+    }
 }

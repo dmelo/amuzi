@@ -191,7 +191,18 @@ class Lastfm extends DZend_Model
             );
         $xmlTrack = $this->_request($args);
 
-        return $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit);
+        $list = $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit);
+        $ret = array();
+        foreach ($list as $item) {
+            $ret[] = new AutocompleteEntry(
+                $item['artist'],
+                $item['musicTitle'],
+                $item['cover'],
+                'track'
+            );
+        }
+
+        return $ret;
     }
 
     public function searchAlbum($q, $limit = 10, $offset = 1)
@@ -202,7 +213,19 @@ class Lastfm extends DZend_Model
         );
         $xmlAlbum = $this->_request($args);
 
-        return $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit);
+        $list = $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit);
+        $ret = array();
+        foreach ($list as $item) {
+            $ret[] = new AutocompleteEntry(
+                $item['artist'],
+                $item['musicTitle'],
+                $item['cover'],
+                'album'
+            );
+        }
+
+        return $ret;
+
     }
 
     public function search($q, $limit = 10, $offset = 1)

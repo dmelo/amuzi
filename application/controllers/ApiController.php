@@ -228,18 +228,28 @@ class ApiController extends DZend_Controller_Action
         if (null !== $q) {
             // TODO: implement fast local search.
             $list = array(); // $this->_artistMusicTitleModel->autocomplete($q);
+            $list = array_merge(
+                $this->_artistMusicTitleModel->autocomplete($q),
+                $this->_albumModel->autocomplete($q)
+            );
+
             if (count($list) < 5) {
                 $resultSet = $this->_lastfmModel->search($q);
                 foreach ($resultSet as $result) {
                     $list[] = $result->getArray();
                     if ('track' === $result->type) {
-                        $this->_trackModel->update($result);
+                        $this->_artistMusicTitleModel->update($result);
                     } elseif ('album' === $result->type) {
                         $this->_albumModel->update($result);
                     }
                 }
             }
-            $this->view->output = $list;
+            $ret = array();
+            foreach ($list as $item) {
+                $ret[] = $item->getArray();
+            }
+
+            $this->view->output = $ret;
         } else {
             $this->view->output = $this->_error;
         }

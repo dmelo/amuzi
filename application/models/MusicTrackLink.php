@@ -105,20 +105,11 @@ class MusicTrackLink extends DZend_Model
         return $ret;
     }
 
-    public function getTrack($artist, $musicTitle)
+    public function getTrackByAMTId($artistMusicTitleId)
     {
-        $c = new DZend_Chronometer();
-        $c->start();
-
-        $cacheKey = $this->_getCacheKey($artist, $musicTitle);
+        $cacheIdKey = $this->_getCacheIdKey($artistMusicTitleId);
         $cache = Zend_Registry::get('cache');
-        $ret = null;
-
-        if (false === ($ret = $cache->load($cacheKey))) {
-            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
-                $artist, $musicTitle
-            );
-            $cacheIdKey = $this->_getCacheIdKey($artistMusicTitleId);
+        if (false === ($ret = $cache->load($cacheIdKey))) {
             $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
                 $artistMusicTitleId
             );
@@ -155,10 +146,31 @@ class MusicTrackLink extends DZend_Model
             $ret = 0 !== $trackId ? $this->_trackModel->findRowById($trackId) : null;
 
             if (null !== $ret) {
-                $cache->save($ret, $cacheKey);
                 $cache->save($ret, $cacheIdKey);
             }
+        }
 
+        return $ret;
+    }
+
+    public function getTrack($artist, $musicTitle)
+    {
+        $c = new DZend_Chronometer();
+        $c->start();
+
+        $cacheKey = $this->_getCacheKey($artist, $musicTitle);
+        $cache = Zend_Registry::get('cache');
+        $ret = null;
+
+        if (false === ($ret = $cache->load($cacheKey))) {
+            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+                $artist, $musicTitle
+            );
+            $ret = $this->getTrackByAMTId($artistMusicTitleId);
+
+            if (null !== $ret) {
+                $cache->save($ret, $cacheKey);
+            }
         }
         $c->stop();
         $this->_logger->debug('MusicTrackLink::getTrack time ' . $c->get());

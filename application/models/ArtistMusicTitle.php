@@ -57,7 +57,33 @@ class ArtistMusicTitle extends DZend_Model
 
     public function autocomplete($q)
     {
-        return $this->_artistMusicTitleDb->autocomplete($q);
+        $keywords = explode(' - ', $q, 2);
+        $ret = array();
+        if (count($keywords) === 1) {
+            $ret = $this->_artistMusicTitleDb->autocomplete(
+                array(
+                    'music_title' => $keywords[0]
+                )
+            );
+            if (count($ret) < 5) {
+                $ret = array_merge($ret, $this->_artistMusicTitleDb->autocomplete(
+                    array(
+                        'artist' => $keywords[0]
+                    )
+                ));
+            }
+        } elseif (count($keywords) === 2) {
+            $ret = $this->_artistMusicTitleDb->autocomplete(
+                array(
+                    'artist' => $keywords[0],
+                    'music_title' => $keywords[1]
+                )
+            );
+        }
+
+        $this->_logger->debug("ArtistMusicTitle::autocomplete " . count($ret));
+
+        return $ret;
     }
 
     public function getBestGuess($q)
@@ -66,18 +92,10 @@ class ArtistMusicTitle extends DZend_Model
         foreach ($list as $item) {
             return $item;
         }
-
         return null;
     }
 
-    public function findArtistAndMusicTitleById($id)
-    {
-        $row = $this->_artistMusicTitleDb->findRowById($id);
-        return array(
-            'artist' => $this->_artistDb->findRowById($row->artistId)->name,
-            'musicTitle' => $this->_musicTitleDb
-                ->findRowById($row->musicTitleId)
-                ->name
-        );
+    public function update(LastfmEntry $data) {
+        // TODO: update cover on database.
     }
 }
