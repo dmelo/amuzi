@@ -30,6 +30,10 @@ class DbTable_Album extends DZend_Db_Table
             $data['name'] = substr($data['name'], 0, 254);
         }
 
+        if (array_key_exists('cover', $data) && null !== $data['cover']) {
+            $data['cover'] = substr($data['cover'], 0, 2046);
+        }
+
         return $this->insertCachedWithoutException($data);
     }
 }

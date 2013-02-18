@@ -53,14 +53,4 @@ class LastfmEntry extends AbstractEntry
             }
         }
     }
-
-    /**
-     * getArray
-     *
-     * @return void
-     */
-    public function getArray()
-    {
-        return $this->_data;
-    }
 }

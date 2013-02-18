@@ -87,13 +87,14 @@ class Album extends DZend_Model
         return $id;
     }
 
-    public function insertEmpty($artist, $album)
+    public function insertEmpty($artist, $album, $cover = null)
     {
         $artistId = $this->_artistModel->insert($artist);
         return $this->_albumDb->insert(
             array(
                 'name' => $album,
-                'artist_id' => $artistId
+                'artist_id' => $artistId,
+                'cover' => $cover
             )
         );
     }
@@ -136,5 +137,30 @@ class Album extends DZend_Model
         } else {
             return 'Album was already removed';
         }
+    }
+
+    public function findRowByNameAndArtist($name, $artist) {
+        $ret = null;
+        if (($artistRow = $this->_artistDb->findRowByName($artist)) !== null) {
+            $ret = $this->_albumDb->findRowByNameAndArtistId($name, $artistRow->id);
+        }
+
+        return $ret;
+    }
+
+    public function update(LastfmEntry $data) {
+        $id = null;
+        if (null !== $data->cover) {
+            $row = $this->findRowByNameAndArtist($data->musicTitle, $data->artist);
+            if (null !== $row) {
+                $row->cover = substr($data->cover, 0, 2046);
+                $row->save();
+                $id = $row->id;
+            } else {
+                $id = $this->insertEmpty($data->artist, $data->musicTitle, $data->cover);
+            }
+        }
+
+        return $id;
     }
 }

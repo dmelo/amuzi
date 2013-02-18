@@ -143,6 +143,8 @@ class Lastfm extends DZend_Model
 
     public function _exploreDOM($xml, $func, $limit = null)
     {
+        $c = new DZend_Chronometer();
+        $c->start();
         $type = 'track';
         $resultSet = array();
         $xmlDoc = new DOMDocument();
@@ -158,13 +160,12 @@ class Lastfm extends DZend_Model
                 $item->type = $type;
                 $resultSet[] = $item;
 
-                if (null !== $limit) {
-                    $i++;
-                    if ($i >= $limit)
-                        break;
+                if (null !== $limit && $i++ >= $limit) {
+                    break;
                 }
             }
         }
+        $c->stop();
 
         return $resultSet;
     }
@@ -207,8 +208,8 @@ class Lastfm extends DZend_Model
     public function search($q, $limit = 10, $offset = 1)
     {
         return array_merge(
-            $this->searchTrack($q, $limit / 2),
-            $this->searchAlbum($q, $limit / 2)
+            $this->searchTrack(strtoupper($q), $limit / 2),
+            $this->searchAlbum(strtoupper($q), $limit / 2)
         );
     }
 

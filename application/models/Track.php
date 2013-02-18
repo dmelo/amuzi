@@ -77,4 +77,9 @@ class Track extends DZend_Model
 
         return $ret;
     }
+
+    public function update(LastfmEntry $data)
+    {
+        // TODO: implement like Album::update.
+    }
 }

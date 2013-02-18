@@ -12,6 +12,5 @@ if (($fd = fopen('/tmp/artist_album.csv', 'r')) !== false) {
             $time = time();
             echo "import_mb_artist_album {$time}: {$row[0]}, {$row[1]}, $id" . PHP_EOL;
         }
-
     }
 }
