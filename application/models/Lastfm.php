@@ -183,8 +183,9 @@ class Lastfm extends DZend_Model
         $this->_cache = Zend_Registry::get('cache');
     }
 
-    public function searchTrack($q, $limit = 10, $offset = 1)
+    public function searchTrack($q, $limit = 5, $offset = 1)
     {
+        $q = strtoupper($q);
         $args = array(
             'method' => 'track.search',
             'track' => $q
@@ -195,9 +196,9 @@ class Lastfm extends DZend_Model
         $ret = array();
         foreach ($list as $item) {
             $ret[] = new AutocompleteEntry(
-                $item['artist'],
-                $item['musicTitle'],
-                $item['cover'],
+                $item->artist,
+                $item->musicTitle,
+                $item->cover,
                 'track'
             );
         }
@@ -205,8 +206,9 @@ class Lastfm extends DZend_Model
         return $ret;
     }
 
-    public function searchAlbum($q, $limit = 10, $offset = 1)
+    public function searchAlbum($q, $limit = 5, $offset = 1)
     {
+        $q = strtoupper($q);
         $args = array(
             'method' => 'album.search',
             'album' => $q
@@ -217,9 +219,9 @@ class Lastfm extends DZend_Model
         $ret = array();
         foreach ($list as $item) {
             $ret[] = new AutocompleteEntry(
-                $item['artist'],
-                $item['musicTitle'],
-                $item['cover'],
+                $item->artist,
+                $item->musicTitle,
+                $item->cover,
                 'album'
             );
         }
@@ -228,7 +230,7 @@ class Lastfm extends DZend_Model
 
     }
 
-    public function search($q, $limit = 10, $offset = 1)
+    public function search($q, $limit = 10)
     {
         return array_merge(
             $this->searchTrack(strtoupper($q), $limit / 2),

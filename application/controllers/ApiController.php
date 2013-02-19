@@ -223,27 +223,29 @@ class ApiController extends DZend_Controller_Action
      */
     public function autocompleteAction()
     {
-        $q = $this->_request->getParam('q');
-        $list = array();
+        $q = strtoupper($this->_request->getParam('q'));
         if (null !== $q) {
-            // TODO: implement fast local search.
-            $list = array(); // $this->_artistMusicTitleModel->autocomplete($q);
-            $list = array_merge(
-                $this->_artistMusicTitleModel->autocomplete($q),
-                $this->_albumModel->autocomplete($q)
-            );
+            $list = array();
+            $listMusicTitle = $this->_artistMusicTitleModel->autocomplete($q);
+            $listAlbum = $this->_albumModel->autocomplete($q);
 
-            if (count($list) < 5) {
-                $resultSet = $this->_lastfmModel->search($q);
-                foreach ($resultSet as $result) {
-                    $list[] = $result->getArray();
-                    if ('track' === $result->type) {
-                        $this->_artistMusicTitleModel->update($result);
-                    } elseif ('album' === $result->type) {
-                        $this->_albumModel->update($result);
-                    }
-                }
+            $this->_logger->debug("ApiController::autocomplete COUNT " . count($listMusicTitle) . " " . count($listAlbum));
+            if (count($listMusicTitle) < 5) {
+                $listMusicTitle = $this->_lastfmModel->searchTrack($q);
+            } else {
+                $this->_logger->debug("ApiController::autocomplete addTask MusicTitle $q");
+                $this->_taskRequestModel->addTask('SearchString', 'MusicTitle', $q);
             }
+
+            if (count($listAlbum) < 5) {
+                $listAlbum = $this->_lastfmModel->searchAlbum($q);
+            } else {
+                $this->_logger->debug("ApiController::autocomplete addTask Album $q");
+                $this->_taskRequestModel->addTask('SearchString', 'Album', $q);
+            }
+
+            $list = array_merge($listAlbum, $listMusicTitle);
+
             $ret = array();
             foreach ($list as $item) {
                 $ret[] = $item->getArray();

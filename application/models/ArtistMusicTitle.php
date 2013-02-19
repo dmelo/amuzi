@@ -83,7 +83,7 @@ class ArtistMusicTitle extends DZend_Model
 
         $this->_logger->debug("ArtistMusicTitle::autocomplete " . count($ret));
 
-        return $ret;
+        return array_slice($ret, 0, 5);
     }
 
     public function getBestGuess($q)

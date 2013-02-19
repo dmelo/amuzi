@@ -190,6 +190,6 @@ class Album extends DZend_Model
             );
         }
 
-        return $ret;
+        return array_slice($ret, 0, 5);
     }
 }
