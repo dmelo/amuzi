@@ -203,7 +203,7 @@ class Lastfm extends DZend_Model
             );
         }
 
-        return $ret;
+        return array_slice($ret, 0, 5);
     }
 
     public function searchAlbum($q, $limit = 5, $offset = 1)
@@ -226,16 +226,7 @@ class Lastfm extends DZend_Model
             );
         }
 
-        return $ret;
-
-    }
-
-    public function search($q, $limit = 10)
-    {
-        return array_merge(
-            $this->searchTrack(strtoupper($q), $limit / 2),
-            $this->searchAlbum(strtoupper($q), $limit / 2)
-        );
+        return array_slice($ret, 0, 5);
     }
 
     public function getAlbum($artist, $album)
