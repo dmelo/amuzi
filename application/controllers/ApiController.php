@@ -131,13 +131,15 @@ class ApiController extends DZend_Controller_Action
     public function _getAlbum($artist, $album)
     {
         $albumRow = null;
-        if (($albumRow = $this->_albumModel->get($artist, $album)) === null) {
+        if (($albumRow = $this->_albumModel->get($artist, $album)) === null ||
+            count($albumRow->trackList) == 0) {
             $album = $this->_lastfmModel->getAlbum($artist, $album);
             $albumId = $this->_albumModel->insert($album);
             $albumRow = $this->_albumModel->findRowById($albumId);
         }
 
         $ret = $albumRow->getArray();
+        /*
         $trackList = $albumRow->trackList;
         $ret['duration'] = 0;
         $ret['title'] =  $ret['artist'] . ' - ' . $ret['name'];
@@ -150,6 +152,7 @@ class ApiController extends DZend_Controller_Action
         }
 
         $ret['trackList'] = $trackList;
+        */
 
 
         return $ret;

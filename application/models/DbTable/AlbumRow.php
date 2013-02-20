@@ -27,6 +27,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
     {
         $columns = array(
             'id',
+            'title',
             'name',
             'cover',
             'artist',
@@ -70,24 +71,38 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function __get($name)
     {
+        $musicTrackLinkModel = new MusicTrackLink();
+        $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
+
         if ('artist' === $name) {
             $artistDb = new DbTable_Artist();
             $artistRow = $artistDb->findRowById($this->artistId);
             return $artistRow->name;
-        } elseif ('trackList' === $name) {
-            $musicTrackLinkModel = new MusicTrackLink();
+        } elseif ('title' === $name) {
+            return "{$this->artist} - {$this->name}";
+        } elseif ('artistMusicTitleList' === $name) {
             $ret = array();
-            $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
             $ahamtRowset = $albumHasArtistMusicTitleDb->findByAlbumId($this->id);
+            foreach ($ahamtRowset as $row) {
+                $ret[] = $row->artistMusicTitleId;
+            }
+
+            return $ret;
+        } elseif ('trackList' === $name) {
+            $ret = array();
             $artistMusicTitleModel = new ArtistMusicTitle();
 
-            foreach ($ahamtRowset as $row) {
-                $trackRow = $musicTrackLinkModel->getTrackById($row->artistMusicTitleId);
+            foreach ($this->artistMusicTitleList as $artistMusicTitleId) {
+                $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId);
                 if (null === $trackRow) {
-                    $track = $artistMusicTitleModel->findArtistAndMusicTitleById($row->artistMusicTitleId);
+                    $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
+                    $track = array(
+                        'artist' => $artistMusicTitleRow->getArtistName(),
+                        'musicTitle' => $artistMusicTitleRow->getMusicTitleName()
+                    );
                 } else {
                     $track = $trackRow->getArray();
-                    $track['artist_music_title_id'] = $row->artistMusicTitleId;
+                    $track['artist_music_title_id'] = $artistMusicTitleId;
                 }
 
                 if (null !== $track) {

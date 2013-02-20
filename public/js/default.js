@@ -612,9 +612,12 @@
 
         ac = $('#q').autocomplete({
             source: function (request, response) {
+                var start = new Date();
                 $.get('/api/autocomplete', {
                     q: request.term,
                 }, function (data) {
+                    var end = new Date();
+                    console.log("AUTOCOMPLETE: " + (end.getTime() - start.getTime()));
                     var a =  $.map(data, function (row) {
                         return {
                             data: row,

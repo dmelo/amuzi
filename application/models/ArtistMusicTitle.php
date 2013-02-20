@@ -98,4 +98,9 @@ class ArtistMusicTitle extends DZend_Model
     public function update(LastfmEntry $data) {
         // TODO: update cover on database.
     }
+
+    public function findRowById($id)
+    {
+        return $this->_artistMusicTitleDb->findRowById($id);
+    }
 }
