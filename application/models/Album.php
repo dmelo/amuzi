@@ -116,7 +116,7 @@ class Album extends DZend_Model
 
         $this->_logger->debug("Album::findAllFromUser - " . print_r($albumIdSet, true));
 
-        return $this->_albumDb->findById($albumIdSet);
+        return empty($albumIdSet) ? array() : $this->_albumDb->findById($albumIdSet);
     }
 
     public function remove($id)
