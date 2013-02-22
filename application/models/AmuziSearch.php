@@ -9,11 +9,12 @@ class AmuziSearch extends DZend_Model
 
     public function autocomplete($q, $type, $limit = 5)
     {
+        $ret = array();
         $q = str_replace(' - ', 'A', strtolower($q));
         ob_implicit_flush();
         if (!in_array($type, $this->_keys)) {
             $this->_logger->debug("AmuziSearch::autocomplete wrong type $type.");
-            return false;
+            return $ret;
         }
 
         $sock = false;
@@ -21,7 +22,7 @@ class AmuziSearch extends DZend_Model
             AF_INET, SOCK_STREAM, SOL_TCP
         )) === false) {
             $this->_logger->err("AmuziSearch::autocomplete error on socket_create. Reason: " . socket_strerror(socket_last_error()));
-            return false;
+            return $ret;
         }
 
         if (($r = socket_connect(
@@ -30,17 +31,16 @@ class AmuziSearch extends DZend_Model
             $this->_ports[$type]
         )) === false) {
             $this->_logger->err("AmuziSearch::autocomplete error on socket_connect $type. Reason: " . socket_strerror(socket_last_error($sock)));
-            return false;
+            return $ret;
         }
 
         $c = new DZend_Chronometer();
         $c->start();
         socket_write($sock, $q, strlen($q));
-        $resultList = array_slice(explode("\n", socket_read($sock, 4096 * 1024, PHP_BINARY_READ)), 0, 5 * $limit);
-        $c->stop();
+        $str = socket_read($sock, 4096 * 1024, PHP_BINARY_READ);
+        socket_close($sock);
 
-
-        $ret = array();
+        $resultList = "0\n" === $str ? array() : array_slice(explode("\n", $str), 0, 5 * $limit);
         foreach ($resultList as $result) {
             if (strlen($result) > 0) {
                 list($artistName, $name) = explode('A', $result);
@@ -51,7 +51,6 @@ class AmuziSearch extends DZend_Model
             }
         }
 
-        socket_close($sock);
 
         return $ret;
     }
