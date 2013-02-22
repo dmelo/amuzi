@@ -165,21 +165,6 @@ class ApiController extends DZend_Controller_Action
         $trackRow = $this->_musicTrackLinkModel->getTrack(
             $artist, $musicTitle
         );
-        if (null === $trackRow) {
-            // Look for it on Youtube.
-            $resultSet = $this->_youtubeModel->search(
-                "${artist} - ${musicTitle}", 5, 1, array(
-                    'artist' => $artist,
-                    'musicTitle' => $musicTitle
-                )
-            );
-            $this->_trackModel->insertMany(
-                $resultSet, $artist, $musicTitle
-            );
-            $trackRow = $this->_musicTrackLinkModel->getTrack(
-                $artist, $musicTitle
-            );
-        }
 
         if (null !== $trackRow) {
             $ret = array_merge(

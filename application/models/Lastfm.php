@@ -226,7 +226,7 @@ class Lastfm extends DZend_Model
             );
         }
 
-        return array_slice($ret, 0, 5);
+        return $ret;
     }
 
     public function getAlbum($artist, $album)

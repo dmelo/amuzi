@@ -97,7 +97,8 @@
     };
 
     $.ResultSet.prototype.getAlbumDescription = function (v) {
-        return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title">' + v.artist + ' - ' + v.name + '</div></div>';
+        var duration = 'duration' in v ? '<div class="duration">' + this.secondsToHMS(v.duration) + '</div>' : '';
+        return '<div class="description">' + duration + '<div class="title">' + v.artist + ' - ' + v.name + '</div></div>';
     };
 
     $.ResultSet.prototype.getMusicLarge = function (v, objectType) {

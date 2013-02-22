@@ -70,7 +70,7 @@ IncBoardCell.prototype.getHtml = function() {
 
     ret.addClass('incboard-cell incboard-col-' + this.col + ' incboard-row-' + this.row);
     ret.find('.cover').addClass('incboard-img');
-    ret.attr('data-content', v.title + ' (' + resultSet.secondsToHMS(v.duration) + ')');
+    ret.attr('data-content', v.title + ('duration' in v ? ' (' + resultSet.secondsToHMS(v.duration) + ')' : ''));
     ret.attr('data-trigger', 'hover');
     ret.attr('id', v.artistMusicTitleId);
     ret.find('.description').remove();
