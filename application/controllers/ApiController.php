@@ -226,7 +226,7 @@ class ApiController extends DZend_Controller_Action
      */
     public function autocompleteAction()
     {
-        $q = strtoupper($this->_request->getParam('q'));
+        $q = strtolower($this->_request->getParam('q'));
         if (null !== $q) {
             // Try to get from music_title and album.
             $list = array();
@@ -235,21 +235,15 @@ class ApiController extends DZend_Controller_Action
 
             $this->_logger->debug("ApiController::autocomplete COUNT " . count($listMusicTitle) . " " . count($listAlbum));
             if (count($listMusicTitle) < 5) {
-                // TODO: try to get from amuzi_kmp
-                $listMusicTitle = $this->_amuziSearch->autocomplete($q, 'track');
-                // $listMusicTitle = $this->_lastfmModel->searchTrack($q);
-            } else {
-                $this->_logger->debug("ApiController::autocomplete addTask MusicTitle $q");
-                $this->_taskRequestModel->addTask('SearchString', 'MusicTitle', $q);
+                $listMusicTitle = array_merge($listMusicTitle, $this->_amuziSearchModel->autocomplete($q, 'track', 5 - count($listMusicTitle)));
             }
+            $this->_taskRequestModel->addTask('SearchString', 'MusicTitle', $q);
+
 
             if (count($listAlbum) < 5) {
-                // TODO: try to get from amuzi_kmp
-                $listAlbum = $this->_lastfmModel->searchAlbum($q);
-            } else {
-                $this->_logger->debug("ApiController::autocomplete addTask Album $q");
-                $this->_taskRequestModel->addTask('SearchString', 'Album', $q);
+                $listAlbum = array_merge($listAlbum, $this->_amuziSearchModel->autocomplete($q, 'album', 5 - count($listAlbum)));
             }
+            $this->_taskRequestModel->addTask('SearchString', 'Album', $q);
 
             $list = array_merge($listAlbum, $listMusicTitle);
 

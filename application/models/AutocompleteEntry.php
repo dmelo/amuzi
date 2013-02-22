@@ -44,4 +44,9 @@ class AutocompleteEntry extends AbstractEntry
 
         return $ret;
     }
+
+    public function resultLength()
+    {
+        return strlen($this->name);
+    }
 }

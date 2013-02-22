@@ -16,3 +16,6 @@
 [submodule "external/jPlayer"]
 	path = external/jPlayer
 	url = git://github.com/happyworm/jPlayer.git
+[submodule "library/amuzi_search"]
+	path = library/amuzi_search
+	url = git@github.com:dmelo/amuzi_search.git
