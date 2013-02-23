@@ -621,7 +621,7 @@
                     var a =  $.map(data, function (row) {
                         return {
                             data: row,
-                            label: '<img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',
+                            label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',
                             value: row.name,
                             artist: row.artist,
                             musicTitle: row.musicTitle,
