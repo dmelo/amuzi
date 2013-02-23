@@ -30,11 +30,22 @@ class DbTable_Album extends DZend_Db_Table
             $data['name'] = substr($data['name'], 0, 254);
         }
 
+        $cover = null;
         if (array_key_exists('cover', $data) && null !== $data['cover']) {
             $data['cover'] = substr($data['cover'], 0, 2046);
+            $cover = $data['cover'];
+            unset($data['cover']);
         }
 
-        return $this->insertCachedWithoutException($data);
+        $id = $this->insertCachedWithoutException($data);
+
+        if (null !== $cover) {
+            $albumRow = $this->findRowById($id);
+            $albumRow->cover = $cover;
+            $albumRow->save();
+        }
+
+        return $id;
     }
 
     public function autocomplete($data)

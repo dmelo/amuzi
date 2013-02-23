@@ -182,7 +182,7 @@ class Album extends DZend_Model
                 ));
             }
         } elseif (count($keywords) === 2) {
-            $ret = $this->_artistMusicTitleDb->autocomplete(
+            $ret = $this->_albumDb->autocomplete(
                 array(
                     'artist' => $keywords[0],
                     'album' => $keywords[1]

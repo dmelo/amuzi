@@ -10,7 +10,7 @@ class AmuziSearch extends DZend_Model
     public function autocomplete($q, $type, $limit = 5)
     {
         $ret = array();
-        $q = str_replace(' - ', 'A', strtolower($q));
+        $q = preg_replace('/ - ?/', 'A', strtolower($q));
         ob_implicit_flush();
         if (!in_array($type, $this->_keys)) {
             $this->_logger->debug("AmuziSearch::autocomplete wrong type $type.");

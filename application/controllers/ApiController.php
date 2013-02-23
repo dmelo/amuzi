@@ -218,7 +218,7 @@ class ApiController extends DZend_Controller_Action
             $listMusicTitle = $this->_artistMusicTitleModel->autocomplete($q);
             $listAlbum = $this->_albumModel->autocomplete($q);
 
-            $this->_logger->debug("ApiController::autocomplete COUNT " . count($listMusicTitle) . " " . count($listAlbum));
+            $this->_logger->debug("ApiController::autocomplete COUNT A " . count($listMusicTitle) . " " . count($listAlbum));
             if (count($listMusicTitle) < 5) {
                 $listMusicTitle = array_merge($listMusicTitle, $this->_amuziSearchModel->autocomplete($q, 'track', 5 - count($listMusicTitle)));
             }
@@ -228,6 +228,9 @@ class ApiController extends DZend_Controller_Action
             if (count($listAlbum) < 5) {
                 $listAlbum = array_merge($listAlbum, $this->_amuziSearchModel->autocomplete($q, 'album', 5 - count($listAlbum)));
             }
+
+
+            $this->_logger->debug("ApiController::autocomplete COUNT B " . count($listMusicTitle) . " " . count($listAlbum));
             $this->_taskRequestModel->addTask('SearchString', 'Album', $q);
 
             $list = array_merge($listAlbum, $listMusicTitle);
