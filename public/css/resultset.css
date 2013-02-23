@@ -95,16 +95,17 @@
 
 .item-square {
     max-width: 120px;
+    text-align: center;
 }
 
-.item-square[albumid] {
+.item-square[albumid], .item-square[albumid] .cover {
     max-width: 160px;
     max-height: 160px;
 }
 
-.item-square[playlistid] {
-    max-width: 120px;
-    max-height: 90px;
+.item-square[playlistid], .item-square[playlistid] .cover {
+    width: 120px;
+    height: 90px;
 }
 
 .item-square .name {
@@ -160,6 +161,10 @@
     top: -50px;
     position: relative;
     display: inline-block;
+}
+
+.createPlaylist:hover {
+    cursor: pointer;
 }
 
 .createPlaylist .loadModal {
