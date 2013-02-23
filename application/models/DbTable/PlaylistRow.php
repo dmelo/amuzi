@@ -153,4 +153,9 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row implements DbTable_iTrackCo
     {
         return 'playlist';
     }
+
+    public function getCoverName()
+    {
+        return $this->name;
+    }
 }

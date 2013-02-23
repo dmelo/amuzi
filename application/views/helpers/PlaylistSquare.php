@@ -31,7 +31,7 @@ class View_Helper_PlaylistSquare extends View_Helper_PlaylistInfo
         return '<div class="item-square playlist-square object-playlist" '
             . $playlistRow->getType() . 'id="' . $playlistRow->id . '">'
             . '<div class="cover"><img src="' . $playlistRow->getCover()
-            . '"/></div>' . '<div class="name">' . $playlistRow->name . '</div>'
+            . '"/></div>' . '<div class="name">' . $playlistRow->getCoverName() . '</div>'
             . '<a href="#" class="play button"><img src="/img/play_icon_'
             . 'square.png"/></a>'
             . '<a href="#" class="remove button"><img src="/img/remove_icon_'

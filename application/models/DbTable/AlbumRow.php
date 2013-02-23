@@ -61,12 +61,20 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function getCover()
     {
-        return $this->cover;
+        return null == $this->cover ? '/img/album.png' : $this->cover;
     }
 
     public function getType()
     {
         return 'album';
+    }
+
+    public function getCoverName()
+    {
+        $artistDb = new DbTable_Artist();
+        $artistRow = $artistDb->findRowById($this->artistId);
+
+        return $artistRow->name . ' - ' . $this->name;
     }
 
     public function __get($name)

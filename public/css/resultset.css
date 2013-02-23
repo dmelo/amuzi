@@ -157,8 +157,8 @@
 }
 
 .createPlaylist {
-    margin-top: 10px;
-    position: absolute;
+    top: -50px;
+    position: relative;
     display: inline-block;
 }
 

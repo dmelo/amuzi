@@ -30,4 +30,11 @@ interface DbTable_iTrackCollectionRow
      * @return string Returns the collection type.
      */
     public function getType();
+
+    /**
+     * getArtistName Get the name of the collection to be displayed as cover.
+     *
+     * @return string Returns the name of the collection.
+     */
+    public function getCoverName();
 }
