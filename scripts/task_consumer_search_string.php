@@ -5,6 +5,8 @@ require_once '../scripts/lib.php';
 $taskSetModel = new TaskSet();
 $lastfmModel = new Lastfm();
 $albumModel = new Album();
+$musicTrackLinkModel = new MusicTrackLink();
+$lastfmModel = new Lastfm();
 
 $rowSet = $taskSetModel->findOpenTasks('SearchString');
 
@@ -14,11 +16,18 @@ foreach ($rowSet as $row) {
         $ret = $lastfmModel->searchAlbum($row->param1, 250);
         foreach ($ret as $r) {
             try {
-                $albumModel->insertEmpty(
-                    $r->artist,
-                    $r->musicTitle,
-                    $r->cover
-                );
+                $album = $lastfmModel->getAlbum($r->artist, $r->musicTitle);
+                $albumId = $albumModel->insert($album);
+                $albumRow = $albumModel->findRowById($albumId);
+                foreach ($albumRow->trackList as $track) {
+                    if (count($track) === 2) {
+                        $artist = $track['artist'];
+                        $musicTitle = $track['musicTitle'];
+                        $musicTrackLinkModel->getTrackSync($artist, $musicTitle);
+                        echo "Search missing music: " . $artist . ' - ' . $musicTitle . ' for album ' . $r . PHP_EOL;
+                    }
+                }
+
                 echo "Inserted: " . $r . PHP_EOL;
             } catch (Zend_Exception $e) {
                 echo "Album $r is already inserted" . PHP_EOL;

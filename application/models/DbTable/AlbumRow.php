@@ -36,7 +36,11 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
         $ret = array();
         foreach($columns as $column) {
-            $ret[$column] = $this->$column;
+            if ('cover' === $column) {
+                $ret[$column] = $this->getCover();
+            } else {
+                $ret[$column] = $this->$column;
+            }
         }
 
         return $ret;
@@ -61,7 +65,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function getCover()
     {
-        return null == $this->cover ? '/img/album.png' : $this->cover;
+        return in_array($this->cover, array(null, '')) ? '/img/album.png' : $this->cover;
     }
 
     public function getType()
@@ -114,9 +118,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
                     $track['artist_music_title_id'] = $artistMusicTitleId;
                 }
 
-                if (null !== $track) {
-                    $ret[] = $track;
-                }
+                $ret[] = $track;
             }
 
             return $ret;

@@ -18,15 +18,9 @@ class AlbumController extends DZend_Controller_Action
                 if (2 === count($track)) {
                     $artist = $track['artist'];
                     $musicTitle = $track['musicTitle'];
-                    $resultSet = $this->_youtubeModel->search(
-                        "${artist} - ${musicTitle}", 5, 1, array(
-                            'artist' => $artist,
-                            'musicTitle' => $musicTitle
-                        )
-                    );
-                    $this->_trackModel->insertMany(
-                        $resultSet, $artist, $musicTitle
-                    );
+                    $this->_musicTrackLinkModel->getTrackSync($artist, $musicTitle);
+                    // I don't have to store the value because it doesn't
+                    // return the album.
                 }
             }
         }

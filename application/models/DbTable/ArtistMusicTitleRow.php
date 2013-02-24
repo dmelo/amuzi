@@ -49,7 +49,7 @@ class DbTable_ArtistMusicTitleRow extends DZend_Db_Table_Row
     {
         $cover = null;
         $musicTrackLinkModel = new MusicTrackLink();
-        if (($trackRow = $musicTrackLinkModel->getTrackByAMTId($this->id)) !== null) {
+        if (($trackRow = $musicTrackLinkModel->getTrackById($this->id)) !== null) {
             $cover = $trackRow->cover;
         }
 

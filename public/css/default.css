@@ -281,15 +281,21 @@ ul.ui-autocomplete li small {
 }
 
 ul.ui-autocomplete li div.description {
-    height: 50px;
+    min-height: 50px;
     margin-top: -50px;
     margin-left: 54px;
     width: 246px;
 }
 
-ul.ui-autocomplete li:hover {
+ul.ui-autocomplete li.ui-menu-item:hover {
     cursor: pointer;
     background-color: #F40C42;
+}
+
+ul.ui-autocomplete li.ui-autocomplete-category {
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
 }
 
 ul.ui-autocomplete li a {

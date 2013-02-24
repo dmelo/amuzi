@@ -610,7 +610,23 @@
             return a;
         };
 
-        ac = $('#q').autocomplete({
+
+        $.widget( "custom.catcomplete", $.ui.autocomplete, {
+            _renderMenu: function( ul, items ) {
+                var that = this,
+                    currentCategory = "";
+                $.each( items, function( index, item ) {
+                    if ( item.category != currentCategory ) {
+                        var t = 'track' === item.category ? 'Tracks' : 'Albums';
+                        ul.append( "<li class='ui-autocomplete-category " + item.category + "'>" + t + "</li>" );
+                        currentCategory = item.category;
+                    }
+                    that._renderItemData( ul, item );
+                });
+            }
+        });
+
+        ac = $('#q').catcomplete({
             source: function (request, response) {
                 var start = new Date();
                 $.get('/api/autocomplete', {
@@ -618,10 +634,12 @@
                 }, function (data) {
                     var end = new Date();
                     console.log("AUTOCOMPLETE: " + (end.getTime() - start.getTime()));
+                    var count = 0;
                     var a =  $.map(data, function (row) {
                         return {
                             data: row,
-                            label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><small>' + row.type + '</small><br/><span>' + row.name + '</span></div>',
+                            label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
+                            category: row.type,
                             value: row.name,
                             artist: row.artist,
                             musicTitle: row.musicTitle,

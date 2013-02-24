@@ -90,22 +90,30 @@ class MusicTrackLink extends DZend_Model
         }
     }
 
-    public function getTrackById($artistMusicTitleId)
+    public function getTrackById($artistMusicTitleId, $sync = false)
     {
         $cacheKey = $this->_getCacheIdKey($artistMusicTitleId);
         $cache = Zend_Registry::get('cache');
 
-        if (false === ($ret = $cache->load($cacheKey))) {
+        if (false === ($ret = $cache->load($cacheKey)) ||
+            ($sync && null === $ret)) {
+            // If it's not on cache, then insert it from artist,musicTitle, so
+            // that all both caches are recorded.
             $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById($artistMusicTitleId);
             $artistRow = $this->_artistDb->findRowById($artistMusicTitleRow->artistId);
             $musicTitleRow = $this->_musicTitleDb->findRowById($artistMusicTitleRow->musicTitleId);
-            return $this->getTrack($artistRow->name, $musicTitleRow->name);
+            return $this->getTrack($artistRow->name, $musicTitleRow->name, $sync);
         }
 
         return $ret;
     }
 
-    public function getTrackByAMTId($artistMusicTitleId)
+    public function getTrackByIdSync($artistMusicTitleId)
+    {
+        return $this->getTrackById($artistMusicTitleId, true);
+    }
+
+    protected function _getTrackByAMTId($artistMusicTitleId, $sync, $artist, $musicTitle)
     {
         $cacheIdKey = $this->_getCacheIdKey($artistMusicTitleId);
         $cache = Zend_Registry::get('cache');
@@ -113,6 +121,21 @@ class MusicTrackLink extends DZend_Model
             $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
                 $artistMusicTitleId
             );
+            if (count($rowSet) == 0) {
+                // Look for it on Youtube.
+                $resultSet = $this->_youtubeModel->search(
+                    "${artist} - ${musicTitle}", 5, 1, array(
+                        'artist' => $artist,
+                        'musicTitle' => $musicTitle
+                    )
+                );
+                $this->_trackModel->insertMany(
+                    $resultSet, $artist, $musicTitle
+                );
+                $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
+                    $artistMusicTitleId
+                );
+            }
             $points = array();
             foreach ($rowSet as $row) {
                 if (!array_key_exists($row->trackId, $points))
@@ -153,7 +176,7 @@ class MusicTrackLink extends DZend_Model
         return $ret;
     }
 
-    public function getTrack($artist, $musicTitle)
+    public function getTrack($artist, $musicTitle, $sync = false)
     {
         $c = new DZend_Chronometer();
         $c->start();
@@ -166,7 +189,7 @@ class MusicTrackLink extends DZend_Model
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
             );
-            $ret = $this->getTrackByAMTId($artistMusicTitleId);
+            $ret = $this->_getTrackByAMTId($artistMusicTitleId, $sync, $artist, $musicTitle);
 
             if (null !== $ret) {
                 $cache->save($ret, $cacheKey);
@@ -176,5 +199,10 @@ class MusicTrackLink extends DZend_Model
         $this->_logger->debug('MusicTrackLink::getTrack time ' . $c->get());
 
         return $ret;
+    }
+
+    public function getTrackSync($artist, $musicTitle)
+    {
+        return $this->getTrack($artist, $musicTitle, true);
     }
 }
