@@ -244,7 +244,7 @@ IncBoardBoard.prototype.centralizeItems = function() {
                 self.setPos(cell.getContent().artistMusicTitleId, pos);
             });
         } else {
-            self.log("shift: (" + shiftX + ", " + shiftY + ")");
+            self.log.debug("shift: (" + shiftX + ", " + shiftY + ")");
         }
     }
 };
