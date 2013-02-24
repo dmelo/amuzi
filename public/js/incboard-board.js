@@ -271,7 +271,7 @@ IncBoardBoard.prototype.flushDraw = function() {
     realWidth = this.maxX - (this.minX - 1) + 1;
     factorY = this.rows / realHeight;
     factorX = this.cols / realWidth;
-    self.log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ')');
+    self.log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ') cols: ' + this.cols + ", rows: " + this.rows);
     factor = Math.min(factorX, factorY);
 
     if (factor * this.cellSizeX > 120 || factor * this.cellSizeY > 90 || factor < 0) {
@@ -283,8 +283,16 @@ IncBoardBoard.prototype.flushDraw = function() {
         newCellSizeY = factor * this.cellSizeY;
     }
 
+
+
     newTop = (1 - factor) * this.cellSizeY * this.rows * 0.5;
-    newLeft = ((1 - factor) * this.cellSizeX * this.cols * 0.5) + 269;
+    newLeft = ((1 - factor) * this.cellSizeX * this.cols * 0.5);
+
+    $('#incboard').css('height', (newCellSizeY * this.rows) + 'px');
+    $('#incboard').css('width', (newCellSizeX * this.cols) + 'px');
+    $('#incboard').css('top', newTop + 'px');
+    $('#incboard').css('left', newLeft + 'px');
+
 
     $.cssRule('.incboard-cell', 'width', newCellSizeX + 'px');
     $.cssRule('.incboard-cell', 'height', newCellSizeY + 'px');
@@ -292,8 +300,6 @@ IncBoardBoard.prototype.flushDraw = function() {
     $.cssRule('.incboard-cell.album-square .side', 'width', (newCellSizeX - newCellSizeY) + 'px');
     $.cssRule('.incboard-cell.album-square .side', 'height', '100%');
 
-    $.cssRule('#incboard', 'top', newTop + 'px');
-    $.cssRule('#incboard', 'left', newLeft + 'px');
 
     for (var i = 0; i < this.rows; i++) {
         $.cssRule('.incboard-row-' + i, 'top', (i * newCellSizeY) + "px");
