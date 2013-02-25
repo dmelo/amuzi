@@ -202,10 +202,11 @@ class PlaylistController extends DZend_Controller_Action
                     $name = (int) $id;
                 $this->view->playlist = $this->_playlistModel->export($name);
             }
-            elseif (isset($this->_session->playlist))
+            elseif (isset($this->_session->playlist)) {
                 $this->view->playlist = $this->_session->playlist;
-            else
+            } else {
                 $this->view->playlist = null;
+            }
         }
 
         $this->_logger->debug(print_r($this->view->playlist, true));
