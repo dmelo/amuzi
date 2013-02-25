@@ -103,13 +103,13 @@ class ApiController extends DZend_Controller_Action
         );
 
         if (($artist = $this->_request->getParam('artist')) != null &&
-            ($musicTitle = $this->_request->getParam('musicTitle')) != null) {
+            ($musicTitle = $this->_request->getParam('musicTitle')) != null &&
+            ($type = $this->_request->getParam('type')) != null) {
 
             $this->view->output = $this->_musicSimilarityModel
-                ->getSimilar($artist, $musicTitle, $artistMusicTitleIdList);
+                ->getSimilar($artist, $musicTitle, $type, $artistMusicTitleIdList);
         } elseif (($q = $this->_request->getParam('q')) != null) {
-            $trackItem = $this->_artistMusicTitleModel->getBestGuess($q);
-            $albumItem = $this->_albumModel->getBestGuess($q);
+            $item = $this->_artistMusicTitleModel->getBestGuess($q);
             if (null === $item) {
                 $item = $this->_albumModel->getBestGuess($q);
             }
