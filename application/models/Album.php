@@ -23,6 +23,8 @@
  */
 class Album extends DZend_Model
 {
+    use autocompleteTrait;
+
     public function search($q)
     {
         $list = $this->_lastfmModel->searchAlbum($q);
@@ -164,32 +166,23 @@ class Album extends DZend_Model
         return $id;
     }
 
-    public function autocomplete($q)
+    public function autocomplete($q, $limit = 5)
     {
-        $keywords = explode(' - ', $q, 2);
-        $ret = array();
-        if (count($keywords) === 1) {
-            $ret = $this->_albumDb->autocomplete(
-                array(
-                    'album' => $keywords[0]
-                )
-            );
-            if (count($ret) < 5) {
-                $ret = array_merge($ret, $this->_albumDb->autocomplete(
-                    array(
-                        'artist' => $keywords[0]
-                    )
-                ));
-            }
-        } elseif (count($keywords) === 2) {
-            $ret = $this->_albumDb->autocomplete(
-                array(
-                    'artist' => $keywords[0],
-                    'album' => $keywords[1]
-                )
-            );
-        }
+        return $this->acTrait($q, 'album', $limit);
+    }
 
-        return array_slice($ret, 0, 5);
+    /**
+     * getBestGuess Gets the best guess for the given string.
+     *
+     * @param string $q User's input string.
+     * @return AutocompleteEntry Returns the fittest guess.
+     */
+    public function getBestGuess($q)
+    {
+        $list = $this->autocomplete($q, 1);
+        foreach ($list as $item) {
+            return $item;
+        }
+        return null;
     }
 }

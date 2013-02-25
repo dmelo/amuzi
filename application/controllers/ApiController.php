@@ -108,12 +108,18 @@ class ApiController extends DZend_Controller_Action
             $this->view->output = $this->_musicSimilarityModel
                 ->getSimilar($artist, $musicTitle, $artistMusicTitleIdList);
         } elseif (($q = $this->_request->getParam('q')) != null) {
-            $item = $this->_artistMusicTitleModel->getBestGuess($q);
+            $trackItem = $this->_artistMusicTitleModel->getBestGuess($q);
+            $albumItem = $this->_albumModel->getBestGuess($q);
+            if (null === $item) {
+                $item = $this->_albumModel->getBestGuess($q);
+            }
+
             $this->view->output = null === $item ?
                 $this->_error :
                 $this->_musicSimilarityModel->getSimilar(
-                    $item['artist'],
-                    $item['musicTitle'],
+                    $item->artist,
+                    $item->musicTitle,
+                    $item->type,
                     $artistMusicTitleIdList
                 );
         } else {
@@ -139,21 +145,6 @@ class ApiController extends DZend_Controller_Action
         }
 
         $ret = $albumRow->getArray();
-        /*
-        $trackList = $albumRow->trackList;
-        $ret['duration'] = 0;
-        $ret['title'] =  $ret['artist'] . ' - ' . $ret['name'];
-        foreach ($trackList as $key => $track) {
-            if (count($track) === 2) {
-                $trackList[$key] = $this->_getMusic($track['artist'], $track['musicTitle']);
-            }
-            $ret['duration'] += $trackList[$key]['duration'];
-            $this->_logger->debug('ApiController::_getAlbum - ' . $trackList[$key]['duration']);
-        }
-
-        $ret['trackList'] = $trackList;
-        */
-
 
         return $ret;
     }
@@ -180,7 +171,6 @@ class ApiController extends DZend_Controller_Action
 
         return $ret;
     }
-
 
     /**
      * searchmusicAction Given the artist and musicTitle parameters, find all
@@ -211,30 +201,13 @@ class ApiController extends DZend_Controller_Action
      */
     public function autocompleteAction()
     {
-        $q = strtolower($this->_request->getParam('q'));
-        if (null !== $q) {
+        if (null !== ($q = strtolower($this->_request->getParam('q')))) {
             // Try to get from music_title and album.
             $list = array();
             $listMusicTitle = $this->_artistMusicTitleModel->autocomplete($q);
             $listAlbum = $this->_albumModel->autocomplete($q);
 
-            $this->_logger->debug("ApiController::autocomplete COUNT A " . count($listMusicTitle) . " " . count($listAlbum));
-            if (count($listMusicTitle) < 5) {
-                $listMusicTitle = array_merge($listMusicTitle, $this->_amuziSearchModel->autocomplete($q, 'track', 5 - count($listMusicTitle)));
-            }
-            $this->_taskRequestModel->addTask('SearchString', 'MusicTitle', $q);
-
-
-            if (count($listAlbum) < 5) {
-                $listAlbum = array_merge($listAlbum, $this->_amuziSearchModel->autocomplete($q, 'album', 5 - count($listAlbum)));
-            }
-
-
-            $this->_logger->debug("ApiController::autocomplete COUNT B " . count($listMusicTitle) . " " . count($listAlbum));
-            $this->_taskRequestModel->addTask('SearchString', 'Album', $q);
-
             $list = array_merge($listAlbum, $listMusicTitle);
-
             $ret = array();
             foreach ($list as $item) {
                 $ret[] = $item->getArray();

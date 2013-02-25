@@ -23,6 +23,8 @@
  */
 class ArtistMusicTitle extends DZend_Model
 {
+    use autocompleteTrait;
+
     public function insert($artist, $musicTitle)
     {
         $artistId = $this->_artistModel->insert($artist);
@@ -55,35 +57,9 @@ class ArtistMusicTitle extends DZend_Model
         );
     }
 
-    public function autocomplete($q)
+    public function autocomplete($q, $limit = 5)
     {
-        $keywords = explode(' - ', $q, 2);
-        $ret = array();
-        if (count($keywords) === 1) {
-            $ret = $this->_artistMusicTitleDb->autocomplete(
-                array(
-                    'music_title' => $keywords[0]
-                )
-            );
-            if (count($ret) < 5) {
-                $ret = array_merge($ret, $this->_artistMusicTitleDb->autocomplete(
-                    array(
-                        'artist' => $keywords[0]
-                    )
-                ));
-            }
-        } elseif (count($keywords) === 2) {
-            $ret = $this->_artistMusicTitleDb->autocomplete(
-                array(
-                    'artist' => $keywords[0],
-                    'music_title' => $keywords[1]
-                )
-            );
-        }
-
-        $this->_logger->debug("ArtistMusicTitle::autocomplete " . count($ret));
-
-        return array_slice($ret, 0, 5);
+        return $this->acTrait($q, 'music_title', $limit);
     }
 
     public function getBestGuess($q)
