@@ -25,6 +25,8 @@ class Album extends DZend_Model
 {
     use autocompleteTrait;
 
+    private $_type = 'album';
+
     public function search($q)
     {
         $list = $this->_lastfmModel->searchAlbum($q);
@@ -164,25 +166,5 @@ class Album extends DZend_Model
         }
 
         return $id;
-    }
-
-    public function autocomplete($q, $limit = 5)
-    {
-        return $this->acTrait($q, 'album', $limit);
-    }
-
-    /**
-     * getBestGuess Gets the best guess for the given string.
-     *
-     * @param string $q User's input string.
-     * @return AutocompleteEntry Returns the fittest guess.
-     */
-    public function getBestGuess($q)
-    {
-        $list = $this->autocomplete($q, 1);
-        foreach ($list as $item) {
-            return $item;
-        }
-        return null;
     }
 }

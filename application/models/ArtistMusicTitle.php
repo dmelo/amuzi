@@ -25,6 +25,8 @@ class ArtistMusicTitle extends DZend_Model
 {
     use autocompleteTrait;
 
+    private $_type = 'music_title';
+
     public function insert($artist, $musicTitle)
     {
         $artistId = $this->_artistModel->insert($artist);
@@ -55,20 +57,6 @@ class ArtistMusicTitle extends DZend_Model
         return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle(
             $idsList
         );
-    }
-
-    public function autocomplete($q, $limit = 5)
-    {
-        return $this->acTrait($q, 'music_title', $limit);
-    }
-
-    public function getBestGuess($q)
-    {
-        $list = $this->autocomplete($q);
-        foreach ($list as $item) {
-            return $item;
-        }
-        return null;
     }
 
     public function update(LastfmEntry $data) {
