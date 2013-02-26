@@ -27,6 +27,11 @@ class Album extends DZend_Model
 
     private $_type = 'album';
 
+    public function fetchAllArtistAndAlbum($idList)
+    {
+        return $this->_albumDb->fetchAllArtistAndAlbum($idList);
+    }
+
     public function search($q)
     {
         $list = $this->_lastfmModel->searchAlbum($q);

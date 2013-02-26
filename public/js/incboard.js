@@ -69,12 +69,12 @@ IncBoard.prototype.stochasticItems = function(center) {
     var start = new Date().getTime();
     var self = this,
         list = [],
-        idsList = this.ibb.getIdsList();
+        idList = this.ibb.getIdsList();
 
     this.ibb.getByPos(center).forEach(function(item) {
         var id = item.artistMusicTitleId;
         list.push(id);
-        idsList.splice(idsList.indexOf(id), 1);
+        idList.splice(idList.indexOf(id), 1);
     });
 
     this.shiftList.forEach(function(shift) {
@@ -82,14 +82,14 @@ IncBoard.prototype.stochasticItems = function(center) {
         self.ibb.getByPos(pos).forEach(function(item) {
             var id = item.artistMusicTitleId;
             list.push(id);
-            idsList.splice(idsList.indexOf(id), 1);
+            idList.splice(idList.indexOf(id), 1);
         });
     });
 
-    while (list.length < this.stochasticLength && idsList.length > 0) {
-        var rid = Math.floor(Math.random() * idsList.length);
-        list.push(idsList[rid]);
-        idsList.splice(rid, 1);
+    while (list.length < this.stochasticLength && idList.length > 0) {
+        var rid = Math.floor(Math.random() * idList.length);
+        list.push(idList[rid]);
+        idList.splice(rid, 1);
     }
 
     var end = new Date().getTime();

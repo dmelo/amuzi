@@ -88,4 +88,20 @@ class DbTable_Album extends DZend_Db_Table
 
         return $ret;
     }
+
+    public function fetchAllArtistAndAlbum($idList)
+    {
+        $db = $this->getAdapter();
+        $select = $db->select();
+        $select->from(
+            array('album' => 'album'),
+            array('id' => 'id', 'name', 'name')
+        )->join(
+            array('a' => 'artist'),
+            'a.id = album.artist_id',
+            array('artist' => 'name')
+        )->where('album.id in ( ' . implode(', ', $idList) . ')');
+
+        return $db->fetchAll($select);
+    }
 }

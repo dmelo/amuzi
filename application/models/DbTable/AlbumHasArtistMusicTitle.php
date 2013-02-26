@@ -23,4 +23,12 @@
  */
 class DbTable_AlbumHasArtistMusicTitle extends DZend_Db_Table
 {
+    public function fetchAllByArtistMusicTitleIdGrouped($artistMusicTitleIdList)
+    {
+        $select = $this->select()
+            ->where('artist_music_title_id in ('
+                . implode(', ', $artistMusicTitleIdList) . ')')
+            ->group('artist_music_title_id');
+        return $this->fetchAll($select);
+    }
 }

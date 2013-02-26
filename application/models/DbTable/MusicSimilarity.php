@@ -77,27 +77,11 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
             }
         }
 
-        $rowSet = $this->fetchAll($where, 'similarity desc', 100);
-        $sim = array();
-        foreach ($rowSet as $row) {
-            $id = $artistMusicTitleId == $row->fArtistMusicTitleId ?
-                $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
-
-            if (array_key_exists($id, $sim)) {
-                $sim[$id] += $row->similarity;
-                $sim[$id] /= 2;
-            } else {
-                $sim[$id] = $row->similarity;
-            }
-        }
-
         $ret = array();
-
-        foreach ($sim as $key => $value) {
-            $ret[] = array(
-                'artist_music_title_id' => $key,
-                'similarity' => $value
-            );
+        $rowSet = $this->fetchAll($where, 'similarity desc', 100);
+        foreach ($rowSet as $row) {
+            $ret[] = $artistMusicTitleId == $row->fArtistMusicTitleId ?
+                $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
         }
 
         return $ret;

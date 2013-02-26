@@ -52,10 +52,10 @@ class ArtistMusicTitle extends DZend_Model
         return $this->_artistMusicTitleDb->fetchRow($where);
     }
 
-    public function fetchAllArtistAndMusicTitle($idsList)
+    public function fetchAllArtistAndMusicTitle($idList)
     {
         return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle(
-            $idsList
+            $idList
         );
     }
 

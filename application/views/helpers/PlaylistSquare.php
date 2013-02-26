@@ -22,8 +22,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('views/helpers/PlaylistInfo.php');
-class View_Helper_PlaylistSquare extends View_Helper_PlaylistInfo
+require_once('views/helpers/T.php');
+class View_Helper_PlaylistSquare extends View_Helper_T
 {
 
     public function playlistSquare(DbTable_iTrackCollectionRow $playlistRow)

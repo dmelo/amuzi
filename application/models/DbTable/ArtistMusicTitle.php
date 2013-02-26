@@ -28,13 +28,13 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         return $this->insertCachedWithoutException($data);
     }
 
-    public function fetchAllArtistAndMusicTitle($idsList)
+    public function fetchAllArtistAndMusicTitle($idList)
     {
         $db = $this->getAdapter();
         $select = $db->select();
         $select->from(
             array('amt' => 'artist_music_title'),
-            array('artistMusicTitleId' => 'id')
+            array('id' => 'id')
         )->join(
             array('a' => 'artist'),
             'a.id = amt.artist_id',
@@ -43,7 +43,7 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
             array('m' => 'music_title'),
             'm.id = amt.music_title_id',
             array('musicTitle' => 'name')
-        )->where('amt.id in ( ' . implode(', ', $idsList) . ')');
+        )->where('amt.id in ( ' . implode(', ', $idList) . ')');
 
         return $db->fetchAll($select);
     }

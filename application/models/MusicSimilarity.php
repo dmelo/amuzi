@@ -93,13 +93,8 @@ class MusicSimilarity extends DZend_Model
         return $this->_musicSimilarityDb->getRandomArtistMusicTitleId();
     }
 
-    public function test()
-    {
-        $this->_musicSimilarityDb->test();
-    }
-
     /**
-     * getSimilarityMatrix Calculate the similarity matrix for a given set of
+     * _getSimilarityMatrix Calculate the similarity matrix for a given set of
      * elements
      *
      * @param mixed $list List of artist_music_title_id.
@@ -108,11 +103,11 @@ class MusicSimilarity extends DZend_Model
      * matrix which is measured by N / M, where N is the number of non-zero
      * elements and M is the total number of elements on the matrix.
      */
-    public function getSimilarityMatrix($list)
+    protected function _getSimilarityMatrix($list)
     {
-        $this->_logger->debug('MS::getSimilarityMatrix A ' . microtime(true));
+        $this->_logger->debug('MS::_getSimilarityMatrix A ' . microtime(true));
         $rowSet = $this->findByArtistMusicTitleIdSetAndDegree($list, false);
-        $this->_logger->debug('MS::getSimilarityMatrix B ' . microtime(true));
+        $this->_logger->debug('MS::_getSimilarityMatrix B ' . microtime(true));
         $matrix = array();
         foreach ($list as $a) {
             $matrix[$a] = array();
@@ -120,7 +115,7 @@ class MusicSimilarity extends DZend_Model
                 $matrix[$a][$b] = 0;
         }
         $this->_logger->debug(
-            'MS::getSimilarityMatrix C ' . microtime(true) .
+            'MS::_getSimilarityMatrix C ' . microtime(true) .
             ' -- ' . count($rowSet)
         );
         $count = 0;
@@ -131,8 +126,24 @@ class MusicSimilarity extends DZend_Model
             $b = $row->sArtistMusicTitleId;
             $matrix[$a][$b] = (int) $row->similarity;
         }
+
+        // TODO: Extrapolate matrix using markov.
+
+        // from last.fm semantic to incBoard semantic.
+        foreach ($list as $a) {
+            foreach ($list as $b) {
+                if (0 !== $matrix[$a][$b] && 0 !== $matrix[$b][$a]) {
+                    $matrix[$a][$b] = $matrix[$b][$a] = (int) ($matrix[$a][$b] + $matrix[$b][$a]) / 2;
+                } elseif (0 !== $matrix[$a][$b]) {
+                    $matrix[$b][$a] = $matrix[$a][$b];
+                } elseif (0 !== $matrix[$b][$a]) {
+                    $matrix[$a][$b] = $matrix[$b][$a];
+                }
+            }
+        }
+
         $this->_logger->debug(
-            'MusicSimilarity::getSimilarityMatrix D ' .
+            'MusicSimilarity::_getSimilarityMatrix D ' .
             microtime(true) . "#" . $count
         );
 
@@ -143,13 +154,94 @@ class MusicSimilarity extends DZend_Model
         return array($matrix, $total, $quality);
     }
 
+    protected function _applyListTranslation($similarityMatrix, $translationList)
+    {
+        $amtList = array();
+        foreach ($similarityMatrix as $id => $cols) {
+            $amtList[] = $id;
+        }
+
+        foreach ($translationList as $albumId => $amtIdSet) {
+            // Fill the column
+            foreach ($amtList as $i) {
+                $sum = 0;
+                foreach ($amtIdSet as $j) {
+                    $sum += $similarityMatrix[$i][$j];
+                }
+                $similarityMatrix[$i][-$albumId] = (int) $sum / count($amtIdSet);
+            }
+
+            // Fill the row
+            $similarityMatrix[-$albumId] = array();
+            foreach ($amtList as $j) {
+                $similarityMatrix[-$albumId][$j] = 0;
+                $sum = 0;
+                foreach ($amtIdSet as $i) {
+                    $sum += $similarityMatrix[$i][$j];
+                }
+                $similarityMatrix[-$albumId][$j] = (int) $sum / count($amtIdSet);
+            }
+
+            $similarityMatrix[-$albumId][-$albumId] = 0;
+
+            // erase replaced rows.
+            foreach ($amtIdSet as $i) {
+                unset($similarityMatrix[$i]);
+            }
+
+            // erase replace columns.
+            foreach ($amtList as $i) {
+                foreach ($amtIdSet as $j) {
+                    unset($similarityMatrix[$i][$j]);
+                }
+            }
+
+            // replace on amtList;
+            foreach ($amtIdSet as $i) {
+                if (($key = array_search($i, $amtList)) !== false) {
+                    unset($amtList[$key]);
+                }
+            }
+            $amtList[] = -$albumId;
+        }
+
+        return $similarityMatrix;
+    }
+
+    protected function _fetchObjList($idList)
+    {
+        $amtIdList = array();
+        $albumIdList = array();
+
+        foreach ($idList as $id) {
+            if ($id < 0) {
+                $albumIdList[] = -$id;
+            } else {
+                $amtIdList[] = $id;
+            }
+        }
+
+
+        $amtList = empty($amtIdList) ? array() : $this->_artistMusicTitleModel->fetchAllArtistAndMusicTitle($amtIdList);
+        foreach ($amtList as &$row) {
+            $row['type'] = 'track';
+        }
+
+        $albumList = empty($albumIdList) ? array() : $this->_albumModel->fetchAllArtistAndAlbum($albumIdList);
+        foreach ($albumList as &$row) {
+            $row['type'] = 'album';
+        }
+
+        return array_merge($amtList, $albumList);
+    }
+
     /**
      * Returns an array with two elements. The first is an array of similar
      * elements, each element containing artist and musicTitle. The second
      * element is the similarity matrix.
      */
     public function getSimilar(
-        $artist, $musicTitle, $type, $artistMusicTitleIdList = array()
+        $artist, $musicTitle, $type, $artistMusicTitleIdList = array(), $mayUseSync = true
     )
     {
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
@@ -158,64 +250,68 @@ class MusicSimilarity extends DZend_Model
         $similarList = $this->_musicSimilarityDb->getSimilar(
             $artist, $musicTitle, $artistMusicTitleIdList
         );
-        $idsList = array($artistMusicTitleId);
-        foreach ($similarList as $entry) {
-            $idsList[] = $entry['artist_music_title_id'];
-        }
-
-
-        if (empty($idsList)) {
-            $this->_logger->debug("MusicSimilarity::getSimilar local empty");
-            return $this->getSimilarSync(
-                $artist, $musicTitle, $artistMusicTitleIdList
-            );
-        }
-
-        $completeIdsList = array();
-        foreach ($artistMusicTitleIdList as $artistMusicTitleId) {
-            $completeIdsList[] = $artistMusicTitleId;
-        }
-        $completeIdsList = array_merge($completeIdsList, $idsList);
-
-        $similarityMatrixResponse = $this->getSimilarityMatrix(
-            $completeIdsList
-        );
-
-        $this->_logger->debug(
-            "MusicSimilarity::getSimilar local quality{ size: "
-            . $similarityMatrixResponse[1] . ". non-zero: "
-            . $similarityMatrixResponse[2]
-        );
 
         $ret = array();
-        if (
-            $similarityMatrixResponse[1] < 20 ||
-            $similarityMatrixResponse[2] < 0.03
-        ) {
+        if (empty($similarList)) {
             $ret = $this->getSimilarSync(
-                $artist, $musicTitle, $artistMusicTitleIdList
+                $artist, $musicTitle, $type, $artistMusicTitleIdList
             );
         } else {
-            $artistAndMusicTitleList = $this->_artistMusicTitleModel
-                ->fetchAllArtistAndMusicTitle($idsList);
-
-            // If local information is used, then there must be a task to
-            // refresh current data.
-            $this->_taskRequestModel->addTask(
-                'SearchSimilar', $artist, $musicTitle, $type
+            $completeIdList = array_merge(
+                array($artistMusicTitleId),
+                $similarList,
+                $artistMusicTitleIdList
             );
 
-            $ret = array(
-                $artistAndMusicTitleList,
-                $similarityMatrixResponse[0]
+
+            $similarityMatrixResponse = $this->_getSimilarityMatrix(
+                $completeIdList
             );
+
+            list($completeIdList, $translationList) = $this->_insertAlbumIds($completeIdList);
+
+            $similarityMatrixResponse[0] = $this->_applyListTranslation($similarityMatrixResponse[0], $translationList);
+
+            $this->_logger->debug(
+                "MusicSimilarity::getSimilar local quality{ size: "
+                . $similarityMatrixResponse[1] . ". non-zero: "
+                . $similarityMatrixResponse[2]
+            );
+
+            if (
+                ($similarityMatrixResponse[1] < 20 ||
+                $similarityMatrixResponse[2] < 0.03) &&
+                $mayUseSync
+            ) {
+                $ret = $this->getSimilarSync(
+                    $artist, $musicTitle, $type, $artistMusicTitleIdList
+                );
+            } else {
+                $objList = $this->_fetchObjList($completeIdList);
+
+                // If local information is used, then there must be a task to
+                // refresh current data.
+                $this->_logger->debug("MusicSimilarity::getSimilar $artist $musicTitle " . print_r($type, true));
+                $this->_taskRequestModel->addTask(
+                    'SearchSimilar', $artist, $musicTitle, $type
+                );
+
+                $ret = array(
+                    $objList,
+                    $similarityMatrixResponse[0]
+                );
+            }
         }
 
         return $ret;
     }
 
+    /**
+     * getSimilarSync The sync version of getSimilar. It just request lastfm,
+     * record the results on database and call getSimilar.
+     */
     public function getSimilarSync(
-        $artist, $musicTitle, $artistMusicTitleIdList = array()
+        $artist, $musicTitle, $type, $artistMusicTitleIdList = array()
     )
     {
         $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
@@ -235,36 +331,61 @@ class MusicSimilarity extends DZend_Model
             );
 
             if (null !== $sArtistMusicTitleId) {
-                $this->_musicSimilarityModel->insert(
+                $this->insert(
                     $artistMusicTitleId,
                     $sArtistMusicTitleId,
                     $row->similarity
                 );
             }
+        }
 
-            if (
-                array_search(
-                    $sArtistMusicTitleId, $artistMusicTitleIdList
-                ) === false
-            ) {
-                $list[] = array(
-                    'artist' => $row->artist,
-                    'musicTitle' => $row->musicTitle,
-                    'artistMusicTitleId' => $sArtistMusicTitleId
-                );
+        return $this->getSimilar($artist, $musicTitle, $type, $artistMusicTitleIdList, false);
+    }
 
-                $artistMusicTitleIdList[] = $sArtistMusicTitleId;
+    protected function _insertAlbumIds($artistMusicTitleIdList)
+    {
+        $translationList = array();
+        $albumAMTRowSet = $this->_albumHasArtistMusicTitleDb->fetchAllByArtistMusicTitleIdGrouped($artistMusicTitleIdList);
+
+        $albumIdCount = array();
+        foreach ($albumAMTRowSet as $row) {
+            if (!array_key_exists($row->albumId, $albumIdCount)) {
+                $albumIdCount[$row->albumId] = array();
+            }
+            $albumIdCount[$row->albumId][] = $row->artistMusicTitleId;
+        }
+        $freq = array();
+        for ($i = 0; $i <= count($artistMusicTitleIdList); $i++) {
+            $freq[$i] = array();
+        }
+
+        foreach ($albumIdCount as $albumId => $amtList) {
+            $freq[count($amtList)][] = $albumId;
+        }
+
+        $maxReplacements = (int) count($artistMusicTitleIdList) / 2;
+
+        for ($i = count($artistMusicTitleIdList); $i >= 0; $i--) {
+            if ($maxReplacements <= 0) {
+                break;
+            }
+
+            foreach ($freq[$i] as $albumId) {
+                $translationList[$albumId] = array();
+                foreach ($albumIdCount[$albumId] as $amtId) {
+                    $translationList[$albumId][] = $amtId;
+                    if (($key = array_search($amtId, $artistMusicTitleIdList)) !== false) {
+                        unset($artistMusicTitleIdList[$key]);
+                        $maxReplacements--;
+                    }
+                }
+                $artistMusicTitleIdList[] = -$albumId;
+                if ($maxReplacements <= 0) {
+                    break;
+                }
             }
         }
 
-        $similarityMatrixResponse = $this->_musicSimilarityModel
-        ->getSimilarityMatrix(
-            $artistMusicTitleIdList
-        );
-
-        return array(
-            $list,
-            $similarityMatrixResponse[0]
-        );
+        return array($artistMusicTitleIdList, $translationList);
     }
 }
