@@ -288,7 +288,6 @@ IncBoardBoard.prototype.flushDraw = function() {
     newTop = (1 - factor) * this.cellSizeY * this.rows * 0.5;
     newLeft = ((1 - factor) * this.cellSizeX * this.cols * 0.5);
 
-    $('#incboard').css('height', (newCellSizeY * this.rows) + 'px');
     $('#incboard').css('width', (newCellSizeX * this.cols) + 'px');
     $('#incboard').css('top', newTop + 'px');
     $('#incboard').css('left', newLeft + 'px');

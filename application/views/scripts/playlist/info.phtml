@@ -10,7 +10,7 @@
             <?= $this->t('Type') . ': ' . $this->t(ucfirst($this->collection->getType())); ?>
         </div>
         <div class="info">
-            <?= $this->t('Duration') . ': ' . $this->collection->playTime(); ?>
+            <?= $this->t('Duration') . ': ' . $this->secsToTime($this->collection->playTime()); ?>
         </div>
     </div>
     <table class="tracklist table table-striped">
@@ -24,7 +24,7 @@
                 <td><img src="<?= $track['cover']; ?>"/></td>
                 <td>
                     <div class="info"><?=  $this->t('Name') . ': ' . $track['title']; ?></div>
-                    <div class="info"><?= $this->t('Duration') . ': ' . $track['duration']; ?></div>
+                    <div class="info"><?= $this->t('Duration') . ': ' . $this->secsToTime($track['duration']); ?></div>
                 </td>
             </tr>
         <? endforeach; ?>
