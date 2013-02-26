@@ -24,6 +24,13 @@
 class Youtube extends DZend_Model
 {
     private $_baseUrl = 'https://gdata.youtube.com/feeds/api/videos?';
+    private $_cache;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_cache = Zend_Registry::get('cache');
+    }
 
     public function search($q, $limit = 9, $offset = 1, $complement = array())
     {
@@ -33,12 +40,19 @@ class Youtube extends DZend_Model
                 'start-index=' . (int) $offset
                 );
 
-        $url = $this->_baseUrl . implode('&', $args);
-        $this->_logger->debug("Youtube::search - url: $url");
-        $xml = file_get_contents($url);
-        $xml = str_replace(
-            array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
-        );
+        $key = sha1('Youtube::search' . implode(',', $args));
+
+        if (($xml = $this->_cache->load($key)) === false) {
+            $url = $this->_baseUrl . implode('&', $args);
+            $this->_logger->debug("Youtube::search - url: $url");
+            $xml = file_get_contents($url);
+            $xml = str_replace(
+                array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
+            );
+            $this->_cache->save($xml, $key);
+        } else {
+            $this->_logger->debug("Youtube::search cache hit - url: " . implode('&', $args));
+        }
 
         $xmlDoc = new DOMDocument();
 
