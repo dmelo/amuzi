@@ -187,6 +187,19 @@ class Playlist extends DZend_Model
     }
 
     /**
+     * findRowById Find a row, given it's ID.
+     *
+     * @param int $id Row ID
+     * @return Returns the asked row.
+     */
+    public function findRowById($id)
+    {
+        return $this->_playlistDb->findRowByUserIdAndId(
+            $this->_session->user->id, $id
+        );
+    }
+
+    /**
      * setNewName
      *
      * @param string $name Current playlist's name.
@@ -324,17 +337,6 @@ class Playlist extends DZend_Model
         } catch(Zend_Exception $e) {
             return $e->getMessage();
         }
-    }
-
-    /**
-     * findRowById Find a row, given it's ID.
-     *
-     * @param int $id Row ID
-     * @return Returns the asked row.
-     */
-    public function findRowById($id)
-    {
-        return $this->_playlistDb->findRowById($id);
     }
 
     /**

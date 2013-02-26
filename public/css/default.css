@@ -380,12 +380,6 @@ ul.ui-autocomplete {
     min-height: 115px;
 }
 
-.music-manager#playlists a.loadModal img {
-    padding-top: 25.5px;
-    padding-right: 28px;
-    padding-left: 28px;
-}
-
 .side-view-thumb {
     position: relative;
     float: right;
@@ -428,4 +422,22 @@ dd {
     margin-right: 482px;
     overflow-y: scroll;
 
+}
+
+.collection-info .caption, .collection-info .cover {
+    display: inline-block;
+}
+
+.collection-info .cover img {
+    height: 97px;
+}
+
+.collection-info .caption {
+    padding-left: 20px;
+    font-weight: bold;
+
+}
+
+.collection-info table img {
+    height: 50px;
 }

@@ -212,6 +212,14 @@ class PlaylistController extends DZend_Controller_Action
         $this->_logger->debug(print_r($this->view->playlist, true));
     }
 
+    public function infoAction()
+    {
+        if (($id = $this->_request->getParam('id')) !== false
+            && isset($this->_session->user)) {
+                $this->view->collection = $this->_playlistModel->findRowById($id);
+        }
+    }
+
     public function setrepeatAction()
     {
         $message = null;
@@ -360,27 +368,5 @@ class PlaylistController extends DZend_Controller_Action
     public function listAction()
     {
         $this->view->playlistRowSet = $this->_playlistModel->fetchAllUsers();
-    }
-
-    /**
-     * infoAction fetch detailed information about an specific playlist.
-     *
-     * @return void
-     */
-    public function infoAction()
-    {
-        if (($playlistId = $this->_request->getParam('playlistId')) !== null) {
-            $this->view->playlistRow = $this->_playlistModel->findRowById(
-                $playlistId
-            );
-        } elseif (
-            ($playlistName = $this->_request->getParam('playlistName')) !== null
-        ) {
-            $this->view->playlistRow = $this->_playlistModel->findRowByName(
-                $playlistName
-            );
-        } else {
-            $this->view->message = array('Wrong call', 'error');
-        }
     }
 }

@@ -123,7 +123,7 @@
     top: -90px;
 }
 
-.item-square .button.play img {
+.item-square .button img {
     width: 30px;
     opacity: 0.65;
     z-index: 100000;
@@ -136,7 +136,17 @@
     margin-left: -15px;
     position: absolute;
 }
-.item-square .button.play img:hover {
+
+.item-square .button.info {
+    top: 100%;
+    margin-top: -30px;
+    left: 0%;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+}
+
+.item-square .button img:hover {
     opacity: 1.0;
 }
 

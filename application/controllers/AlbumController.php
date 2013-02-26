@@ -37,6 +37,31 @@ class AlbumController extends DZend_Controller_Action
         }
     }
 
+    public function infoAction()
+    {
+        if (($id = $this->_request->getParam('id')) !== false) {
+            $collection = $this->view->collection = $this->_albumModel->findRowById($id);
+            $c = new DZend_Chronometer();
+
+            $c->start();
+            $collection->getCoverName();
+            $c->stop();
+            $this->_logger->debug("AlbumController::info covername " . $c->get());
+
+            foreach (array(
+                'getCoverName', 'getType', 'playTime', 'getTrackListAsArray'
+                ) as $f) {
+                $c->start();
+                $collection->$f();
+                $c->stop();
+                $this->_logger->debug("AlbumController::info $f " . $c->get());
+            }
+
+
+            $this->renderScript('playlist/info.phtml');
+        }
+    }
+
     public function listAction()
     {
         $this->view->playlistRowSet = $this->_albumModel->findAllFromUser();
