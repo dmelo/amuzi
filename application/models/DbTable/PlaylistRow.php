@@ -146,7 +146,7 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row implements DbTable_iTrackCo
         );
 
         $row = $this->_playlistDb->fetchRow($select);
-        return $row ? $row->cover : '/img/playlist64.png';
+        return $row ? $row->cover : '/img/playlist120x90.png';
     }
 
     public function getType()

@@ -109,24 +109,28 @@
 }
 
 .item-square .name {
-    position: relative;
+    position: absolute;
     background-color: white;
     background-color: rgba(255, 255, 255, 0.85);
     opacity: 0.0;
 }
 
 .item-square[albumid] .name {
-    top: -160px;
+    top: 0;
 }
 
 .item-square[playlistid] .name {
-    top: -90px;
+    top: 0;
 }
 
 .item-square .button img {
     width: 30px;
     opacity: 0.65;
     z-index: 100000;
+}
+
+.item-square .button.info img {
+    width: 24px;
 }
 
 .item-square .button.play {
@@ -139,11 +143,11 @@
 
 .item-square .button.info {
     top: 100%;
-    margin-top: -30px;
+    margin-top: -24px;
     left: 0%;
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
 }
 
 .item-square .button img:hover {
