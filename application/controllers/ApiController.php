@@ -301,7 +301,7 @@ class ApiController extends DZend_Controller_Action
         $ret = array();
         foreach ($resultSet as $row) {
             $track = $this->_getMusic($row->artist, $row->musicTitle);
-            $track['cover'] = $row->cover;
+            $track['cover'] = '' === $row->cover ? '/img/album.png' : $row->cover;
             $ret[] = $track;
         }
 

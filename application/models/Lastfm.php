@@ -83,6 +83,7 @@ class Lastfm extends DZend_Model
     {
         $artist = $track->getElementsByTagName('artist')->item(0);
         $name = $artist->getElementsByTagName('name');
+        $this->_logger->debug("Lastfm::_processResponseSearch dd $artist - $name");
         $this->_logger->debug('Lastfm::_processResponseSearch -- ' . get_class($name));
 
         if (get_class($name) === 'DOMNodeList' && $name->item(0) !== null) {
@@ -137,6 +138,8 @@ class Lastfm extends DZend_Model
             ->nodeValue;
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
+
+        $this->_logger->debug("Lastfm::_processResponseGetTop $artist $musicTitle $cover --> {$track->nodeValue}");
 
         return new LastfmEntry($name, $cover, $artist, $musicTitle);
     }

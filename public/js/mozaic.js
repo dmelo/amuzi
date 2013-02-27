@@ -4,8 +4,8 @@ function calculateMusicSquareSize() {
 
     musicSquareWidth--;
 
-    $('.music-square:not(.incboard-cell)').css('width', musicSquareWidth);
-    $('.music-square:not(.incboard-cell)').css('height', musicSquareWidth);
+    $('.music-square:not(.incboard-cell), .music-square:not(.incboard-cell) .cover img').css('width', musicSquareWidth);
+    $('.music-square:not(.incboard-cell), .music-square:not(.incboard-cell) .cover img').css('height', musicSquareWidth);
 }
 
 $(document).ready(function() {
