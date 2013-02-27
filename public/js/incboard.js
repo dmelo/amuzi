@@ -350,7 +350,6 @@ IncBoard.prototype.incrementSimilar = function() {
 
             console.log('INCREMENTING ' + artist + " - " + musicTitle);
             this.incrementSimilarRunning = true;
-            /*
             $.post('/api/searchsimilar', {
                 q: artist + ' - ' + musicTitle,
                 artist: artist,
@@ -363,7 +362,6 @@ IncBoard.prototype.incrementSimilar = function() {
             }, 'json').error(function() {
                 self.incrementSimilarRunning = false;
             });
-            */
         }
     }
 };

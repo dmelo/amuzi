@@ -141,7 +141,6 @@
     };
 
     $.ResultSet.prototype.getSimilarTracks = function (artist, musicTitle) {
-        /*
         $.get('/api/searchsimilar', {
             artist: artist,
             musicTitle: musicTitle,
@@ -151,7 +150,6 @@
                 resultSet.appendTable(v, 'music');
             });
         }, 'json');
-        */
     };
 
     $(document).ready(function () {
