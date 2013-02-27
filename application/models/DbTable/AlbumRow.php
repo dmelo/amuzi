@@ -46,9 +46,35 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
         return $ret;
     }
 
-    public function getTrackListAsArray()
+    public function getTrackListAsArray($sync = false)
     {
-        return $this->trackList;
+        $ret = array();
+        $artistMusicTitleModel = new ArtistMusicTitle();
+        $musicTrackLinkModel = new MusicTrackLink();
+
+        foreach ($this->artistMusicTitleList as $artistMusicTitleId) {
+            $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId, $sync);
+            $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
+            if (null === $trackRow) {
+                $track = array(
+                    'artist' => $artistMusicTitleRow->getArtistName(),
+                    'musicTitle' => $artistMusicTitleRow->getMusicTitleName()
+                );
+            } else {
+                $track = $trackRow->getArray();
+                $track['title'] = $artistMusicTitleRow->getArtistName() . ' - ' . $artistMusicTitleRow->getMusicTitleName();
+                $track['artist_music_title_id'] = $artistMusicTitleId;
+            }
+
+            $ret[] = $track;
+        }
+
+        return $ret;
+    }
+
+    public function getTrackListSync()
+    {
+        return $this->getTrackListAsArray(true);
     }
 
     public function playTime()
@@ -83,7 +109,6 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function __get($name)
     {
-        $musicTrackLinkModel = new MusicTrackLink();
         $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
 
         if ('artist' === $name) {
@@ -101,27 +126,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
             return $ret;
         } elseif ('trackList' === $name) {
-            $ret = array();
-            $artistMusicTitleModel = new ArtistMusicTitle();
-
-            foreach ($this->artistMusicTitleList as $artistMusicTitleId) {
-                $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId);
-                $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
-                if (null === $trackRow) {
-                    $track = array(
-                        'artist' => $artistMusicTitleRow->getArtistName(),
-                        'musicTitle' => $artistMusicTitleRow->getMusicTitleName()
-                    );
-                } else {
-                    $track = $trackRow->getArray();
-                    $track['title'] = $artistMusicTitleRow->getArtistName() . ' - ' . $artistMusicTitleRow->getMusicTitleName();
-                    $track['artist_music_title_id'] = $artistMusicTitleId;
-                }
-
-                $ret[] = $track;
-            }
-
-            return $ret;
+            return $this->getTrackListAsArray(); // Assynchronous.
         } else {
             return parent::__get($name);
         }

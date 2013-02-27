@@ -121,7 +121,7 @@ class MusicTrackLink extends DZend_Model
             $rowSet = $this->_musicTrackLinkDb->findByArtistMusicTitleId(
                 $artistMusicTitleId
             );
-            if (count($rowSet) == 0) {
+            if (count($rowSet) == 0 && $sync) {
                 // Look for it on Youtube.
                 $resultSet = $this->_youtubeModel->search(
                     "${artist} - ${musicTitle}", 5, 1, array(

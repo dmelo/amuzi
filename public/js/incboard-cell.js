@@ -28,10 +28,6 @@ function IncBoardCell() {
     this.col = null;
 }
 
-IncBoardCell.prototype.setContent = function(v) {
-    this.content = v;
-}
-
 /**
  * Set position of the cell.
  * Can be used as setPos(2, 3) or setPos([2, 3]).
@@ -49,8 +45,8 @@ IncBoardCell.prototype.getPos = function() {
     return [this.col, this.row];
 }
 
-IncBoardCell.prototype.setContent = function(content) {
-    this.content = content;
+IncBoardCell.prototype.setContent = function(v) {
+    this.content = v;
 }
 
 IncBoardCell.prototype.getContent = function() {
@@ -72,7 +68,7 @@ IncBoardCell.prototype.getHtml = function() {
     ret.find('.cover').addClass('incboard-img');
     ret.attr('data-content', v.title + ('duration' in v ? ' (' + resultSet.secondsToHMS(v.duration) + ')' : ''));
     ret.attr('data-trigger', 'hover');
-    ret.attr('id', v.artistMusicTitleId);
+    ret.attr('id', 'artistMusicTitleId' in v ? v.artistMusicTitleId : v.id); // in case it is an album, get the album id.
     ret.find('.description').remove();
     ret.popover({placement: 'top'});
     return ret;

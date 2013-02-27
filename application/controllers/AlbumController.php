@@ -14,6 +14,7 @@ class AlbumController extends DZend_Controller_Action
             $this->view->output = $this->
                 _userListenAlbumModel->insert($albumId);
             $albumRow = $this->_albumModel->findRowById($albumId);
+            $albumRow->getTrackListSync();
             foreach ($albumRow->trackList as $track) {
                 if (2 === count($track)) {
                     $artist = $track['artist'];

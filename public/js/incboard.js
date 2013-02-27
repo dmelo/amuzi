@@ -250,39 +250,45 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
     }
 }
 
+/**
+ *  Insert the object (music or album) on the incBoard.
+ */
 IncBoard.prototype.insert = function(v) {
-    if (this.ibb.getByAMTId(v.artistMusicTitleId) !== undefined) {
-        console.log("Trying to insert " + v.artistMusicTitleId + " that already is on incBoard. Discarding it...");
-        return false;
-    }
-
-    // Find the most similar element already on incBoard.
     var maxSimilarity = 0,
         mostSimilar = null,
         nSwitches = 0,
-        self = this;
+        self = this,
+        ret;
 
-    this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
-        if(artistMusicTitleId in self.similarity && v.artistMusicTitleId in self.similarity[artistMusicTitleId] && maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
-            maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
-            mostSimilar = e;
-            nSwitches++;
-        }
-    });
 
-    if(null !== mostSimilar) {
-        this.ibb.insert(v, this.ibb.getPos(mostSimilar.artistMusicTitleId));
-        this.resolveConflict(mostSimilar, v, []);
+    if (this.ibb.getByAMTId(v.artistMusicTitleId) !== undefined) {
+        console.log("Trying to insert " + v.artistMusicTitleId + " that already is on incBoard. Discarding it...");
+        ret = false;
     } else {
-        this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
+        // Find the most similar element already on incBoard.
+        this.ibb.getAllMusic().forEach(function(e, artistMusicTitleId) {
+            if(artistMusicTitleId in self.similarity && v.artistMusicTitleId in self.similarity[artistMusicTitleId] && maxSimilarity < self.similarity[artistMusicTitleId][v.artistMusicTitleId]) {
+                maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
+                mostSimilar = e;
+                nSwitches++;
+            }
+        });
+
+        if(null !== mostSimilar) {
+            this.ibb.insert(v, this.ibb.getPos(mostSimilar.artistMusicTitleId));
+            this.resolveConflict(mostSimilar, v, []);
+        } else {
+            this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
+        }
+
+        console.log("inserted " + v.artistMusicTitleId);
+        this.ibb.removeOutOfBorder();
+        this.ibb.centralizeItems();
+        this.ibb.flushDraw();
+        ret = true;
     }
 
-    console.log("inserted " + v.artistMusicTitleId);
-    this.ibb.removeOutOfBorder();
-    this.ibb.centralizeItems();
-    this.ibb.flushDraw();
-
-    return true;
+    return ret;
 }
 
 IncBoard.prototype.searchMusic = function(set, num, callback) {
@@ -344,6 +350,7 @@ IncBoard.prototype.incrementSimilar = function() {
 
             console.log('INCREMENTING ' + artist + " - " + musicTitle);
             this.incrementSimilarRunning = true;
+            /*
             $.post('/api/searchsimilar', {
                 q: artist + ' - ' + musicTitle,
                 artist: artist,
@@ -356,6 +363,7 @@ IncBoard.prototype.incrementSimilar = function() {
             }, 'json').error(function() {
                 self.incrementSimilarRunning = false;
             });
+            */
         }
     }
 };

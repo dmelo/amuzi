@@ -141,14 +141,17 @@
     };
 
     $.ResultSet.prototype.getSimilarTracks = function (artist, musicTitle) {
+        /*
         $.get('/api/searchsimilar', {
             artist: artist,
-            musicTitle: musicTitle
+            musicTitle: musicTitle,
+            type: 'track'
         }, function (data) {
             $.each(data, function (i, v) {
                 resultSet.appendTable(v, 'music');
             });
         }, 'json');
+        */
     };
 
     $(document).ready(function () {

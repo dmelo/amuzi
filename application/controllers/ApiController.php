@@ -153,7 +153,7 @@ class ApiController extends DZend_Controller_Action
         $ret = null;
 
         $trackRow = $this->_musicTrackLinkModel->getTrack(
-            $artist, $musicTitle
+            $artist, $musicTitle, true
         );
 
         if (null !== $trackRow) {
