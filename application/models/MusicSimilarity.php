@@ -211,12 +211,17 @@ class MusicSimilarity extends DZend_Model
     protected function _applyListTranslationToList($objList, $translationList)
     {
         foreach ($translationList as $albumId => $amtIdList) {
+            $first = true;
             foreach ($amtIdList as $amtId) {
                 if (($key = array_search($amtId, $objList)) !== false) {
-                    unset($objList[$key]);
+                    if ($first) { // The album Id will take the place of one of the AMTIds it is replacing.
+                        $objList[$key] = -$albumId;
+                        $first = false;
+                    } else {
+                        unset($objList[$key]);
+                    }
                 }
             }
-            $objList[] = -$albumId;
         }
 
         return $objList;
@@ -226,6 +231,7 @@ class MusicSimilarity extends DZend_Model
     {
         $amtIdList = array();
         $albumIdList = array();
+        $ret = array();
 
         foreach ($idList as $id) {
             if ($id < 0) {
@@ -239,14 +245,31 @@ class MusicSimilarity extends DZend_Model
         $amtList = empty($amtIdList) ? array() : $this->_artistMusicTitleModel->fetchAllArtistAndMusicTitle($amtIdList);
         foreach ($amtList as &$row) {
             $row['type'] = 'track';
+            // $row['objId'] = $row['artistMusicTitleId'];
         }
 
         $albumList = empty($albumIdList) ? array() : $this->_albumModel->fetchAllArtistAndAlbum($albumIdList);
         foreach ($albumList as &$row) {
             $row['type'] = 'album';
+            // $row['objId'] = $row['id'];
         }
 
         return array_merge($amtList, $albumList);
+    }
+
+    public function _replaceAlbumIdByAMTIds($objIds)
+    {
+        $ret = array();
+        $albumIdList = array();
+        foreach ($objIds as $id) {
+            if ($id > 0) {
+                $ret[] = $id;
+            } else {
+                $albumIdList[] = -$id;
+            }
+        }
+
+        return array_merge($ret, $this->_albumHasArtistMusicTitleDb->fetchAllAMTIdsFromAlbumIdList($albumIdList));
     }
 
     /**
@@ -255,28 +278,32 @@ class MusicSimilarity extends DZend_Model
      * element is the similarity matrix.
      */
     public function getSimilar(
-        $artist, $musicTitle, $type, $artistMusicTitleIdList = array(), $mayUseSync = true
+        $artist, $musicTitle, $type, $extObjIdList = array(), $mayUseSync = true
     )
     {
+        // TODO: solve for 'album' === $type.
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
             $artist, $musicTitle
         );
+
+        // Get the AMTIds that are not yet on $extObjIdList neither is on
+        // AMTIds owned by the albums.
         $similarList = $this->_musicSimilarityDb->getSimilar(
-            $artist, $musicTitle, $artistMusicTitleIdList
+            $artist, $musicTitle, $this->_replaceAlbumIdByAMTIds($extObjIdList)
         );
 
         $ret = array();
+        // If nothing is found, use sync.
         if (empty($similarList)) {
             $ret = $this->getSimilarSync(
-                $artist, $musicTitle, $type, $artistMusicTitleIdList
+                $artist, $musicTitle, $type, $extObjIdList
             );
         } else {
             $completeIdList = array_merge(
                 array($artistMusicTitleId),
                 $similarList,
-                $artistMusicTitleIdList
+                $extObjIdList
             );
-
 
             $similarityMatrixResponse = $this->_getSimilarityMatrix(
                 $completeIdList
@@ -286,7 +313,7 @@ class MusicSimilarity extends DZend_Model
             $completeIdList = array_merge(
                 array($artistMusicTitleId),
                 $similarList,
-                $artistMusicTitleIdList
+                $extObjIdList
             );
 
 
@@ -305,7 +332,7 @@ class MusicSimilarity extends DZend_Model
                 $mayUseSync
             ) {
                 $ret = $this->getSimilarSync(
-                    $artist, $musicTitle, $type, $artistMusicTitleIdList
+                    $artist, $musicTitle, $type, $extObjIdList
                 );
             } else {
                 $objList = $this->_fetchObjList($completeIdList);

@@ -144,6 +144,8 @@ class ApiController extends DZend_Controller_Action
         }
 
         $ret = $albumRow->getArray();
+        $ret['objId'] = $ret['id'];
+        $ret['type'] = 'album';
 
         return $ret;
     }
@@ -166,6 +168,8 @@ class ApiController extends DZend_Controller_Action
                         ->insert($artist, $musicTitle)
                 )
             );
+            $ret['objId'] = $ret['artistMusicTitleId'];
+            $ret['type'] = 'track';
         }
 
         return $ret;
