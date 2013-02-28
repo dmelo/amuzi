@@ -39,7 +39,6 @@ IncBoardBoard.prototype.init = function () {
 };
 
 IncBoardBoard.prototype.clean = function () {
-    var cell = new IncBoardCell();
     this.listByAMTId = [];
     this.listByPos = [];
     this.size = 0;
@@ -62,26 +61,29 @@ IncBoardBoard.prototype.getRows = function () {
     return this.rows;
 };
 
+// TODO: replace artistMusicTitleId to objId
 IncBoardBoard.prototype.insert = function (music, pos) {
     var ret,
         cell = new IncBoardCell(),
-        intPos;
+        intPos = this.posToInt(pos);
 
     if ('object' === typeof pos && 'object' === typeof music && -1 === this.listByAMTId.indexOf(music.artistMusicTitleId)) {
         if (!('artistMusicTitleId' in music)) {
-            music.artistMusicTitleId = -parseInt(music.id);
+            music.artistMusicTitleId = -parseInt(music.id, 10);
+        } else {
+            music.artistMusicTitleId = parseInt(music.artistMusicTitleId, 10);
         }
-        music.artistMusicTitleId = parseInt(music.artistMusicTitleId, 10);
-        intPos = this.posToInt(pos);
         cell.setContent(music);
         cell.setPos(pos);
 
+        // Fill listByAMTId
         this.listByAMTId[music.artistMusicTitleId] = cell;
 
         if (!(intPos in this.listByPos)) {
             this.listByPos[intPos] = [];
         }
 
+        // Fill listByPos
         this.listByPos[intPos][music.artistMusicTitleId] = cell;
 
         ret = true;
@@ -228,10 +230,7 @@ IncBoardBoard.prototype.centralizeItems = function() {
         }
     });
 
-    if (isEmpty) {
-        this.log.debug("Nothing to centralize");
-        return;
-    } else {
+    if (!isEmpty) {
         var shiftX = parseInt(((this.cols - this.maxX - 1) - this.minX) / 2);
         var shiftY = parseInt(((this.rows - this.maxY - 1) - this.minY) / 2);
 
@@ -243,8 +242,6 @@ IncBoardBoard.prototype.centralizeItems = function() {
                 pos[1] += shiftY;
                 self.setPos(cell.getContent().artistMusicTitleId, pos);
             });
-        } else {
-            self.log.debug("shift: (" + shiftX + ", " + shiftY + ")");
         }
     }
 };
@@ -271,7 +268,7 @@ IncBoardBoard.prototype.flushDraw = function() {
     realWidth = this.maxX - (this.minX - 1) + 1;
     factorY = this.rows / realHeight;
     factorX = this.cols / realWidth;
-    self.log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ') cols: ' + this.cols + ", rows: " + this.rows);
+    // self.log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ') cols: ' + this.cols + ", rows: " + this.rows);
     factor = Math.min(factorX, factorY);
 
     if (factor * this.cellSizeX > 120 || factor * this.cellSizeY > 90 || factor < 0) {
@@ -433,13 +430,16 @@ IncBoardBoard.prototype.fsckReport = function() {
 
 IncBoardBoard.prototype.fsck = function () {
     var counter = [],
-        self = this;
+        self = this,
+        ret = true;
 
+    console.log('kkkkkk');
     this.listByAMTId.forEach(function (item, id) {
         counter[id] = 1;
     });
 
     var conflictedCells = 0;
+    console.log(this.listByPos);
     this.listByPos.forEach(function (posList, pos) {
         var count = 0;
         posList.forEach(function (item, id) {
@@ -448,12 +448,13 @@ IncBoardBoard.prototype.fsck = function () {
 
         if (count > 1) {
             conflictedCells++;
-            if (conflictedCells >= 2) {
+            if (conflictedCells >= 2 || count > 2) {
                 var str = "There is " + conflictedCells + " conflicted cells. There is " + count + " elements on pos " + pos + ": ";
                 posList.forEach(function (item, id) {
                     str += ", " + id;
                 });
-                this.log.debug(str);
+                self.log.debug(str);
+                ret = false;
             }
         }
 
@@ -477,19 +478,19 @@ IncBoardBoard.prototype.fsck = function () {
 
         var intPos = self.posToInt(cell.getPos());
         if (!(intPos in self.listByPos)) {
-            this.log.debug("merda 1");
-            this.log.debug(index);
-            this.log.debug(self.listByPos[intPos]);
+            self.log.debug("merda 1");
+            self.log.debug(index);
+            self.log.debug(self.listByPos[intPos]);
             throw new Error("merda 1");
         }
 
         if (!(cell.getContent().artistMusicTitleId in self.listByPos[self.posToInt(cell.getPos())])) {
-            this.log.debug("merda 2");
-            this.log.debug(cell);
-            this.log.debug(self);
+            self.log.debug("merda 2");
+            self.log.debug(cell);
+            self.log.debug(self);
             throw new Error("merda 2");
         }
     });
 
-    return true;
+    return ret;
 };

@@ -154,7 +154,7 @@ class MusicSimilarity extends DZend_Model
         return array($matrix, $total, $quality);
     }
 
-    protected function _applyListTranslation($similarityMatrix, $translationList)
+    protected function _applyListTranslationToMatrix($similarityMatrix, $translationList)
     {
         $amtList = array();
         foreach ($similarityMatrix as $id => $cols) {
@@ -206,6 +206,20 @@ class MusicSimilarity extends DZend_Model
         }
 
         return $similarityMatrix;
+    }
+
+    protected function _applyListTranslationToList($objList, $translationList)
+    {
+        foreach ($translationList as $albumId => $amtIdList) {
+            foreach ($amtIdList as $amtId) {
+                if (($key = array_search($amtId, $objList)) !== false) {
+                    unset($objList[$key]);
+                }
+            }
+            $objList[] = -$albumId;
+        }
+
+        return $objList;
     }
 
     protected function _fetchObjList($idList)
@@ -268,9 +282,16 @@ class MusicSimilarity extends DZend_Model
                 $completeIdList
             );
 
-            list($completeIdList, $translationList) = $this->_insertAlbumIds($completeIdList);
+            list($similarList, $translationList) = $this->_insertAlbumIds($similarList);
+            $completeIdList = array_merge(
+                array($artistMusicTitleId),
+                $similarList,
+                $artistMusicTitleIdList
+            );
 
-            $similarityMatrixResponse[0] = $this->_applyListTranslation($similarityMatrixResponse[0], $translationList);
+
+            $similarityMatrixResponse[0] = $this->_applyListTranslationToMatrix($similarityMatrixResponse[0], $translationList);
+            $completeIdList = $this->_applyListTranslationToList($completeIdList, $translationList);
 
             $this->_logger->debug(
                 "MusicSimilarity::getSimilar local quality{ size: "

@@ -27,6 +27,7 @@ function  IncBoard() {
     this.ibb = new IncBoardBoard();
     this.stochasticLength = 15;
     this.clean();
+    this.log = new Log();
 }
 
 IncBoard.prototype.clean = function () {
@@ -186,6 +187,8 @@ IncBoard.prototype.calcError = function(v, musicList) {
 
 IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCells) {
     var self = this;
+
+    self.log.debug("resolveConflict " + mostSimilar.artistMusicTitleId + " " + newMusic.artistMusicTitleId + ": " + visitedCells);
     if ('undefined' === typeof mostSimilar || 'undefined' === typeof newMusic) {
         // console.log(visitedCells);
     }
@@ -254,7 +257,7 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
  *  Insert the object (music or album) on the incBoard.
  */
 IncBoard.prototype.insert = function(v) {
-    var maxSimilarity = 0,
+    var maxSimilarity = -1,
         mostSimilar = null,
         nSwitches = 0,
         self = this,
@@ -271,6 +274,10 @@ IncBoard.prototype.insert = function(v) {
                 maxSimilarity = self.similarity[artistMusicTitleId][v.artistMusicTitleId];
                 mostSimilar = e;
                 nSwitches++;
+            } else if (!(artistMusicTitleId in self.similarity)) {
+                self.log.debug("AAAAA artistMusicTitleId not in similarity " + artistMusicTitleId);
+            } else if (!(v.artistMusicTitleId in self.similarity[artistMusicTitleId])) {
+                self.log.debug("AAAAA v.artistMusicTitleId not in similarity[artistMusicTitleId] #" + v.artistMusicTitleId + "# #" + artistMusicTitleId + "#");
             }
         });
 
@@ -297,6 +304,8 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
         uri,
         params;
 
+    console.log('searchMusic ');
+    console.log(m);
     console.log('searchMusic -- num: ' + num + '. length: ' + set.length);
     if (num > 0 && 'undefined' !== typeof m) {
         if ('type' in m && 'album' === m.type) {

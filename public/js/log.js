@@ -7,26 +7,27 @@ function Log() {
 
     Log.prototype.singletonInstance = this;
 
-    var enabledList = ['DEBUG', 'INFO', 'WARN', 'ERROR'],
-        getDateTime = function () {
-            var now = new Date(),
-                y = now.getFullYear(),
-                m = now.getMonth() + 1,
-                d = now.getDate(),
-                h = now.getHours(),
-                M = now.getMinutes(),
-                s = now.getSeconds();
+    var enabledList = ['DEBUG', 'INFO', 'WARN', 'ERROR'];
 
-            return y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s;
-        };
+    function getDateTime() {
+        var now = new Date(),
+            y = now.getFullYear(),
+            m = now.getMonth() + 1,
+            d = now.getDate(),
+            h = now.getHours(),
+            M = now.getMinutes(),
+            s = now.getSeconds();
 
-    this.mainLog = function (msg, type) {
+        return y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s;
+    }
+
+    function mainLog(msg, type) {
         if (enabledList.indexOf(type) !== -1) {
             console.log(getDateTime() + " " + type + ": " + msg);
         }
-    };
+    }
 
-    this.switchType = function (type, action) {
+    function switchType(type, action) {
         var i;
 
         if (true === action && -1 === enabledList.indexOf(type)) {
@@ -34,29 +35,31 @@ function Log() {
         } else if (false === action && -1 !== (i = enabledList.indexOf(type))) {
             enabledList.splice(i, 1);
         }
+    }
+
+    this.enable = function (type) {
+        switchType(type, true);
+    };
+
+    this.disable = function (type) {
+        switchType(type, false);
+    };
+
+    this.debug = function (msg) {
+        mainLog(msg, 'DEBUG');
+    };
+
+    this.info = function (msg) {
+        mainLog(msg, 'INFO');
+    };
+
+    this.warn = function (msg) {
+        mainLog(msg, 'WARN');
+    };
+
+    this.error = function (msg) {
+        mainLog(msg, 'ERROR');
     };
 }
 
-Log.prototype.enable = function (type) {
-    this.switchType(type, true);
-};
 
-Log.prototype.disable = function (type) {
-    this.switchType(type, false);
-};
-
-Log.prototype.debug = function (msg) {
-    this.mainLog(msg, 'DEBUG');
-};
-
-Log.prototype.info = function (msg) {
-    this.mainLog(msg, 'INFO');
-};
-
-Log.prototype.warn = function (msg) {
-    this.mainLog(msg, 'WARN');
-};
-
-Log.prototype.error = function (msg) {
-    this.mainLog(msg, 'ERROR');
-};
