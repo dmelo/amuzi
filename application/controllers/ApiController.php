@@ -144,7 +144,7 @@ class ApiController extends DZend_Controller_Action
         }
 
         $ret = $albumRow->getArray();
-        $ret['objId'] = $ret['id'];
+        $ret['objId'] = -$ret['id'];
         $ret['type'] = 'album';
 
         return $ret;

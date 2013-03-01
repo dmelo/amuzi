@@ -230,7 +230,9 @@ class MusicSimilarity extends DZend_Model
     protected function _fetchObjList($idList)
     {
         $amtIdList = array();
+        $indexAmtIdList = array();
         $albumIdList = array();
+        $indexAlbumIdList = array();
         $ret = array();
 
         foreach ($idList as $id) {
@@ -245,16 +247,26 @@ class MusicSimilarity extends DZend_Model
         $amtList = empty($amtIdList) ? array() : $this->_artistMusicTitleModel->fetchAllArtistAndMusicTitle($amtIdList);
         foreach ($amtList as &$row) {
             $row['type'] = 'track';
-            // $row['objId'] = $row['artistMusicTitleId'];
+            $row['objId'] = $row['id'];
+            $indexAmtIdList[$row['objId']] = $row;
         }
 
         $albumList = empty($albumIdList) ? array() : $this->_albumModel->fetchAllArtistAndAlbum($albumIdList);
         foreach ($albumList as &$row) {
             $row['type'] = 'album';
-            // $row['objId'] = $row['id'];
+            $row['objId'] = -$row['id'];
+            $indexAlbumIdList[$row['objId']] = $row;
         }
 
-        return array_merge($amtList, $albumList);
+        foreach ($idList as $id) {
+            if ($id < 0) {
+                $ret[] = $indexAlbumIdList[$id];
+            } else {
+                $ret[] = $indexAmtIdList[$id];
+            }
+        }
+
+        return $ret;
     }
 
     public function _replaceAlbumIdByAMTIds($objIds)
@@ -295,9 +307,13 @@ class MusicSimilarity extends DZend_Model
         $ret = array();
         // If nothing is found, use sync.
         if (empty($similarList)) {
-            $ret = $this->getSimilarSync(
-                $artist, $musicTitle, $type, $extObjIdList
-            );
+            if ($mayUseSync) {
+                $ret = $this->getSimilarSync(
+                    $artist, $musicTitle, $type, $extObjIdList
+                );
+            } else {
+                $ret = array(array(), $extObjIdList);
+            }
         } else {
             $completeIdList = array_merge(
                 array($artistMusicTitleId),

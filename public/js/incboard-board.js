@@ -39,7 +39,7 @@ IncBoardBoard.prototype.init = function () {
 };
 
 IncBoardBoard.prototype.clean = function () {
-    this.listByAMTId = [];
+    this.listByObjId = [];
     this.listByPos = [];
     this.size = 0;
     this.drawList = [];
@@ -61,35 +61,32 @@ IncBoardBoard.prototype.getRows = function () {
     return this.rows;
 };
 
-// TODO: replace artistMusicTitleId to objId
-IncBoardBoard.prototype.insert = function (music, pos) {
+IncBoardBoard.prototype.insert = function (obj, pos) {
     var ret,
         cell = new IncBoardCell(),
         intPos = this.posToInt(pos);
 
-    if ('object' === typeof pos && 'object' === typeof music && -1 === this.listByAMTId.indexOf(music.artistMusicTitleId)) {
-        if (!('artistMusicTitleId' in music)) {
-            music.artistMusicTitleId = -parseInt(music.id, 10);
-        } else {
-            music.artistMusicTitleId = parseInt(music.artistMusicTitleId, 10);
-        }
-        cell.setContent(music);
+    console.log(obj);
+    console.log(pos);
+
+    if ('object' === typeof pos && 'object' === typeof obj && -1 === this.listByObjId.indexOf(obj.objId)) {
+        cell.setContent(obj);
         cell.setPos(pos);
 
-        // Fill listByAMTId
-        this.listByAMTId[music.artistMusicTitleId] = cell;
+        // Fill listByObjId
+        this.listByObjId[obj.objId] = cell;
 
         if (!(intPos in this.listByPos)) {
             this.listByPos[intPos] = [];
         }
 
         // Fill listByPos
-        this.listByPos[intPos][music.artistMusicTitleId] = cell;
+        this.listByPos[intPos][obj.objId] = cell;
 
         ret = true;
         this.size++;
-        if (this.drawList.indexOf(music.artistMusicTitleId) === -1) {
-            this.drawList.push(music.artistMusicTitleId);
+        if (this.drawList.indexOf(obj.objId) === -1) {
+            this.drawList.push(obj.objId);
         }
     } else {
         throw new Error('Invalid parameter given');
@@ -104,44 +101,44 @@ IncBoardBoard.prototype.insert = function (music, pos) {
 /**
  * Safe way to set IncBoardCell position.
  */
-IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
+IncBoardBoard.prototype.setPos = function(objId, pos) {
     var ret,
         cell,
         oldPos,
         intPos;
 
-    if ('undefined' !== typeof artistMusicTitleId && 'object' === typeof pos && (artistMusicTitleId in this.listByAMTId)) {
-        cell = this.listByAMTId[artistMusicTitleId];
+    if ('undefined' !== typeof objId && 'object' === typeof pos && (objId in this.listByObjId)) {
+        cell = this.listByObjId[objId];
         oldPos = this.posToInt(cell.getPos());
         intPos = this.posToInt(pos);
 
-        delete this.listByPos[oldPos][artistMusicTitleId];
+        delete this.listByPos[oldPos][objId];
 
         if (!(intPos in this.listByPos)) {
             this.listByPos[intPos] = [];
         }
 
-        this.listByPos[intPos][artistMusicTitleId] = cell;
+        this.listByPos[intPos][objId] = cell;
         cell.setPos(pos);
 
-        if (this.drawList.indexOf(artistMusicTitleId) === -1) {
-            this.drawList.push(artistMusicTitleId);
+        if (this.drawList.indexOf(objId) === -1) {
+            this.drawList.push(objId);
         }
 
         ret = true;
     } else {
         var errMsg = "";
 
-        if ('undefined' === typeof artistMusicTitleId) {
-            errMsg += 'artistMusicTitleId is undefined. ';
+        if ('undefined' === typeof objId) {
+            errMsg += 'objId is undefined. ';
         }
 
         if ('object' !== typeof pos) {
             errMsg += 'pos is not the type object. ';
         }
 
-        if (!(artistMusicTitleId in this.listByAMTId)) {
-            errMsg += 'artistMusicTitleId is not in listByAMTId. ';
+        if (!(objId in this.listByObjId)) {
+            errMsg += 'objId is not in listByObjId. ';
         }
 
         throw new Error('Invalid parameter given: ' + errMsg);
@@ -154,25 +151,25 @@ IncBoardBoard.prototype.setPos = function(artistMusicTitleId, pos) {
 /**
  * Safely remove an element from the board.
  */
-IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
-    this.log.debug("removing " + artistMusicTitleId);
-    var pos = this.listByAMTId[artistMusicTitleId].getPos();
+IncBoardBoard.prototype.remove = function(objId) {
+    this.log.debug("removing " + objId);
+    var pos = this.listByObjId[objId].getPos();
 
     // cell.remove()
-    this.listByAMTId[artistMusicTitleId].remove();
+    this.listByObjId[objId].remove();
 
     // size
     this.size--;
 
-    // listByAMTId
-    delete this.listByAMTId[artistMusicTitleId];
+    // listByObjId
+    delete this.listByObjId[objId];
 
     // listByPos
-    delete this.listByPos[this.posToInt(pos)][artistMusicTitleId];
+    delete this.listByPos[this.posToInt(pos)][objId];
 
     // drawList
-    if (-1 !== this.drawList.indexOf(artistMusicTitleId)) {
-        delete this.drawList[this.drawList.indexOf(artistMusicTitleId)];
+    if (-1 !== this.drawList.indexOf(objId)) {
+        delete this.drawList[this.drawList.indexOf(objId)];
     }
 };
 
@@ -182,12 +179,14 @@ IncBoardBoard.prototype.remove = function(artistMusicTitleId) {
 IncBoardBoard.prototype.removeOutOfBorder = function() {
     var self = this;
 
-    this.listByAMTId.forEach(function (cell) {
-        var pos = cell.getPos();
+    for (var id in this.listByObjId) {
+        var cell = this.listByObjId[id],
+            pos = cell.getPos();
+
         if (pos[0] < 0 || pos[0] >= self.cols || pos[1] < 0 || pos[1] >= self.rows) {
-            self.remove(cell.getContent().artistMusicTitleId);
+            self.remove(cell.getContent().objId);
         }
-    });
+    }
 };
 
 IncBoardBoard.prototype.resize = function() {
@@ -211,7 +210,9 @@ IncBoardBoard.prototype.centralizeItems = function() {
     this.minX = this.minY = 1000;
     this.maxX = this.maxY = 0;
 
-    this.listByAMTId.forEach(function (cell) {
+    for (var id in this.listByObjId) {
+        var cell = this.listByObjId[id];
+
         isEmpty = false;
         if (cell.row < self.minY) {
             self.minY = cell.row;
@@ -228,20 +229,22 @@ IncBoardBoard.prototype.centralizeItems = function() {
         if (cell.col > self.maxX) {
             self.maxX = cell.col;
         }
-    });
+    }
 
     if (!isEmpty) {
         var shiftX = parseInt(((this.cols - this.maxX - 1) - this.minX) / 2);
         var shiftY = parseInt(((this.rows - this.maxY - 1) - this.minY) / 2);
 
         if (0 !== shiftX || 0 !== shiftY) {
-            this.log.debug("Applying shift (" + shiftX + ", " + shiftY + ")");
-            this.listByAMTId.forEach(function (cell) {
-                var pos = cell.getPos();
+            self.log.debug("Applying shift (" + shiftX + ", " + shiftY + ")");
+            for (var id in self.listByObjId) {
+                var cell = self.listByObjId[id],
+                    pos = cell.getPos();
+
                 pos[0] += shiftX;
                 pos[1] += shiftY;
-                self.setPos(cell.getContent().artistMusicTitleId, pos);
-            });
+                self.setPos(cell.getContent().objId, pos);
+            }
         }
     }
 };
@@ -260,9 +263,10 @@ IncBoardBoard.prototype.flushDraw = function() {
         newTop,
         newLeft;
 
-    this.drawList.forEach(function(id) {
-        self.listByAMTId[id].draw();
-    });
+    for (var key in this.drawList) {
+        var id = this.drawList[key];
+        self.listByObjId[id].draw();
+    }
 
     realHeight = this.maxY - (this.minY - 1) + 1;
     realWidth = this.maxX - (this.minX - 1) + 1;
@@ -313,24 +317,26 @@ IncBoardBoard.prototype.getByPos = function(pos) {
         list = [];
 
     if (pos in this.listByPos) {
-        this.listByPos[pos].forEach(function (cell) {
+        for (var id in this.listByPos[pos]) {
+            var cell = this.listByPos[pos][id];
             list.push(cell.getContent());
-        });
+        }
     }
 
     return list;
 };
 
-IncBoardBoard.prototype.getByAMTId = function (artistMusicTitleId) {
-    return this.listByAMTId[artistMusicTitleId];
+IncBoardBoard.prototype.getByObjId = function (objId) {
+    return this.listByObjId[objId];
 };
 
 IncBoardBoard.prototype.getAllMusic = function () {
     var list = [];
 
-    this.listByAMTId.forEach(function (item, id) {
+    for (var id in this.listByObjId) {
+        var item = this.listByObjId[id];
         list[id] = item.getContent();
-    });
+    }
 
     return list;
 };
@@ -344,9 +350,9 @@ IncBoardBoard.prototype.focusArtist = function (artist) {
     });
 };
 
-IncBoardBoard.prototype.getPos = function (artistMusicTitleId) {
-    if (artistMusicTitleId in this.listByAMTId) {
-        return this.listByAMTId[artistMusicTitleId].getPos();
+IncBoardBoard.prototype.getPos = function (objId) {
+    if (objId in this.listByObjId) {
+        return this.listByObjId[objId].getPos();
     } else {
         return false;
     }
@@ -359,9 +365,9 @@ IncBoardBoard.prototype.getPos = function (artistMusicTitleId) {
 IncBoardBoard.prototype.isPosOccupied = function (pos) {
     var total = 0;
 
-    this.getByPos(pos).forEach(function(item) {
+    for (var id in this.getByPos(pos)) {
         total++;
-    });
+    }
 
     return total > 0 ? total : false;
 };
@@ -406,12 +412,12 @@ IncBoardBoard.prototype.getSize = function () {
     return this.size;
 };
 
-IncBoardBoard.prototype.getIdsList = function() {
+IncBoardBoard.prototype.getIdList = function() {
     var list = [];
 
-    this.listByAMTId.forEach(function (item, id) {
+    for (var id in this.listByObjId) {
         list.push(id);
-    });
+    }
 
     return list;
 };
@@ -433,64 +439,69 @@ IncBoardBoard.prototype.fsck = function () {
         self = this,
         ret = true;
 
-    console.log('kkkkkk');
-    this.listByAMTId.forEach(function (item, id) {
+    console.log('fsck begin');
+    for (var id in this.listByObjId) {
         counter[id] = 1;
-    });
+    }
 
-    var conflictedCells = 0;
-    console.log(this.listByPos);
-    this.listByPos.forEach(function (posList, pos) {
-        var count = 0;
-        posList.forEach(function (item, id) {
-            count++;
-        });
-
-        if (count > 1) {
-            conflictedCells++;
-            if (conflictedCells >= 2 || count > 2) {
-                var str = "There is " + conflictedCells + " conflicted cells. There is " + count + " elements on pos " + pos + ": ";
-                posList.forEach(function (item, id) {
-                    str += ", " + id;
-                });
-                self.log.debug(str);
-                ret = false;
+    try {
+        var conflictedCells = 0;
+        console.log(this.listByPos);
+        for (var pos in this.listByPos) {
+            var posList = this.listByPos[pos];
+            var count = 0;
+            for (var id in posList) {
+                count++;
             }
-        }
 
-        posList.forEach(function (item, id) {
-            if (id !== item.getContent().artistMusicTitleId) {
-                throw new Error("artistMusicTitleId on listByPos index doesn't match the content id: " + id + ". contentid: " + item.getContent().artistMusicTitleId);
-            } else {
-                counter[id]--;
-                if (counter[id] !== 0) {
-                    throw new Error("artistMusicTitleId " + id + " happens on listByPos more than once (" + pos + ")");
+            if (count > 1) {
+                conflictedCells++;
+                if (conflictedCells >= 2 || count > 2) {
+                    var str = "There is " + conflictedCells + " conflicted cells. There is " + count + " elements on pos " + pos + ": ";
+                    for (id in posList) {
+                        str += ', ' + id;
+                    }
+                    self.log.debug(str);
+                    ret = false;
                 }
             }
-        });
 
-    });
-
-    this.listByAMTId.forEach(function (cell, id) {
-        if (cell.getContent().artistMusicTitleId !== id) {
-            throw new Error("artistMusicTitleId on listByPos index doesn't match the content id: " + id + ". contentid: " + cell.getContent().artistMusicTitleId);
+            for (var id in posList) {
+                if (id  !== posList[id].getContent.objId) {
+                    throw new Error("objId on listByPos index doesn't match the content id: " + id + ". contentid: " + item.getContent().objId);
+                } else {
+                    counter[id]--;
+                    if (counter[id] !== 0) {
+                        throw new Error("objId " + id + " happens on listByPos more than once (" + pos + ")");
+                    }
+                }
+            }
         }
 
-        var intPos = self.posToInt(cell.getPos());
-        if (!(intPos in self.listByPos)) {
-            self.log.debug("merda 1");
-            self.log.debug(index);
-            self.log.debug(self.listByPos[intPos]);
-            throw new Error("merda 1");
-        }
+        for (var id in this.listByObjId) {
+            var cell = listByObjId[id];
+            if (cell.getContent().objId !== id) {
+                throw new Error("objId on listByPos index doesn't match the content id: " + id + ". contentid: " + cell.getContent().objId);
+            }
 
-        if (!(cell.getContent().artistMusicTitleId in self.listByPos[self.posToInt(cell.getPos())])) {
-            self.log.debug("merda 2");
-            self.log.debug(cell);
-            self.log.debug(self);
-            throw new Error("merda 2");
+            var intPos = self.posToInt(cell.getPos());
+            if (!(intPos in self.listByPos)) {
+                self.log.debug(index);
+                self.log.debug(self.listByPos[intPos]);
+                throw new Error("merda 1");
+            }
+
+            if (!(cell.getContent().objId in self.listByPos[self.posToInt(cell.getPos())])) {
+                self.log.debug(cell);
+                self.log.debug(self);
+                throw new Error("merda 2");
+            }
         }
-    });
+    } catch (e) {
+        console.log('===> ');
+        console.log(e);
+    }
+    console.log("fsck end");
 
     return ret;
 };

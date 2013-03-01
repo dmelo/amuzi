@@ -29,9 +29,11 @@ function IncBoardCell() {
         self = this;
 
     getHtml = function() {
-        var v = self.content,
-            resultSet = new $.ResultSet(),
-            ret = ('trackList' in v) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
+        var v = self.getContent(),
+            resultSet = new $.ResultSet();
+
+        console.log(v);
+        ret = ('album' === v.type) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
 
         ret.addClass('incboard-cell incboard-col-' + self.col + ' incboard-row-' + self.row);
         ret.find('.cover').addClass('incboard-img');

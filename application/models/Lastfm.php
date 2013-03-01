@@ -274,7 +274,7 @@ class Lastfm extends DZend_Model
 
     public function getSimilar($artist, $music)
     {
-        $this->_logger->debug('Lastfm::getSimilar A ' . microtime(true));
+        $this->_logger->debug('Lastfm::getSimilar A ' . $artist . ' - ' . $music . ' # ' . microtime(true));
         $resultSet = array();
         $args = array(
             'method' => 'track.getsimilar',
