@@ -35,11 +35,11 @@ function IncBoardCell() {
         console.log(v);
         ret = ('album' === v.type) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
 
-        ret.addClass('incboard-cell incboard-col-' + self.col + ' incboard-row-' + self.row);
+        ret.addClass('music-square incboard-cell incboard-col-' + self.col + ' incboard-row-' + self.row);
         ret.find('.cover').addClass('incboard-img');
         ret.attr('data-content', v.title + ('duration' in v ? ' (' + resultSet.secondsToHMS(v.duration) + ')' : ''));
         ret.attr('data-trigger', 'hover');
-        ret.attr('id', 'artistMusicTitleId' in v ? v.artistMusicTitleId : v.id); // in case it is an album, get the album id.
+        ret.attr('id', v.type + v.objId);
         ret.find('.description').remove();
         ret.popover({placement: 'top'});
 
@@ -48,13 +48,18 @@ function IncBoardCell() {
 
     this.draw = function() {
         var v = self.content,
-            e = $('#' + v.artistMusicTitleId),
-            sty = 'width: ' + self.cellSizeX + 'px; height: ' + self.cellSizeY + 'px; ';
+            e = $('#' + v.type + v.objId);
 
         // If the element already exists then the only attribute that can chage is the position.
         if (e.length !== 0) {
+            console.log
             e.removeClass();
-            e.addClass('music-square incboard-cell incboard-row-' + self.row + ' incboard-col-' + self.col);
+            e.addClass('incboard-cell incboard-row-' + self.row + ' incboard-col-' + self.col);
+            if ('album' === v.type) {
+                e.addClass('album-square');
+            } else {
+                e.addClass('music-square');
+            }
         } else {
             e = getHtml();
             $('#subtitle').subtitleAdd(v.artist);
@@ -89,13 +94,13 @@ function IncBoardCell() {
     };
 
     this.toString = function() {
-        return '[ ' + self.content.artistMusicTitleId + ' (' + self.col + ',' + self.row + ')]';
+        return '[ ' + self.content.objId + self.content.type + ' (' + self.col + ',' + self.row + ')]';
     };
 
     /**
      * Remove itself from the HTML.
      */
     this.remove = function() {
-        $('#' + self.content.artistMusicTitleId).remove();
+        $('#' + self.content.type + self.content.objId).remove();
     };
 }

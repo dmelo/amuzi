@@ -168,8 +168,8 @@ IncBoardBoard.prototype.remove = function(objId) {
     delete this.listByPos[this.posToInt(pos)][objId];
 
     // drawList
-    if (-1 !== this.drawList.indexOf(objId)) {
-        delete this.drawList[this.drawList.indexOf(objId)];
+    if (-1 !== (key = this.drawList.indexOf(objId))) {
+        delete this.drawList[key];
     }
 };
 
@@ -253,13 +253,11 @@ IncBoardBoard.prototype.flushDraw = function() {
     var self = this,
         newCellSizeX,
         newCellSizeY,
-        sheet,
         realHeight,
         realWidth,
         factorX,
         factorY,
         factor,
-        marginFactor,
         newTop,
         newLeft;
 
@@ -296,9 +294,10 @@ IncBoardBoard.prototype.flushDraw = function() {
 
     $.cssRule('.incboard-cell', 'width', newCellSizeX + 'px');
     $.cssRule('.incboard-cell', 'height', newCellSizeY + 'px');
-    $.cssRule('.incboard-cell.album-square .cover img', 'width', newCellSizeY + 'px !important');
-    $.cssRule('.incboard-cell.album-square .side', 'width', (newCellSizeX - newCellSizeY) + 'px');
-    $.cssRule('.incboard-cell.album-square .side', 'height', '100%');
+    $.cssRule('.incboard-cell.album-square .cover > img', 'height', (newCellSizeY - 6) + 'px !important');
+    $.cssRule('.incboard-cell.album-square .cover > img', 'width', (newCellSizeY - 6) + 'px !important');
+    // $.cssRule('.incboard-cell.album-square .side', 'width', (newCellSizeX - newCellSizeY) + 'px');
+    $.cssRule('.incboard-cell.album-square .side', 'height', (newCellSizeY - 6) + 'px');
 
 
     for (var i = 0; i < this.rows; i++) {
