@@ -376,6 +376,7 @@ class PlaylistController extends DZend_Controller_Action
 
     public function listAction()
     {
+        $this->view->currentId = $this->_session->user->currentPlaylistId;
         $this->view->playlistRowSet = $this->_playlistModel->fetchAllUsers();
     }
 }

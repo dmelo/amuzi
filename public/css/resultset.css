@@ -12,6 +12,12 @@
     box-shadow: 0px 0px 8px #3a3e41;
 }
 
+.current-playlist {
+    padding: 3px;
+    box-shadow: 0px 0px 8px red;
+    background-color: red !important;
+}
+
 .incboard-cell:hover {
     cursor: pointer;
 }

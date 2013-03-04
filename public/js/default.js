@@ -119,6 +119,10 @@
                 setTimeout(callbackShuffle, 1500);
                 applyOverPlaylist();
 
+                if (!isAlbum && 'number' === typeof options.id) {
+                    $('.playlist-square').removeClass('current-playlist');
+                    $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
+                }
             }
         }, 'json').complete(function () {
             if (commands.isRunCommand) {

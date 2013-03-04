@@ -26,9 +26,10 @@ require_once('views/helpers/T.php');
 class View_Helper_PlaylistSquare extends View_Helper_T
 {
 
-    public function playlistSquare(DbTable_iTrackCollectionRow $playlistRow)
+    public function playlistSquare(DbTable_iTrackCollectionRow $playlistRow, $current = false)
     {
-        return '<div class="item-square playlist-square object-playlist" '
+        return '<div class="item-square playlist-square object-playlist '
+            . ($current ? 'current-playlist' : '') . '" '
             . $playlistRow->getType() . 'id="' . $playlistRow->id . '">'
             . '<div class="cover"><img src="' . $playlistRow->getCover()
             . '"/></div>' . '<div class="name">' . $playlistRow->getCoverName()
