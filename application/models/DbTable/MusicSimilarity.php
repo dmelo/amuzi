@@ -59,13 +59,8 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
         return $row->$column;
     }
 
-    public function getSimilar($artist, $musicTitle, $artistMusicTitleIdList)
+    public function getSimilar($artistMusicTitleId, $artistMusicTitleIdList)
     {
-        $artistMusicTitleModel = new ArtistMusicTitle();
-        $artistMusicTitleId = $artistMusicTitleModel->insert(
-            $artist, $musicTitle
-        );
-
         $db = $this->getAdapter();
 
         $where = "( f_artist_music_title_id = $artistMusicTitleId " .

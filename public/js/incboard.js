@@ -419,9 +419,7 @@ $(document).ready(function() {
     $('#incboard-search').ajaxForm({
         dataType: 'json',
         success: function (data) {
-            if ($('#type').val() === 'track') {
-                loadSimilarMusic(data, 10);
-            }
+            loadSimilarMusic(data, 10);
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();

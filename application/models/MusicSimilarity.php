@@ -295,6 +295,7 @@ class MusicSimilarity extends DZend_Model
     {
         if ('album' === $type) {
             $albumRow = $this->_albumModel->get($artist, $musicTitle);
+            $extObjIdList[] = -$albumRow->id;
             $artistMusicTitleId = -1;
             foreach ($albumRow->artistMusicTitleIdList as $id) {
                 if ($artistMusicTitleId === -1 || $artistMusicTitleId < $id) {
@@ -308,7 +309,7 @@ class MusicSimilarity extends DZend_Model
             $musicTitle = $artistMusicTitleRow->getMusicTitleName();
             $type = 'track';
 
-            $this->_logger->debug('MusicSimilarity::getSimilar ' . $artist . ' - ' . $musicTitle . ' (' . $artistMusicTitleId . ')');
+            $this->_logger->debug('MusicSimilarity::getSimilar AA ' . $artist . ' - ' . $musicTitle . ' (' . $artistMusicTitleId . ')');
         } else {
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
@@ -318,7 +319,7 @@ class MusicSimilarity extends DZend_Model
         // Get the AMTIds that are not yet on $extObjIdList neither is on
         // AMTIds owned by the albums.
         $similarList = $this->_musicSimilarityDb->getSimilar(
-            $artist, $musicTitle, $this->_replaceAlbumIdByAMTIds($extObjIdList)
+            $artistMusicTitleId, $this->_replaceAlbumIdByAMTIds($extObjIdList)
         );
 
         $ret = array();
