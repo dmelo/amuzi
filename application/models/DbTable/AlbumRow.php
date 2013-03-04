@@ -52,7 +52,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
         $artistMusicTitleModel = new ArtistMusicTitle();
         $musicTrackLinkModel = new MusicTrackLink();
 
-        foreach ($this->artistMusicTitleList as $artistMusicTitleId) {
+        foreach ($this->artistMusicTitleIdList as $artistMusicTitleId) {
             $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId, $sync);
             $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
             if (null === $trackRow) {
@@ -117,7 +117,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
             return $artistRow->name;
         } elseif ('title' === $name) {
             return "{$this->artist} - {$this->name}";
-        } elseif ('artistMusicTitleList' === $name) {
+        } elseif ('artistMusicTitleIdList' === $name) {
             $ret = array();
             $ahamtRowset = $albumHasArtistMusicTitleDb->findByAlbumId($this->id);
             foreach ($ahamtRowset as $row) {

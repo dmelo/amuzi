@@ -99,8 +99,6 @@ IncBoard.prototype.stochasticItems = function(center) {
 
     var end = new Date().getTime();
 
-    // console.log('stochasticItems ' + (end - start));
-
     return list;
 }
 
@@ -186,9 +184,6 @@ IncBoard.prototype.calcError = function(v, musicList) {
     }
 
     var s3 = new Date().getTime();
-
-    // console.log("calcError times: " + (s1 - s0) + "#" + (s2 - s1) + "#" + (s3 - s2));
-
 
     return werr;
 }
@@ -319,11 +314,12 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
     console.log(m);
     console.log('searchMusic -- num: ' + num + '. length: ' + set.length);
     if (num > 0 && 'undefined' !== typeof m) {
+        console.log(m);
         if ('type' in m && 'album' === m.type) {
             uri = '/api/searchalbum';
             params = {
                artist: m.artist,
-               album: m.name
+               album: m.musicTitle
             };
         } else {
             uri = '/api/searchmusic',
@@ -366,7 +362,8 @@ IncBoard.prototype.incrementSimilar = function() {
         if (this.searchSimilarList.length > 0) {
             var obj = this.searchSimilarList.shift(),
                 artist = obj[0],
-                musicTitle = obj[1];
+                musicTitle = obj[1],
+                type = obj[2];
 
             console.log('INCREMENTING ' + artist + " - " + musicTitle);
             this.incrementSimilarRunning = true;
@@ -374,6 +371,7 @@ IncBoard.prototype.incrementSimilar = function() {
                 q: artist + ' - ' + musicTitle,
                 artist: artist,
                 musicTitle: musicTitle,
+                type: type,
                 objIdList: incBoard.ibb.getIdList()
             }, function(data) {
                 loadSimilarMusic(data, 10);
@@ -389,9 +387,6 @@ IncBoard.prototype.incrementSimilar = function() {
 var incBoard = new IncBoard();
 
 function searchMusicCallbackCenter(v) {
-    console.log(v);
-    console.log(v.objId);
-
     $('#' + v.objId).addClass('center');
 }
 
@@ -403,7 +398,10 @@ function loadSimilarMusic(data, num, callback) {
 }
 
 function searchSimilar(ele) {
-    incBoard.searchSimilarList.push([ele.attr('artist'), ele.attr('musicTitle')]);
+    console.log('searchSimilar ==> list push');
+    console.log(ele);
+    var type = 'undefined' === typeof ele.attr('albumid') ? 'track' : 'album';
+    incBoard.searchSimilarList.push([ele.attr('artist'), ele.attr('album' === type ? 'name' : 'musicTitle'), type]);
     incBoard.incrementSimilar();
 }
 

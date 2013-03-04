@@ -293,10 +293,27 @@ class MusicSimilarity extends DZend_Model
         $artist, $musicTitle, $type, $extObjIdList = array(), $mayUseSync = true
     )
     {
-        // TODO: solve for 'album' === $type.
-        $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
-            $artist, $musicTitle
-        );
+        if ('album' === $type) {
+            $albumRow = $this->_albumModel->get($artist, $musicTitle);
+            $artistMusicTitleId = -1;
+            foreach ($albumRow->artistMusicTitleIdList as $id) {
+                if ($artistMusicTitleId === -1 || $artistMusicTitleId < $id) {
+                    $artistMusicTitleId = $id;
+                }
+            }
+            $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById(
+                $artistMusicTitleId
+            );
+            $artist = $artistMusicTitleRow->getArtistName();
+            $musicTitle = $artistMusicTitleRow->getMusicTitleName();
+            $type = 'track';
+
+            $this->_logger->debug('MusicSimilarity::getSimilar ' . $artist . ' - ' . $musicTitle . ' (' . $artistMusicTitleId . ')');
+        } else {
+            $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
+                $artist, $musicTitle
+            );
+        }
 
         // Get the AMTIds that are not yet on $extObjIdList neither is on
         // AMTIds owned by the albums.
@@ -331,7 +348,6 @@ class MusicSimilarity extends DZend_Model
                 $similarList,
                 $extObjIdList
             );
-
 
             $similarityMatrixResponse[0] = $this->_applyListTranslationToMatrix($similarityMatrixResponse[0], $translationList);
             $completeIdList = $this->_applyListTranslationToList($completeIdList, $translationList);
