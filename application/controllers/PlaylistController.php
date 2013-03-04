@@ -100,12 +100,13 @@ class PlaylistController extends DZend_Controller_Action
         $message = null;
 
         if ($this->_request->isPost()) {
-            if($this->_request->getPost('id') !== null)
+            if($this->_request->getPost('id') !== null) {
                 $trackInfo = array('id' => $this->_request->getPost('id'));
-            else
+            } else {
                 $trackInfo = array('title' => $this->_request->getPost('title'),
                     'url' => $this->_request->getPost('url'),
                     'cover' => $this->_request->getPost('cover'));
+            }
 
             if (
                 ($artist = $this->_request->getPost('artist')) !== null &&
@@ -123,10 +124,18 @@ class PlaylistController extends DZend_Controller_Action
             );
 
             try {
-                $trackRow = $this->_playlistModel->addTrack(
-                    $trackInfo,
-                    $this->_request->getPost('playlist')
-                );
+                $playlistRow = null;
+                if (($isAlbum = $this->_request->getPost('isAlbum', false)) == true) {
+                    $playlistRow = $this->_playlistModel->getCurrentRow();
+                } else {
+                    $playlistRow = $this->_playlistModel->create(
+                        $this->_request->getPost('playlist')
+                    );
+                }
+
+                $this->_logger->debug('PlaylistController::addtrack ' . $playlistRow->id . '#' . $playlistRow->name);
+
+                $trackRow = $playlistRow->addTrack($trackInfo);
 
                 if (isset($artistMusicTitleId)) {
                     $this->_musicTrackLinkModel->bond(
@@ -142,7 +151,7 @@ class PlaylistController extends DZend_Controller_Action
                 }
 
                 $message = array(
-                    $this->view->t('Track added'),
+                    $this->view->t('Track added into playlist ' . $playlistRow->name),
                     'success',
                     $trackArray
                 );

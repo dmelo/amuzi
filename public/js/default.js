@@ -90,6 +90,7 @@
         name = name || '';
         isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
+        window.myPlaylist.isAlbum = isAlbum;
         var options,
             uri = isAlbum ? '/album/load' : '/playlist/load';
 
@@ -429,6 +430,7 @@
         options = {
             id: trackId,
             playlist: window.myPlaylist.name,
+            isAlbum: window.myPlaylist.isAlbum,
             artist: artist,
             musicTitle: musicTitle
         };
@@ -439,9 +441,11 @@
             if ('error' === data[1]) {
                 loadPlaylist(window.myPlaylist.name);
             } else if ('success' === data[1]) {
-                var v = data[2],
-                    pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
-                window.myPlaylist.add(pOpt, playNow);
+                if (!window.myPlaylist.isAlbum) {
+                    var v = data[2],
+                        pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                    window.myPlaylist.add(pOpt, playNow);
+                }
             }
         }, 'json');
     }

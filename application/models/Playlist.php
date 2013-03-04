@@ -222,19 +222,6 @@ class Playlist extends DZend_Model
     }
 
     /**
-     * addTrack Add a track into the playlist
-     *
-     * @param array $trackInfo Track information
-     * @param string $name Playlist's name
-     * @return Returns the track row.
-     */
-    public function addTrack(array $trackInfo, $name = 'default')
-    {
-        $playlistRow = $this->create($name);
-        return $playlistRow->addTrack($trackInfo);
-    }
-
-    /**
      * rmTrack Remove a track from a playlist.
      *
      * @param $trackId Track ID
@@ -360,5 +347,12 @@ class Playlist extends DZend_Model
         } catch(Zend_Exception $e) {
             return false;
         }
+    }
+
+    public function getCurrentRow()
+    {
+        return $this->_playlistDb->findRowById(
+            $this->_session->user->currentPlaylistId
+        );
     }
 }

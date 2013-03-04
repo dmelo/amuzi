@@ -153,7 +153,8 @@ IncBoardBoard.prototype.setPos = function(objId, pos) {
  */
 IncBoardBoard.prototype.remove = function(objId) {
     this.log.debug("removing " + objId);
-    var pos = this.listByObjId[objId].getPos();
+    var pos = this.listByObjId[objId].getPos(),
+        key;
 
     // cell.remove()
     this.listByObjId[objId].remove();
