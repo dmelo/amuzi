@@ -30,7 +30,7 @@ $rowSet = $taskSetModel->findOpenTasks('SearchSimilar');
 
 foreach ($rowSet as $row) {
     echo $row->id . "#" . $row->param0 . "#" . $row->param1 . "#" . PHP_EOL;
-    $ret = $musicSimilarityModel->getSimilarSync($row->param0, $row->param1);
+    $ret = $musicSimilarityModel->getSimilarSync($row->param0, $row->param1, null === $row->param2 ? 'track' : $row->param2);
     echo print_r($ret[0], true) . PHP_EOL;
     $done = date('Y-m-d H:i:s', time());
     $expiration = date('Y-m-d H:i:s', strtotime($done . ' + 1 month'));
@@ -38,6 +38,4 @@ foreach ($rowSet as $row) {
     $row->done = $done;
     $row->expiration = $expiration;
     $row->save();
-
-    break;
 }

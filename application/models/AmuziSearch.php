@@ -51,7 +51,6 @@ class AmuziSearch extends DZend_Model
             }
         }
 
-
         return $ret;
     }
 }

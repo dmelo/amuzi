@@ -45,6 +45,7 @@ trait autocompleteTrait
                     $q, $autocompleteType, $limit - count($ret)
                 )
             );
+            $this->_taskRequestModel->addTask('SearchString', 'music_title' === $autocompleteType ? 'MusicTitle' : 'Album', $q);
         }
 
         return array_slice($ret, 0, $limit);
