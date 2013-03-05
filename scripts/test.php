@@ -23,6 +23,14 @@
  */
 require_once '../scripts/lib.php';
 
-$youtubeModel = new Youtube();
+$c = new DZend_Chronometer();
+$c->start();
+$artistMusicTitleModel = new ArtistMusicTitle();
+$albumModel = new Album();
+$q = 'blable';
+$listMusicTitle = $artistMusicTitleModel->autocomplete($q);
+$listAlbum = $albumModel->autocomplete($q);
+$c->stop();
 
-$youtubeModel->search2('U2 - One');
+echo $c->get() . PHP_EOL;
+
