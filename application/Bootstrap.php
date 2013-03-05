@@ -47,6 +47,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js = array();
         $js[] = $domainJs . 'ie-compatibility.js';
         $js[] = $domainJs . 'jquery.js';
+        $js[] = $domainJs . 'log.js';
         $js[] = $domainJs . 'facebook-connect.js';
         $js[] = $domainJs . 'bootstrap.js';
         $js[] = $domainJs . 'jquery.browser.min.js';
@@ -76,10 +77,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js[] = $domainJs . 'jquery.subtitle.js';
 
         $css = array();
-        $css[] = $domainCss . 'prettify-jPlayer.css';
         $css[] = $domainCss . 'jplayer.pink.flag.css';
         $css[] = $domainCss . 'player.css';
-        $css[] = $domainCss . 'gallery.css';
         $css[] = $domainCss . 'miniplayer.css';
         $css[] = $domainCss . 'resultset.css';
         $css[] = $domainCss . 'bootstrap.css';
@@ -135,7 +134,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         );
 
         $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);
-
         Zend_Registry::set('cache', $cache);
     }
 

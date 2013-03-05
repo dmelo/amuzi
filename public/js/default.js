@@ -86,10 +86,13 @@
      * playlist.
      * @return void
      */
-    function loadPlaylist(name) {
+    function loadPlaylist(name, isAlbum) {
         name = name || '';
+        isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
-        var options;
+        window.myPlaylist.isAlbum = isAlbum;
+        var options,
+            uri = isAlbum ? '/album/load' : '/playlist/load';
 
         if (typeof (name) === 'number' || (typeof (name) === 'string' && parseInt(name, 10) >= 0)) {
             // It's an ID
@@ -103,7 +106,8 @@
         }
 
 
-        $.post('/playlist/load', options, function (data) {
+
+        $.post(uri, options, function (data) {
             if (null !== data) {
                 $('.jp-title').css('display', 'block');
                 $.each(data[0], function (i, v) {
@@ -115,6 +119,10 @@
                 setTimeout(callbackShuffle, 1500);
                 applyOverPlaylist();
 
+                if (!isAlbum && 'number' === typeof options.id) {
+                    $('.playlist-square').removeClass('current-playlist');
+                    $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
+                }
             }
         }, 'json').complete(function () {
             if (commands.isRunCommand) {
@@ -124,28 +132,7 @@
         });
     }
 
-    $.addTrack = function(trackId, artist, musicTitle) {
-        var options,
-            playNow = false;
-        options = {
-            id: trackId,
-            playlist: window.myPlaylist.name,
-            artist: artist,
-            musicTitle: musicTitle
-        };
-
-        $.bootstrapMessageLoading();
-        $.post('/playlist/addtrack', options, function (data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
-            if ('error' === data[1]) {
-                loadPlaylist(window.myPlaylist.name);
-            } else if ('success' === data[1]) {
-                var v = data[2],
-                    pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
-                window.myPlaylist.add(pOpt, playNow);
-            }
-        }, 'json');
-    }
+    $.loadPlaylist = loadPlaylist;
 
     // TODO: take away the playlistName
     function rmTrack(trackId, playlistName) {
@@ -164,13 +151,14 @@
         });
     }
 
-    function rmPlaylist(name, callback) {
+    function rmPlaylist(id, isPlaylist, callback) {
+        var controller = isPlaylist ? 'playlist' : 'album';
         $.bootstrapMessageLoading();
-        $.post('/playlist/remove', {
-            name: name
+        $.post('/' + controller + '/remove', {
+            id: id
         }, function (data) {
             if ('success' === data[1] && 'function' === typeof callback) {
-                callback(name);
+                callback(id, isPlaylist);
             }
             $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json');
@@ -280,8 +268,20 @@
         $.get('/playlist/list', function (data) {
             $('.music-manager#playlists .stripe').html(data);
             $.resizeEditPlaylist();
+            $('div[playlistid]').each(function(i, item) {
+                $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'hover'});
+            });
         }).error(function (data) {
             $.resizeEditPlaylist();
+        });
+    }
+
+    function loadAlbumSet() {
+        $.get('/album/list', function(data) {
+            $('.music-manager#albums .stripe').html(data);
+            $('div[albumid]').each(function(i, item) {
+                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover', placement: 'right', selector: '#slide-music-manager'});
+            });
         });
     }
 
@@ -316,6 +316,7 @@
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
+            $('#type').val(ui.item.type);
             $('form.search').submit();
             latestSearch = ui.item.value;
             if ('function' === typeof (window.tutorialCloseSearch)) {
@@ -379,17 +380,27 @@
     }
 
     $.rendered_userSettings = function () {
-        console.log('Just renedered settings');
         $('#view').parent().append('<div class="side-view-thumb"><img src=""/></div>');
         refreshViewThumbnail();
         $('#view').change(refreshViewThumbnail);
     };
 
+    function addElementAnimation(e) {
+        var clone = e.clone();
+
+        e.parent().append(clone);
+        clone.animate({left: $(window).width()}, {
+            duration: 1500,
+            complete: function () {
+                clone.remove();
+            }
+        });
+    }
+
     function addToPlaylist(e) {
         var trackId = e.attr('trackId'),
             artist = e.attr('artist'),
-            musicTitle = e.attr('musicTitle'),
-            clone = e.clone();
+            musicTitle = e.attr('musicTitle');
 
         if ($('.playlist-row[track_id=' + trackId + ']').length > 0) {
             if (!confirm('You already have this track on your playlist. Are you sure you want to insert it again?')) {
@@ -413,13 +424,44 @@
 
         $.addTrack(trackId, artist, musicTitle);
 
+        addElementAnimation(e);
+    }
 
-        e.parent().append(clone);
-        clone.animate({top: 0, left: $(window).width()}, {
-            complete: function () {
-                clone.remove();
+    $.addTrack = function(trackId, artist, musicTitle) {
+        var options,
+            playNow = false;
+
+        options = {
+            id: trackId,
+            playlist: window.myPlaylist.name,
+            isAlbum: window.myPlaylist.isAlbum,
+            artist: artist,
+            musicTitle: musicTitle
+        };
+
+        $.bootstrapMessageLoading();
+        $.post('/playlist/addtrack', options, function (data) {
+            $.bootstrapMessageAuto(data[0], data[1]);
+            if ('error' === data[1]) {
+                loadPlaylist(window.myPlaylist.name);
+            } else if ('success' === data[1]) {
+                if (!window.myPlaylist.isAlbum) {
+                    var v = data[2],
+                        pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                    window.myPlaylist.add(pOpt, playNow);
+                }
             }
-        });
+        }, 'json');
+    }
+
+    function addAlbum(ele) {
+        var albumId = ele.attr('albumid');
+        $.get('/album/add', {
+            albumId: albumId
+        }, function (data) {
+            addElementAnimation(ele);
+            loadAlbumSet();
+        }, 'json');
     }
 
     function prepareVoteButton() {
@@ -445,6 +487,7 @@
 
     $.resizeEditPlaylist = function () {
         $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
+        $('.music-manager-content').height($(window).height() - $('.music-manager-content').offset().top - $('.footer').height());
     };
 
     $.isSearchFormValid = function () {
@@ -500,13 +543,10 @@
         }
     }
 
-    function removePlaylistSquareCallback(name) {
-        $('.playlist-square').each(function (e) {
-            if ($(this).find('.name').html() === name) {
-                $(this).remove();
-                $.resizeEditPlaylist();
-            }
-        });
+    function removePlaylistSquareCallback(id, isPlaylist) {
+        var attr = isPlaylist ? 'playlistid' : 'albumid';
+        $('.playlist-square[' + attr + '=' + id + ']').remove();
+        $.resizeEditPlaylist();
     }
 
     $(document).ready(function () {
@@ -539,7 +579,11 @@
         $('.music-large, .music-square').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            addToPlaylist($(this));
+            if ($(this).hasClass('album-square')) {
+                addAlbum($(this));
+            } else {
+                addToPlaylist($(this));
+            }
         });
 
         $('.youtube-link, .download').live('click', function (e) {
@@ -569,22 +613,45 @@
             var a = $('<li></li>')
                 .data('item.autocomplete', row)
                 .append('<a>' + row.label + '</a>')
-                .appendTo(ul);
+                .appendTo(ul)
+                .addClass(row.type);
             return a;
         };
 
-        ac = $('#q').autocomplete({
+
+        $.widget( "custom.catcomplete", $.ui.autocomplete, {
+            _renderMenu: function( ul, items ) {
+                var that = this,
+                    currentCategory = "";
+                $.each( items, function( index, item ) {
+                    if ( item.category != currentCategory ) {
+                        var t = 'track' === item.category ? 'Tracks' : 'Albums';
+                        ul.append( "<li class='ui-autocomplete-category " + item.category + "'>" + t + "</li>" );
+                        currentCategory = item.category;
+                    }
+                    that._renderItemData( ul, item );
+                });
+            }
+        });
+
+        ac = $('#q').catcomplete({
             source: function (request, response) {
+                var start = new Date();
                 $.get('/api/autocomplete', {
                     q: request.term,
                 }, function (data) {
+                    var end = new Date();
+                    console.log("AUTOCOMPLETE: " + (end.getTime() - start.getTime()));
+                    var count = 0;
                     var a =  $.map(data, function (row) {
                         return {
                             data: row,
-                            label: '<img src="' + row.cover + '"/> <span>' + row.name + '</span>',
+                            label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
+                            category: row.type,
                             value: row.name,
                             artist: row.artist,
-                            musicTitle: row.musicTitle
+                            musicTitle: row.musicTitle,
+                            type: row.type
                         };
                     }, 'json');
 
@@ -672,35 +739,44 @@
             }
         });
 
-        $('.playlist-square').live('hover', function (e) {
-            $('#edit-playlist .stripe').html($(this).find('.playlist-info').html());
-            $('#edit-playlist .stripe').attr('playlistid', $(this).attr('playlistid'));
-        });
-
         $.resizeEditPlaylist();
 
         $.slideInit();
 
-        $('.playlist-square .play').live('click', function (e) {
+        $('.playlist-square[playlistid] .play').live('click', function (e) {
             e.preventDefault();
             loadPlaylist($(this).parent().attr('playlistid'));
+        });
+
+        $('.playlist-square[albumid] .play').live('click', function (e) {
+            e.preventDefault();
+            loadPlaylist($(this).parent().attr('albumid'), true);
         });
 
         $('.playlist-square .remove').live('click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure?')) {
-                var name = $(this).parent().find('.name').html().
-                    playlistId = $(this).parent().attr('playlistid');
-                rmPlaylist(name, removePlaylistSquareCallback);
+                var name = $(this).parent().find('.name').html(),
+                    p = $(this).parent(),
+                    isPlaylist = undefined !== p.attr('playlistid'),
+                    id = $(this).parent().attr(isPlaylist ? 'playlistid' : 'albumid');
+                rmPlaylist(id, isPlaylist, removePlaylistSquareCallback);
                 if (name === window.myPlaylist.name) {
                     loadPlaylist('');
                 }
             }
         });
 
+        $('.playlist-square').live({mouseenter: function () {
+            $(this).find('.name').css('opacity', '1.0');
+        }, mouseleave: function () {
+            $(this).find('.name').css('opacity', '0.0');
+        }});
+
         if ($('div.container.regular').length > 0) {
             $('body').css('overflow', 'auto');
         }
         loadPlaylistSet();
+        loadAlbumSet();
     });
 }(jQuery, undefined));

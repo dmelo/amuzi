@@ -1,7 +1,12 @@
 *.swp
+*.swo
 public/api/*
+public/data/*.php
+public/data/*.txt
 docs/api
 tests/tmp
 public/tmp
 tests/report/
 library/EasyBib
+html/
+latex/

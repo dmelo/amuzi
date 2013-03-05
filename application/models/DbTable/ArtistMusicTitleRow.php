@@ -23,4 +23,36 @@
  */
 class DbTable_ArtistMusicTitleRow extends DZend_Db_Table_Row
 {
+    public function getArtistName()
+    {
+        $name = null;
+        $artistDb = new DbTable_Artist();
+        if (($artistRow = $artistDb->findRowById($this->artistId)) !== null) {
+            $name = $artistRow->name;
+        }
+
+        return $name;
+    }
+
+    public function getMusicTitleName()
+    {
+        $name = null;
+        $musicTitleDb = new DbTable_MusicTitle();
+        if (($musicTitleRow = $musicTitleDb->findRowById($this->musicTitleId)) !== null) {
+            $name = $musicTitleRow->name;
+        }
+
+        return $name;
+    }
+
+    public function getCover()
+    {
+        $cover = null;
+        $musicTrackLinkModel = new MusicTrackLink();
+        if (($trackRow = $musicTrackLinkModel->getTrackById($this->id)) !== null) {
+            $cover = $trackRow->cover;
+        }
+
+        return $cover;
+    }
 }

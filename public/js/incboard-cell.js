@@ -21,87 +21,86 @@
  */
 
 function IncBoardCell() {
-    this.cellSizeX = 56;
-    this.cellSizeY = 44;
-    this.content = null;
-    this.row = null;
-    this.col = null;
-}
+    var cellSizeX = 56,
+        cellSizeY = 44,
+        content = null,
+        row = null,
+        col = null,
+        self = this;
 
-IncBoardCell.prototype.setContent = function(v) {
-    this.content = v;
-}
+    getHtml = function() {
+        var v = self.getContent(),
+            resultSet = new $.ResultSet();
 
-/**
- * Set position of the cell.
- * Can be used as setPos(2, 3) or setPos([2, 3]).
- */
-IncBoardCell.prototype.setPos = function(pos) {
-    if ('object' === typeof pos) {
-        this.col = pos[0];
-        this.row = pos[1];
-    } else {
-        throw new Error('First argument of IncBoardCell.setPos not an object.');
-    }
-}
+        console.log(v);
+        ret = ('album' === v.type) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
 
-IncBoardCell.prototype.getPos = function() {
-    return [this.col, this.row];
-}
+        ret.addClass('music-square incboard-cell incboard-col-' + self.col + ' incboard-row-' + self.row);
+        ret.find('.cover').addClass('incboard-img');
+        ret.attr('data-content', v.title + ('duration' in v ? ' (' + resultSet.secondsToHMS(v.duration) + ')' : ''));
+        ret.attr('data-trigger', 'hover');
+        ret.attr('id', v.type + v.objId);
+        ret.find('.description').remove();
+        ret.popover({placement: 'top'});
 
-IncBoardCell.prototype.setContent = function(content) {
-    this.content = content;
-}
+        return ret;
+    };
 
-IncBoardCell.prototype.getContent = function() {
-    return this.content;
-}
+    this.draw = function() {
+        var v = self.content,
+            e = $('#' + v.type + v.objId);
 
-IncBoardCell.prototype.getInnerHtml = function() {
-    var v = this.content;
-    var resultSet = new $.ResultSet();
-    return img + resultSet.getMusicLarge(v, 'music');
-}
+        // If the element already exists then the only attribute that can chage is the position.
+        if (e.length !== 0) {
+            console.log
+            e.removeClass();
+            e.addClass('incboard-cell incboard-row-' + self.row + ' incboard-col-' + self.col);
+            if ('album' === v.type) {
+                e.addClass('album-square');
+            } else {
+                e.addClass('music-square');
+            }
+        } else {
+            e = getHtml();
+            $('#subtitle').subtitleAdd(v.artist);
+            e.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
+            $('#incboard-result #incboard').append(e);
+        }
+    };
 
-IncBoardCell.prototype.getHtml = function() {
-    var v = this.content,
-        resultSet = new $.ResultSet(),
-        ret = $(resultSet.getMusicSquare(v));
+    /**
+     * Set position of the cell.
+     * Can be used as setPos(2, 3) or setPos([2, 3]).
+     */
+    this.setPos = function(pos) {
+        if ('object' === typeof pos) {
+            self.col = pos[0];
+            self.row = pos[1];
+        } else {
+            throw new Error('First argument of IncBoardCell.setPos not an object.');
+        }
+    };
 
-    ret.addClass('incboard-cell incboard-col-' + this.col + ' incboard-row-' + this.row);
-    ret.find('.cover').addClass('incboard-img');
-    ret.attr('data-content', v.title + ' (' + resultSet.secondsToHMS(v.duration) + ')');
-    ret.attr('data-trigger', 'hover');
-    ret.attr('id', v.artistMusicTitleId);
-    ret.find('.description').remove();
-    ret.popover({placement: 'top'})
-    return ret;
-}
+    this.getPos = function() {
+        return [self.col, self.row];
+    };
 
-IncBoardCell.prototype.toString = function() {
-    return '[ ' + this.content.artistMusicTitleId + ' (' + this.col + ',' + this.row + ')]';
-}
+    this.setContent = function(v) {
+        self.content = v;
+    };
 
-IncBoardCell.prototype.draw = function() {
-    var v = this.content;
-    var e = $('#' + v.artistMusicTitleId);
-    var sty = 'width: ' + this.cellSizeX + 'px; height: ' + this.cellSizeY + 'px; ';
+    this.getContent = function() {
+        return self.content;
+    };
 
-    // If the element already exists then the only attribute that can chage is the position.
-    if (e.length !== 0) {
-        e.removeClass();
-        e.addClass('music-square incboard-cell incboard-row-' + this.row + ' incboard-col-' + this.col);
-    } else {
-        e = this.getHtml();
-        $('#subtitle').subtitleAdd(v.artist);
-        e.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
-        $('#incboard-result #incboard').append(e);
-    }
-}
+    this.toString = function() {
+        return '[ ' + self.content.objId + self.content.type + ' (' + self.col + ',' + self.row + ')]';
+    };
 
-/**
- * Remove itself from the HTML.
- */
-IncBoardCell.prototype.remove = function() {
-    $('#' + this.content.artistMusicTitleId).remove();
+    /**
+     * Remove itself from the HTML.
+     */
+    this.remove = function() {
+        $('#' + self.content.type + self.content.objId).remove();
+    };
 }

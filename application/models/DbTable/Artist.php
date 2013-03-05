@@ -28,6 +28,12 @@ class DbTable_Artist extends DZend_Db_Table
         if (array_key_exists('name', $data)) {
             $data['name'] = substr($data['name'], 0, 62);
         }
-        return $this->insertCachedWithoutException($data);
+
+        if (($id = $this->_hscache->load(md5($data['name']))) === false) {
+            $id = $this->insertCachedWithoutException($data);
+            $this->_hscache->save($id, md5($data['name']));
+        }
+
+        return $id;
     }
 }

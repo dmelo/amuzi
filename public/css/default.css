@@ -166,6 +166,10 @@ dd#submit-element {
     z-index: 3;
 }
 
+.popover {
+    z-index:5000000;
+}
+
 .ac_input {
     color: black;
 }
@@ -267,9 +271,31 @@ ul.ui-autocomplete li {
     transition: background 300ms ease-in 0ms;
 }
 
-ul.ui-autocomplete li:hover {
+ul.ui-autocomplete li.album {
+    background-color: #ccc;
+}
+
+ul.ui-autocomplete li small {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+ul.ui-autocomplete li div.description {
+    min-height: 50px;
+    margin-top: -50px;
+    margin-left: 54px;
+    width: 246px;
+}
+
+ul.ui-autocomplete li.ui-menu-item:hover {
     cursor: pointer;
     background-color: #F40C42;
+}
+
+ul.ui-autocomplete li.ui-autocomplete-category {
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
 }
 
 ul.ui-autocomplete li a {
@@ -279,6 +305,11 @@ ul.ui-autocomplete li a {
 ul.ui-autocomplete li a img {
     max-width: 50px;
     max-height: 50px;
+}
+
+ul.ui-autocomplete li .cover {
+    width: 50px;
+    height: 50px;
 }
 
 ul.ui-autocomplete {
@@ -349,12 +380,6 @@ ul.ui-autocomplete {
     min-height: 115px;
 }
 
-.music-manager#playlists a.loadModal img {
-    padding-top: 25.5px;
-    padding-right: 28px;
-    padding-left: 28px;
-}
-
 .side-view-thumb {
     position: relative;
     float: right;
@@ -365,7 +390,7 @@ ul.ui-autocomplete {
     width: 200px;
 }
 
-.playlist-info {
+.playlist-info, .album-info {
     display: none;
 }
 
@@ -387,3 +412,32 @@ dd {
     margin-left: 0px;
 }
 
+.music-manager-group {
+    position: fixed;
+    max-height: 100%;
+    width: 100%;
+}
+
+.music-manager-content {
+    margin-right: 482px;
+    overflow-y: scroll;
+
+}
+
+.collection-info .caption, .collection-info .cover {
+    display: inline-block;
+}
+
+.collection-info .cover img {
+    height: 97px;
+}
+
+.collection-info .caption {
+    padding-left: 20px;
+    font-weight: bold;
+
+}
+
+.collection-info table img {
+    height: 50px;
+}

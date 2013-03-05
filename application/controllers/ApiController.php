@@ -26,44 +26,10 @@ class ApiController extends DZend_Controller_Action
             'error' => 'Parameter "q" must be specified'
             );
 
-    /**
-     * _registerTracks Persists track on database.
-     *
-     * @param array $resultSet List of results to persist.
-     * @param mixed $artist Artist related to the results' list.
-     * @param mixed $musicTitle Music title related to the results' list.
-     * @return void Return an array with the list of registered elements.
-     */
-    protected function _registerTracks(array $resultSet, $artist, $musicTitle)
+    public function init()
     {
-        $artistMusicTitleId = $this->_artistMusicTitleModel
-            ->insert($artist, $musicTitle);
-        $ret = array();
-
-        foreach ($resultSet as $result) {
-            $data = array(
-                'title' => $result->title,
-                'fid' => $result->fid,
-                'fcode' => $result->fcode,
-                'cover' => $result->cover,
-                'duration' => $result->duration
-            );
-            $trackRow = $this->_trackModel->insert($data);
-
-            $this->_musicTrackLinkModel->bond(
-                $artistMusicTitleId,
-                $trackRow->id,
-                $this->_bondModel->search
-            );
-
-            $row = $trackRow->getArray();
-            $row['artist'] = $artist;
-            $row['musicTitle'] = $musicTitle;
-
-            $ret[] = $row;
-        }
-
-        return $ret;
+        parent::init();
+        $this->_jsonify = true;
     }
 
     /**
@@ -80,35 +46,36 @@ class ApiController extends DZend_Controller_Action
             if (null !== $q) {
                 $limit = $this->_request->getParam('limit', 9);
                 $offset = $this->_request->getParam('offset', 1);
-                $cache = Zend_Registry::get('cache');
-                $key = sha1($q . $limit . $offset);
-                // TODO: UNCOMMENT CACHE.
-                // if (($list = $cache->load($key)) === false) {
-                    $complement = array();
-                    $artist = $this->_request->getParam('artist');
-                    $musicTitle = $this->_request->getParam('musicTitle');
-                    $complement = null !== $artist && null !== $musicTitle ?
-                        array(
-                            'artist' => $artist,
-                            'musicTitle' => $musicTitle,
-                            'artistMusicTitleId' => $this->
-                                _artistMusicTitleModel->insert(
-                                    $artist, $musicTitle
-                                )
-                        ):
-                        array();
-                    $resultSet = $this->_youtubeModel->search(
-                        $q, $limit, $offset, $complement
+                $complement = array();
+                $artist = $this->_request->getParam('artist');
+                $musicTitle = $this->_request->getParam('musicTitle');
+                $complement = null !== $artist && null !== $musicTitle ?
+                    array(
+                        'artist' => $artist,
+                        'musicTitle' => $musicTitle,
+                        'artistMusicTitleId' => $this->
+                            _artistMusicTitleModel->insert(
+                                $artist, $musicTitle
+                            )
+                    ): array();
+
+                $resultSet = $this->_youtubeModel->search(
+                    $q, $limit, $offset, $complement
+                );
+                if (!empty($complement)) {
+                    $list = $this->_trackModel->insertMany(
+                        $resultSet, $artist, $musicTitle
                     );
-                    if (!empty($complement))
-                        $list = $this->_registerTracks(
-                            $resultSet, $artist, $musicTitle
-                        );
-                    else
-                        foreach ($resultSet as $result)
-                            $list[] = $result->getArray();
-                //    $cache->save($list, $key);
-                //}
+                } else {
+                    foreach ($resultSet as $result) {
+                        $list[] = $result->getArray();
+                    }
+                }
+
+                if (!empty($complement)) {
+                    $resultSet = $this->_albumModel->search($q);
+                    $list = array_merge($list, $resultSet);
+                }
 
                 $this->view->output = $list;
             } else {
@@ -136,20 +103,51 @@ class ApiController extends DZend_Controller_Action
         );
 
         if (($artist = $this->_request->getParam('artist')) != null &&
-            ($musicTitle = $this->_request->getParam('musicTitle')) != null) {
-
+            ($musicTitle = $this->_request->getParam('musicTitle')) != null &&
+            ($type = $this->_request->getParam('type')) != null) {
             $this->view->output = $this->_musicSimilarityModel
-                ->getSimilar($artist, $musicTitle, $artistMusicTitleIdList);
+                ->getSimilar($artist, $musicTitle, $type, $artistMusicTitleIdList);
         } elseif (($q = $this->_request->getParam('q')) != null) {
             $item = $this->_artistMusicTitleModel->getBestGuess($q);
+            if (null === $item) {
+                $item = $this->_albumModel->getBestGuess($q);
+            }
+
             $this->view->output = null === $item ?
                 $this->_error :
                 $this->_musicSimilarityModel->getSimilar(
-                    $item['artist'], $item['musicTitle'], $artistMusicTitleIdList
+                    $item->artist,
+                    $item->musicTitle,
+                    $item->type,
+                    $artistMusicTitleIdList
                 );
         } else {
             $this->view->output = $this->_error;
         }
+    }
+
+    /**
+     * _getAlbum Get full information of the requested album.
+     *
+     * @param string $artist
+     * @param string $album
+     * @return array Returns the array conversion of the album row.
+     */
+    public function _getAlbum($artist, $album)
+    {
+        $albumRow = null;
+        if (($albumRow = $this->_albumModel->get($artist, $album)) === null ||
+            count($albumRow->trackList) == 0) {
+            $album = $this->_lastfmModel->getAlbum($artist, $album);
+            $albumId = $this->_albumModel->insert($album);
+            $albumRow = $this->_albumModel->findRowById($albumId);
+        }
+
+        $ret = $albumRow->getArray();
+        $ret['objId'] = -$ret['id'];
+        $ret['type'] = 'album';
+
+        return $ret;
     }
 
     public function _getMusic($artist, $musicTitle)
@@ -157,23 +155,8 @@ class ApiController extends DZend_Controller_Action
         $ret = null;
 
         $trackRow = $this->_musicTrackLinkModel->getTrack(
-            $artist, $musicTitle
+            $artist, $musicTitle, true
         );
-        if (null === $trackRow) {
-            // Look for it on Youtube.
-            $resultSet = $this->_youtubeModel->search(
-                "${artist} - ${musicTitle}", 5, 1, array(
-                    'artist' => $artist,
-                    'musicTitle' => $musicTitle
-                )
-            );
-            $this->_registerTracks(
-                $resultSet, $artist, $musicTitle
-            );
-            $trackRow = $this->_musicTrackLinkModel->getTrack(
-                $artist, $musicTitle
-            );
-        }
 
         if (null !== $trackRow) {
             $ret = array_merge(
@@ -185,11 +168,12 @@ class ApiController extends DZend_Controller_Action
                         ->insert($artist, $musicTitle)
                 )
             );
+            $ret['objId'] = $ret['artistMusicTitleId'];
+            $ret['type'] = 'track';
         }
 
         return $ret;
     }
-
 
     /**
      * searchmusicAction Given the artist and musicTitle parameters, find all
@@ -205,6 +189,14 @@ class ApiController extends DZend_Controller_Action
         }
     }
 
+    public function searchalbumAction()
+    {
+        if (($artist = $this->_request->getParam('artist')) !== null &&
+            ($album = $this->_request->getParam('album')) !== null) {
+            $this->view->output = $this->_getAlbum($artist, $album);
+        }
+    }
+
     /**
      * Given the user's incomplete outputs the list of suggestions in Json.
      *
@@ -212,19 +204,22 @@ class ApiController extends DZend_Controller_Action
      */
     public function autocompleteAction()
     {
-        $q = $this->_request->getParam('q');
-        $list = array();
-        if (null !== $q) {
-            $list = $this->_artistMusicTitleModel->autocomplete($q);
-            if (count($list) < 5) {
-                $resultSet = $this->_lastfmModel->search($q);
-                foreach ($resultSet as $result)
-                    $list[] = $result->getArray();
+        if (null !== ($q = strtolower($this->_request->getParam('q')))) {
+            // Try to get from music_title and album.
+            $list = array();
+            $listMusicTitle = $this->_artistMusicTitleModel->autocomplete($q);
+            $listAlbum = $this->_albumModel->autocomplete($q);
+
+            $list = array_merge($listAlbum, $listMusicTitle);
+            $ret = array();
+            foreach ($list as $item) {
+                $ret[] = $item->getArray();
             }
-            $this->view->output = $list;
-        }
-        else
+
+            $this->view->output = $ret;
+        } else {
             $this->view->output = $this->_error;
+        }
     }
 
     /**
@@ -277,18 +272,6 @@ class ApiController extends DZend_Controller_Action
     }
 
     /**
-     * postDispatch Make it easier to output Json.
-     *
-     * @return void
-     *
-     */
-    public function postDispatch()
-    {
-        if (isset( $this->view->output ))
-            echo Zend_Json::encode($this->view->output);
-    }
-
-    /**
      * reporterrorAction In case of JS error, the default procedure must be
      * call this action to report it.
      *
@@ -311,13 +294,18 @@ class ApiController extends DZend_Controller_Action
         $this->view->message = $message;
     }
 
+    /**
+     * gettopAction Get top music on lastfm.
+     *
+     * @return void
+     */
     public function gettopAction()
     {
         $resultSet = $this->_lastfmModel->getTop();
         $ret = array();
         foreach ($resultSet as $row) {
             $track = $this->_getMusic($row->artist, $row->musicTitle);
-            $track['cover'] = $row->cover;
+            $track['cover'] = '' === $row->cover ? '/img/album.png' : $row->cover;
             $ret[] = $track;
         }
 

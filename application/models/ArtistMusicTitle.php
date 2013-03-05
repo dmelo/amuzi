@@ -23,6 +23,10 @@
  */
 class ArtistMusicTitle extends DZend_Model
 {
+    use autocompleteTrait;
+
+    private $_type = 'music_title';
+
     public function insert($artist, $musicTitle)
     {
         $artistId = $this->_artistModel->insert($artist);
@@ -48,25 +52,19 @@ class ArtistMusicTitle extends DZend_Model
         return $this->_artistMusicTitleDb->fetchRow($where);
     }
 
-    public function fetchAllArtistAndMusicTitle($idsList)
+    public function fetchAllArtistAndMusicTitle($idList)
     {
         return $this->_artistMusicTitleDb->fetchAllArtistAndMusicTitle(
-            $idsList
+            $idList
         );
     }
 
-    public function autocomplete($q)
-    {
-        return $this->_artistMusicTitleDb->autocomplete($q);
+    public function update(LastfmEntry $data) {
+        // TODO: update cover on database.
     }
 
-    public function getBestGuess($q)
+    public function findRowById($id)
     {
-        $list = $this->autocomplete($q);
-        foreach ($list as $item) {
-            return $item;
-        }
-
-        return null;
+        return $this->_artistMusicTitleDb->findRowById($id);
     }
 }

@@ -9,7 +9,8 @@ INSERT INTO `user`(`name`, `email`, `password`)
 
 INSERT INTO `playlist`(user_id, name) VALUES(last_insert_id(), 'Diogo Melo');
 
-INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24 * 30);
+INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24 * 30), ('SearchString', 60 * 60 * 24 * 30 * 6);
 
 INSERT INTO `tutorial`(`name`) values('welcome'), ('search'), ('slide');
 
+source artist_full.sql;

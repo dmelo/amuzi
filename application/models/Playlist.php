@@ -187,6 +187,19 @@ class Playlist extends DZend_Model
     }
 
     /**
+     * findRowById Find a row, given it's ID.
+     *
+     * @param int $id Row ID
+     * @return Returns the asked row.
+     */
+    public function findRowById($id)
+    {
+        return $this->_playlistDb->findRowByUserIdAndId(
+            $this->_session->user->id, $id
+        );
+    }
+
+    /**
      * setNewName
      *
      * @param string $name Current playlist's name.
@@ -206,19 +219,6 @@ class Playlist extends DZend_Model
         } catch(Zend_Exception $e) {
             return false;
         }
-    }
-
-    /**
-     * addTrack Add a track into the playlist
-     *
-     * @param array $trackInfo Track information
-     * @param string $name Playlist's name
-     * @return Returns the track row.
-     */
-    public function addTrack(array $trackInfo, $name = 'default')
-    {
-        $playlistRow = $this->create($name);
-        return $playlistRow->addTrack($trackInfo);
     }
 
     /**
@@ -279,11 +279,11 @@ class Playlist extends DZend_Model
      * @return bool Returns true if the playlist was successfully deleted,
      * the error string otherwise.
      */
-    public function remove($name)
+    public function remove($id)
     {
         try {
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id, $name
+            $playlistRow = $this->_playlistDb->findRowByUserIdAndId(
+                $this->_session->user->id, $id
             );
 
             if (null !== $playlistRow) {
@@ -327,17 +327,6 @@ class Playlist extends DZend_Model
     }
 
     /**
-     * findRowById Find a row, given it's ID.
-     *
-     * @param int $id Row ID
-     * @return Returns the asked row.
-     */
-    public function findRowById($id)
-    {
-        return $this->_playlistDb->findRowById($id);
-    }
-
-    /**
      * Changes the privacy behavior of a user's playlist.
      *
      * @param $name string The name of the playlist.
@@ -358,5 +347,12 @@ class Playlist extends DZend_Model
         } catch(Zend_Exception $e) {
             return false;
         }
+    }
+
+    public function getCurrentRow()
+    {
+        return $this->_playlistDb->findRowById(
+            $this->_session->user->currentPlaylistId
+        );
     }
 }

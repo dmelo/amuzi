@@ -35,7 +35,7 @@ class DbTable_TaskSetRow extends DZend_Db_Table_Row
                 }
             }
 
-            return parent::__get($name);
+            return null;
         } elseif ('type' === $name) {
             $taskTypeDb = new DbTable_TaskType();
             return $taskTypeDb->findRowById($this->taskTypeId);

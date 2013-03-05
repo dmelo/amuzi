@@ -28,16 +28,30 @@ class Lastfm extends DZend_Model
     private $_secret;
     private $_cache;
 
-    protected function _request($args)
+    /**
+     * _request Perform a request to lastfm.
+     *
+     * @param mixed $args
+     * @return void
+     */
+    protected function _request($args, $useCache = true)
     {
         $args['api_key'] = $this->_key;
-        foreach ($args as $key => $value)
+        foreach ($args as $key => $value) {
             $final[] = $key . '='. urlencode($value);
+        }
 
-        $url = $this->_baseUrl . '?' . implode('&', $final);
-        $this->_logger->debug('Lastfm::_request - ' . $url);
+        $key = sha1('Lastfm::_request' . implode($final));
+        if (($xml = $this->_cache->load($key)) === false) {
+            $url = $this->_baseUrl . '?' . implode('&', $final);
+            $this->_logger->debug('Lastfm::_request - ' . $url);
+            $xml = file_get_contents($url);
+            if ($useCache) {
+                $this->_cache->save($xml, $key);
+            }
+        }
 
-        return file_get_contents($url);
+        return $xml;
     }
 
     protected function _calcName($artist, $musicTitle)
@@ -67,14 +81,22 @@ class Lastfm extends DZend_Model
 
     protected function _processResponseSearch($track)
     {
-        $artist = $track->getElementsByTagName('artist')
-            ->item(0)
-            ->nodeValue;
+        $artist = $track->getElementsByTagName('artist')->item(0);
+        $name = $artist->getElementsByTagName('name');
+        $this->_logger->debug('Lastfm::_processResponseSearch -- ' . get_class($name));
+
+        if (get_class($name) === 'DOMNodeList' && $name->item(0) !== null) {
+            $artist = $name->item(0)->nodeValue;
+        } else {
+            $artist = $artist->nodeValue;
+        }
+
         $musicTitle = $track->getElementsByTagName('name')
             ->item(0)
             ->nodeValue;
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
+
         return  new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
 
@@ -116,29 +138,38 @@ class Lastfm extends DZend_Model
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
 
+        $this->_logger->debug("Lastfm::_processResponseGetTop $artist $musicTitle $cover --> {$track->nodeValue}");
+
         return new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
 
     public function _exploreDOM($xml, $func, $limit = null)
     {
+        $c = new DZend_Chronometer();
+        $c->start();
+        $type = 'track';
         $resultSet = array();
         $xmlDoc = new DOMDocument();
         $i = 0;
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
-            foreach ($xmlDoc->getElementsByTagName('track') as $track) {
-                $resultSet[] = $this->$func($track);
+            if ($xmlDoc->getElementsByTagName('track')->length === 0) {
+                $type = 'album';
+            }
 
-                if (null !== $limit) {
-                    $i++;
-                    if ($i >= $limit)
-                        break;
+            foreach ($xmlDoc->getElementsByTagName($type) as $track) {
+                $item = $this->$func($track);
+                $item->type = $type;
+                $resultSet[] = $item;
+
+                if (null !== $limit && $i++ >= $limit) {
+                    break;
                 }
             }
         }
+        $c->stop();
 
         return $resultSet;
-
     }
 
     public function __construct()
@@ -154,51 +185,113 @@ class Lastfm extends DZend_Model
         $this->_cache = Zend_Registry::get('cache');
     }
 
-    public function search($q, $limit = 10, $offset = 1)
+    public function searchTrack($q, $limit = 5, $offset = 1)
     {
-        $key = sha1("Lastfm::search#$q");
+        $q = strtoupper($q);
+        $args = array(
+            'method' => 'track.search',
+            'track' => $q
+            );
+        $xmlTrack = $this->_request($args);
 
-        $this->_logger->debug('Lastfm::search A ' . microtime(true));
-        if (($xml = $this->_cache->load($key)) === false) {
-            $args = array(
-                'method' => 'track.search',
-                'track' => $q
-                );
-
-            $xml = $this->_request($args);
-            $this->_cache->save($xml, $key);
-            $this->_logger->debug('Lastfm::search B ' . microtime(true));
+        $list = $this->_exploreDOM($xmlTrack, '_processResponseSearch', $limit);
+        $ret = array();
+        foreach ($list as $item) {
+            $ret[] = new AutocompleteEntry(
+                $item->artist,
+                $item->musicTitle,
+                $item->cover,
+                'track'
+            );
         }
-        $this->_logger->debug('Lastfm::search C ' . microtime(true));
 
-        return $this->_exploreDOM($xml, '_processResponseSearch', $limit);
+        return array_slice($ret, 0, 5);
+    }
+
+    public function searchAlbum($q, $limit = 5, $offset = 1)
+    {
+        $q = strtoupper($q);
+        $args = array(
+            'method' => 'album.search',
+            'album' => $q
+        );
+        $xmlAlbum = $this->_request($args);
+
+        $list = $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit);
+        $ret = array();
+        foreach ($list as $item) {
+            $ret[] = new AutocompleteEntry(
+                $item->artist,
+                $item->musicTitle,
+                $item->cover,
+                'album'
+            );
+        }
+
+        return $ret;
+    }
+
+    public function getAlbum($artist, $album)
+    {
+        $args = array(
+            'method' => 'album.getInfo',
+            'album' => $album,
+            'artist' => $artist,
+            'autocorrect' => 0
+        );
+        $xml = $this->_request($args);
+
+        $albumName = $artist = $cover = '';
+        $xmlDoc = new DOMDocument();
+        if ('' !== $xml) {
+            $xmlDoc->loadXML($xml);
+            $this->_logger->debug("XML: " . $xml);
+            $album = $xmlDoc->getElementsByTagName('album');
+            for ($e = $album->item(0)->firstChild; null !== $e; $e = $e->nextSibling) {
+                $value = $e->nodeValue;
+                switch ($e->nodeName) {
+                    case 'name':
+                        $albumName = $value;
+                        break;
+                    case 'artist':
+                        $artist = $value;
+                        break;
+                    case 'image':
+                        $cover = $value;
+                        break;
+                }
+            }
+        }
+
+        $trackList = $this->_exploreDOM($xml, '_processResponseSearch', 1000);
+
+        $albumRow = new LastfmAlbum($albumName, $cover, $artist, $trackList);
+
+        $this->_logger->debug('Lastfm::getAlbum - ' . $albumRow);
+
+        return $albumRow;
     }
 
     public function getSimilar($artist, $music)
     {
-        $key = sha1("Lastfm::search#$artist#$music");
+        $this->_logger->debug('Lastfm::getSimilar A ' . $artist . ' - ' . $music . ' # ' . microtime(true));
+        $resultSet = array();
+        $args = array(
+            'method' => 'track.getsimilar',
+            'artist' => $artist,
+            'track' => $music,
+            );
 
-        $this->_logger->debug('Lastfm::getSimilar A ' . microtime(true));
-        if (($xml = $this->_cache->load($key)) === false) {
-            $resultSet = array();
-            $args = array(
-                'method' => 'track.getsimilar',
-                'artist' => $artist,
-                'track' => $music
-                );
-
-            $xml = $this->_request($args);
-            $this->_cache->save($xml, $key);
-            $this->_logger->debug('Lastfm::getSimilar B ' . microtime(true));
-        }
-        $this->_logger->debug('Lastfm::getSimilar C ' . microtime(true));
+        $xml = $this->_request($args);
+        $this->_logger->debug('Lastfm::getSimilar B ' . microtime(true));
 
         return $this->_exploreDOM($xml, '_processResponseSimilar', 200);
     }
 
     public function getTop($limit = 50)
     {
-        $date = date('Ymd');
+        $date = date('Ymd', time(null));
+        $c = new DZend_Chronometer();
         $key = sha1("Lastfm::getTop#$limit#$date");
 
         if (($xml = $this->_cache->load($key)) === false) {
@@ -208,7 +301,7 @@ class Lastfm extends DZend_Model
                 'country' => 'united states'
             );
 
-            $xml = $this->_request($args);
+            $xml = $this->_request($args, false);
             $this->_logger->debug("Lastfm::getTop -> xml: " . $xml);
             $this->_cache->save($xml, $key);
         }

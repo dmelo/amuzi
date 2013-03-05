@@ -1,14 +1,33 @@
-<?
-
-if (isset($this->playlistRow)) {
-    echo Zend_Json::encode(
-        array(
-            $this->playlistRow->id,
-            $this->playlistInfo($this->playlistRow)
-        )
-    );
-} elseif (isset($this->message)) {
-    echo Zend_Json::encode($this->message);
-}
-
-?>
+<div class="collection-info">
+    <div class="cover">
+        <img src="<?= $this->collection->getCover(); ?>"/>
+    </div>
+    <div class="caption">
+        <div class="info">
+            <?= $this->t('Name') . ': ' . $this->collection->getCoverName(); ?>
+        </div>
+        <div class="info">
+            <?= $this->t('Type') . ': ' . $this->t(ucfirst($this->collection->getType())); ?>
+        </div>
+        <div class="info">
+            <?= $this->t('Duration') . ': ' . $this->secsToTime($this->collection->playTime()); ?>
+        </div>
+    </div>
+    <table class="tracklist table table-striped">
+        <caption><?= $this->t('Track list'); ?></caption>
+        <thead></thead>
+        <tbody>
+        <? $count = 0; foreach ($this->collection->getTrackListAsArray() as $track): ?>
+            <? if (!array_key_exists('title', $track)) continue; ?>
+            <tr>
+                <td><?= ++$count; ?></div>
+                <td><img src="<?= $track['cover']; ?>"/></td>
+                <td>
+                    <div class="info"><?=  $this->t('Name') . ': ' . $track['title']; ?></div>
+                    <div class="info"><?= $this->t('Duration') . ': ' . $this->secsToTime($track['duration']); ?></div>
+                </td>
+            </tr>
+        <? endforeach; ?>
+        </tbody>
+    </table>
+</div>

@@ -69,7 +69,7 @@
         s = time;
 
         if (h > 0) {
-            str = this.twoDigit(h);
+            str = this.twoDigit(h) + ":";
         }
 
         str += this.twoDigit(m) + ':';
@@ -88,11 +88,17 @@
     };
 
     $.ResultSet.prototype.getControl = function (v) {
-        return '<a href="' + v.url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+        var url = 'url' in v ? v.url : v.id;
+        return '<a href="' + url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
     };
 
     $.ResultSet.prototype.getDescription = function (v) {
-        return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div>';
+        return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div></div>';
+    };
+
+    $.ResultSet.prototype.getAlbumDescription = function (v) {
+        var duration = 'duration' in v ? '<div class="duration">' + this.secondsToHMS(v.duration) + '</div>' : '';
+        return '<div class="description">' + duration + '<div class="title">' + v.artist + ' - ' + v.name + '</div></div>';
     };
 
     $.ResultSet.prototype.getMusicLarge = function (v, objectType) {
@@ -100,7 +106,11 @@
     };
 
     $.ResultSet.prototype.getMusicSquare = function (v) {
-        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div><div class="overlay"></div>' + this.getDescription(v) + '</div><div class="play">' + this.getControl(v) + '</div>';
+        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div>' + this.getDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
+    };
+
+    $.ResultSet.prototype.getAlbumSquare = function (v) {
+        return '<div class="album-square music-square" albumid="' + v.id + '" artist="' + v.artist + '" name="' + v.name + '"><div class="cover"><div class="side"><img src="/img/album-side.png"/></div><img src="' + v.cover + '" alt="cover" class="cover-img" /></div><div class="overlay"></div>' + this.getAlbumDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
     };
 
     $.ResultSet.prototype.appendTable = function (v, objectType) {
@@ -133,7 +143,8 @@
     $.ResultSet.prototype.getSimilarTracks = function (artist, musicTitle) {
         $.get('/api/searchsimilar', {
             artist: artist,
-            musicTitle: musicTitle
+            musicTitle: musicTitle,
+            type: 'track'
         }, function (data) {
             $.each(data, function (i, v) {
                 resultSet.appendTable(v, 'music');
@@ -142,14 +153,6 @@
     };
 
     $(document).ready(function () {
-        $('.music-large').live({mouseenter: function () {
-            $(this).find('a').css('color', 'white');
-            $(this).find('.play').css('display', 'block');
-        }, mouseleave: function () {
-            $(this).find('a').css('color', 'black');
-            $(this).find('.play').css('display', 'none');
-        }});
-
         // query youtube for videos and fill the result table.
         $('#search').ajaxForm({
             dataType: 'json',

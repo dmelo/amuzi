@@ -1,15 +1,14 @@
 <div class="slide" id="slide-music-manager">
     <div class="music-manager-group">
         <div class="music-manager" id="transfer"></div>
-        <div class="music-manager" id="playlists">
-            <h5><?= $this->t("Your playlists"); ?></h5>
+        <div class="music-manager-content">
+        <? foreach (array("playlists", "albums") as $col): ?>
+        <div class="music-manager" id="<?= $col; ?>">
+            <h5><?= $this->t("Your " . $col); ?></h5>
             <div class="stripe">
             </div>
         </div>
-        <div class="music-manager" id="edit-playlist">
-            <h5><?= $this->t("Details"); ?></h5>
-            <div class="stripe">
-            </div>
+        <? endforeach; ?>
         </div>
     </div>
     <?= $this->jPlayer(); ?>

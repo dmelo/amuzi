@@ -1,5 +1,6 @@
 #incboard {
     position: relative;
+    height: 0px;
 }
 
 .incboard-cell {
@@ -14,15 +15,36 @@
     opacity: 1.0;
     filter: alpha (opacity = 100);
     background-color: transparent;
+    position: relative;
+    height: 100%;
 }
 
-.incboard-cell.music-square .play {
+.incboard-cell .play {
     position: absolute;
     top: 50%;
     margin-top: -12px;
     left: 50%;
     margin-left: -12px;
 }
+
+.incboard-cell.album-square .cover > img {
+    position: absolute;
+    margin-left: -24%;
+    top: 3px;
+}
+
+.incboard-cell.album-square .side {
+    background-color: black;
+    position: absolute;
+    height: 100%;
+    margin-left: 0px;
+    width: 23%;
+}
+
+.incboard-cell.album-square .side img {
+    height: 100%;
+}
+
 
 .incboard-cell .incboard-control {
     display: none;
@@ -38,6 +60,8 @@
 }
 
 .incboard-cell .incboard-img {
+    position: relative;
+    height: 100%;
     padding: 3px;
 }
 

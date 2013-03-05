@@ -28,13 +28,13 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         return $this->insertCachedWithoutException($data);
     }
 
-    public function fetchAllArtistAndMusicTitle($idsList)
+    public function fetchAllArtistAndMusicTitle($idList)
     {
         $db = $this->getAdapter();
         $select = $db->select();
         $select->from(
             array('amt' => 'artist_music_title'),
-            array('artistMusicTitleId' => 'id')
+            array('id' => 'id')
         )->join(
             array('a' => 'artist'),
             'a.id = amt.artist_id',
@@ -43,7 +43,7 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
             array('m' => 'music_title'),
             'm.id = amt.music_title_id',
             array('musicTitle' => 'name')
-        )->where('amt.id in ( ' . implode(', ', $idsList) . ')');
+        )->where('amt.id in ( ' . implode(', ', $idList) . ')');
 
         return $db->fetchAll($select);
     }
@@ -51,10 +51,14 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
     /**
      * autocomplete Search on database for rows that fits the query.
      *
+     * @DEPRECATED: as tables have millions of rows, a like on a join with
+     * three tables will take too long.
+     *
      * @param mixed $q
      * @param int $limit
      * @return Zend_Db_Table_RowSet
      */
+    /*
     public function autocomplete($q, $limit = 10)
     {
         $db = $this->getAdapter();
@@ -86,5 +90,56 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
 
         $this->_logger->debug("-----> select: " . $select);
         return $db->fetchAll($select);
+    }
+    */
+
+    public function autocomplete($data)
+    {
+        $this->_logger->debug("ArtistMusicTitle::autocomplete " . print_r($data, true));
+        $ret = array();
+
+        $db = $this->getAdapter();
+        $select = $db->select();
+        $select->from(
+            array('a' => 'artist'),
+            array(
+                'amtid' => 'amt.id'
+            )
+        )->join(
+            array('amt' => 'artist_music_title'),
+            'amt.artist_id = a.id',
+            array()
+        )->join(
+            array('mt' => 'music_title'),
+            'mt.id = amt.music_title_id',
+            array())
+        ->limit(5);
+
+        if (array_key_exists('artist', $data)) {
+            $where[] = $db->quoteInto('a.name like ?', '%' . $data['artist'] . '%');
+        }
+
+        if (array_key_exists('music_title', $data)) {
+            $where[] = $db->quoteInto('mt.name like ?', '%' . $data['music_title'] . '%');
+        }
+
+        $where = implode(' AND ', $where);
+        $select->where($where);
+
+        $this->_logger->debug("DbTable_ArtistMusicTitle autocomplete " . $select);
+
+        $rowSet = $db->fetchAll($select);
+        $ret = array();
+        foreach ($rowSet as $row) {
+            $artistMusicTitleRow = $this->findRowById($row['amtid']);
+            $ret[] = new AutocompleteEntry(
+                $artistMusicTitleRow->getArtistName(),
+                $artistMusicTitleRow->getMusicTitleName(),
+                $artistMusicTitleRow->getCover(),
+                'track'
+            );
+        }
+
+        return $ret;
     }
 }
