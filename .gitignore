@@ -2,7 +2,6 @@
 *.swo
 public/api/*
 public/data/*.php
-public/data/*.txt
 docs/api
 tests/tmp
 public/tmp
