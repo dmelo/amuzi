@@ -247,7 +247,7 @@ CREATE TABLE `album` (
     `id` int(11) NOT NULL auto_increment,
     `name` varchar(255) NOT NULL,
     `cover` varchar(2047) collate utf8_swedish_ci default NULL,
-    `artist_id` int(11), -- In case there is many artist ("Various Artists" from last.fm) then this info is not recorded.
+    `artist_id` int(11) NOT NULL, -- In case there is many artist ("Various Artists" from last.fm) then this info is not recorded.
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(`id`),

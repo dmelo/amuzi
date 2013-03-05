@@ -13,3 +13,4 @@ INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24
 
 INSERT INTO `tutorial`(`name`) values('welcome'), ('search'), ('slide');
 
+source artist_full.sql;
