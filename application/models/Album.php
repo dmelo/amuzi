@@ -50,12 +50,10 @@ class Album extends DZend_Model
                 )
             );
 
-
-
             $ret[] = $album;
         }
 
-        return array();
+        return $ret;
     }
 
     public function get($artist, $album)
@@ -157,6 +155,8 @@ class Album extends DZend_Model
         return $ret;
     }
 
+    /*
+     * TODO: apperentaly nobody calls this method. If so, just remove it.
     public function update(LastfmEntry $data) {
         $id = null;
         if (null !== $data->cover) {
@@ -172,4 +172,5 @@ class Album extends DZend_Model
 
         return $id;
     }
+    */
 }
