@@ -576,7 +576,7 @@
         // topbar menu
         $('.topbar').dropdown();
 
-        $('.music-large, .music-square').live('click', function (e) {
+        $('.music-large, .music-square, .album-square').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             if ($(this).hasClass('album-square')) {

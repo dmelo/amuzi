@@ -30,7 +30,7 @@
     cursor: pointer;
 }
 
-.music-square .description, .music-square .play {
+.music-square .description, .music-square .play, .album-square .play {
     display: none;
 }
 

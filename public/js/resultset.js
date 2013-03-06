@@ -177,7 +177,7 @@
             resultSet.searchMore();
         });
 
-        $('.music-square').live({mouseenter: function () {
+        $('.music-square, .album-square').live({mouseenter: function () {
             $(this).find('.description, .play').css('display', 'block');
             $(this).find('.overlay').css('display', 'none');
         }, mouseleave: function () {
