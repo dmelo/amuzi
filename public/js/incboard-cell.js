@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+"use strict";
+
 function IncBoardCell() {
     var cellSizeX = 56,
         cellSizeY = 44,
@@ -42,6 +44,8 @@ function IncBoardCell() {
         ret.attr('id', v.type + v.objId);
         ret.find('.description').remove();
         ret.popover({placement: 'top'});
+
+        delete resultSet;
 
         return ret;
     };
