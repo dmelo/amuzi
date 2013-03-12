@@ -102,38 +102,35 @@ IncBoard.prototype.stochasticItems = function(center) {
     return list;
 }
 
+/**
+ * @param music The entire music object.
+ * @param musicList a list of Obj IDs.
+ */
 IncBoard.prototype.get2DRank = function(music, musicList) {
     var center = this.ibb.getPos(music.objId),
         list = [],
         rank = [],
         self = this,
         i,
-        j;
+        j,
+        countSort = [];
 
     for (var key in musicList) {
-        var id = musicList[id],
+        var id = musicList[key],
             a = [],
-            pos =  self.ibb.getPos(id);
+            pos =  self.ibb.getPos(id),
+            p = Math.max(Math.abs(pos[0] - center[0]), Math.abs(pos[1] - center[1]));
 
-        a['pos'] = [pos[0] - center[0], pos[1] - center[1]];
-        a['id'] = id;
-
-        list.push(a);
-    }
-
-    for (i = 0; i < list.length; i++) {
-        for (j = i + 1; j < list.length; j++) {
-            if (self.posGreaterThan(list[i].pos, list[j].pos)) {
-                var aux = list[i];
-                list[i] = list[j];
-                list[j] = aux;
-            }
+        if (!(p in countSort)) {
+            countSort[p] = [];
         }
+        countSort[p].push(id);
     }
 
-    for (var key in list) {
-        var item = list[key];
-        rank.push(item.id);
+    for (var i in countSort) {
+        for (var j in countSort[i]) {
+            rank.push(countSort[i][j]);
+        }
     }
 
     return rank;
@@ -141,25 +138,25 @@ IncBoard.prototype.get2DRank = function(music, musicList) {
 
 IncBoard.prototype.getNDRank = function(music, musicList) {
     var rank = new Array(),
-        currentRank = 1,
-        localSimilarity = new Array(),
-        similarityPull = new Array(),
         objId = music.objId,
         rank = new Array(),
-        self = this;
+        self = this,
+        countSort = [];
 
     for (var key in musicList) {
-        var id = musicList[key];
-        localSimilarity[id] = self.similarity[objId][id];
-        similarityPull.push(self.similarity[objId][id]);
+        var id = musicList[key],
+            p = self.similarity[objId][id];
+
+        if (!(p in countSort)) {
+            countSort[p] = [];
+        }
+        countSort[p].push(id);
     }
 
-    for (var key in localSimilarity) {
-        var max = Math.max.apply(Math, similarityPull);
-        var val = localSimilarity.indexOf(max);
-        rank.push(val);
-        delete localSimilarity[val];
-        delete similarityPull[similarityPull.indexOf(val)];
+    for (var i in countSort) {
+        for (var j in countSort[i]) {
+            rank.push(countSort[i][j]);
+        }
     }
 
     return rank;
@@ -179,8 +176,9 @@ IncBoard.prototype.calcError = function(v, musicList) {
     for (var r2 in rank2D) {
         var item = rank2D[r2];
         rN = rankND.indexOf(item);
-        if (rN !== r2)
+        if (rN !== r2) {
             werr += Math.abs((rN - r2) * (self.ibb.getSize() - rN));
+        }
     }
 
     var s3 = new Date().getTime();
@@ -189,12 +187,10 @@ IncBoard.prototype.calcError = function(v, musicList) {
 }
 
 IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCells) {
-    console.log("resolveConflict ");
     var self = this;
 
     self.log.debug("resolveConflict " + mostSimilar.objId + " " + newMusic.objId + ": " + visitedCells);
     if ('undefined' === typeof mostSimilar || 'undefined' === typeof newMusic) {
-        // console.log(visitedCells);
     }
 
     var ncPos = this.ibb.getPos(newMusic.objId),
@@ -247,13 +243,10 @@ IncBoard.prototype.resolveConflict = function(mostSimilar, newMusic, visitedCell
                 second = conflictList[1];
 
             this.resolveConflict(first, second, visitedCells);
-        } else {
-            // console.log('DONE WITH: ' + newMusic);
         }
-    } else { // the cell is trapped.
+    } else { // otherwise the cell is trapped.
         console.log("Cell is trapped: ");
         console.log(newMusic);
-        console.log(mostSimilar);
     }
 }
 
@@ -269,7 +262,6 @@ IncBoard.prototype.insert = function(v) {
 
 
     if (this.ibb.getByObjId(v.objId) !== undefined) {
-        console.log("Trying to insert " + v.objId + " that already is on incBoard. Discarding it...");
         ret = false;
     } else {
         // Find the most similar element already on incBoard.
@@ -294,7 +286,6 @@ IncBoard.prototype.insert = function(v) {
             this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
         }
 
-        console.log("inserted " + v.objId);
         this.ibb.removeOutOfBorder();
         this.ibb.centralizeItems();
         this.ibb.flushDraw();
@@ -310,11 +301,7 @@ IncBoard.prototype.searchMusic = function(set, num, callback) {
         uri,
         params;
 
-    console.log('searchMusic ');
-    console.log(m);
-    console.log('searchMusic -- num: ' + num + '. length: ' + set.length);
     if (num > 0 && 'undefined' !== typeof m) {
-        console.log(m);
         if ('type' in m && 'album' === m.type) {
             uri = '/api/searchalbum';
             params = {
@@ -365,7 +352,6 @@ IncBoard.prototype.incrementSimilar = function() {
                 musicTitle = obj[1],
                 type = obj[2];
 
-            console.log('INCREMENTING ' + artist + " - " + musicTitle);
             this.incrementSimilarRunning = true;
             $.post('/api/searchsimilar', {
                 q: artist + ' - ' + musicTitle,
@@ -398,8 +384,6 @@ function loadSimilarMusic(data, num, callback) {
 }
 
 function searchSimilar(ele) {
-    console.log('searchSimilar ==> list push');
-    console.log(ele);
     var type = 'undefined' === typeof ele.attr('albumid') ? 'track' : 'album';
     incBoard.searchSimilarList.push([ele.attr('artist'), ele.attr('album' === type ? 'name' : 'musicTitle'), type]);
     incBoard.incrementSimilar();

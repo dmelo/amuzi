@@ -66,9 +66,6 @@ IncBoardBoard.prototype.insert = function (obj, pos) {
         cell = new IncBoardCell(),
         intPos = this.posToInt(pos);
 
-    console.log(obj);
-    console.log(pos);
-
     if ('object' === typeof pos && 'object' === typeof obj && -1 === this.listByObjId.indexOf(obj.objId)) {
         cell.setContent(obj);
         cell.setPos(pos);
@@ -439,14 +436,12 @@ IncBoardBoard.prototype.fsck = function () {
         self = this,
         ret = true;
 
-    console.log('fsck begin');
     for (var id in this.listByObjId) {
         counter[id] = 1;
     }
 
     try {
         var conflictedCells = 0;
-        console.log(this.listByPos);
         for (var pos in this.listByPos) {
             var posList = this.listByPos[pos];
             var count = 0;
@@ -498,7 +493,6 @@ IncBoardBoard.prototype.fsck = function () {
             }
         }
     } catch (e) {
-        console.log('===> ');
         console.log(e);
     }
     console.log("fsck end");
