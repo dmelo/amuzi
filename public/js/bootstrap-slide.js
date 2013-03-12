@@ -75,13 +75,11 @@
 
         $('.slide-prev.active').live('click', function(e) {
             e.preventDefault();
-            console.log('prev');
             $.slideMove(-1);
         });
 
         $('.slide-next.active').live('click', function(e) {
             e.preventDefault();
-            console.log('next');
             $.slideMove(1);
         });
 
