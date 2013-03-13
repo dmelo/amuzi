@@ -33,29 +33,33 @@ function IncBoardBoard() {
         self = this;
 
 
+    this.posToInt = function (pos) {
+        return (pos[1] * 10000) + pos[0];
+    };
+
     /**
      * Safely remove an element from the board.
      */
-    remove = function(objId) {
+    this.remove = function(objId) {
         log.debug("removing " + objId);
-        var pos = this.listByObjId[objId].getPos(),
+        var pos = listByObjId[objId].getPos(),
             key;
 
         // cell.remove()
-        this.listByObjId[objId].remove();
+        listByObjId[objId].remove();
 
         // size
-        this.size--;
+        size--;
 
         // listByObjId
-        delete this.listByObjId[objId];
+        delete listByObjId[objId];
 
         // listByPos
-        delete this.listByPos[this.posToInt(pos)][objId];
+        delete listByPos[self.posToInt(pos)][objId];
 
         // drawList
-        if (-1 !== (key = this.drawList.indexOf(objId))) {
-            delete this.drawList[key];
+        if (-1 !== (key = drawList.indexOf(objId))) {
+            delete drawList[key];
         }
     };
 
@@ -63,13 +67,13 @@ function IncBoardBoard() {
     /**
      * Remove elements that are out of the border.
      */
-    removeOutOfBorder = function() {
+    this.removeOutOfBorder = function() {
         for (var id in listByObjId) {
             var cell = listByObjId[id],
                 pos = cell.getPos();
 
             if (pos[0] < 0 || pos[0] >= cols || pos[1] < 0 || pos[1] >= rows) {
-                self.remove(cell.getContent().objId);
+                this.remove(cell.getContent().objId);
             }
         }
     };
@@ -85,8 +89,8 @@ function IncBoardBoard() {
 
         if ('undefined' !== typeof objId && 'object' === typeof pos && (objId in listByObjId)) {
             cell = listByObjId[objId];
-            oldPos = posToInt(cell.getPos());
-            intPos = posToInt(pos);
+            oldPos = this.posToInt(cell.getPos());
+            intPos = this.posToInt(pos);
 
             delete listByPos[oldPos][objId];
 
@@ -124,42 +128,50 @@ function IncBoardBoard() {
         return ret;
     };
 
+    getBoundaries = function() {
+        var obj = {};
 
-
-    /**
-     * Shifts the elements in order to keep then at the center.
-     */
-    centralizeItems = function() {
-        var isEmpty = true,
-            minX = 1000,
-            minY = 1000,
-            maxX = 0,
-            maxY = 0;
+        obj.minX = 1000;
+        obj.maxX = 0;
+        obj.minY = 1000;
+        obj.maxY = 0;
 
         for (var id in listByObjId) {
             var cell = listByObjId[id];
 
             isEmpty = false;
-            if (cell.row < minY) {
-                minY = cell.row;
+            if (cell.row < obj.minY) {
+                obj.minY = cell.row;
             }
 
-            if (cell.row > maxY) {
-                maxY = cell.row;
+            if (cell.row > obj.maxY) {
+                obj.maxY = cell.row;
             }
 
-            if (cell.col < minX) {
-                minX = cell.col;
+            if (cell.col < obj.minX) {
+                obj.minX = cell.col;
             }
 
-            if (cell.col > maxX) {
-                maxX = cell.col;
+            if (cell.col > obj.maxX) {
+                obj.maxX = cell.col;
             }
         }
 
+        return obj;
+    }
+
+
+    /**
+     * Shifts the elements in order to keep then at the center.
+     */
+    this.centralizeItems = function() {
+        var isEmpty = true,
+            b = getBoundaries();
+
+
         if (!isEmpty) {
-            var shiftX = parseInt(((cols - maxX - 1) - minX) / 2);
-            var shiftY = parseInt(((rows - maxY - 1) - minY) / 2);
+            var shiftX = parseInt(((cols - b.maxX - 1) - b.minX) / 2);
+            var shiftY = parseInt(((rows - b.maxY - 1) - b.minY) / 2);
 
             if (0 !== shiftX || 0 !== shiftY) {
                 log.debug("Applying shift (" + shiftX + ", " + shiftY + ")");
@@ -173,12 +185,10 @@ function IncBoardBoard() {
                 }
             }
         }
-
-        return [minX, maxX, minY, maxY];
     };
 
 
-    flushDraw = function(boundaries) {
+    this.flushDraw = function() {
         var newCellSizeX,
             newCellSizeY,
             realHeight,
@@ -188,18 +198,15 @@ function IncBoardBoard() {
             factor,
             newTop,
             newLeft,
-            minX = boundaries[0],
-            maxX = boundaries[1],
-            minY = boundaries[2],
-            maxY = boundaries[3];
+            b = getBoundaries();
 
         for (var key in drawList) {
             var id = drawList[key];
             listByObjId[id].draw();
         }
 
-        realHeight = maxY - (minY - 1) + 1;
-        realWidth = maxX - (minX - 1) + 1;
+        realHeight = b.maxY - (b.minY - 1) + 1;
+        realWidth = b.maxX - (b.minX - 1) + 1;
         factorY = rows / realHeight;
         factorX = cols / realWidth;
         // log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ') cols: ' + this.cols + ", rows: " + this.rows);
@@ -232,26 +239,26 @@ function IncBoardBoard() {
         $.cssRule('.incboard-cell.album-square .side', 'height', (newCellSizeY - 6) + 'px');
 
 
-        for (var i = 0; i < this.rows; i++) {
+        for (var i = 0; i < rows; i++) {
             $.cssRule('.incboard-row-' + i, 'top', (i * newCellSizeY) + "px");
         }
 
-        for (var i = 0; i < this.cols; i++) {
+        for (var i = 0; i < cols; i++) {
             $.cssRule('.incboard-col-' + i, 'left', (i * newCellSizeX) + "px");
         }
 
-        this.drawList = [];
+        drawList = [];
     };
 
-    resize = function() {
+    this.resize = function() {
         if ($('form.search').length > 0) {
             var cell = new IncBoardCell(),
                 boundaries;
             cols = parseInt( ( $(window).width() - 296 ) / cellSizeX );
             rows = parseInt( ( $(window).height() - $('form.search').height() - $('form.search').offset().top - $('.footer').height() ) / cellSizeY );
-            removeOutOfBorder();
-            boundaries = centralizeItems();
-            flushDraw(boundaries);
+            this.removeOutOfBorder();
+            this.centralizeItems();
+            this.flushDraw();
 
             delete cell;
         }
@@ -299,7 +306,7 @@ function IncBoardBoard() {
         size = 0;
         drawList = [];
 
-        resize();
+        this.resize();
         log.debug("COLS: " + cols);
         log.debug("ROWS: " + rows);
 
@@ -317,14 +324,6 @@ function IncBoardBoard() {
 
     this.getRows = function () {
         return rows;
-    };
-
-    this.posToInt = function (pos) {
-        return (pos[1] * 10000) + pos[0];
-    };
-
-    this.intToPos = function (num) {
-        return [num % 10000, Math.floor(num / 10000)];
     };
 
     this.getSize = function () {
@@ -346,24 +345,24 @@ function IncBoardBoard() {
             cell = new IncBoardCell(),
             intPos = this.posToInt(pos);
 
-        if ('object' === typeof pos && 'object' === typeof obj && -1 === this.listByObjId.indexOf(obj.objId)) {
+        if ('object' === typeof pos && 'object' === typeof obj && -1 === listByObjId.indexOf(obj.objId)) {
             cell.setContent(obj);
             cell.setPos(pos);
 
             // Fill listByObjId
-            this.listByObjId[obj.objId] = cell;
+            listByObjId[obj.objId] = cell;
 
-            if (!(intPos in this.listByPos)) {
-                this.listByPos[intPos] = [];
+            if (!(intPos in listByPos)) {
+                listByPos[intPos] = [];
             }
 
             // Fill listByPos
-            this.listByPos[intPos][obj.objId] = cell;
+            listByPos[intPos][obj.objId] = cell;
 
             ret = true;
-            this.size++;
-            if (this.drawList.indexOf(obj.objId) === -1) {
-                this.drawList.push(obj.objId);
+            size++;
+            if (drawList.indexOf(obj.objId) === -1) {
+                drawList.push(obj.objId);
             }
         } else {
             delete cell;
@@ -371,7 +370,7 @@ function IncBoardBoard() {
             ret = false;
         }
 
-        this.fsckReport();
+        //this.fsckReport();
 
         return ret;
     };
@@ -380,9 +379,9 @@ function IncBoardBoard() {
         var pos = this.posToInt(pos),
             list = [];
 
-        if (pos in this.listByPos) {
-            for (var id in this.listByPos[pos]) {
-                var cell = this.listByPos[pos][id];
+        if (pos in listByPos) {
+            for (var id in listByPos[pos]) {
+                var cell = listByPos[pos][id];
                 list.push(cell.getContent());
             }
         }
@@ -397,8 +396,8 @@ function IncBoardBoard() {
     this.getAllMusic = function () {
         var list = [];
 
-        for (var id in this.listByObjId) {
-            var item = this.listByObjId[id];
+        for (var id in listByObjId) {
+            var item = listByObjId[id];
             list[id] = item.getContent();
         }
 
@@ -406,8 +405,8 @@ function IncBoardBoard() {
     };
 
     this.getPos = function (objId) {
-        if (objId in this.listByObjId) {
-            return this.listByObjId[objId].getPos();
+        if (objId in listByObjId) {
+            return listByObjId[objId].getPos();
         } else {
             return false;
         }
@@ -444,14 +443,14 @@ function IncBoardBoard() {
             self = this,
             ret = true;
 
-        for (var id in this.listByObjId) {
+        for (var id in listByObjId) {
             counter[id] = 1;
         }
 
         try {
             var conflictedCells = 0;
-            for (var pos in this.listByPos) {
-                var posList = this.listByPos[pos];
+            for (var pos in listByPos) {
+                var posList = listByPos[pos];
                 var count = 0;
                 for (var id in posList) {
                     count++;
@@ -481,20 +480,20 @@ function IncBoardBoard() {
                 }
             }
 
-            for (var id in this.listByObjId) {
+            for (var id in listByObjId) {
                 var cell = listByObjId[id];
                 if (cell.getContent().objId !== id) {
                     throw new Error("objId on listByPos index doesn't match the content id: " + id + ". contentid: " + cell.getContent().objId);
                 }
 
-                var intPos = self.posToInt(cell.getPos());
-                if (!(intPos in self.listByPos)) {
+                var intPos = this.posToInt(cell.getPos());
+                if (!(intPos in listByPos)) {
                     log.debug(index);
-                    log.debug(self.listByPos[intPos]);
+                    log.debug(listByPos[intPos]);
                     throw new Error("merda 1");
                 }
 
-                if (!(cell.getContent().objId in self.listByPos[self.posToInt(cell.getPos())])) {
+                if (!(cell.getContent().objId in listByPos[this.posToInt(cell.getPos())])) {
                     log.debug(cell);
                     log.debug(self);
                     throw new Error("merda 2");
@@ -507,7 +506,6 @@ function IncBoardBoard() {
 
         return ret;
     };
-
 
     this.init();
 }
