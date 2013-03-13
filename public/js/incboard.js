@@ -281,7 +281,7 @@ IncBoard.prototype.insert = function(v) {
             this.ibb.insert(v, this.ibb.getPos(mostSimilar.objId));
             this.resolveConflict(mostSimilar, v, []);
         } else {
-            this.ibb.insert(v, [Math.floor(this.ibb.getCols() / 2), Math.floor(this.ibb.getRows() / 2)]);
+            this.ibb.insert(v);
         }
 
         this.ibb.removeOutOfBorder();
