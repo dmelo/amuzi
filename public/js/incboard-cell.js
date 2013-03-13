@@ -20,8 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-"use strict";
-
 function IncBoardCell() {
     var cellSizeX = 56,
         cellSizeY = 44,

@@ -20,9 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-"use strict";
-
-
 function IncBoardBoard() {
     this.rows = 7;
     this.cols = 14;
