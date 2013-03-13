@@ -19,6 +19,10 @@ ul.subtitle li {
     padding: 3px;
 }
 
+ul.subtitle li:hover {
+    cursor: pointer;
+}
+
 ul.subtitle .subtitle-color {
     width: 15px;
     height: 15px;

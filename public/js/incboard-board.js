@@ -32,6 +32,53 @@ function IncBoardBoard() {
         log = new Log(),
         self = this;
 
+    focusArtist = function (artist) {
+        $('.incboard-cell').removeClass('focus');
+        $('.incboard-cell[artist="' + artist.replace('"', '\\"') + '"]').addClass('focus');
+    };
+
+    animateCells = function () {
+        $('.incboard-cell').live('mouseover', function (e) {
+            $('.incboard-img').css('display', 'block');
+            $('.incboard-cell').find('.inevidence').removeClass('inevidence');
+            $(this).find('.object-music').addClass('inevidence');
+            $(this).find('.incboard.img').css('display', 'none');
+
+            focusArtist($(this).attr('artist'));
+        }).live('mouseleave', function (e) {
+            $('.incboard-img').css('display', 'block');
+            $('.incboard-cell').find('.inevidence').removeClass('inevidence');
+            $('.incboard-cell').removeClass('focus');
+        });
+
+        $('#subtitle li').live('hover', function (e) {
+            focusArtist($(this).attr('artist'));
+        }).live('mouseleave', function (e) {
+            $('.incboard-cell').removeClass('focus');
+        });
+    };
+
+    getBoundaries = function() {
+        var obj = {};
+
+        obj.minX = 1000;
+        obj.maxX = 0;
+        obj.minY = 1000;
+        obj.maxY = 0;
+        obj.isEmpty = true;
+
+        for (var id in listByObjId) {
+            var cell = listByObjId[id];
+
+            obj.isEmpty = false;
+            obj.minX = Math.min(obj.minX, cell.col);
+            obj.maxX = Math.max(obj.maxX, cell.col);
+            obj.minY = Math.min(obj.minY, cell.row);
+            obj.maxY = Math.max(obj.maxY, cell.row);
+        }
+
+        return obj;
+    }
 
     this.posToInt = function (pos) {
         return (pos[1] * 10000) + pos[0];
@@ -62,7 +109,6 @@ function IncBoardBoard() {
             delete drawList[key];
         }
     };
-
 
     /**
      * Remove elements that are out of the border.
@@ -128,48 +174,14 @@ function IncBoardBoard() {
         return ret;
     };
 
-    getBoundaries = function() {
-        var obj = {};
-
-        obj.minX = 1000;
-        obj.maxX = 0;
-        obj.minY = 1000;
-        obj.maxY = 0;
-
-        for (var id in listByObjId) {
-            var cell = listByObjId[id];
-
-            isEmpty = false;
-            if (cell.row < obj.minY) {
-                obj.minY = cell.row;
-            }
-
-            if (cell.row > obj.maxY) {
-                obj.maxY = cell.row;
-            }
-
-            if (cell.col < obj.minX) {
-                obj.minX = cell.col;
-            }
-
-            if (cell.col > obj.maxX) {
-                obj.maxX = cell.col;
-            }
-        }
-
-        return obj;
-    }
-
-
     /**
      * Shifts the elements in order to keep then at the center.
      */
     this.centralizeItems = function() {
-        var isEmpty = true,
-            b = getBoundaries();
+        var b = getBoundaries();
 
 
-        if (!isEmpty) {
+        if (!b.isEmpty) {
             var shiftX = parseInt(((cols - b.maxX - 1) - b.minX) / 2);
             var shiftY = parseInt(((rows - b.maxY - 1) - b.minY) / 2);
 
@@ -264,42 +276,6 @@ function IncBoardBoard() {
         }
     };
 
-    focusArtist = function (artist) {
-        $.each($('.incboard-cell'), function (i, e) {
-            if($(this).attr('artist') === artist)
-                $(this).addClass('focus');
-            else
-                $(this).removeClass('focus');
-        });
-    };
-
-    animateCells = function () {
-        $('.incboard-cell').live('mouseover', function (e) {
-            $('.incboard-img').css('display', 'block');
-            $('.incboard-cell').find('.inevidence').removeClass('inevidence');
-            $(this).find('.object-music').addClass('inevidence');
-            $(this).find('.incboard.img').css('display', 'none');
-
-            focusArtist($(this).attr('artist'));
-        });
-
-        $('.incboard-cell').live('mouseleave', function (e) {
-            $('.incboard-img').css('display', 'block');
-            $('.incboard-cell').find('.inevidence').removeClass('inevidence');
-            $('.incboard-cell').removeClass('focus');
-        });
-
-        $('#subtitle li').live('hover', function (e) {
-            focusArtist($(this).attr('artist'));
-            $('html').css('cursor', 'pointer');
-        });
-
-        $('#subtitle li').live('mouseleave', function (e) {
-            $('.incboard-cell').removeClass('focus');
-            $('html').css('cursor', 'default');
-        });
-    };
-
     this.clean = function () {
         listByObjId = [];
         listByPos = [];
@@ -316,14 +292,6 @@ function IncBoardBoard() {
     this.init = function () {
         this.clean();
         animateCells();
-    };
-
-    this.getCols = function () {
-        return cols;
-    };
-
-    this.getRows = function () {
-        return rows;
     };
 
     this.getSize = function () {
@@ -343,7 +311,12 @@ function IncBoardBoard() {
     this.insert = function (obj, pos) {
         var ret,
             cell = new IncBoardCell(),
-            intPos = this.posToInt(pos);
+            intPos;
+
+        if ('undefined' === typeof pos) {
+            pos = [Math.floor(cols / 2), Math.floor(rows / 2)];
+        }
+        intPos = this.posToInt(pos);
 
         if ('object' === typeof pos && 'object' === typeof obj && -1 === listByObjId.indexOf(obj.objId)) {
             cell.setContent(obj);
@@ -370,7 +343,7 @@ function IncBoardBoard() {
             ret = false;
         }
 
-        //this.fsckReport();
+        this.fsckReport();
 
         return ret;
     };
@@ -509,6 +482,3 @@ function IncBoardBoard() {
 
     this.init();
 }
-
-
-
