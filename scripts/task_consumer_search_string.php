@@ -56,4 +56,6 @@ foreach ($rowSet as $row) {
     $row->done = $done;
     $row->expiration = $expiration;
     $row->save();
+
+    break;
 }

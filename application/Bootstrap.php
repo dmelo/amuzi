@@ -130,7 +130,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         );
 
         $backend = array(
-            'cache_dir' => '../public/tmp/'
+            'cache_dir' => '../public/tmp/',
+            'hashed_directory_level' => 2
         );
 
         $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);

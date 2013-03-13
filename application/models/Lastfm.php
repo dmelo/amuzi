@@ -293,8 +293,11 @@ class Lastfm extends DZend_Model
         $date = date('Ymd', time(null));
         $c = new DZend_Chronometer();
         $key = sha1("Lastfm::getTop#$limit#$date");
+        $this->_logger->debug('ApiController::gettop 4 - ' . $key);
 
         if (($xml = $this->_cache->load($key)) === false) {
+            $c = new DZend_Chronometer();
+            $c->start();
             $resultSet = array();
             $args = array(
                 'method' => 'geo.gettoptracks',
@@ -304,6 +307,8 @@ class Lastfm extends DZend_Model
             $xml = $this->_request($args, false);
             $this->_logger->debug("Lastfm::getTop -> xml: " . $xml);
             $this->_cache->save($xml, $key);
+            $c->stop();
+            $this->_logger->debug('ApiController::gettop 3 - ' . $c->get());
         }
 
         return $this->_exploreDOM($xml, '_processResponseGetTop', $limit);
