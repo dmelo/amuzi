@@ -61,10 +61,8 @@ function IncBoardBoard() {
     getBoundaries = function() {
         var obj = {};
 
-        obj.minX = 1000;
-        obj.maxX = 0;
-        obj.minY = 1000;
-        obj.maxY = 0;
+        obj.minX = obj.minY = 1000;
+        obj.maxX = obj.maxY = 0;
         obj.isEmpty = true;
 
         for (var id in listByObjId) {
@@ -193,7 +191,7 @@ function IncBoardBoard() {
 
                     pos[0] += shiftX;
                     pos[1] += shiftY;
-                    setPos(cell.getContent().objId, pos);
+                    this.setPos(cell.getContent().objId, pos);
                 }
             }
         }
@@ -283,9 +281,6 @@ function IncBoardBoard() {
         drawList = [];
 
         this.resize();
-        log.debug("COLS: " + cols);
-        log.debug("ROWS: " + rows);
-
         $('#incboard-result').html('<div id="incboard"></div>');
     };
 
@@ -378,11 +373,7 @@ function IncBoardBoard() {
     };
 
     this.getPos = function (objId) {
-        if (objId in listByObjId) {
-            return listByObjId[objId].getPos();
-        } else {
-            return false;
-        }
+        return (objId in listByObjId) ? listByObjId[objId].getPos() : false;
     };
 
     /**
