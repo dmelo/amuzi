@@ -441,3 +441,7 @@ dd {
 .collection-info table img {
     height: 50px;
 }
+
+.collection-info img.icon {
+    height: 25px;
+}
