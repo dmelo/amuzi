@@ -433,7 +433,7 @@ function IncBoardBoard() {
                 }
 
                 for (var id in posList) {
-                    if (id  !== posList[id].getContent.objId) {
+                    if (id  != posList[id].getContent().objId) {
                         throw new Error("objId on listByPos index doesn't match the content id: " + id);
                     } else {
                         counter[id]--;
@@ -446,7 +446,7 @@ function IncBoardBoard() {
 
             for (var id in listByObjId) {
                 var cell = listByObjId[id];
-                if (cell.getContent().objId !== id) {
+                if (cell.getContent().objId != id) {
                     throw new Error("objId on listByPos index doesn't match the content id: " + id + ". contentid: " + cell.getContent().objId);
                 }
 
