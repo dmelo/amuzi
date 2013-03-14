@@ -31,7 +31,8 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
             'name',
             'cover',
             'artist',
-            'trackList'
+            'trackList',
+            'shareUrl'
         );
 
         $ret = array();
@@ -127,6 +128,11 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
             return $ret;
         } elseif ('trackList' === $name) {
             return $this->getTrackListAsArray(); // Assynchronous.
+        } elseif ('shareUrl' === $name || 'share_url' === $name) {
+            $domain = Zend_Registry::get('domain');
+            return $domain . '/share/index/command/a/param/' . $this->id;
+        } elseif ('facebookUrl' === $name) {
+            return 'http://facebook.com/share.php?u=' . urlencode($this->shareUrl);
         } else {
             return parent::__get($name);
         }
