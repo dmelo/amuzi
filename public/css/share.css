@@ -2,27 +2,75 @@ body {
     text-align: center;
 }
 
+h1 {
+    padding: 0;
+    margin: 0;
+}
+
 .content {
     border: 1px solid black;
-    width: 600px;
+    width: 550px;
+    height: 130px;
     margin: auto;
+    padding: 15px;
+    max-height: 150px;
+    overflow: hidden;
+    vertical-align: top;
 }
 
 p {
-    font-size: 20px;
+    text-align: left;
     vertical-align: middle;
-    line-height: 90px;
+    position: fixed;
+    left: 50%;
+    margin-left: -140px;
+    width: 420px;
+    height: 96px;
+    overflow: hidden;
+
 }
 
 img {
-    vertical-align: middle;
 }
 
 h1 {
     font-size: 23px;
+    height: 25px;
+    overflow: hidden;
     font-weight: bold;
 }
 
 #url {
     display: none;
 }
+
+div.description {
+    position: static;
+}
+
+div.description ul {
+    display: inline-block;
+    text-align: left;
+    position: fixed;
+    list-style-image: none;
+    left: 50%;
+    margin-left: -190px;
+    max-width: 430px;
+}
+
+div.description ul li {
+    max-height: 20px;
+    overflow-y: hidden;
+}
+
+div.description > img {
+    vertical-align: middle;
+    max-height: 90px;
+
+    display: inline-block;
+    position: fixed;
+    left: 50%;
+    margin-left: -275px;
+    margin-top: 15px;
+}
+
