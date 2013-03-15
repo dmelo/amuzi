@@ -34,6 +34,7 @@
         popup;
 
     window.myPlaylist = null;
+    $.commands = new Commands();
 
     $.modalWrapper = "#load-modal-wrapper";
     // Soon to be deprecated.
@@ -86,7 +87,7 @@
      * playlist.
      * @return void
      */
-    function loadPlaylist(name, isAlbum) {
+    $.loadPlaylist = function (name, isAlbum) {
         name = name || '';
         isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
@@ -123,16 +124,18 @@
                     $('.playlist-square').removeClass('current-playlist');
                     $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                 }
+
+                $('.slide-next.active').trigger('click');
+                window.myPlaylist.play();
             }
         }, 'json').complete(function () {
-            if (commands.isRunCommand) {
-                setTimeout('commands.runProgram()', 1500);
+
+            if ($.commands.isRunCommand) {
+                setTimeout('$.commands.runProgram()', 1500);
             }
         }).error(function (e) {
         });
     }
-
-    $.loadPlaylist = loadPlaylist;
 
     // TODO: take away the playlistName
     function rmTrack(trackId, playlistName) {
@@ -144,7 +147,7 @@
         }, function (data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if ('error' === data[1]) {
-                loadPlaylist(playlistName);
+                $.loadPlaylist(playlistName);
             }
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
@@ -165,8 +168,8 @@
     }
 
     $.initAmuzi = function () {
-        commands.isRunCommand = true;
-        loadPlaylist();
+        $.commands.isRunCommand = true;
+        $.loadPlaylist();
     };
 
     function setPlaylistRepeat(name, repeat) {
@@ -289,7 +292,7 @@
         $('form#newPlaylist').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                loadPlaylist($('input[name=name]').val());
+                $.loadPlaylist($('input[name=name]').val());
                 $.bootstrapMessageAuto(data[0], data[1]);
                 $($.modalWrapper).modal('hide');
                 loadPlaylistSet();
@@ -443,7 +446,7 @@
         $.post('/playlist/addtrack', options, function (data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if ('error' === data[1]) {
-                loadPlaylist(window.myPlaylist.name);
+                $.loadPlaylist(window.myPlaylist.name);
             } else if ('success' === data[1]) {
                 if (!window.myPlaylist.isAlbum) {
                     var v = data[2],
@@ -454,12 +457,14 @@
         }, 'json');
     }
 
-    function addAlbum(ele) {
-        var albumId = ele.attr('albumid');
+    $.addAlbum = function(albumId) {
         $.get('/album/add', {
             albumId: albumId
         }, function (data) {
-            addElementAnimation(ele);
+            var ele = $('.incboard[albumid=' + albumId + ']');
+            if (ele.length > 0) {
+                addElementAnimation(ele);
+            }
             loadAlbumSet();
         }, 'json');
     }
@@ -580,7 +585,7 @@
             e.preventDefault();
             e.stopPropagation();
             if ($(this).hasClass('album-square')) {
-                addAlbum($(this));
+                $.addAlbum($(this).attr('albumid'));
             } else {
                 addToPlaylist($(this));
             }
@@ -745,12 +750,12 @@
 
         $('.playlist-square[playlistid] .play').live('click', function (e) {
             e.preventDefault();
-            loadPlaylist($(this).parent().attr('playlistid'));
+            $.loadPlaylist($(this).parent().attr('playlistid'));
         });
 
         $('.playlist-square[albumid] .play').live('click', function (e) {
             e.preventDefault();
-            loadPlaylist($(this).parent().attr('albumid'), true);
+            $.loadPlaylist($(this).parent().attr('albumid'), true);
         });
 
         $('.playlist-square .remove').live('click', function (e) {
@@ -762,7 +767,7 @@
                     id = $(this).parent().attr(isPlaylist ? 'playlistid' : 'albumid');
                 rmPlaylist(id, isPlaylist, removePlaylistSquareCallback);
                 if (name === window.myPlaylist.name) {
-                    loadPlaylist('');
+                    $.loadPlaylist('');
                 }
             }
         });

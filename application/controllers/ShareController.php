@@ -34,6 +34,9 @@ class ShareController extends DZend_Controller_Action
             if ('t' === $command) {
                 $this->view->data = $this->_trackModel->findRowById($param);
                 $this->view->url = '/index/index/#t' . $param;
+            } elseif ('a' === $command) {
+                $this->view->data = $this->_albumModel->findRowById($param);
+                $this->view->url = '/index/index/#a' . $param;
             }
             $this->view->lightningPackerScript()->exchangeArray(array());
             $this->view->lightningPackerLink()->exchangeArray(array());

@@ -23,8 +23,6 @@
  * Parse and run commands given by url fragment.
  */
 
-var commands = new Commands();
-
 /**
  * Constructor
  */
@@ -43,12 +41,14 @@ Commands.prototype.runCommand = function(command) {
 
         }, 'json');
 
-    }
-    else if ('p' === command[0]) {
+    } else if ('p' === command[0]) {
         id = command.substr(1);
-        loadPlaylist(id);
+        $.loadPlaylist(id);
+    } else if ('a' === command[0]) {
+        $.addAlbum(command.substr(1));
+        $.loadPlaylist(command.substr(1), true);
     }
-}
+};
 
 Commands.prototype.getCommandOnFragment = function() {
     var ret;
