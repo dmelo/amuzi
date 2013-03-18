@@ -74,11 +74,10 @@ class IndexController extends DZend_Controller_Action
 
     public function testAction()
     {
-        echo "<br/>";
-        echo "<br/>";
-        echo "<br/>";
-        echo "<br/>";
-        echo "<br/>";
-        var_dump($_SERVER);
+        try {
+            print_r($this->_amuziSearchModel->autocomplete('the', 'track'));
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

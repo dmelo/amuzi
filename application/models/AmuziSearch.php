@@ -38,6 +38,7 @@ class AmuziSearch extends DZend_Model
             return $ret;
         }
 
+        $varName = 'amuziSearch' . $this->_ports[$type];
         $sock = false;
         if (($sock = socket_create(
             AF_INET, SOCK_STREAM, SOL_TCP
@@ -57,17 +58,23 @@ class AmuziSearch extends DZend_Model
 
         $c = new DZend_Chronometer();
         $c->start();
-        socket_write($sock, $q, strlen($q));
+        false === socket_write($sock, $q, strlen($q));
         $str = socket_read($sock, 4096 * 1024, PHP_BINARY_READ);
+        socket_shutdown($sock);
         socket_close($sock);
 
-        $resultList = "0\n" === $str ? array() : array_slice(explode("\n", $str), 0, 5 * $limit);
-        foreach ($resultList as $result) {
-            if (strlen($result) > 0) {
-                list($artistName, $name) = explode('A', $result);
-                $ret[] = new AutocompleteEntry($artistName, $name, null, $type);
-                if (count($ret) >= $limit) {
-                    break;
+
+        if (false === $str) {
+            $this->_logger->debug('AmuziSearch::autocomplete failed to read from socket. try to open a new connection');
+        } else {
+            $resultList = "0\n" === $str ? array() : array_slice(explode("\n", $str), 0, 5 * $limit);
+            foreach ($resultList as $result) {
+                if (strlen($result) > 0) {
+                    list($artistName, $name) = explode('A', $result);
+                    $ret[] = new AutocompleteEntry($artistName, $name, null, $type);
+                    if (count($ret) >= $limit) {
+                        break;
+                    }
                 }
             }
         }
