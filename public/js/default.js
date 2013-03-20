@@ -197,6 +197,12 @@
         }
     }
 
+    function applyOverResultDiv() {
+        var height = $(window).height() - $('#slide-search').offset().top - $('form#search').height() - parseInt($('form#search').css('margin-bottom'), 10) - $('#more-results').height() - $('.navbar').height() - 30;
+
+        $('#result').height(height);
+    }
+
     // Repeat
     function setRepeat(repeat) {
         setInterfaceRepeat(repeat);
@@ -710,8 +716,10 @@
         applyRepeatTriggers();
         applyShuffleTriggers();
         applyPlaylistSettings();
+        applyOverResultDiv();
         $(window).resize(function (e) {
             applyOverPlaylist();
+            applyOverResultDiv();
         });
 
         //$('.loadModal').bootstrapLoadModal();

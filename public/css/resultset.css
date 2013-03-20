@@ -25,6 +25,15 @@
 #result {
     background-color: rgba(255, 255, 255, 0.5);
     z-index: 24;
+    position: relative;
+    overflow-y: auto;
+    display: none;
+}
+
+#close-results {
+    position: fixed;
+    margin-left: 905px;
+    font-size: 2em;
 }
 
 .object-track {
@@ -50,6 +59,7 @@
 
 .music-large:hover, .playlist-square:hover {
     cursor: pointer;
+    background-color: #f40c42;
 }
 
 .music-large .image {
@@ -60,6 +70,7 @@
     height: 60px;
     position: absolute;
     padding: 0px;
+    left: 0px;
 }
 
 .music-large .image div.duration {
@@ -93,10 +104,11 @@
 }
 
 #more-results {
-    width: 812px;
-    opacity: 0.0;
+    opacity: 1.0;
     filter: alpha (opacity = 0);
     z-index: 25;
+    position: relative;
+    display: none;
 }
 
 .item-square {
