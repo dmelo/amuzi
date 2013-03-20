@@ -83,8 +83,9 @@
      */
     $.ResultSet.prototype.cleanTable = function () {
         $('#result .music-large').remove();
-        $('#more-results').css('opacity', '0.0');
-        $('#more-results').css('filter', 'alpha (opacity = 100)');
+        $('#result').css('display', 'none');
+        $('#more-results').css('display', 'none');
+
     };
 
     $.ResultSet.prototype.getControl = function (v) {
@@ -117,8 +118,7 @@
         if (0 === $('[trackId=' + v.id + ']').length) {
             $('#result').append(this.getMusicLarge(v, objectType));
         }
-        $('#more-results').css('opacity', '1.0');
-        $('#more-results').css('filter', 'alpha (opacity = 100)');
+        $('#more-results').css('display', 'block');
     };
 
     $.ResultSet.prototype.searchMore = function () {
@@ -158,6 +158,8 @@
             dataType: 'json',
             success: function (data) {
                 $.bootstrapMessageOff();
+                $('#result').css('display', 'block');
+                $('#more-results').css('display', 'block');
                 $.each(data, function (i, v) {
                     resultSet.appendTable(v, 'track');
                 });
@@ -175,6 +177,11 @@
 
         $('#more-results').click(function (e) {
             resultSet.searchMore();
+        });
+
+        $('#result #close-results').live('click', function(e) {
+            e.preventDefault();
+            resultSet.cleanTable();
         });
 
         $('.music-square, .album-square').live({mouseenter: function () {
