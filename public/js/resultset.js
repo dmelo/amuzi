@@ -79,43 +79,27 @@
             return '<a href="' + url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
         };
 
-        this.getMusicLarge = function (v, objectType) {
-            return '<div class="music-large object-' + objectType + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + this.secondsToHMS(v.duration) + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + this.getControl(v) + '</div>';
+        this.getMusicLarge = function (v) {
+            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + this.secondsToHMS(v.duration) + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + this.getControl(v) + '</div>';
         };
 
-        this.appendTable = function (v, objectType) {
+        this.insert = function (v) {
             if (0 === $('[trackId=' + v.id + ']').length) {
-                $('#result').append(this.getMusicLarge(v, objectType));
+                $('#result').append(this.getMusicLarge(v));
             }
             $('#more-results').css('display', 'block');
+            $('#result').css('display', 'block');
+
         };
-
-        this.getSimilarTracks = function (artist, musicTitle) {
-            var self = this;
-
-            $.get('/api/searchsimilar', {
-                artist: artist,
-                musicTitle: musicTitle,
-                type: 'track'
-            }, function (data) {
-                $.each(data[0], function (i, v) {
-                    self.appendTable(v, 'music');
-                });
-            }, 'json');
-        };
-
-
 
     };
 
     var resultSet = new $.ResultSet();
 
-
-
     /**
      * Cleans the table of results and let it ready to a search.
      */
-    $.ResultSet.prototype.cleanTable = function () {
+    $.ResultSet.prototype.clean = function () {
         $('#result .music-large').remove();
         $('#result').css('display', 'none');
         $('#more-results').css('display', 'none');
@@ -139,65 +123,4 @@
     $.ResultSet.prototype.getAlbumSquare = function (v) {
         return '<div class="album-square music-square" albumid="' + v.id + '" artist="' + v.artist + '" name="' + v.name + '"><div class="cover"><div class="side"><img src="/img/album-side.png"/></div><img src="' + v.cover + '" alt="cover" class="cover-img" /></div><div class="overlay"></div>' + this.getAlbumDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
     };
-
-    $.ResultSet.prototype.searchMore = function () {
-        $.bootstrapMessage('Loading...', 'info');
-        this.searchPage += 1;
-        $.get('/api/search', {
-            q: this.searchString,
-            artist: $('#artist').val(),
-            musicTitle: $('#musicTitle').val(),
-            limit: 9,
-            offset: 1 + (9 * (this.searchPage - 1))
-        }, function (data) {
-            $.bootstrapMessageOff();
-            $.each(data, function (i, v) {
-                resultSet.appendTable(v, 'track');
-            });
-        }, 'json').error(function (data) {
-            $.bootstrapMessageAuto('An error occured', 'error');
-        });
-    };
-
-    $(document).ready(function () {
-        // query youtube for videos and fill the result table.
-        $('#search').ajaxForm({
-            dataType: 'json',
-            success: function (data) {
-                $.bootstrapMessageOff();
-                $('#result').css('display', 'block');
-                $('#more-results').css('display', 'block');
-                $.each(data, function (i, v) {
-                    resultSet.appendTable(v, 'track');
-                });
-            },
-            error: function (data) {
-                $.bootstrapMessageAuto('Error searching for music', 'error');
-            },
-            beforeSubmit: function () {
-                resultSet.cleanTable();
-                resultSet.searchString = $('#q').val();
-                resultSet.searchPage = 1;
-                $.bootstrapMessage('Loading...', 'info');
-            }
-        });
-
-        $('#more-results').click(function (e) {
-            resultSet.searchMore();
-        });
-
-        $('#result #close-results').live('click', function(e) {
-            e.preventDefault();
-            resultSet.cleanTable();
-        });
-
-        $('.music-square, .album-square').live({mouseenter: function () {
-            $(this).find('.description, .play').css('display', 'block');
-            $(this).find('.overlay').css('display', 'none');
-        }, mouseleave: function () {
-            $(this).find('.description, .play').css('display', 'none');
-            $(this).find('.overlay').css('display', 'block');
-        }});
-
-    });
 }(jQuery, undefined));
