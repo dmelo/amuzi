@@ -2,6 +2,11 @@ var search,
     searchSimilarList = [],
     incrementSimilarRunning = false;
 
+/**
+ * The search object have to implement the following methods:
+ * .insert(v);
+ * .clean();
+ */
 
 function searchMusicCallbackCenter(v) {
     $('#' + v.objId).addClass('center');
@@ -104,19 +109,38 @@ $(document).ready(function() {
         $(window).bind('resize', $.proxy(search.ibb, 'resize'));
     } else if (1 === $('#search').length) {
         search = new $.ResultSet();
+        $('#more-results').click(function (e) {
+            // TODO: implement the search-more button.
+            // resultSet.searchMore();
+        });
+
+        $('#result #close-results').live('click', function(e) {
+            e.preventDefault();
+            resultSet.clean();
+        });
+
     }
+
+    $('.music-square, .album-square').live({mouseenter: function () {
+        $(this).find('.description, .play').css('display', 'block');
+        $(this).find('.overlay').css('display', 'none');
+    }, mouseleave: function () {
+        $(this).find('.description, .play').css('display', 'none');
+        $(this).find('.overlay').css('display', 'block');
+    }});
+
 
     $('form.search').ajaxForm({
         dataType: 'json',
         success: function (data) {
             loadSimilarMusic(data, 10);
+
         },
         error: function (data) {
             $.bootstrapMessageAuto('Error searching for music', 'error');
         },
         beforeSubmit: function() {
             $('#subtitle').subtitleInit();
-            search.searchString = $('#q').val();
             $.bootstrapMessage('Loading...', 'info');
             search.clean();
             var obj = new Object();
@@ -128,5 +152,4 @@ $(document).ready(function() {
             }
         }
     });
-
 });
