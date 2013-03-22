@@ -43,7 +43,7 @@ class Form_Search extends DZend_Form
         $element->setAttrib('class', 'search btn');
         $this->addElement($element);
 
-        $this->setAction('/api/search');
+        $this->setAction('/api/searchsimilar');
         $this->setAttrib('id', 'search');
         $this->_useBootstrap = false;
 

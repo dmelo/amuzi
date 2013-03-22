@@ -49,7 +49,6 @@ class IndexController extends DZend_Controller_Action
     public function incboardAction()
     {
         $this->view->form->setAttrib('id', 'incboard-search');
-        $this->view->form->setAction('/api/searchsimilar');
     }
 
     /**

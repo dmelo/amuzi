@@ -464,10 +464,11 @@
     }
 
     $.addAlbum = function(albumId) {
+        $.bootstrapMessage('Adding album...', 'info');
         $.get('/album/add', {
             albumId: albumId
         }, function (data) {
-            var ele = $('.incboard[albumid=' + albumId + ']');
+            var ele = $('#slide-search div[albumid=' + albumId + ']');
             if (ele.length > 0) {
                 addElementAnimation(ele);
             }
@@ -560,6 +561,14 @@
         $.resizeEditPlaylist();
     }
 
+    function ping() {
+        $.get('/user/ping');
+    }
+
+    function startPing() {
+        setInterval(ping, 30000);
+    }
+
     $(document).ready(function () {
         var ac,
             message,
@@ -590,7 +599,7 @@
         $('.music-large, .music-square, .album-square').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            if ($(this).hasClass('album-square')) {
+            if (undefined !== $(this).attr('albumid')) {
                 $.addAlbum($(this).attr('albumid'));
             } else {
                 addToPlaylist($(this));
@@ -791,5 +800,6 @@
         }
         loadPlaylistSet();
         loadAlbumSet();
+        startPing();
     });
 }(jQuery, undefined));
