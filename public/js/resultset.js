@@ -100,6 +100,7 @@
             $('#more-results').css('display', 'block');
             $('#result').css('display', 'block');
 
+            return true;
         };
 
     };
