@@ -125,7 +125,6 @@
                     $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                 }
 
-                $('.slide-next.active').trigger('click');
                 window.myPlaylist.play();
             }
         }, 'json').complete(function () {
