@@ -39,12 +39,8 @@
 .object-track {
     background-color: #ccc;
 }
-.object-music {
+.object-album {
     background-color: #beb;
-}
-
-.object-playlist {
-    background-color: #ffcd54;
 }
 
 .music-large a {
@@ -73,10 +69,10 @@
     left: 0px;
 }
 
-.music-large .image div.duration {
+.music-large div.duration {
     position: absolute;
-    left: 0px;
-    top: 42px;
+    top: 100%;
+    margin-top: -20px;
     color: white;
     background-color: #000;
     background-color: rgba(0, 0, 0, 0.4);

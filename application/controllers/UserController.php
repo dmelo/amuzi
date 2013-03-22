@@ -49,4 +49,9 @@ class UserController extends DZend_Controller_Action
     {
         $this->view->view = $this->_userModel->getView();
     }
+
+    public function pingAction()
+    {
+        $this->view->message = $this->_session->user->id;
+    }
 }

@@ -32,8 +32,6 @@ IncBoard.prototype.clean = function () {
     this.pos = 0;
     this.similarity = null;
     this.ibb.clean();
-    this.searchSimilarList = [];
-    this.incrementSimilarRunning = false;
 };
 
 IncBoard.prototype.posGreaterThan = function(posA, posB) {
@@ -293,78 +291,8 @@ IncBoard.prototype.insert = function(v) {
     return ret;
 }
 
-IncBoard.prototype.searchMusic = function(set, num, callback) {
-    var self = this,
-        m = set.shift(),
-        uri,
-        params;
-
-    if (num > 0 && 'undefined' !== typeof m) {
-        if ('type' in m && 'album' === m.type) {
-            uri = '/api/searchalbum';
-            params = {
-               artist: m.artist,
-               album: m.musicTitle
-            };
-        } else {
-            uri = '/api/searchmusic',
-            params = {
-                artist: m.artist,
-                musicTitle: m.musicTitle
-            };
-        }
-
-        $.get(uri, params, function(v) {
-            try {
-                var start = new Date().getTime();
-                if (null !== v && true === self.insert(v)) {
-                    if ('function' === typeof callback) {
-                        callback(v, set, num);
-                    }
-                    self.searchMusic(set, num - 1);
-                } else {
-                    self.searchMusic(set, num);
-                }
-                var end = new Date().getTime();
-            } catch(e) {
-                console.log(e.stack);
-                console.log(e);
-            }
-        }, 'json');
-    }
-}
-
 IncBoard.prototype.posToString = function (pos) {
     return "(" + pos[0] + "," + pos[1] + ")";
 };
 
-IncBoard.prototype.incrementSimilar = function() {
-    var self = this;
-
-    if (true === this.incrementSimilarRunning) {
-        setTimeout(1000, this.incrementSimilar);
-    } else {
-        if (this.searchSimilarList.length > 0) {
-            var obj = this.searchSimilarList.shift(),
-                artist = obj[0],
-                musicTitle = obj[1],
-                type = obj[2];
-
-            this.incrementSimilarRunning = true;
-            $.post('/api/searchsimilar', {
-                q: artist + ' - ' + musicTitle,
-                artist: artist,
-                musicTitle: musicTitle,
-                type: type,
-                objIdList: incBoard.ibb.getIdList()
-            }, function(data) {
-                loadSimilarMusic(data, 10);
-                self.incrementSimilarRunning = false;
-                self.incrementSimilar();
-            }, 'json').error(function() {
-                self.incrementSimilarRunning = false;
-            });
-        }
-    }
-};
 
