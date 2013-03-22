@@ -75,12 +75,22 @@
         };
 
         this.getControl = function (v) {
-            var url = 'url' in v ? v.url : v.id;
+            var url = 'url' in v ? v.url : v.objId;
             return '<a href="' + url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
         };
 
+        this.getDescription = function (v) {
+            var duration = 'track' === v.type ? '<div class="duration">' + this.secondsToHMS(v.duration) + '</div>' : '',
+                url = 'url' in v ? v.url : '#';
+            if ('' == duration) {
+                console.log(v);
+            }
+
+            return '<div class="description">' + duration + '<div class="title"><a href="' + url + '">' + v.title + '</a></div></div>';
+        };
+
         this.getMusicLarge = function (v) {
-            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" trackId="' + v.id + '"><div class="image"><img src="' + v.cover + '"/><div class="duration">' + this.secondsToHMS(v.duration) + '</div></div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div><div class="play">' + this.getControl(v) + '</div>';
+            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" ' + v.type + 'id="' + v.id + '"><div class="image"><img src="' + v.cover + '"/></div>' + this.getDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
         };
 
         this.insert = function (v) {
@@ -104,10 +114,6 @@
         $('#result').css('display', 'none');
         $('#more-results').css('display', 'none');
 
-    };
-
-    $.ResultSet.prototype.getDescription = function (v) {
-        return '<div class="description"><div class="duration">' + this.secondsToHMS(v.duration) + '</div><div class="title"><a href="' + v.url + '">' + v.title + '</a></div></div>';
     };
 
     $.ResultSet.prototype.getAlbumDescription = function (v) {

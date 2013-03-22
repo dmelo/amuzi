@@ -45,7 +45,7 @@ function searchMusic(set, num, callback) {
         uri,
         params;
 
-    if (num > 0 && 'undefined' !== typeof m) {
+    if (num > 0 && 'undefined' !== typeof m && null !== m) {
         if ('type' in m && 'album' === m.type) {
             uri = '/api/searchalbum';
             params = {
