@@ -116,7 +116,7 @@ $(document).ready(function() {
 
         $('#result #close-results').live('click', function(e) {
             e.preventDefault();
-            resultSet.clean();
+            search.clean();
         });
 
     }
