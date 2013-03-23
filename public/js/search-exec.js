@@ -97,7 +97,7 @@ function searchSimilar(ele) {
 
 $(document).ready(function() {
     if (1 === $('#incboard-search').length) {
-        search = new IncBoard();
+        search = new $.IncBoard();
 
         $('.music-large').live('click', function (e) {
             searchSimilar($(this).parent());
