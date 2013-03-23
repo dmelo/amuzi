@@ -22,7 +22,7 @@
 
 function  IncBoard() {
     this.shiftList = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
-    this.ibb = new IncBoardBoard();
+    this.ibb = new $.IncBoardBoard();
     this.stochasticLength = 15;
     this.clean();
     this.log = new Log();
