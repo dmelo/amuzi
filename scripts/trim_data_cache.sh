@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATAPATH=public/api/tmp/cache/
-THRESHOLD=`expr 15 \* 1024 \* 1024`
+THRESHOLD=`expr 14 \* 1024 \* 1024`
 
 while [ $THRESHOLD -le `du $DATAPATH | cut -f 1` ]
 do
