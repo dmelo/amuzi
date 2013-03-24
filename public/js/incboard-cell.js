@@ -20,89 +20,94 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function IncBoardCell() {
-    var cellSizeX = 56,
-        cellSizeY = 44,
-        content = null,
-        row = null,
-        col = null,
-        self = this;
+(function ($, undefined) {
+    'use strict';
 
-    getHtml = function() {
-        var v = self.getContent(),
-            resultSet = new $.ResultSet();
+    function IncBoardCell() {
+        var cellSizeX = 56,
+            cellSizeY = 44,
+            content = null,
+            row = null,
+            col = null,
+            self = this;
 
-        console.log(v);
-        ret = ('album' === v.type) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
+        function getHtml() {
+            var v = self.getContent(),
+                resultSet = new $.ResultSet(),
+                ret;
 
-        ret.addClass('music-square incboard-cell incboard-col-' + self.col + ' incboard-row-' + self.row);
-        ret.find('.cover').addClass('incboard-img');
-        ret.attr('data-content', v.title + ('duration' in v ? ' (' + resultSet.secondsToHMS(v.duration) + ')' : ''));
-        ret.attr('data-trigger', 'hover');
-        ret.attr('id', v.type + v.objId);
-        ret.find('.description').remove();
-        ret.popover({placement: 'top'});
+            console.log(v);
+            ret = ('album' === v.type) ? $(resultSet.getAlbumSquare(v)) : $(resultSet.getMusicSquare(v));
 
-        delete resultSet;
+            ret.addClass('music-square incboard-cell incboard-col-' + self.col + ' incboard-row-' + self.row);
+            ret.find('.cover').addClass('incboard-img');
+            ret.attr('data-content', v.title + ('duration' in v ? ' (' + resultSet.secondsToHMS(v.duration) + ')' : ''));
+            ret.attr('data-trigger', 'hover');
+            ret.attr('id', v.type + v.objId);
+            ret.find('.description').remove();
+            ret.popover({placement: 'top'});
 
-        return ret;
-    };
+            return ret;
+        };
 
-    this.draw = function() {
-        var v = self.content,
-            e = $('#' + v.type + v.objId);
+        this.draw = function() {
+            var v = self.content,
+                e = $('#' + v.type + v.objId);
 
-        // If the element already exists then the only attribute that can chage is the position.
-        if (e.length !== 0) {
-            console.log
-            e.removeClass();
-            e.addClass('incboard-cell incboard-row-' + self.row + ' incboard-col-' + self.col);
-            if ('album' === v.type) {
-                e.addClass('album-square');
+            // If the element already exists then the only attribute that can chage is the position.
+            if (e.length !== 0) {
+                console.log
+                e.removeClass();
+                e.addClass('incboard-cell incboard-row-' + self.row + ' incboard-col-' + self.col);
+                if ('album' === v.type) {
+                    e.addClass('album-square');
+                } else {
+                    e.addClass('music-square');
+                }
             } else {
-                e.addClass('music-square');
+                e = getHtml();
+                $('#subtitle').subtitleAdd(v.artist);
+                e.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
+                $('#incboard-result #incboard').append(e);
             }
-        } else {
-            e = getHtml();
-            $('#subtitle').subtitleAdd(v.artist);
-            e.css('background-color', $('#subtitle').subtitleGetColor(v.artist));
-            $('#incboard-result #incboard').append(e);
-        }
-    };
+        };
 
-    /**
-     * Set position of the cell.
-     * Can be used as setPos(2, 3) or setPos([2, 3]).
-     */
-    this.setPos = function(pos) {
-        if ('object' === typeof pos) {
-            self.col = pos[0];
-            self.row = pos[1];
-        } else {
-            throw new Error('First argument of IncBoardCell.setPos not an object.');
-        }
-    };
+        /**
+         * Set position of the cell.
+         * Can be used as setPos(2, 3) or setPos([2, 3]).
+         */
+        this.setPos = function(pos) {
+            if ('object' === typeof pos) {
+                self.col = pos[0];
+                self.row = pos[1];
+            } else {
+                throw new Error('First argument of IncBoardCell.setPos not an object.');
+            }
+        };
 
-    this.getPos = function() {
-        return [self.col, self.row];
-    };
+        this.getPos = function() {
+            return [self.col, self.row];
+        };
 
-    this.setContent = function(v) {
-        self.content = v;
-    };
+        this.setContent = function(v) {
+            self.content = v;
+        };
 
-    this.getContent = function() {
-        return self.content;
-    };
+        this.getContent = function() {
+            return self.content;
+        };
 
-    this.toString = function() {
-        return '[ ' + self.content.objId + self.content.type + ' (' + self.col + ',' + self.row + ')]';
-    };
+        this.toString = function() {
+            return '[ ' + self.content.objId + self.content.type + ' (' + self.col + ',' + self.row + ')]';
+        };
 
-    /**
-     * Remove itself from the HTML.
-     */
-    this.remove = function() {
-        $('#' + self.content.type + self.content.objId).remove();
-    };
-}
+        /**
+         * Remove itself from the HTML.
+         */
+        this.remove = function() {
+            $('#' + self.content.type + self.content.objId).remove();
+        };
+    }
+
+    $.IncBoardCell = IncBoardCell;
+}(jQuery, undefined));
