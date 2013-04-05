@@ -58,8 +58,11 @@ CREATE TABLE `user` (
     `privacy` enum('public', 'private') NOT NULL default 'public',
     `view` enum('default', 'incboard') NOT NULL default 'default',
     `current_playlist_id` int(11),
+    `current_album_id` int(11),
     PRIMARY KEY(`id`),
     UNIQUE(`email`),
+    CONSTRAINT `user_ibfk_1` FOREIGN KEY(`current_playlist_id`) REFERENCES `playlist`(`id`),
+    CONSTRAINT `user_ibfk_2` FOREIGN KEY(`current_album_id`) REFERENCES `album`(`id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
@@ -275,11 +278,13 @@ CREATE TABLE `user_listen_album` (
     `album_id` int(11) NOT NULL,
     `user_id` int(11) NOT NULL,
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `current_artist_music_title_id` int(11),
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(`id`),
     UNIQUE(`album_id`, `user_id`),
     CONSTRAINT `user_listen_album_ibfk_1` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
-    CONSTRAINT `user_listen_album_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+    CONSTRAINT `user_listen_album_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    CONSTRAINT `user_listen_album_ibfk_3` FOREIGN KEY (`current_artist_music_title_id`) REFERENCES `artist_music_title`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `user_listen_album_created_trigger` BEFORE INSERT ON `user_listen_album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 

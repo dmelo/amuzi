@@ -19,3 +19,6 @@
 [submodule "library/amuzi_search"]
 	path = library/amuzi_search
 	url = git@github.com:dmelo/amuzi_search.git
+[submodule "application/modules/Auth"]
+	path = application/modules/Auth
+	url = git@github.com:dmelo/zend-module-login.git

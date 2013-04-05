@@ -80,15 +80,19 @@ class Playlist extends DZend_Model
      */
     public function export($name)
     {
+        $ret = null;
+        $playlistRow = null;
         $this->_logger->debug("export: " . $name);
         $this->_logger->debug("export: " . gettype($name));
         $user = $this->_session->user;
         $this->_logger->debug("export: " . $user->currentPlaylistId);
         if (gettype($name) === 'string') {
-            if ('' === $name) {
-                $playlistRow = $this->_playlistDb->findRowById(
-                    $user->currentPlaylistId
-                );
+            if ('' === $name) { // if current is null, ret will be null.
+                if (null !== $user->currentPlaylistId) {
+                    $playlistRow = $this->_playlistDb->findRowById(
+                        $user->currentPlaylistId
+                    );
+                }
             } else {
                 $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
                     $user->id, $name
@@ -106,10 +110,10 @@ class Playlist extends DZend_Model
         $this->_logger->debug(print_r($playlistRow, true));
         $this->_logger->debug($playlistRow->id);
 
-        $ret = null;
         if (null !== $playlistRow) {
             $ret = array();
             $user->currentPlaylistId = $playlistRow->id;
+            $user->currentAlbumId = null;
             $user->save();
             $trackList = $playlistRow->getTrackListAsArray();
             $this->_logger->debug(count($trackList));

@@ -50,8 +50,17 @@ class AlbumController extends DZend_Controller_Action
 
     public function loadAction()
     {
-        if (($id = $this->_request->getParam('id')) !== false) {
+        $this->_logger->debug('AlbumController::loadAction A# ' . $this->_session->user->id);
+        $this->_logger->debug('AlbumController::loadAction C# ' . $this->_session->user->currentAlbumId);
+        $this->_logger->debug('AlbumController::loadAction D# ' . $this->_session->user->currentPlaylistId);
+        if (($id = $this->_request->getParam('id')) !== null || ($id = $this->_session->user->currentAlbumId) !== null) {
+
+            $this->_logger->debug("AlbumController::loadAction " . print_r($this->_request->getParam('id'), true) . '#' . gettype($this->_request->getParam('id')));
+            $this->_logger->debug("AlbumController::loadAction " . print_r($id, true) . "#" . gettype($id));
             $albumRow = $this->_albumModel->findRowById($id);
+            $this->_session->user->currentAlbumId = $albumRow->id;
+            $this->_session->user->currentPlaylistId = null;
+            $this->_session->user->save();
             $album = $albumRow->getArray();
             $ret = array($album['trackList'], $album['name'], 0, 0, 0);
 
