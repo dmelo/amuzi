@@ -209,7 +209,12 @@ class PlaylistController extends DZend_Controller_Action
                 $id = $this->_request->getPost('id');
                 if(null === $name && null !== $id)
                     $name = (int) $id;
-                $this->view->playlist = $this->_playlistModel->export($name);
+                $playlist = $this->_playlistModel->export($name);
+                if (null === $playlist) {
+                    $this->_helper->redirector('load', 'album');
+                } else {
+                    $this->view->playlist = $playlist;
+                }
             }
             elseif (isset($this->_session->playlist)) {
                 $this->view->playlist = $this->_session->playlist;
