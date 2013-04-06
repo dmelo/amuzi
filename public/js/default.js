@@ -496,8 +496,10 @@
     }
 
     $.resizeEditPlaylist = function () {
-        $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
-        $('.music-manager-content').height($(window).height() - $('.music-manager-content').offset().top - $('.footer').height());
+        if ($('.music-manager-content').length > 0) {
+            $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
+            $('.music-manager-content').height($(window).height() - $('.music-manager-content').offset().top - $('.footer').height());
+        }
     };
 
     $.isSearchFormValid = function () {
