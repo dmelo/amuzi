@@ -40,7 +40,9 @@ class AlbumController extends DZend_Controller_Action
                 if (2 === count($track)) {
                     $artist = $track['artist'];
                     $musicTitle = $track['musicTitle'];
-                    $this->_musicTrackLinkModel->getTrackSync($artist, $musicTitle);
+                    $this->_musicTrackLinkModel->getTrackSync(
+                        $artist, $musicTitle
+                    );
                     // I don't have to store the value because it doesn't
                     // return the album.
                 }
@@ -50,7 +52,8 @@ class AlbumController extends DZend_Controller_Action
 
     public function loadAction()
     {
-        if (($id = $this->_request->getParam('id')) !== null || ($id = $this->_session->user->currentAlbumId) !== null) {
+        if (($id = $this->_request->getParam('id')) !== null
+            || ($id = $this->_session->user->currentAlbumId) !== null) {
             $albumRow = $this->_albumModel->findRowById($id);
             $this->_session->user->currentAlbumId = $albumRow->id;
             $this->_session->user->currentPlaylistId = null;
@@ -65,13 +68,11 @@ class AlbumController extends DZend_Controller_Action
     public function infoAction()
     {
         if (($id = $this->_request->getParam('id')) !== false) {
-            $collection = $this->view->collection = $this->_albumModel->findRowById($id);
+            $collection = $this->view->collection = $this->_albumModel
+                ->findRowById($id);
             $c = new DZend_Chronometer();
 
-            $c->start();
             $collection->getCoverName();
-            $c->stop();
-            $this->_logger->debug("AlbumController::info covername " . $c->get());
 
             foreach (array(
                 'getCoverName', 'getType', 'playTime', 'getTrackListAsArray'
@@ -99,7 +100,8 @@ class AlbumController extends DZend_Controller_Action
 
         if ($this->_request->isPost() &&
             ($id = $this->_request->getPost('id')) !== null) {
-            if (($msg = $this->_albumModel = $this->_albumModel->remove($id)) === true) {
+            if (($msg = $this->_albumModel = $this->_albumModel->remove($id))
+                === true) {
                 $message = array($this->view->t('Album removed'), 'success');
             } else {
                 $message = array(
