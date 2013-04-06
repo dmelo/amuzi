@@ -191,9 +191,11 @@
     }
 
     function applyOverResultDiv() {
-        var height = $(window).height() - $('#slide-search').offset().top - $('form#search').height() - parseInt($('form#search').css('margin-bottom'), 10) - $('#more-results').height() - $('.navbar').height() - 30;
+        if ($('#result').length > 0) {
+            var height = $(window).height() - $('#slide-search').offset().top - $('form#search').height() - parseInt($('form#search').css('margin-bottom'), 10) - $('#more-results').height() - $('.navbar').height() - 30;
 
-        $('#result').height(height);
+            $('#result').height(height);
+        }
     }
 
     // Repeat
