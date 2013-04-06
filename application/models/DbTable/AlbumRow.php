@@ -23,6 +23,8 @@
  */
 class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackCollectionRow
 {
+    protected $_trackList = null;
+
     public function getArray()
     {
         $columns = array(
@@ -49,26 +51,40 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function getTrackListAsArray($sync = false)
     {
-        $ret = array();
-        $artistMusicTitleModel = new ArtistMusicTitle();
-        $musicTrackLinkModel = new MusicTrackLink();
+        $c = new DZend_Chronometer();
+        $c->start();
 
-        foreach ($this->artistMusicTitleIdList as $artistMusicTitleId) {
-            $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId, $sync);
-            $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
-            if (null === $trackRow) {
-                $track = array(
-                    'artist' => $artistMusicTitleRow->getArtistName(),
-                    'musicTitle' => $artistMusicTitleRow->getMusicTitleName()
-                );
-            } else {
-                $track = $trackRow->getArray();
-                $track['title'] = $artistMusicTitleRow->getArtistName() . ' - ' . $artistMusicTitleRow->getMusicTitleName();
-                $track['artist_music_title_id'] = $artistMusicTitleId;
+        if (null === $this->_trackList) {
+            $this->_trackList = array(false => null, true => null);
+        }
+
+        if (($ret = $this->_trackList[$sync]) === null) {
+            $ret = array();
+            $artistMusicTitleModel = new ArtistMusicTitle();
+            $musicTrackLinkModel = new MusicTrackLink();
+
+            foreach ($this->artistMusicTitleIdList as $artistMusicTitleId) {
+                $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId, $sync);
+                $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
+                if (null === $trackRow) {
+                    $track = array(
+                        'artist' => $artistMusicTitleRow->getArtistName(),
+                        'musicTitle' => $artistMusicTitleRow->getMusicTitleName()
+                    );
+                } else {
+                    $track = $trackRow->getArray();
+                    $track['title'] = $artistMusicTitleRow->getArtistName() . ' - ' . $artistMusicTitleRow->getMusicTitleName();
+                    $track['artist_music_title_id'] = $artistMusicTitleId;
+                }
+
+                $ret[] = $track;
             }
 
-            $ret[] = $track;
+            $this->_trackList[$sync] = $ret;
         }
+
+        $c->stop();
+        $this->_logger->debug("AlbumRow::getTrackListAsArray sync = " . ($sync ? 'true' : 'false') . " " . $c->get());
 
         return $ret;
     }
@@ -104,6 +120,10 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
     {
         $artistDb = new DbTable_Artist();
         $artistRow = $artistDb->findRowById($this->artistId);
+
+        if (null === $artistRow) {
+            $this->_logger->err("AlbumRow::getCoverName row " . $this->id . " points to artist_id " . $this->artistId . " but doesn't exists on table artist");
+        }
 
         return $artistRow->name . ' - ' . $this->name;
     }
