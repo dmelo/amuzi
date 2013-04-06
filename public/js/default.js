@@ -69,11 +69,6 @@
         $('.jp-repeat').css('display', repeat ? 'none' : 'block');
     }
 
-    function callbackShuffle() {
-        window.myPlaylist.setCurrent(window.myPlaylist.newCurrent);
-        setInterfaceRepeat(window.myPlaylist.loop);
-    }
-
     function unloadPlaylist() {
         window.myPlaylist.name = null;
         window.myPlaylist.removeAll();
@@ -112,12 +107,11 @@
             if (null !== data) {
                 $('.jp-title').css('display', 'block');
                 $.each(data[0], function (i, v) {
-                    window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id});
+                    window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
                 });
                 window.myPlaylist.name = data[1];
                 setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
                 setInterfaceShuffle(parseInt(data[3], 10));
-                setTimeout(callbackShuffle, 1500);
                 applyOverPlaylist();
 
                 if (!isAlbum && 'number' === typeof options.id) {
@@ -470,8 +464,11 @@
             var ele = $('#slide-search div[albumid=' + albumId + ']');
             if (ele.length > 0) {
                 addElementAnimation(ele);
+            } else { // It's a share link.
+                $('.slide-next').trigger('click');
             }
             loadAlbumSet();
+            $.bootstrapMessageAuto('Album added', 'success');
         }, 'json');
     }
 
