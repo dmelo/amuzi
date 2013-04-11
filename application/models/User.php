@@ -90,6 +90,7 @@ class User extends DZend_Model
         $data['email'] = $email;
         $data['password'] = sha1($password);
         $data['token'] = sha1(time(null) . implode('', $data));
+        $data['view'] = rand(0, 1) ? 'incboard' : 'default';
 
         try {
             $row = $this->_userDb->insert($data);
