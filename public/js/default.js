@@ -75,6 +75,18 @@
         window.myPlaylist.removeAll();
     }
 
+    $.loadNextPlaylist = function() {
+        $.get('/user/nextplaylist', function(data) {
+            if ('error' === data[1]) {
+                $.bootstrapMessageAuto(data[0], data[1]);
+            } else {
+                $.loadPlaylist(data[0], data[1]);
+            }
+        }, 'json').error(function(data) {
+            $.bootstrapMessageAuto('Coundn\'t load next album/playlist', 'error');
+        });
+    };
+
     /**
      * Load the an specific playlist or the default if an empty string is
      * especified. If a number is given, load the playlist by it's id.
