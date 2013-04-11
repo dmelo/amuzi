@@ -31,7 +31,8 @@
         repeat,
         current,
         latestSearch,
-        popup;
+        popup,
+        loadingPlaylistMessage = null;
 
     window.myPlaylist = null;
     $.commands = new Commands();
@@ -87,47 +88,57 @@
         isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
         window.myPlaylist.isAlbum = isAlbum;
+
         var options,
-            uri = isAlbum ? '/album/load' : '/playlist/load';
+            uri = isAlbum ? '/album/load' : '/playlist/load',
+            item = isAlbum ? 'album' : 'playlist';
 
-        if (typeof (name) === 'number' || (typeof (name) === 'string' && parseInt(name, 10) >= 0)) {
-            // It's an ID
-            if (typeof (name) === 'string') {
-                name = parseInt(name, 10);
-            }
-            options = { id: name };
-        } else {
-            // It's a name
-            options = { name: name };
-        }
-
-
-
-        $.post(uri, options, function (data) {
-            if (null !== data) {
-                $('.jp-title').css('display', 'block');
-                $.each(data[0], function (i, v) {
-                    window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
-                });
-                window.myPlaylist.name = data[1];
-                setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
-                setInterfaceShuffle(parseInt(data[3], 10));
-                applyOverPlaylist();
-
-                if (!isAlbum && 'number' === typeof options.id) {
-                    $('.playlist-square').removeClass('current-playlist');
-                    $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
+        if (null === loadingPlaylistMessage) {
+            loadingPlaylistMessage = 'Already loading ' + item + ', please wait.';
+            if (typeof (name) === 'number' || (typeof (name) === 'string' && parseInt(name, 10) >= 0)) {
+                // It's an ID
+                if (typeof (name) === 'string') {
+                    name = parseInt(name, 10);
                 }
+                options = { id: name };
 
-                window.myPlaylist.play();
-            }
-        }, 'json').complete(function () {
+            } else {
+                // It's a name
+                options = { name: name };
 
-            if ($.commands.isRunCommand) {
-                setTimeout('$.commands.runProgram()', 1500);
             }
-        }).error(function (e) {
-        });
+
+            $.post(uri, options, function (data) {
+                if (null !== data) {
+                    $('.jp-title').css('display', 'block');
+                    $.each(data[0], function (i, v) {
+                        window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
+                    });
+                    window.myPlaylist.name = data[1];
+                    setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
+                    setInterfaceShuffle(parseInt(data[3], 10));
+                    applyOverPlaylist();
+
+                    if (!isAlbum && 'number' === typeof options.id) {
+                        $('.playlist-square').removeClass('current-playlist');
+                        $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
+                    }
+
+                    window.myPlaylist.play();
+                }
+            }, 'json').complete(function () {
+                loadingPlaylistMessage = null;
+
+                if ($.commands.isRunCommand) {
+                    setTimeout('$.commands.runProgram()', 1500);
+                }
+            }).error(function (e) {
+                loadingPlaylistMessage = null;
+                $.bootstrapMessageAuto('Error loading ' + item, 'error');
+            });
+        } else {
+            $.bootstrapMessageAuto(loadingPlaylistMessage, 'info');
+        }
     }
 
     // TODO: take away the playlistName
