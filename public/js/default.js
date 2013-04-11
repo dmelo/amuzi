@@ -173,7 +173,9 @@
 
     $.initAmuzi = function () {
         $.commands.isRunCommand = true;
-        $.loadPlaylist();
+        if (1 === $('#userId').length) {
+            $.loadPlaylist();
+        }
     };
 
     function setPlaylistRepeat(name, repeat) {
