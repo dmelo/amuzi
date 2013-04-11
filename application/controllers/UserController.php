@@ -54,4 +54,47 @@ class UserController extends DZend_Controller_Action
     {
         $this->view->message = $this->_session->user->id;
     }
+
+    public function nextplaylistAction()
+    {
+        $userRow = $this->_session->user;
+        $message = array();
+        $next = false;
+        $itemRow = null;
+        $collectionRowSet = null;
+        if (null !== $userRow->currentPlaylistId) {
+            $collectionRowSet = $this->_playlistModel->fetchAllUsers();
+            $itemId = $userRow->currentPlaylistId;
+            $isAlbum = false;
+        } elseif (null !== $userRow->currentAlbumId) {
+            $collectionRowSet = $this->_albumModel->findAllFromUser();
+            $itemId = $userRow->currentAlbumId;
+            $isAlbum = true;
+        }
+
+        if (null !== $collectionRowSet) {
+            foreach ($collectionRowSet as $p) {
+                if (true === $next) {
+                    $itemRow = $p;
+                    break;
+                } elseif ($itemId === $p->id) {
+                    $next = true;
+                }
+            }
+            if (null === $itemRow && true === $next) {
+                foreach ($collectionRowSet as $p) {
+                    $itemRow = $p;
+                    break;
+                }
+            }
+
+            if (null !== $itemRow) {
+                $message = array($itemRow->id, $isAlbum);
+            }
+        } else {
+            $message = array('Could not determine next playlist/album', 'error');
+        }
+
+        $this->view->message = $message;
+    }
 }
