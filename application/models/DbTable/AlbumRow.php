@@ -108,7 +108,8 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function getCover()
     {
-        return in_array($this->cover, array(null, '')) ? '/img/album.png' : $this->cover;
+        return in_array($this->cover, array(null, '')) ?
+            '/img/album.png' : $this->cover;
     }
 
     public function getType()
@@ -130,7 +131,6 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
 
     public function __get($name)
     {
-        $albumHasArtistMusicTitleDb = new DbTable_AlbumHasArtistMusicTitle();
 
         if ('artist' === $name) {
             $artistDb = new DbTable_Artist();
@@ -139,8 +139,11 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
         } elseif ('title' === $name) {
             return "{$this->artist} - {$this->name}";
         } elseif ('artistMusicTitleIdList' === $name) {
+            $albumHasArtistMusicTitleDb =
+                new DbTable_AlbumHasArtistMusicTitle();
             $ret = array();
-            $ahamtRowset = $albumHasArtistMusicTitleDb->findByAlbumId($this->id);
+            $ahamtRowset = $albumHasArtistMusicTitleDb
+                ->findByAlbumId($this->id);
             foreach ($ahamtRowset as $row) {
                 $ret[] = $row->artistMusicTitleId;
             }

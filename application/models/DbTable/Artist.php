@@ -36,4 +36,36 @@ class DbTable_Artist extends DZend_Db_Table
 
         return $id;
     }
+
+    public function findRowById($id)
+    {
+        try {
+            $artistList = Zend_Registry::get('artistList');
+        } catch (Zend_Exception $e) {
+            $artistList = array();
+        }
+        $ret = null;
+        if (array_key_exists($id, $artistList)) {
+            $ret = $artistList[$id];
+        } else {
+            $ret = parent::findRowById($id);
+        }
+
+        return $ret;
+    }
+
+    public function preload($ids)
+    {
+        try {
+            $artistList = Zend_Registry::get('artistList');
+        } catch (Zend_Exception $e) {
+            $artistList = array();
+        }
+        $l = $this->findById($ids);
+        foreach ($l as $row) {
+            $artistList[$row->id] = $row;
+        }
+
+        Zend_Registry::set('artistList', $artistList);
+    }
 }
