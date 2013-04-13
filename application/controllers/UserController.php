@@ -92,7 +92,9 @@ class UserController extends DZend_Controller_Action
                 $message = array($itemRow->id, $isAlbum);
             }
         } else {
-            $message = array('Could not determine next playlist/album', 'error');
+            $message = array(
+                'Could not determine next playlist/album', 'error'
+            );
         }
 
         $this->view->message = $message;

@@ -100,7 +100,7 @@ class PlaylistController extends DZend_Controller_Action
         $message = null;
 
         if ($this->_request->isPost()) {
-            if($this->_request->getPost('id') !== null) {
+            if ($this->_request->getPost('id') !== null) {
                 $trackInfo = array('id' => $this->_request->getPost('id'));
             } else {
                 $trackInfo = array('title' => $this->_request->getPost('title'),
@@ -125,7 +125,8 @@ class PlaylistController extends DZend_Controller_Action
 
             try {
                 $playlistRow = null;
-                if (($isAlbum = $this->_request->getPost('isAlbum', false)) == true) {
+                if (($isAlbum = $this->_request->getPost('isAlbum', false))
+                    == true) {
                     $playlistRow = $this->_playlistModel->getCurrentRow();
                 } else {
                     $playlistRow = $this->_playlistModel->create(
@@ -133,7 +134,10 @@ class PlaylistController extends DZend_Controller_Action
                     );
                 }
 
-                $this->_logger->debug('PlaylistController::addtrack ' . $playlistRow->id . '#' . $playlistRow->name);
+                $this->_logger->debug(
+                    'PlaylistController::addtrack ' . $playlistRow->id
+                    . '#' . $playlistRow->name
+                );
 
                 $trackRow = $playlistRow->addTrack($trackInfo);
 
@@ -151,7 +155,9 @@ class PlaylistController extends DZend_Controller_Action
                 }
 
                 $message = array(
-                    $this->view->t('Track added into playlist ' . $playlistRow->name),
+                    $this->view->t(
+                        'Track added into playlist ' . $playlistRow->name
+                    ),
                     'success',
                     $trackArray
                 );
@@ -215,8 +221,7 @@ class PlaylistController extends DZend_Controller_Action
                 } else {
                     $this->view->playlist = $playlist;
                 }
-            }
-            elseif (isset($this->_session->playlist)) {
+            } elseif (isset($this->_session->playlist)) {
                 $this->view->playlist = $this->_session->playlist;
             } else {
                 $this->view->playlist = null;
@@ -230,7 +235,8 @@ class PlaylistController extends DZend_Controller_Action
     {
         if (($id = $this->_request->getParam('id')) !== false
             && isset($this->_session->user)) {
-                $this->view->collection = $this->_playlistModel->findRowById($id);
+                $this->view->collection = $this->_playlistModel
+                    ->findRowById($id);
         }
     }
 
@@ -317,7 +323,10 @@ class PlaylistController extends DZend_Controller_Action
         if ($this->_request->isPost() &&
             ($id = $this->_request->getPost('id')) !== null) {
             if ($this->_session->user->countPlaylists() <= 1) {
-                $message = array($this->view->t('You must have at least one playlist'), 'error');
+                $message = array(
+                    $this->view->t('You must have at least one playlist'),
+                    'error'
+                );
             } elseif (($msg = $this->_playlistModel->remove($id)) === true) {
                 $message = array($this->view->t('Playlist removed'), 'success');
             } else {

@@ -59,7 +59,9 @@ class Album extends DZend_Model
     public function get($artist, $album)
     {
         $artistId = $this->_artistModel->insert($artist);
-        $albumRow = $this->_albumDb->findRowByNameAndArtistId($album, $artistId);
+        $albumRow = $this->_albumDb->findRowByNameAndArtistId(
+            $album, $artistId
+        );
 
         return $albumRow;
     }
@@ -121,16 +123,19 @@ class Album extends DZend_Model
             $albumIdSet[] = $userListenAlbumRow->albumId;
         }
 
-        $this->_logger->debug("Album::findAllFromUser - " . print_r($albumIdSet, true));
+        $this->_logger->debug(
+            "Album::findAllFromUser - " . print_r($albumIdSet, true)
+        );
 
-        return empty($albumIdSet) ? array() : $this->_albumDb->findById($albumIdSet);
+        return empty($albumIdSet) ?
+            array() : $this->_albumDb->findById($albumIdSet);
     }
 
     public function remove($id)
     {
         $userListenAlbumRow = $this->_userListenAlbumDb
             ->findRowByUserIdAndAlbumId(
-            $this->_session->user->id, $id
+                $this->_session->user->id, $id
             );
 
         if (null !== $userListenAlbumRow) {
@@ -146,31 +151,15 @@ class Album extends DZend_Model
         }
     }
 
-    public function findRowByNameAndArtist($name, $artist) {
+    public function findRowByNameAndArtist($name, $artist)
+    {
         $ret = null;
         if (($artistRow = $this->_artistDb->findRowByName($artist)) !== null) {
-            $ret = $this->_albumDb->findRowByNameAndArtistId($name, $artistRow->id);
+            $ret = $this->_albumDb->findRowByNameAndArtistId(
+                $name, $artistRow->id
+            );
         }
 
         return $ret;
     }
-
-    /*
-     * TODO: apperentaly nobody calls this method. If so, just remove it.
-    public function update(LastfmEntry $data) {
-        $id = null;
-        if (null !== $data->cover) {
-            $row = $this->findRowByNameAndArtist($data->musicTitle, $data->artist);
-            if (null !== $row) {
-                $row->cover = substr($data->cover, 0, 2046);
-                $row->save();
-                $id = $row->id;
-            } else {
-                $id = $this->insertEmpty($data->artist, $data->musicTitle, $data->cover);
-            }
-        }
-
-        return $id;
-    }
-    */
 }

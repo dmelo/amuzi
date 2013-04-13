@@ -105,8 +105,9 @@ class ApiController extends DZend_Controller_Action
         if (($artist = $this->_request->getParam('artist')) != null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) != null &&
             ($type = $this->_request->getParam('type')) != null) {
-            $this->view->output = $this->_musicSimilarityModel
-                ->getSimilar($artist, $musicTitle, $type, $artistMusicTitleIdList);
+            $this->view->output = $this->_musicSimilarityModel->getSimilar(
+                $artist, $musicTitle, $type, $artistMusicTitleIdList
+            );
         } elseif (($q = $this->_request->getParam('q')) != null) {
             $item = $this->_artistMusicTitleModel->getBestGuess($q);
             if (null === $item) {
@@ -313,7 +314,8 @@ class ApiController extends DZend_Controller_Action
             foreach ($resultSet as $row) {
                 $c->start();
                 $track = $this->_getMusic($row->artist, $row->musicTitle);
-                $track['cover'] = '' === $row->cover ? '/img/album.png' : $row->cover;
+                $track['cover'] = '' === $row->cover ?
+                    '/img/album.png' : $row->cover;
                 $ret[] = $track;
                 $c->stop();
                 $this->_logger->debug('ApiController::gettop 2 - ' . $c->get());
