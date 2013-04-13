@@ -98,7 +98,9 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             'Zend_View_Helper'
         );
         $view->addHelperPath('../application/views/helpers', 'View_Helper');
-        $view->addHelperPath('../library/DZend/View/Helper', 'DZend_View_Helper');
+        $view->addHelperPath(
+            '../library/DZend/View/Helper', 'DZend_View_Helper'
+        );
 
         $view->doctype('HTML5');
         $view->headMeta()->setCharset('UTF-8');

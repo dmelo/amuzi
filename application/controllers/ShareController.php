@@ -41,9 +41,15 @@ class ShareController extends DZend_Controller_Action
             $this->view->lightningPackerScript()->exchangeArray(array());
             $this->view->lightningPackerLink()->exchangeArray(array());
 
-            $this->view->lightningPackerScript()->appendFile("/js/jquery.js?v=$version");
-            $this->view->lightningPackerScript()->appendFile("/js/share.js?v=$version");
-            $this->view->lightningPackerLink()->appendStylesheet("/css/share.css?v=$version");
+            $this->view->lightningPackerScript()->appendFile(
+                "/js/jquery.js?v=$version"
+            );
+            $this->view->lightningPackerScript()->appendFile(
+                "/js/share.js?v=$version"
+            );
+            $this->view->lightningPackerLink()->appendStylesheet(
+                "/css/share.css?v=$version"
+            );
 
         }
     }
