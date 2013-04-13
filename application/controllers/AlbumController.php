@@ -91,6 +91,11 @@ class AlbumController extends DZend_Controller_Action
     public function listAction()
     {
         $this->view->playlistRowSet = $this->_albumModel->findAllFromUser();
+        $artistIds = array();
+        foreach ($this->view->playlistRowSet as $row) {
+            $artistIds[] = $row->artistId;
+        }
+        $this->_artistModel->preload($artistIds);
         $this->renderScript('playlist/list.phtml');
     }
 

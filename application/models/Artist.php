@@ -27,4 +27,9 @@ class Artist extends DZend_Model
     {
         return $this->_artistDb->insert(array('name' => $name));
     }
+
+    public function preload($ids)
+    {
+        $this->_objDb->preload($ids);
+    }
 }
