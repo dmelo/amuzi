@@ -23,6 +23,7 @@ body {
 
 .container.regular {
     margin-top: 100px;
+    text-align: left;
 }
 
 input[type=button]:hover, input[type=submit]:hover {
@@ -448,4 +449,22 @@ dd {
 
 .text-img {
     height: 22px;
+}
+
+.inner-login {
+    padding: 20px;
+}
+
+.left {
+    text-align: left;
+}
+
+.quote-person {
+    float: left;
+    height: 70px;
+}
+
+.quote-set .quote {
+    display: none;
+    min-height: 68px;
 }
