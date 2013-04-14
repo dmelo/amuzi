@@ -568,6 +568,22 @@
         });
     }
 
+    function quoteAnimation() {
+        if ($('.quote-set').length > 0) {
+            var prev = $('.quote-set .quote-active'),
+                cur = $('.quote-set .quote-active').next();
+            if (0 == cur.length) {
+                cur = $('.quote-set .quote').first();
+            }
+            $('.quote-set .quote').removeClass('quote-active');
+            cur.addClass('quote-active');
+            prev.fadeOut(function() {
+                cur.fadeIn();
+                setTimeout(quoteAnimation, 10000);
+            });
+        }
+    }
+
     function checkBrowserCompatibility() {
         if (null === $.cookie('browser_compatibility')) {
             if ($('html').hasClass('msie')) {
@@ -826,5 +842,6 @@
         loadPlaylistSet();
         loadAlbumSet();
         startPing();
+        quoteAnimation();
     });
 }(jQuery, undefined));
