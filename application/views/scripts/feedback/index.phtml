@@ -3,6 +3,7 @@
 if (isset($this->message)) {
     echo Zend_Json::encode($this->message);
 } elseif (isset($this->form)) {
+    echo '<p>' . $this->t('Your feedback is very important to help improve Amuzi. Please, comment on any bug you have found, or any improvement you think it would interesting for Amuzi. Thanks in advance') . '</p>';
     echo $this->form;
 }
 ?>
