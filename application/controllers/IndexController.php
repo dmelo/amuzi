@@ -79,4 +79,8 @@ class IndexController extends DZend_Controller_Action
             echo $e->getMessage();
         }
     }
+
+    public function helpAction()
+    {
+    }
 }
