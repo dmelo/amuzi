@@ -96,7 +96,7 @@
      * @return void
      */
     $.loadPlaylist = function (name, isAlbum) {
-        name = name || '';
+        name = name || null;
         isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
         window.myPlaylist.isAlbum = isAlbum;
@@ -123,10 +123,10 @@
             $.post(uri, options, function (data) {
                 if (null !== data) {
                     $('.jp-title').css('display', 'block');
+                    window.myPlaylist.name = data[1];
                     $.each(data[0], function (i, v) {
                         window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
                     });
-                    window.myPlaylist.name = data[1];
                     setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
                     setInterfaceShuffle(parseInt(data[3], 10));
                     applyOverPlaylist();

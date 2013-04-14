@@ -56,7 +56,6 @@ class AlbumController extends DZend_Controller_Action
             || ($id = $this->_session->user->currentAlbumId) !== null) {
             $albumRow = $this->_albumModel->findRowById($id);
             $this->_session->user->currentAlbumId = $albumRow->id;
-            $this->_session->user->currentPlaylistId = null;
             $this->_session->user->save();
 
             $album = $albumRow->getArray();
