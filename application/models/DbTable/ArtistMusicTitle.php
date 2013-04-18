@@ -102,9 +102,9 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         $select = $db->select();
         $select->from(
             array('a' => 'artist'),
-            array(
-                'amtid' => 'amt.id'
-            )
+            array('amtid' => 'amt.id',
+                'artistId' => 'amt.artist_id',
+                'musicTitleId' => 'amt.music_title_id')
         )->join(
             array('amt' => 'artist_music_title'),
             'amt.artist_id = a.id',
@@ -126,12 +126,19 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         $where = implode(' AND ', $where);
         $select->where($where);
 
-        $this->_logger->debug("DbTable_ArtistMusicTitle autocomplete " . $select);
-
         $rowSet = $db->fetchAll($select);
-        $ret = array();
+        $artistIdSet = array();
+        $artistMusicTitleIdSet = array();
         foreach ($rowSet as $row) {
-            $artistMusicTitleRow = $this->findRowById($row['amtid']);
+            $artistIdSet[] = $row['artistId'];
+            $artistMusicTitleIdSet[] = $row['amtid'];
+        }
+        $artistModel = new Artist();
+        $artistMusicTitleModel = new ArtistMusicTitle();
+        $artistModel->preload($artistIdSet);
+
+        $ret = array();
+        foreach ($artistMusicTitleModel->findById($artistMusicTitleIdSet) as $artistMusicTitleRow) {
             $ret[] = new AutocompleteEntry(
                 $artistMusicTitleRow->getArtistName(),
                 $artistMusicTitleRow->getMusicTitleName(),
