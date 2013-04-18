@@ -65,7 +65,7 @@
 
     function searchMusic(set, num, callback) {
         var m = set.shift(),
-            uri,
+            uri = null,
             params;
 
         if (num > 0 && 'undefined' !== typeof m && null !== m) {
@@ -75,35 +75,54 @@
                    artist: m.artist,
                    album: m.musicTitle
                 };
-            } else {
-                uri = '/api/searchmusic',
+            } else if ('type' in m && 'track' === m.type) {
+                uri = '/api/searchmusic';
                 params = {
                     artist: m.artist,
                     musicTitle: m.musicTitle
                 };
             }
 
-            $.get(uri, params, function(v) {
-                try {
-                    var start = new Date().getTime();
-                    if (null !== v && true === search.insert(v)) {
-                        if ('function' === typeof callback) {
-                            callback(v, set, num);
+            if (null !== uri) {
+                $.get(uri, params, function(v) {
+                    try {
+                        var start = new Date().getTime();
+                        if (null !== v && true === search.insert(v)) {
+                            if ('function' === typeof callback) {
+                                callback(v, set, num);
+                            }
+                            searchMusic(set, num - 1);
+                        } else {
+                            searchMusic(set, num);
                         }
-                        searchMusic(set, num - 1);
-                    } else {
-                        searchMusic(set, num);
+                        var end = new Date().getTime();
+                    } catch(e) {
+                        console.log(e.stack);
+                        console.log(e);
                     }
-                    var end = new Date().getTime();
-                } catch(e) {
-                    console.log(e.stack);
-                    console.log(e);
-                }
-            }, 'json');
+                }, 'json');
+            } else {
+                console.log('error: invalid parameters on searchMusic');
+            }
         }
     }
 
+    function searchMulti(q) {
+        $.get('/api/autocomplete', {
+            q: q
+        }, function(data) {
+            if (0 === data.length) {
+                $.bootstrapMessageAuto('No results found', 'info');
+            } else {
+                console.log('results found');
+                console.log(data);
 
+                searchMusic(data, data.length);
+            }
+        }, 'json').error(function (data) {
+            $.bootstrapMessageAuto(data[0], data[1]);
+        });
+    }
 
     function loadSimilarMusic(data, num, callback) {
         $.bootstrapMessageOff();
@@ -156,8 +175,13 @@
         $('form.search').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                loadSimilarMusic(data, 10);
-
+                if ('error' in data) {
+                    console.log('error during searchsimilar: ' + data.error);
+                } else {
+                    /*
+                    loadSimilarMusic(data, 10);
+                    */
+                }
             },
             error: function (data) {
                 $.bootstrapMessageAuto('Error searching for music', 'error');
@@ -170,8 +194,11 @@
                 obj.artist = $('#artist').val();
                 obj.musicTitle = $('#musicTitle').val();
                 obj.type = $('#type').val();
+                console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
                 if ($.isSearchFormValid()) {
                     searchMusic([obj], 1, searchMusicCallbackCenter);
+                } else { // search in a way that many music can be retrieved.
+                    searchMulti($('#q').val());
                 }
             }
         });

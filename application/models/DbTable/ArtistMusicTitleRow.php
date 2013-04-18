@@ -26,10 +26,20 @@ class DbTable_ArtistMusicTitleRow extends DZend_Db_Table_Row
     public function getArtistName()
     {
         $name = null;
-        $artistDb = new DbTable_Artist();
-        if (($artistRow = $artistDb->findRowById($this->artistId)) !== null) {
-            $name = $artistRow->name;
+        try {
+            $artistList = Zend_Registry::get('artistList');
+        } catch (Zend_Exception $e) {
+            $artistList = array();
         }
+
+        if (!array_key_exists($this->artistId, $artistList)) {
+            $artistDb = new DbTable_Artist();
+            if (($artistRow = $artistDb->findRowById($this->artistId)) !== null) {
+                $artistList[$this->artistId] = $artistRow;
+                Zend_Registry::set('artistList', $artistList);
+            }
+        }
+        $name = $artistList[$this->artistId]->name;
 
         return $name;
     }

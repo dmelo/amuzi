@@ -797,10 +797,30 @@
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function () {
-            if ($('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute >= 100) {
+            if ($('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute >= 99) {
                 window.myPlaylist.next();
             }
         });
+
+        $('#jquery_jplayer_1').bind($.jPlayer.event.stall, function () {
+            console.log('MUSIC STALL');
+        });
+
+        $('#jquery_jplayer_1').bind($.jPlayer.event.emptied, function () {
+            console.log('MUSIC EMPTIED');
+        });
+
+        $('#jquery_jplayer_1').bind($.jPlayer.event.waiting, function () {
+            console.log('MUSIC WAITING');
+        });
+
+        $('#jquery_jplayer_1').bind($.jPlayer.event.error, function () {
+            console.log('MUSIC ERROR');
+            window.myPlaylist.next();
+        });
+
+
+
 
         $.resizeEditPlaylist();
 
@@ -843,5 +863,6 @@
         loadAlbumSet();
         startPing();
         quoteAnimation();
+
     });
 }(jQuery, undefined));
