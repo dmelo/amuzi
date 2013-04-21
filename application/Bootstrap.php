@@ -44,51 +44,53 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('domain');
         $domainJs = $this->getResource('domain') . '/js/';
         $domainCss = $this->getResource('domain') . '/css/';
-        $js = array();
-        $js[] = $domainJs . 'ie-compatibility.js';
-        $js[] = $domainJs . 'jquery.js';
-        $js[] = $domainJs . 'log.js';
-        $js[] = $domainJs . 'facebook-connect.js';
-        $js[] = $domainJs . 'bootstrap.js';
-        $js[] = $domainJs . 'jquery.browser.min.js';
-        $js[] = $domainJs . 'jquery.jplayer.js';
-        $js[] = $domainJs . 'jplayer.playlist.js';
-        $js[] = $domainJs . 'jplayer.playlist.ext.js';
-        $js[] = $domainJs . 'themeswitcher.js';
-        $js[] = $domainJs . 'jquery-ui-1.9.2.custom.js';
-        $js[] = $domainJs . 'jquery.progressbar.js';
-        $js[] = $domainJs . 'jquery.placeholder.min.js';
-        $js[] = $domainJs . 'jquery.form.js';
-        $js[] = $domainJs . 'jquery.tableofcontents.js';
-        $js[] = $domainJs . 'resultset.js';
-        $js[] = $domainJs . 'jquery.cookie.js';
-        $js[] = $domainJs . 'commands.js';
-        $js[] = $domainJs . 'jquery.bootstrapMessage.js';
-        $js[] = $domainJs . 'jquery.bootstrapLoadModal.js';
-        $js[] = $domainJs . 'jquery.url.js';
-        $js[] = $domainJs . 'bootstrap-slide.js';
-        $js[] = $domainJs . 'cssrule.js';
-        $js[] = $domainJs . 'default.js';
-        $js[] = $domainJs . 'mozaic.js';
-        $js[] = $domainJs . 'incboard-cell.js';
-        $js[] = $domainJs . 'incboard-board.js';
-        $js[] = $domainJs . 'incboard.js';
-        $js[] = $domainJs . 'search-exec.js';
-        $js[] = $domainJs . 'bootstrap-tutorial.js';
-        $js[] = $domainJs . 'jquery.subtitle.js';
+        $js = array(
+            $domainJs . 'ie-compatibility.js',
+            $domainJs . 'jquery.js',
+            $domainJs . 'log.js',
+            $domainJs . 'facebook-connect.js',
+            $domainJs . 'bootstrap.js',
+            $domainJs . 'jquery.browser.min.js',
+            $domainJs . 'jquery.jplayer.js',
+            $domainJs . 'jplayer.playlist.js',
+            $domainJs . 'jplayer.playlist.ext.js',
+            $domainJs . 'themeswitcher.js',
+            $domainJs . 'jquery-ui-1.9.2.custom.js',
+            $domainJs . 'jquery.progressbar.js',
+            $domainJs . 'jquery.placeholder.min.js',
+            $domainJs . 'jquery.form.js',
+            $domainJs . 'jquery.tableofcontents.js',
+            $domainJs . 'resultset.js',
+            $domainJs . 'jquery.cookie.js',
+            $domainJs . 'commands.js',
+            $domainJs . 'jquery.bootstrapMessage.js',
+            $domainJs . 'jquery.bootstrapLoadModal.js',
+            $domainJs . 'jquery.url.js',
+            $domainJs . 'bootstrap-slide.js',
+            $domainJs . 'cssrule.js',
+            $domainJs . 'default.js',
+            $domainJs . 'mozaic.js',
+            $domainJs . 'incboard-cell.js',
+            $domainJs . 'incboard-board.js',
+            $domainJs . 'incboard.js',
+            $domainJs . 'search-exec.js',
+            $domainJs . 'bootstrap-tutorial.js',
+            $domainJs . 'jquery.subtitle.js'
+        );
 
-        $css = array();
-        $css[] = $domainCss . 'jplayer.pink.flag.css';
-        $css[] = $domainCss . 'player.css';
-        $css[] = $domainCss . 'miniplayer.css';
-        $css[] = $domainCss . 'resultset.css';
-        $css[] = $domainCss . 'bootstrap.css';
-        $css[] = $domainCss . 'github-badge.css';
-        $css[] = $domainCss . 'default.css';
-        $css[] = $domainCss . 'incboard.css';
-        $css[] = $domainCss . 'jquery.subtitle.css';
-        $css[] = $domainCss . 'bootstrap-slide.css';
-        $css[] = $domainCss . 'mozaic.css';
+        $css = array(
+            $domainCss . 'jplayer.pink.flag.css',
+            $domainCss . 'player.css',
+            $domainCss . 'miniplayer.css',
+            $domainCss . 'resultset.css',
+            $domainCss . 'bootstrap.css',
+            $domainCss . 'github-badge.css',
+            $domainCss . 'default.css',
+            $domainCss . 'incboard.css',
+            $domainCss . 'jquery.subtitle.css',
+            $domainCss . 'bootstrap-slide.css',
+            $domainCss . 'mozaic.css'
+        );
 
         $this->bootstrap('layout');
         $layout = $this->getResource('layout');
@@ -108,11 +110,13 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->headMeta()->setCharset('UTF-8');
         $view->headTitle('AMUZI - Online music player');
 
-        foreach($js as $item)
+        foreach($js as $item) {
             $view->lightningPackerScript()->appendFile("$item?v=$version");
+        }
 
-        foreach($css as $item)
+        foreach($css as $item) {
             $view->lightningPackerLink()->appendStylesheet("$item?v=$version");
+        }
 
         $this->bootstrap('translate');
         $view->translate = Zend_Registry::get('translate');
@@ -124,7 +128,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->facebookId = $config->facebook->id;
         $view->facebookSecret = $config->facebook->secret;
         $view->facebookChannel = $this->getResource('domain') . '/channel.html';
-
     }
 
     public function _initCache()
