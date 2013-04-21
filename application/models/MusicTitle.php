@@ -23,6 +23,8 @@
  */
 class MusicTitle extends DZend_Model
 {
+    protected $_allowRequestCache = true;
+
     public function insert($name)
     {
         return $this->_musicTitleDb->insert(array('name' => $name));

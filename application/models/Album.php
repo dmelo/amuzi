@@ -25,6 +25,8 @@ class Album extends DZend_Model
 {
     use autocompleteTrait;
 
+    protected $_allowRequestCache = true;
+
     private $_type = 'album';
 
     public function fetchAllArtistAndAlbum($idList)

@@ -2,6 +2,7 @@
 *.swo
 public/api/*
 public/data/*.php
+public/phpinfo.php
 docs/api
 tests/tmp
 public/tmp
