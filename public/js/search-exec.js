@@ -178,9 +178,7 @@
                 if ('error' in data) {
                     console.log('error during searchsimilar: ' + data.error);
                 } else {
-                    /*
                     loadSimilarMusic(data, 10);
-                    */
                 }
             },
             error: function (data) {
