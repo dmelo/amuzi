@@ -23,6 +23,8 @@
  */
 class DbTable_MusicSimilarity extends DZend_Db_Table
 {
+    protected $_allowRequestCache = true;
+
     public function insert($data)
     {
         try {
