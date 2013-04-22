@@ -24,12 +24,17 @@
 class AmuziSearch extends DZend_Model
 {
     protected $_ports = array(
-        'album' => 3675, 'track' => 3676, 'artist' => 3677
+        'album_db' => 3673, 'track_db' => 3674, 'album' => 3675, 'track' => 3676
     );
-    protected $_keys = array('album', 'track', 'artist');
+    protected $_keys = null;
 
     public function autocomplete($q, $type, $limit = 5)
     {
+        $typeRet = str_replace('_db', '', $type);
+        if (null === $this->_keys) {
+            $this->_keys = array_keys($this->_ports);
+        }
+
         $ret = array();
         $q = preg_replace('/ - ?/', 'A', strtolower($q));
         ob_implicit_flush();
@@ -63,7 +68,6 @@ class AmuziSearch extends DZend_Model
         socket_shutdown($sock);
         socket_close($sock);
 
-
         if (false === $str) {
             $this->_logger->debug('AmuziSearch::autocomplete failed to read from socket. try to open a new connection');
         } else {
@@ -71,7 +75,7 @@ class AmuziSearch extends DZend_Model
             foreach ($resultList as $result) {
                 if (strlen($result) > 0) {
                     list($artistName, $name) = explode('A', $result);
-                    $ret[] = new AutocompleteEntry($artistName, $name, null, $type);
+                    $ret[] = new AutocompleteEntry($artistName, $name, null, $typeRet);
                     if (count($ret) >= $limit) {
                         break;
                     }

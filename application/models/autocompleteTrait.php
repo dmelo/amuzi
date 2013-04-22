@@ -34,6 +34,7 @@ trait autocompleteTrait
     {
         $modelObj = 'music_title' === $this->_type ? '_artistMusicTitleDb' : '_albumDb';
         $autocompleteType = 'music_title' === $this->_type ? 'track' : 'album';
+        /*
         $keywords = explode(' - ', $q, 2);
         $ret = array();
         $this->_logger->debug("---> " . $this->_type);
@@ -58,6 +59,12 @@ trait autocompleteTrait
                 )
             );
         }
+        */
+
+        $ret = $this->_amuziSearchModel->autocomplete(
+            $q, $autocompleteType . '_db', $limit
+        );
+        // TODO: append info about ids and pics.
 
         if (count($ret) < $limit) {
             $ret = array_merge(

@@ -40,61 +40,14 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
      */
     protected function _initView()
     {
-        $version = file_get_contents('../version.txt');
-        $this->bootstrap('domain');
-        $domainJs = $this->getResource('domain') . '/js/';
-        $domainCss = $this->getResource('domain') . '/css/';
-        $js = array(
-            $domainJs . 'ie-compatibility.js',
-            $domainJs . 'jquery.js',
-            $domainJs . 'log.js',
-            $domainJs . 'facebook-connect.js',
-            $domainJs . 'bootstrap.js',
-            $domainJs . 'jquery.browser.min.js',
-            $domainJs . 'jquery.jplayer.js',
-            $domainJs . 'jplayer.playlist.js',
-            $domainJs . 'jplayer.playlist.ext.js',
-            $domainJs . 'themeswitcher.js',
-            $domainJs . 'jquery-ui-1.9.2.custom.js',
-            $domainJs . 'jquery.progressbar.js',
-            $domainJs . 'jquery.placeholder.min.js',
-            $domainJs . 'jquery.form.js',
-            $domainJs . 'jquery.tableofcontents.js',
-            $domainJs . 'resultset.js',
-            $domainJs . 'jquery.cookie.js',
-            $domainJs . 'commands.js',
-            $domainJs . 'jquery.bootstrapMessage.js',
-            $domainJs . 'jquery.bootstrapLoadModal.js',
-            $domainJs . 'jquery.url.js',
-            $domainJs . 'bootstrap-slide.js',
-            $domainJs . 'cssrule.js',
-            $domainJs . 'default.js',
-            $domainJs . 'mozaic.js',
-            $domainJs . 'incboard-cell.js',
-            $domainJs . 'incboard-board.js',
-            $domainJs . 'incboard.js',
-            $domainJs . 'search-exec.js',
-            $domainJs . 'bootstrap-tutorial.js',
-            $domainJs . 'jquery.subtitle.js'
-        );
-
-        $css = array(
-            $domainCss . 'jplayer.pink.flag.css',
-            $domainCss . 'player.css',
-            $domainCss . 'miniplayer.css',
-            $domainCss . 'resultset.css',
-            $domainCss . 'bootstrap.css',
-            $domainCss . 'github-badge.css',
-            $domainCss . 'default.css',
-            $domainCss . 'incboard.css',
-            $domainCss . 'jquery.subtitle.css',
-            $domainCss . 'bootstrap-slide.css',
-            $domainCss . 'mozaic.css'
-        );
-
+        $this->bootstrap('translate');
         $this->bootstrap('layout');
+        $this->bootstrap('domain');
+        $domain = Zend_Registry::get('domain');
         $layout = $this->getResource('layout');
         $view = $layout->getView();
+        $view->translate = Zend_Registry::get('translate');
+
         $view->addHelperPath(
             '../library/LightningPackerHelper/',
             'Zend_View_Helper'
@@ -106,20 +59,55 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         );
         $view->addScriptPath('../application/views/scripts');
 
-        $view->doctype('HTML5');
-        $view->headMeta()->setCharset('UTF-8');
-        $view->headTitle('AMUZI - Online music player');
+        $js = array(
+            'ie-compatibility.js',
+            'jquery.js',
+            'log.js',
+            'facebook-connect.js',
+            'bootstrap.js',
+            'jquery.browser.min.js',
+            'jquery.jplayer.js',
+            'jplayer.playlist.js',
+            'jplayer.playlist.ext.js',
+            'themeswitcher.js',
+            'jquery-ui-1.9.2.custom.js',
+            'jquery.progressbar.js',
+            'jquery.placeholder.min.js',
+            'jquery.form.js',
+            'jquery.tableofcontents.js',
+            'resultset.js',
+            'jquery.cookie.js',
+            'commands.js',
+            'jquery.bootstrapMessage.js',
+            'jquery.bootstrapLoadModal.js',
+            'jquery.url.js',
+            'bootstrap-slide.js',
+            'cssrule.js',
+            'default.js',
+            'mozaic.js',
+            'incboard-cell.js',
+            'incboard-board.js',
+            'incboard.js',
+            'search-exec.js',
+            'bootstrap-tutorial.js',
+            'jquery.subtitle.js'
+        );
+        Zend_Registry::set('js', $js);
 
-        foreach($js as $item) {
-            $view->lightningPackerScript()->appendFile("$item?v=$version");
-        }
-
-        foreach($css as $item) {
-            $view->lightningPackerLink()->appendStylesheet("$item?v=$version");
-        }
-
-        $this->bootstrap('translate');
-        $view->translate = Zend_Registry::get('translate');
+        $css = array(
+            'jplayer.pink.flag.css',
+            'player.css',
+            'miniplayer.css',
+            'resultset.css',
+            'bootstrap.css',
+            'github-badge.css',
+            'default.css',
+            'incboard.css',
+            'jquery.subtitle.css',
+            'bootstrap-slide.css',
+            'mozaic.css'
+        );
+        Zend_Registry::set('css', $css);
 
         $config = new Zend_Config_Ini(
             APPLICATION_PATH . "/configs/application.ini", APPLICATION_ENV
@@ -127,7 +115,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
 
         $view->facebookId = $config->facebook->id;
         $view->facebookSecret = $config->facebook->secret;
-        $view->facebookChannel = $this->getResource('domain') . '/channel.html';
+        $view->facebookChannel = $domain . '/channel.html';
+
     }
 
     public function _initCache()
