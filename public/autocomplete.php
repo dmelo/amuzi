@@ -1,0 +1,147 @@
+<?php
+
+// Define path to application directory
+defined('APPLICATION_PATH')
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+
+// Define application environment
+defined('APPLICATION_ENV')
+    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(APPLICATION_PATH . '/../library'),
+    get_include_path(),
+)));
+
+require_once 'Zend/Config/Ini.php';
+
+
+error_reporting(E_ALL);
+
+
+$ports = array(
+    'album_db' => 3673, 'track_db' => 3674, 'album' => 3675, 'track' => 3676
+);
+
+function openSocket($port)
+{
+    $sock = false;
+    if (($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
+        echo "AmuziSearch::autocomplete error on socket_create. Reason: " . socket_strerror(socket_last_error()) . PHP_EOL;
+        exit(1);
+    }
+
+    if (($r = socket_connect($sock, 'localhost', $port)) === false) {
+        echo "AmuziSearch::autocomplete error on socket_connect $type. Reason: " . socket_strerror(socket_last_error($sock)) . PHP_EOL;
+        exit(1);
+    }
+
+    return $sock;
+}
+
+function getResult($q, $port, $limit = 5)
+{
+    $sock = openSocket($port);
+
+    socket_write($sock, $q, strlen($q));
+    $str = socket_read($sock, 4096 * 1024, PHP_BINARY_READ);
+    socket_shutdown($sock);
+    socket_close($sock);
+    $ret = array();
+
+    if (false === $str) {
+        echo "failed reading from socket" . PHP_EOL;
+        exit(1);
+    } else {
+        $resultList = "0\n" === $str ? array() : array_slice(explode("\n", $str), 0, 5 * $limit);
+        foreach ($resultList as $result) {
+            if (strlen($result) > 0) {
+                list($artistName, $name) = explode('A', $result);
+                $artistName = $artistName;
+                $name = $name;
+                $ret[] = array(
+                    'name' => "$artistName - $name",
+                    'cover' => '/img/album.png',
+                    'artist' => $artistName,
+                    'musicTitle' => $name,
+                    'type' => $port % 2 ? 'album': 'track'
+                );
+                if (count($ret) >= $limit) {
+                    break;
+                }
+            }
+        }
+
+        return $ret;
+    }
+}
+
+function fillImages($sub, $type)
+{
+    try {
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+        if (null === $dbLink) {
+            $params = $config->resources->db->params;
+            $dbLink = mysql_connect($params->host, $params->username, $params->password) or die('connection to mysql failed');
+            mysql_select_db($params->dbname);
+        }
+
+        $query = '';
+        if ('album_db' === $type) {
+            $query = 'select album.cover as cover, artist.name as artist, album.name as musicTitle from album join artist on album.artist_id = artist.id where ';
+            $first = true;
+            foreach ($sub as $r) {
+                if ($first) {
+                    $first = false;
+                } else {
+                    $query .= ' OR ';
+                }
+                $query .= '(artist.name = "' . $r['artist'] . '" AND album.name = "' . $r['musicTitle'] . '")';
+            }
+
+        } elseif ('track_db' === $type) {
+        }
+        if ('' !== $query) {
+            $result = mysql_query($query);
+            while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+                foreach ($sub as &$r) {
+                    if (
+                        $r['artist'] === strtolower($row[1])
+                        && $r['musicTitle'] === strtolower($row[2])
+                    ) {
+                        $r['artist'] = $row[1];
+                        $r['musicTitle'] = $row[2];
+                        $r['cover'] = $row[0];
+                        $r['name'] = $row[1] . ' - ' . $row[2];
+                    }
+                }
+            }
+        }
+    } catch (Zend_Exception $e) {
+        echo $e->getMessage() . PHP_EOL;
+    }
+
+    return $sub;
+}
+
+$q = urldecode($_GET['q']);
+$q = str_replace(' - ', 'A', strtolower($q));
+$limit = 5;
+$dbLink = null;
+
+$ret = array();
+foreach (array('album_db', 'track_db') as $type) {
+    $sub = getResult($q, $ports[$type]);
+    if (count($sub) > 0) {
+        $sub = fillImages($sub, $type);
+    }
+    if (count($sub) < $limit) {
+        $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
+        $sub = array_merge($sub, $complemet);
+    }
+
+    $ret[] = $sub;
+}
+
+echo json_encode(array_merge($ret[0], $ret[1]));

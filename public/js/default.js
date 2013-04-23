@@ -698,7 +698,7 @@
         ac = $('#q').catcomplete({
             source: function (request, response) {
                 var start = new Date();
-                $.get('/api/autocomplete', {
+                $.get('/autocomplete.php', {
                     q: request.term,
                 }, function (data) {
                     var end = new Date();
