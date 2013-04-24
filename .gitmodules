@@ -19,3 +19,6 @@
 [submodule "application/modules/Auth"]
 	path = application/modules/Auth
 	url = git@github.com:dmelo/zend-module-login.git
+[submodule "external/zf1"]
+	path = external/zf1
+	url = git@github.com:zendframework/zf1.git
