@@ -34,37 +34,11 @@ trait autocompleteTrait
     {
         $modelObj = 'music_title' === $this->_type ? '_artistMusicTitleDb' : '_albumDb';
         $autocompleteType = 'music_title' === $this->_type ? 'track' : 'album';
-        /*
-        $keywords = explode(' - ', $q, 2);
-        $ret = array();
-        $this->_logger->debug("---> " . $this->_type);
-        if (count($keywords) === 1) {
-            $ret = $this->$modelObj->autocomplete(
-                array(
-                    $this->_type => $keywords[0]
-                )
-            );
-            if (count($ret) < $limit) {
-                $ret = array_merge($ret, $this->$modelObj->autocomplete(
-                    array(
-                        'artist' => $keywords[0]
-                    )
-                ));
-            }
-        } elseif (count($keywords) === 2) {
-            $ret = $this->$modelObj->autocomplete(
-                array(
-                    'artist' => $keywords[0],
-                    $this->_type => $keywords[1]
-                )
-            );
-        }
-        */
 
         $ret = $this->_amuziSearchModel->autocomplete(
             $q, $autocompleteType . '_db', $limit
         );
-        // TODO: append info about ids and pics.
+        // TODO: append info about pics on tracks.'
 
         if (count($ret) < $limit) {
             $ret = array_merge(
