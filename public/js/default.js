@@ -140,10 +140,6 @@
                 }
             }, 'json').complete(function () {
                 loadingPlaylistMessage = null;
-
-                if ($.commands.isRunCommand) {
-                    setTimeout('$.commands.runProgram()', 1500);
-                }
             }).error(function (e) {
                 loadingPlaylistMessage = null;
                 $.bootstrapMessageAuto('Error loading ' + item, 'error');
@@ -184,10 +180,10 @@
     }
 
     $.initAmuzi = function () {
-        $.commands.isRunCommand = true;
         if (1 === $('#userId').length) {
             $.loadPlaylist();
         }
+        setTimeout('$.commands.runProgram()', 1500);
     };
 
     function setPlaylistRepeat(name, repeat) {
@@ -863,6 +859,7 @@
         loadAlbumSet();
         startPing();
         quoteAnimation();
+
 
     });
 }(jQuery, undefined));

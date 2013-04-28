@@ -27,11 +27,10 @@
  * Constructor
  */
 function Commands() {
-    this.isRunCommand = false;
 }
 
 Commands.prototype.runCommand = function(command) {
-    console.log('I GOT CALLED');
+    console.log('I GOT CALLED for command: ' + command);
     if('t' === command[0]) {
         id = command.substr(1);
         $.get('/api/gettrack', {
@@ -69,14 +68,16 @@ Commands.prototype.getCommandOnFragment = function() {
 
 // Only one command is allowed.
 Commands.prototype.runProgram = function() {
-    this.isRunCommand = false;
+    var program = null;
     if (1 === $('#userId').length) { // User is logged in.
         console.log('command - logged in');
         if (null !== $.cookie('commandc') && 'nnn' !== $.cookie('commandc')) {
             console.log('command - command on cookie');
             program = $.cookie('commandc');
             $.cookie('commandc', 'nnn', {path: '/'});
-        } else {
+        }
+
+        if (null !== this.getCommandOnFragment()) {
             console.log('command - trying to find command on fragment.');
             program = this.getCommandOnFragment();
         }
