@@ -793,9 +793,12 @@
         });
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function () {
-            if ($('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute >= 99) {
+            var progress = $('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute;
+            if (progress >= 99 && progress != $.lastTrackProgress) {
+                $.lastTrackProgress = progress;
                 window.myPlaylist.next();
             }
+            $.lastTrackProgress = progress;
         });
 
         $('#jquery_jplayer_1').bind($.jPlayer.event.stall, function () {
@@ -859,7 +862,5 @@
         loadAlbumSet();
         startPing();
         quoteAnimation();
-
-
     });
 }(jQuery, undefined));
