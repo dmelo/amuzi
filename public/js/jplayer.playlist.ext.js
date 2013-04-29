@@ -174,11 +174,4 @@ jPlayerPlaylist.prototype.next = function() {
 };
 
 $(document).ready(function() {
-    $.bind($.jPlayer.event.progress, function(e) {
-        /*
-        if (status.currentPercentAbsolute >= 100.0) {
-            window.myPlaylist.next();
-        }
-        */
-    });
 });
