@@ -791,35 +791,31 @@
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function () {
             $(this).jPlayer("play");
         });
+        
+        $.stuckCountDown = 20;
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function () {
             var progress = $('#jquery_jplayer_1').data("jPlayer").status.currentPercentAbsolute;
             if (progress >= 99 && progress != $.lastTrackProgress) {
                 $.lastTrackProgress = progress;
                 window.myPlaylist.next();
+            } else if (progress == $.lastTrackProgress) {
+                if ($.stuckCountDown-- <= 0) {
+                    window.myPlaylist.next();
+                    $.stuckCountDown = 20;
+                } else {
+                    console.log("stuck! countdown: " + $.stuckCountDown);
+                }
+            } else {
+                $.stuckCountDown = 20;
             }
             $.lastTrackProgress = progress;
-        });
-
-        $('#jquery_jplayer_1').bind($.jPlayer.event.stall, function () {
-            console.log('MUSIC STALL');
-        });
-
-        $('#jquery_jplayer_1').bind($.jPlayer.event.emptied, function () {
-            console.log('MUSIC EMPTIED');
-        });
-
-        $('#jquery_jplayer_1').bind($.jPlayer.event.waiting, function () {
-            console.log('MUSIC WAITING');
         });
 
         $('#jquery_jplayer_1').bind($.jPlayer.event.error, function () {
             console.log('MUSIC ERROR');
             window.myPlaylist.next();
         });
-
-
-
 
         $.resizeEditPlaylist();
 
