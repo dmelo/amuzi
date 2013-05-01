@@ -37,7 +37,7 @@ class MusicTrackLink extends DZend_Model
     public function __construct()
     {
         parent::__construct();
-        $this->_cache = Zend_Registry::get('cache');
+        $this->_cache = Cache::get('cache');
     }
 
     public function bond($artistMusicTitleId, $trackId, $bondName)
@@ -99,8 +99,6 @@ class MusicTrackLink extends DZend_Model
     public function getTrackById($artistMusicTitleId, $sync = false)
     {
         $cacheKey = $this->_getCacheIdKey($artistMusicTitleId);
-        $this->_cache = Zend_Registry::get('cache');
-
         if (false === ($ret = $this->_cache->load($cacheKey)) ||
             ($sync && null === $ret)) {
             // If it's not on cache, then insert it from artist,musicTitle, so

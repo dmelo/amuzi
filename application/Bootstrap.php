@@ -43,6 +43,11 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('translate');
         $this->bootstrap('layout');
         $this->bootstrap('domain');
+        $this->bootstrap('logger');
+
+        $c = new DZend_Chronometer();
+        $c->start();
+
         $domain = Zend_Registry::get('domain');
         $layout = $this->getResource('layout');
         $view = $layout->getView();
@@ -117,26 +122,19 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->facebookSecret = $config->facebook->secret;
         $view->facebookChannel = $domain . '/channel.html';
 
-    }
-
-    public function _initCache()
-    {
-        $frontend= array(
-            'lifetime' => 2 * 24 * 60 * 60,
-            'automatic_serialization' => true
-        );
-
-        $backend = array(
-            'cache_dir' => '../public/tmp/',
-            'hashed_directory_level' => 2
-        );
-
-        $cache = Zend_Cache::factory('Output', 'File', $frontend, $backend);
-        Zend_Registry::set('cache', $cache);
+        $c->stop();
+        Zend_Registry::get('logger')->debug('_initView ' . $c->get());
     }
 
     public function _initDateTime()
     {
+        $this->bootstrap('logger');
+        $c = new DZend_Chronometer();
+        $c->start();
+
         date_default_timezone_set('America/Sao_Paulo');
+
+        $c->stop();
+        Zend_Registry::get('logger')->debug('_initDateTime ' . $c->get());
     }
 }
