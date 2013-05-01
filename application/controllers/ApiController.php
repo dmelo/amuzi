@@ -302,23 +302,16 @@ class ApiController extends DZend_Controller_Action
      */
     public function gettopAction()
     {
-        $cache = Zend_Registry::get('cache');
+        $cache = Cache::get('cache');
         $key = sha1('ApiController::gettop' . date('Ymd', time(null)));
         $ret = array();
         if (($ret = $cache->load($key)) === false) {
-            $c = new DZend_Chronometer();
-            $c->start();
             $resultSet = $this->_lastfmModel->getTop();
-            $c->stop();
-            $this->_logger->debug('ApiController::gettop 1 - ' . $c->get());
             foreach ($resultSet as $row) {
-                $c->start();
                 $track = $this->_getMusic($row->artist, $row->musicTitle);
                 $track['cover'] = '' === $row->cover ?
                     '/img/album.png' : $row->cover;
                 $ret[] = $track;
-                $c->stop();
-                $this->_logger->debug('ApiController::gettop 2 - ' . $c->get());
             }
 
             $cache->save($ret, $key);

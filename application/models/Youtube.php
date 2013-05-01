@@ -29,7 +29,7 @@ class Youtube extends DZend_Model
     public function __construct()
     {
         parent::__construct();
-        $this->_cache = Zend_Registry::get('cache');
+        $this->_cache = Cache::get('cache');
     }
 
     public function search($q, $limit = 9, $offset = 1, $complement = array())

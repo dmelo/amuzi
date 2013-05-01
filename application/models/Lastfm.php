@@ -182,7 +182,7 @@ class Lastfm extends DZend_Model
 
         $this->_key = $config->lastfm->key;
         $this->_secret = $config->lastfm->secret;
-        $this->_cache = Zend_Registry::get('cache');
+        $this->_cache = Cache::get('cache');
     }
 
     public function searchTrack($q, $limit = 5, $offset = 1)
