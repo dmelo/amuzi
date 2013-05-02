@@ -13,7 +13,7 @@
     php_admin_value date.timezone "America/Sao_Paulo"
 
     <Directory />
-        AllowOverride All
+        AllowOverride None
     </Directory>
 
     RewriteEngine On
