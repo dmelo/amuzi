@@ -80,7 +80,7 @@
             if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
             } else {
-                $.loadPlaylist(data[0], data[1]);
+                $.loadPlaylist(data[0], {isAlbum: data[1]});
             }
         }, 'json').error(function(data) {
             $.bootstrapMessageAuto('Coundn\'t load next album/playlist', 'error');
@@ -95,9 +95,9 @@
      * playlist.
      * @return void
      */
-    $.loadPlaylist = function (name, isAlbum) {
+    $.loadPlaylist = function (name, opt) {
+        var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false;
         name = name || null;
-        isAlbum = isAlbum || false;
         window.myPlaylist.removeAll();
         window.myPlaylist.isAlbum = isAlbum;
 
@@ -117,7 +117,6 @@
             } else {
                 // It's a name
                 options = { name: name };
-
             }
 
             $.post(uri, options, function (data) {
@@ -136,6 +135,9 @@
                         $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                     }
 
+                    if ('undefined' !== typeof opt && 'playLast' in opt && opt.playLast) {
+                        window.Playlist.setCurrent(-1);
+                    }
                     window.myPlaylist.play();
                 }
             }, 'json').complete(function () {
@@ -452,9 +454,8 @@
         addElementAnimation(e);
     }
 
-    $.addTrack = function(trackId, artist, musicTitle) {
-        var options,
-            playNow = false;
+    $.addTrack = function(trackId, artist, musicTitle, playNow) {
+        var options;
 
         options = {
             id: trackId,
@@ -828,7 +829,7 @@
 
         $('.playlist-square[albumid] .play').live('click', function (e) {
             e.preventDefault();
-            $.loadPlaylist($(this).parent().attr('albumid'), true);
+            $.loadPlaylist($(this).parent().attr('albumid'), {isAlbum: true});
         });
 
         $('.playlist-square .remove').live('click', function (e) {

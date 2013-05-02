@@ -10,3 +10,4 @@ tests/report/
 library/EasyBib
 html/
 latex/
+setup/apache.conf

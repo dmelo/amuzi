@@ -36,8 +36,11 @@ Commands.prototype.runCommand = function(command) {
         $.get('/api/gettrack', {
             id: id
         }, function(data) {
-            $.addTrack(data.id);
-
+            $.addTrack(data.id, undefined, undefined, true);
+            $('.slide-next').trigger('click');
+            if (window.myPlaylist.isAlbum) {
+                $.loadPlaylist(undefined, {playLast: true});
+            }
         }, 'json');
 
     } else if ('p' === command[0]) {
@@ -45,7 +48,7 @@ Commands.prototype.runCommand = function(command) {
         $.loadPlaylist(id);
     } else if ('a' === command[0]) {
         $.addAlbum(command.substr(1));
-        $.loadPlaylist(command.substr(1), true);
+        $.loadPlaylist(command.substr(1), {isAlbum: true});
     }
 };
 
