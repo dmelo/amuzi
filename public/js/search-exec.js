@@ -73,7 +73,7 @@
                 uri = '/api/searchalbum';
                 params = {
                    artist: m.artist,
-                   album: m.musicTitle
+                   album: 'musicTitle' in m ? m.musicTitle : m.name
                 };
             } else if ('type' in m && 'track' === m.type) {
                 uri = '/api/searchmusic';
