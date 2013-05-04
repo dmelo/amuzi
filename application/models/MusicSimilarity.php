@@ -326,7 +326,9 @@ class MusicSimilarity extends DZend_Model
             $artistMusicTitleId, $this->_replaceAlbumIdByAMTIds($extObjIdList)
         );
 
-        $this->_logger->debug("MusicSimilarity::getSimilar $artist, $musicTitle, $type, $mayUseSync");
+        $this->_logger->debug(
+            "MusicSimilarity::getSimilar $artist,$musicTitle,$type,$mayUseSync"
+        );
 
         $ret = null;
         // If nothing is found, use sync.
@@ -335,12 +337,14 @@ class MusicSimilarity extends DZend_Model
                 if ('album' === $type && count($artistMusicTitleId) > 0) {
                     $artistMusicTitleId = min($artistMusicTitleId);
                     $type = 'track';
-                } elseif ('album' === $type && count($artistMusicTitleId) === 0) {
+                } elseif ('album' === $type
+                    && count($artistMusicTitleId) === 0) {
                     $ret = array(array(), $extObjIdList);
                 }
 
                 if (null === $ret) {
-                    $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById($artistMusicTitleId);
+                    $artistMusicTitleRow = $this->_artistMusicTitleModel
+                        ->findRowById($artistMusicTitleId);
                     $artist = $artistMusicTitleRow->getArtistName();
                     $musicTitle = $artistMusicTitleRow->getMusicTitleName();
                     $ret = $this->getSimilarSync(
@@ -353,7 +357,7 @@ class MusicSimilarity extends DZend_Model
         } else {
             $completeIdList = array_merge(
                 is_array($artistMusicTitleId) ?
-                    $artistMusicTitleId : array($artistMusicTitleId),
+                $artistMusicTitleId : array($artistMusicTitleId),
                 $similarList,
                 $extObjIdList
             );
@@ -393,7 +397,8 @@ class MusicSimilarity extends DZend_Model
                     $artistMusicTitleId = min($artistMusicTitleId);
                     $type = 'track';
                 }
-                $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById($artistMusicTitleId);
+                $artistMusicTitleRow = $this->_artistMusicTitleModel
+                    ->findRowById($artistMusicTitleId);
                 $artist = $artistMusicTitleRow->getArtistName();
                 $musicTitle = $artistMusicTitleRow->getMusicTitleName();
 
@@ -420,7 +425,9 @@ class MusicSimilarity extends DZend_Model
             }
         }
 
-        $this->_logger->debug('MusicSimilarity::getSimilar ret -- ' . print_r($ret, true));
+        $this->_logger->debug(
+            'MusicSimilarity::getSimilar ret -- ' . print_r($ret, true)
+        );
 
         if (array_key_exists(0, $ret)) {
             $trackList = array();
@@ -445,7 +452,9 @@ class MusicSimilarity extends DZend_Model
             $ret[0] = $shuffled;
         }
 
-        $this->_logger->debug('MusicSimilarity::getSimilar ret end -- ' . print_r($ret, true));
+        $this->_logger->debug(
+            'MusicSimilarity::getSimilar ret end -- ' . print_r($ret, true)
+        );
 
         return $ret;
     }

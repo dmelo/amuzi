@@ -67,9 +67,11 @@ class Lastfm extends DZend_Model
         $covers = $track->getElementsByTagName('image');
 
         for ($i = 0; $i < $covers->length; $i++) {
-            $size = $covers->item($i)->attributes->getNamedItem('size')->nodeValue;
+            $size = $covers->item($i)->attributes->getNamedItem('size')
+                ->nodeValue;
             if (null === $currentSize
-                || array_search($currentSize, $sizes) > array_search($size, $sizes)
+                || array_search($currentSize, $sizes)
+                    > array_search($size, $sizes)
             ) {
                 $currentSize = $size;
                 $cover = $covers->item($i)->nodeValue;
@@ -83,7 +85,9 @@ class Lastfm extends DZend_Model
     {
         $artist = $track->getElementsByTagName('artist')->item(0);
         $name = $artist->getElementsByTagName('name');
-        $this->_logger->debug('Lastfm::_processResponseSearch -- ' . get_class($name));
+        $this->_logger->debug(
+            'Lastfm::_processResponseSearch -- ' . get_class($name)
+        );
 
         if (get_class($name) === 'DOMNodeList' && $name->item(0) !== null) {
             $artist = $name->item(0)->nodeValue;
@@ -138,7 +142,9 @@ class Lastfm extends DZend_Model
         $name = $this->_calcName($artist, $musicTitle);
         $cover = $this->_getCover($track);
 
-        $this->_logger->debug("Lastfm::_processResponseGetTop $artist $musicTitle $cover --> {$track->nodeValue}");
+        $this->_logger->debug(
+            "Lastfm::_processResponseGetTop $artist $musicTitle $cover --> {$track->nodeValue}"
+        );
 
         return new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
@@ -247,7 +253,8 @@ class Lastfm extends DZend_Model
             $xmlDoc->loadXML($xml);
             $this->_logger->debug("XML: " . $xml);
             $album = $xmlDoc->getElementsByTagName('album');
-            for ($e = $album->item(0)->firstChild; null !== $e; $e = $e->nextSibling) {
+            for ($e = $album->item(0)->firstChild; null !== $e;
+                $e = $e->nextSibling) {
                 $value = $e->nodeValue;
                 switch ($e->nodeName) {
                     case 'name':
@@ -274,7 +281,10 @@ class Lastfm extends DZend_Model
 
     public function getSimilar($artist, $music)
     {
-        $this->_logger->debug('Lastfm::getSimilar A ' . $artist . ' - ' . $music . ' # ' . microtime(true));
+        $this->_logger->debug(
+            'Lastfm::getSimilar A ' . $artist . ' - ' . $music
+            . ' # ' . microtime(true)
+        );
         $resultSet = array();
         $args = array(
             'method' => 'track.getsimilar',

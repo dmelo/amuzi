@@ -47,7 +47,7 @@ class LastfmEntry extends AbstractEntry
             'rank',
             'type'
         );
-        foreach($this->_fields as $field) {
+        foreach ($this->_fields as $field) {
             if (null !== $$field) {
                 $this->_data[$field] = $$field;
             }
