@@ -97,7 +97,9 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
 
     public function autocomplete($data)
     {
-        $this->_logger->debug("ArtistMusicTitle::autocomplete " . print_r($data, true));
+        $this->_logger->debug(
+            "ArtistMusicTitle::autocomplete " . print_r($data, true)
+        );
         $ret = array();
 
         $db = $this->getAdapter();
@@ -114,15 +116,19 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         )->join(
             array('mt' => 'music_title'),
             'mt.id = amt.music_title_id',
-            array())
-        ->limit(5);
+            array()
+        )->limit(5);
 
         if (array_key_exists('artist', $data)) {
-            $where[] = $db->quoteInto('a.name like ?', '%' . $data['artist'] . '%');
+            $where[] = $db->quoteInto(
+                'a.name like ?', '%' . $data['artist'] . '%'
+            );
         }
 
         if (array_key_exists('music_title', $data)) {
-            $where[] = $db->quoteInto('mt.name like ?', '%' . $data['music_title'] . '%');
+            $where[] = $db->quoteInto(
+                'mt.name like ?', '%' . $data['music_title'] . '%'
+            );
         }
 
         $where = implode(' AND ', $where);
@@ -140,7 +146,8 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
         $artistModel->preload($artistIdSet);
 
         $ret = array();
-        foreach ($artistMusicTitleModel->findById($artistMusicTitleIdSet) as $artistMusicTitleRow) {
+        foreach ($artistMusicTitleModel->findById($artistMusicTitleIdSet)
+            as $artistMusicTitleRow) {
             $ret[] = new AutocompleteEntry(
                 $artistMusicTitleRow->getArtistName(),
                 $artistMusicTitleRow->getMusicTitleName(),
