@@ -65,14 +65,28 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
     {
         $db = $this->getAdapter();
 
-        $where = "( f_artist_music_title_id = $artistMusicTitleId " .
-            "or s_artist_music_title_id = $artistMusicTitleId ) ";
+        $where = '';
+        if (is_array($artistMusicTitleId)) {
+            if (0 != count($artistMusicTitleId)) {
+                $ids = implode(', ', $artistMusicTitleId);
+                $where = "( f_artist_music_title_id in ($ids) or " .
+                    "s_artist_music_title_id in ($ids) )";
+            } else {
+                $where = ' 1 = 0 ';
+            }
+        } else {
+            $where = "( f_artist_music_title_id = $artistMusicTitleId " .
+                "or s_artist_music_title_id = $artistMusicTitleId ) ";
+        }
+
         foreach ($artistMusicTitleIdList as $amtId) {
             if ($amtId != $artistMusicTitleId) {
             $where .= " AND f_artist_music_title_id != $amtId "
                 . "AND s_artist_music_title_id != $amtId ";
             }
         }
+
+        Zend_Registry::get('logger')->debug("DbTable_MusicSimilarity::getSimilar $where");
 
         $ret = array();
         $rowSet = $this->fetchAll($where, 'similarity desc', 100);
