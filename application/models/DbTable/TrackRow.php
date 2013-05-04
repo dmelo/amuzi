@@ -65,7 +65,8 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
             return 'http://www.youtube.com/embed/' . $this->fid
                 . '?autoplay=1&rel=0';
         } elseif ('facebookUrl' === $name) {
-            return 'http://facebook.com/share.php?u=' . urlencode($this->shareUrl);
+            return 'http://facebook.com/share.php?u='
+                . urlencode($this->shareUrl);
         } elseif ('shareUrl' === $name || 'share_url' === $name) {
             return $domain . '/share/index/command/t/param/' . $this->id;
         } else {
