@@ -46,7 +46,8 @@ class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('task_parameter', 'SELECT * FROM task_parameter');
 
         return $this->filterTable(
-            array('task_type', 'task_set', 'task_request', 'task_parameter'), $ds
+            array('task_type', 'task_set', 'task_request', 'task_parameter'),
+            $ds
         );
     }
 
@@ -71,9 +72,12 @@ class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
         $dsFlat = $this->createXMLDataSet(
             dirname(__FILE__) . '/taskRequestInsertAssertion.xml'
         );
-        $dsFlat->getTable('task_request')->addRow(array('id' => 2, 'task_set_id' => 1));
-        $dsFlat->getTable('task_request')->addRow(array('id' => 3, 'task_set_id' => 1));
-        $dsFlat->getTable('task_request')->addRow(array('id' => 4, 'task_set_id' => 1));
+        $dsFlat->getTable('task_request')
+            ->addRow(array('id' => 2, 'task_set_id' => 1));
+        $dsFlat->getTable('task_request')
+            ->addRow(array('id' => 3, 'task_set_id' => 1));
+        $dsFlat->getTable('task_request')
+            ->addRow(array('id' => 4, 'task_set_id' => 1));
 
         $this->assertDataSetsEqual(
             $dsFlat, $this->_getTaskTables()
@@ -101,7 +105,9 @@ class TaskManagerTest extends DZend_Test_PHPUnit_DatabaseTestCase
             0, 'done', $done
         );
         $dsFlat->getTable('task_set')->setValue(
-            0, 'expiration', date('Y-m-d H:i:s', strtotime("$done + $duration seconds"))
+            0, 'expiration', date(
+                'Y-m-d H:i:s', strtotime("$done + $duration seconds")
+            )
         );
 
 
