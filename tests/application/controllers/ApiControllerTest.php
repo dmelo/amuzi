@@ -165,9 +165,11 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
     {
         $this->request->setMethod('GET');
         $this->setAjaxHeader();
-        $this->request->setParams(array(
-            'artist' => 'Coldplay', 'musicTitle' => 'Yellow'
-        ));
+        $this->request->setParams(
+            array(
+                'artist' => 'Coldplay', 'musicTitle' => 'Yellow'
+            )
+        );
         $this->dispatch('/api/searchsimilar');
         $this->assertResponseCode(200);
         $obj = Zend_Json::decode($this->getResponse()->getBody());
@@ -182,7 +184,10 @@ class ApiControllerTest extends DZend_Test_PHPUnit_ControllerTestCase
 
         foreach ($list as $item) {
             $this->assertInternalType('array', $item);
-            $this->_logger->debug("ApiControllerTest::testSearchsimilarAction -> " . print_r($item, true));
+            $this->_logger->debug(
+                "ApiControllerTest::testSearchsimilarAction -> "
+                . print_r($item, true)
+            );
             $this->assertTrue(array_key_exists('artistMusicTitleId', $item));
             $artistMusicTitleId = $item['artistMusicTitleId'];
             $this->assertTrue(array_key_exists($artistMusicTitleId, $matrix));
