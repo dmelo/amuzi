@@ -352,7 +352,8 @@ class MusicSimilarity extends DZend_Model
             }
         } else {
             $completeIdList = array_merge(
-                array($artistMusicTitleId),
+                is_array($artistMusicTitleId) ?
+                    $artistMusicTitleId : array($artistMusicTitleId),
                 $similarList,
                 $extObjIdList
             );
@@ -388,6 +389,14 @@ class MusicSimilarity extends DZend_Model
                 $similarityMatrixResponse[2] < 0.03) &&
                 $mayUseSync
             ) {
+                if (is_array($artistMusicTitleId)) {
+                    $artistMusicTitleId = min($artistMusicTitleId);
+                    $type = 'track';
+                }
+                $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById($artistMusicTitleId);
+                $artist = $artistMusicTitleRow->getArtistName();
+                $musicTitle = $artistMusicTitleRow->getMusicTitleName();
+
                 $ret = $this->getSimilarSync(
                     $artist, $musicTitle, $type, $extObjIdList
                 );
@@ -410,6 +419,33 @@ class MusicSimilarity extends DZend_Model
                 );
             }
         }
+
+        $this->_logger->debug('MusicSimilarity::getSimilar ret -- ' . print_r($ret, true));
+
+        if (array_key_exists(0, $ret)) {
+            $trackList = array();
+            $albumList = array();
+            foreach ($ret[0] as $item) {
+                if ('album' === $item['type']) {
+                    $albumList[] = $item;
+                } else {
+                    $trackList[] = $item;
+                }
+            }
+            $count = 0;
+            $shuffled = array();
+            while (count($albumList) || count($trackList)) {
+                if ($count % 2 && count($albumList)) {
+                    $shuffled[] = array_shift($albumList);
+                } elseif (count($trackList)) {
+                    $shuffled[] = array_shift($trackList);
+                }
+                $count++;
+            }
+            $ret[0] = $shuffled;
+        }
+
+        $this->_logger->debug('MusicSimilarity::getSimilar ret end -- ' . print_r($ret, true));
 
         return $ret;
     }

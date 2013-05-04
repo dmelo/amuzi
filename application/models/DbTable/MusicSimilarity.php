@@ -27,6 +27,7 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
 
     public function insert($data)
     {
+        Zend_Registry::get('logger')->debug("DbTable_MusicSimilarity::insert " . print_r($data, true));
         try {
             return $this->insertCachedWithoutException($data);
         } catch(Zend_Db_Statement_Exception $e) {
