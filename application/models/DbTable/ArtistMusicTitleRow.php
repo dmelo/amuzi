@@ -34,7 +34,8 @@ class DbTable_ArtistMusicTitleRow extends DZend_Db_Table_Row
 
         if (!array_key_exists($this->artistId, $artistList)) {
             $artistDb = new DbTable_Artist();
-            if (($artistRow = $artistDb->findRowById($this->artistId)) !== null) {
+            if (($artistRow = $artistDb->findRowById($this->artistId))
+                !== null) {
                 $artistList[$this->artistId] = $artistRow;
                 Zend_Registry::set('artistList', $artistList);
             }
@@ -48,7 +49,8 @@ class DbTable_ArtistMusicTitleRow extends DZend_Db_Table_Row
     {
         $name = null;
         $musicTitleDb = new DbTable_MusicTitle();
-        if (($musicTitleRow = $musicTitleDb->findRowById($this->musicTitleId)) !== null) {
+        if (($musicTitleRow = $musicTitleDb->findRowById($this->musicTitleId))
+            !== null) {
             $name = $musicTitleRow->name;
         }
 
@@ -59,7 +61,8 @@ class DbTable_ArtistMusicTitleRow extends DZend_Db_Table_Row
     {
         $cover = null;
         $musicTrackLinkModel = new MusicTrackLink();
-        if (($trackRow = $musicTrackLinkModel->getTrackById($this->id)) !== null) {
+        if (($trackRow = $musicTrackLinkModel->getTrackById($this->id))
+            !== null) {
             $cover = $trackRow->cover;
         }
 

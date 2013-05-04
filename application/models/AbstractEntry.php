@@ -46,7 +46,7 @@ abstract class AbstractEntry
      */
     public function __get($key)
     {
-        if(in_array($key, $this->_fields)
+        if (in_array($key, $this->_fields)
             && array_key_exists($key, $this->_data)) {
             return $this->_data[$key];
         }

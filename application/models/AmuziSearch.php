@@ -39,7 +39,9 @@ class AmuziSearch extends DZend_Model
         $q = preg_replace('/ - ?/', 'A', strtolower($q));
         ob_implicit_flush();
         if (!in_array($type, $this->_keys)) {
-            $this->_logger->debug("AmuziSearch::autocomplete wrong type $type.");
+            $this->_logger->debug(
+                "AmuziSearch::autocomplete wrong type $type."
+            );
             return $ret;
         }
 
@@ -48,7 +50,10 @@ class AmuziSearch extends DZend_Model
         if (($sock = socket_create(
             AF_INET, SOCK_STREAM, SOL_TCP
         )) === false) {
-            $this->_logger->err("AmuziSearch::autocomplete error on socket_create. Reason: " . socket_strerror(socket_last_error()));
+            $this->_logger->err(
+                "AmuziSearch::autocomplete error on socket_create. Reason: "
+                . socket_strerror(socket_last_error())
+            );
             return $ret;
         }
 
@@ -57,7 +62,10 @@ class AmuziSearch extends DZend_Model
             'localhost',
             $this->_ports[$type]
         )) === false) {
-            $this->_logger->err("AmuziSearch::autocomplete error on socket_connect $type. Reason: " . socket_strerror(socket_last_error($sock)));
+            $this->_logger->err(
+                "AmuziSearch::autocomplete error on socket_connect $type. "
+                . "Reason: " . socket_strerror(socket_last_error($sock))
+            );
             return $ret;
         }
 
@@ -69,13 +77,19 @@ class AmuziSearch extends DZend_Model
         socket_close($sock);
 
         if (false === $str) {
-            $this->_logger->debug('AmuziSearch::autocomplete failed to read from socket. try to open a new connection');
+            $this->_logger->debug(
+                'AmuziSearch::autocomplete failed to read from socket. '
+                . 'try to open a new connection'
+            );
         } else {
-            $resultList = "0\n" === $str ? array() : array_slice(explode("\n", $str), 0, 5 * $limit);
+            $resultList = "0\n" === $str ?
+                array() : array_slice(explode("\n", $str), 0, 5 * $limit);
             foreach ($resultList as $result) {
                 if (strlen($result) > 0) {
                     list($artistName, $name) = explode('A', $result);
-                    $ret[] = new AutocompleteEntry($artistName, $name, null, $typeRet);
+                    $ret[] = new AutocompleteEntry(
+                        $artistName, $name, null, $typeRet
+                    );
                     if (count($ret) >= $limit) {
                         break;
                     }

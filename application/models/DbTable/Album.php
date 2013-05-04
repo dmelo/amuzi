@@ -66,11 +66,15 @@ class DbTable_Album extends DZend_Db_Table
 
         $where = array();
         if (array_key_exists('artist', $data)) {
-            $where[] = $db->quoteInto('a.name like ?', '%' . $data['artist'] . '%');
+            $where[] = $db->quoteInto(
+                'a.name like ?', '%' . $data['artist'] . '%'
+            );
         }
 
         if (array_key_exists('album', $data)) {
-            $where[] = $db->quoteInto('album.name like ?', '%' . $data['album'] . '%');
+            $where[] = $db->quoteInto(
+                'album.name like ?', '%' . $data['album'] . '%'
+            );
         }
 
         $select->where(implode(' AND ', $where));

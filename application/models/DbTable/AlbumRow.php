@@ -21,7 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackCollectionRow
+class DbTable_AlbumRow extends DZend_Db_Table_Row
+    implements DbTable_iTrackCollectionRow
 {
     protected $_trackList = null;
 
@@ -38,7 +39,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
         );
 
         $ret = array();
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             if ('cover' === $column) {
                 $ret[$column] = $this->getCover();
             } else {
@@ -64,16 +65,22 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
             $musicTrackLinkModel = new MusicTrackLink();
 
             foreach ($this->artistMusicTitleIdList as $artistMusicTitleId) {
-                $trackRow = $musicTrackLinkModel->getTrackById($artistMusicTitleId, $sync);
-                $artistMusicTitleRow = $artistMusicTitleModel->findRowById($artistMusicTitleId);
+                $trackRow = $musicTrackLinkModel->getTrackById(
+                    $artistMusicTitleId, $sync
+                );
+                $artistMusicTitleRow = $artistMusicTitleModel->findRowById(
+                    $artistMusicTitleId
+                );
                 if (null === $trackRow) {
                     $track = array(
                         'artist' => $artistMusicTitleRow->getArtistName(),
-                        'musicTitle' => $artistMusicTitleRow->getMusicTitleName()
+                        'musicTitle' => $artistMusicTitleRow
+                            ->getMusicTitleName()
                     );
                 } else {
                     $track = $trackRow->getArray();
-                    $track['title'] = $artistMusicTitleRow->getArtistName() . ' - ' . $artistMusicTitleRow->getMusicTitleName();
+                    $track['title'] = $artistMusicTitleRow->getArtistName()
+                        . ' - ' . $artistMusicTitleRow->getMusicTitleName();
                     $track['artist_music_title_id'] = $artistMusicTitleId;
                 }
 
@@ -84,7 +91,10 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
         }
 
         $c->stop();
-        $this->_logger->debug("AlbumRow::getTrackListAsArray sync = " . ($sync ? 'true' : 'false') . " " . $c->get());
+        $this->_logger->debug(
+            "AlbumRow::getTrackListAsArray sync = "
+            . ($sync ? 'true' : 'false') . " " . $c->get()
+        );
 
         return $ret;
     }
@@ -123,7 +133,11 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
         $artistRow = $artistDb->findRowById($this->artistId);
 
         if (null === $artistRow) {
-            $this->_logger->err("AlbumRow::getCoverName row " . $this->id . " points to artist_id " . $this->artistId . " but doesn't exists on table artist");
+            $this->_logger->err(
+                "AlbumRow::getCoverName row " . $this->id
+                . " points to artist_id " . $this->artistId
+                . " but doesn't exists on table artist"
+            );
         }
 
         return $artistRow->name . ' - ' . $this->name;
@@ -155,7 +169,8 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row implements DbTable_iTrackColle
             $domain = Zend_Registry::get('domain');
             return $domain . '/share/index/command/a/param/' . $this->id;
         } elseif ('facebookUrl' === $name) {
-            return 'http://facebook.com/share.php?u=' . urlencode($this->shareUrl);
+            return 'http://facebook.com/share.php?u='
+                . urlencode($this->shareUrl);
         } else {
             return parent::__get($name);
         }

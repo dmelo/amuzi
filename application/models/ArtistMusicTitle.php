@@ -64,7 +64,8 @@ class ArtistMusicTitle extends DZend_Model
         );
     }
 
-    public function update(LastfmEntry $data) {
+    public function update(LastfmEntry $data)
+    {
         // TODO: update cover on database.
     }
 
