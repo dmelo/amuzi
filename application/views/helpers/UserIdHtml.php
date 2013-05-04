@@ -35,7 +35,8 @@ class View_Helper_UserIdHtml extends Zend_View_Helper_Abstract
             );
 
             foreach ($data as $key => $value) {
-                $ret .= "<div class=\"invisible\" id=\"$value\">{$this->view->user->$key}</div>";
+                $ret .= "<div class=\"invisible\" id=\"$value\">"
+                . $this->view->user->$key . "</div>";
             }
         }
 

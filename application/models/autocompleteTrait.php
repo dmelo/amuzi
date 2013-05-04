@@ -32,7 +32,8 @@ trait autocompleteTrait
      */
     public function autocomplete($q, $limit = 5)
     {
-        $modelObj = 'music_title' === $this->_type ? '_artistMusicTitleDb' : '_albumDb';
+        $modelObj = 'music_title' === $this->_type ?
+            '_artistMusicTitleDb' : '_albumDb';
         $autocompleteType = 'music_title' === $this->_type ? 'track' : 'album';
 
         $ret = $this->_amuziSearchModel->autocomplete(
@@ -47,7 +48,11 @@ trait autocompleteTrait
                     $q, $autocompleteType, $limit - count($ret)
                 )
             );
-            $this->_taskRequestModel->addTask('SearchString', 'music_title' === $autocompleteType ? 'MusicTitle' : 'Album', $q);
+            $this->_taskRequestModel->addTask(
+                'SearchString', 'music_title' === $autocompleteType ?
+                'MusicTitle' : 'Album',
+                $q
+            );
         }
 
         return array_slice($ret, 0, $limit);
