@@ -103,10 +103,18 @@ class MusicTrackLink extends DZend_Model
             ($sync && null === $ret)) {
             // If it's not on cache, then insert it from artist,musicTitle, so
             // that all both caches are recorded.
-            $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById($artistMusicTitleId);
-            $artistRow = $this->_artistDb->findRowById($artistMusicTitleRow->artistId);
-            $musicTitleRow = $this->_musicTitleDb->findRowById($artistMusicTitleRow->musicTitleId);
-            return $this->getTrack($artistRow->name, $musicTitleRow->name, $sync);
+            $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById(
+                $artistMusicTitleId
+            );
+            $artistRow = $this->_artistDb->findRowById(
+                $artistMusicTitleRow->artistId
+            );
+            $musicTitleRow = $this->_musicTitleDb->findRowById(
+                $artistMusicTitleRow->musicTitleId
+            );
+            return $this->getTrack(
+                $artistRow->name, $musicTitleRow->name, $sync
+            );
         }
 
         return $ret;
@@ -117,7 +125,9 @@ class MusicTrackLink extends DZend_Model
         return $this->getTrackById($artistMusicTitleId, true);
     }
 
-    protected function _getTrackByAMTId($artistMusicTitleId, $sync, $artist, $musicTitle)
+    protected function _getTrackByAMTId(
+        $artistMusicTitleId, $sync, $artist, $musicTitle
+    )
     {
         $cacheIdKey = $this->_getCacheIdKey($artistMusicTitleId);
         if (false === ($ret = $this->_cache->load($cacheIdKey))) {
@@ -169,7 +179,8 @@ class MusicTrackLink extends DZend_Model
                 }
             }
 
-            $ret = 0 !== $trackId ? $this->_trackModel->findRowById($trackId) : null;
+            $ret = 0 !== $trackId ?
+                $this->_trackModel->findRowById($trackId) : null;
 
             if (null !== $ret) {
                 $this->_cache->save($ret, $cacheIdKey);
@@ -188,17 +199,23 @@ class MusicTrackLink extends DZend_Model
         $ret = null;
 
         if (false === ($ret = $this->_cache->load($cacheKey))) {
-            $this->_logger->debug("MusicTrackLink::getTrack cache miss $cacheKey");
+            $this->_logger->debug(
+                "MusicTrackLink::getTrack cache miss $cacheKey"
+            );
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
             );
-            $ret = $this->_getTrackByAMTId($artistMusicTitleId, $sync, $artist, $musicTitle);
+            $ret = $this->_getTrackByAMTId(
+                $artistMusicTitleId, $sync, $artist, $musicTitle
+            );
 
             if (null !== $ret) {
                 $this->_cache->save($ret, $cacheKey);
             }
         } else {
-            $this->_logger->debug("MusicTrackLink::getTrack cache hit $cacheKey");
+            $this->_logger->debug(
+                "MusicTrackLink::getTrack cache hit $cacheKey"
+            );
         }
         $c->stop();
         $this->_logger->debug('MusicTrackLink::getTrack time ' . $c->get());

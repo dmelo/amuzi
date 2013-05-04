@@ -143,7 +143,8 @@ class Lastfm extends DZend_Model
         $cover = $this->_getCover($track);
 
         $this->_logger->debug(
-            "Lastfm::_processResponseGetTop $artist $musicTitle $cover --> {$track->nodeValue}"
+            "Lastfm::_processResponseGetTop $artist $musicTitle $cover --> "
+            . $track->nodeValue
         );
 
         return new LastfmEntry($name, $cover, $artist, $musicTitle);

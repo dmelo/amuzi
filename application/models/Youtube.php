@@ -51,7 +51,9 @@ class Youtube extends DZend_Model
             );
             $this->_cache->save($xml, $key);
         } else {
-            $this->_logger->debug("Youtube::search cache hit - url: " . implode('&', $args));
+            $this->_logger->debug(
+                "Youtube::search cache hit - url: " . implode('&', $args)
+            );
         }
 
         $xmlDoc = new DOMDocument();
