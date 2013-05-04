@@ -310,23 +310,10 @@ class MusicSimilarity extends DZend_Model
         if ('album' === $type) {
             $albumRow = $this->_albumModel->get($artist, $musicTitle);
             $extObjIdList[] = -$albumRow->id;
-            $artistMusicTitleId = -1;
+            $artistMusicTitleId = array();
             foreach ($albumRow->artistMusicTitleIdList as $id) {
-                if ($artistMusicTitleId === -1 || $artistMusicTitleId < $id) {
-                    $artistMusicTitleId = $id;
-                }
+                $artistMusicTitleId[] = $id;
             }
-            $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById(
-                $artistMusicTitleId
-            );
-            $artist = $artistMusicTitleRow->getArtistName();
-            $musicTitle = $artistMusicTitleRow->getMusicTitleName();
-            $type = 'track';
-
-            $this->_logger->debug(
-                'MusicSimilarity::getSimilar AA ' . $artist . ' - ' .
-                $musicTitle . ' (' . $artistMusicTitleId . ')'
-            );
         } else {
             $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
                 $artist, $musicTitle
@@ -339,13 +326,27 @@ class MusicSimilarity extends DZend_Model
             $artistMusicTitleId, $this->_replaceAlbumIdByAMTIds($extObjIdList)
         );
 
-        $ret = array();
+        $this->_logger->debug("MusicSimilarity::getSimilar $artist, $musicTitle, $type, $mayUseSync");
+
+        $ret = null;
         // If nothing is found, use sync.
         if (empty($similarList)) {
             if ($mayUseSync) {
-                $ret = $this->getSimilarSync(
-                    $artist, $musicTitle, $type, $extObjIdList
-                );
+                if ('album' === $type && count($artistMusicTitleId) > 0) {
+                    $artistMusicTitleId = min($artistMusicTitleId);
+                    $type = 'track';
+                } elseif ('album' === $type && count($artistMusicTitleId) === 0) {
+                    $ret = array(array(), $extObjIdList);
+                }
+
+                if (null === $ret) {
+                    $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById($artistMusicTitleId);
+                    $artist = $artistMusicTitleRow->getArtistName();
+                    $musicTitle = $artistMusicTitleRow->getMusicTitleName();
+                    $ret = $this->getSimilarSync(
+                        $artist, $musicTitle, $type, $extObjIdList
+                    );
+                }
             } else {
                 $ret = array(array(), $extObjIdList);
             }
