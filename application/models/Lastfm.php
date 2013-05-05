@@ -159,6 +159,8 @@ class Lastfm extends DZend_Model
         $xmlDoc = new DOMDocument();
         $i = 0;
         if ('' !== $xml) {
+            file_put_contents("tmp/gettop.xml", $xml);
+            $this->_logger->debug("Lastfm::_exploreDOM xml -- $xml");
             $xmlDoc->loadXML($xml);
             if ($xmlDoc->getElementsByTagName('track')->length === 0) {
                 $type = 'album';
@@ -303,7 +305,7 @@ class Lastfm extends DZend_Model
     {
         $date = date('Ymd', time(null));
         $c = new DZend_Chronometer();
-        $key = sha1("Lastfm::getTop#$limit#$date");
+        $key = sha1("Lastfm::getTop#$limit#$date#a");
         $this->_logger->debug('ApiController::gettop 4 - ' . $key);
 
         if (($xml = $this->_cache->load($key)) === false) {
