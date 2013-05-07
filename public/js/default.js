@@ -151,22 +151,6 @@
         }
     }
 
-    // TODO: take away the playlistName
-    function rmTrack(trackId, playlistName) {
-        playlistName = playlistName || 'default';
-        $.bootstrapMessageLoading();
-        $.post('/playlist/rmtrack', {
-            playlist: playlistName,
-            trackId: trackId
-        }, function (data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
-            if ('error' === data[1]) {
-                $.loadPlaylist(playlistName);
-            }
-        }, 'json').error(function (e) {
-            $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
-        });
-    }
 
     function rmPlaylist(id, isPlaylist, callback) {
         var controller = isPlaylist ? 'playlist' : 'album';
@@ -505,18 +489,6 @@
         });
     }
 
-    function reloadPlaylistInfo(name) {
-        $.get('/playlist/info', {
-            playlistName: name
-        }, function (data) {
-            $('div[playlistid=' + data[0] + '] .playlist-info').html(data[1]);
-            var editDiv = $('#edit-playlist .stripe[playlistid=' + data[0] + ']');
-            if (1 === editDiv.length) {
-                editDiv.html(data[1]);
-            }
-        }, 'json');
-    }
-
     $.resizeEditPlaylist = function () {
         if ($('.music-manager-content').length > 0) {
             $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
@@ -658,12 +630,6 @@
             );
         });
 
-        $('.jp-playlist-item-remove').live('click', function (e) {
-            var trackId = $(this).parent().parent().attr('track_id');
-            rmTrack(trackId, window.myPlaylist.name);
-            reloadPlaylistInfo(window.myPlaylist.name);
-        });
-
         // placeholder on the search input.
         $('#q').placeholder();
         // autocomplete the search input from last.fm.
@@ -755,7 +721,6 @@
             update: function () {
                 window.myPlaylist.scan();
                 savePlaylist();
-                reloadPlaylistInfo(window.myPlaylist.name);
             }
         });
 
