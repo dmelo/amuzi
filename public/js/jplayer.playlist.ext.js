@@ -30,8 +30,28 @@ jPlayerPlaylist.prototype._createListItem = function(media) {
         return listItem;
 };
 
+// TODO: take away the playlistName
+jPlayerPlaylist.prototype.rmTrack = function(trackId, playlistName) {
+    playlistName = playlistName || 'default';
+    $.bootstrapMessageLoading();
+    $.post('/playlist/rmtrack', {
+        playlist: playlistName,
+        trackId: trackId
+    }, function (data) {
+        $.bootstrapMessageAuto(data[0], data[1]);
+        if ('error' === data[1]) {
+            $.loadPlaylist(playlistName);
+        }
+    }, 'json').error(function (e) {
+        $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
+    });
+}
+
+
 jPlayerPlaylist.prototype.remove = function(index) {
     var self = this;
+
+    console.log("remove track " + index);
 
     if(index === undefined) {
         this._initPlaylist([]);
@@ -48,6 +68,12 @@ jPlayerPlaylist.prototype.remove = function(index) {
             index = (index < 0) ? self.original.length + index : index; // Negative index relates to end of array.
             if(0 <= index && index < this.playlist.length) {
                 this.removing = true;
+
+                if (false == myPlaylist.isAlbum) {
+                    console.log('delete track index ' + index);
+                    var trackId = $($('.jp-playlist-item-remove')[index]).parent().parent().attr('track_id')
+                    myPlaylist.rmTrack(trackId, myPlaylist.name);
+                }
 
                 $(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
                     $(this).remove();
