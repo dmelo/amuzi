@@ -13,4 +13,6 @@ INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24
 
 INSERT INTO `tutorial`(`name`) values('welcome'), ('search'), ('slide');
 
+INSERT INTO `log_action`(`name`) values('add_album'), ('add_track'), ('change_view');
+
 source artist_full.sql;
