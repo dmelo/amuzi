@@ -301,6 +301,7 @@ CREATE TABLE `log_action` (
     `id` int(11) NOT NULL auto_increment,
     `name` varchar(255),
     PRIMARY KEY(`id`),
+    UNIQUE(`name`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;

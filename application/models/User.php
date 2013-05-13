@@ -50,6 +50,7 @@ class User extends DZend_Model
 
     public function setSettings($params)
     {
+        // TODO: create log entry on db.
         $user = $this->_userDb->findCurrent();
         $user->name = $params['name'];
         $user->email = $params['email'];
