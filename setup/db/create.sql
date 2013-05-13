@@ -297,3 +297,28 @@ CREATE TABLE `artist_full` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `artist_full_created_trigger` BEFORE INSERT ON `artist_full` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
+CREATE TABLE `log_action` (
+    `id` int(11) NOT NULL auto_increment,
+    `name` varchar(255),
+    PRIMARY KEY(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `log_action_created_trigger` BEFORE INSERT ON `log_action` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `log` (
+    `id` int(11) NOT NULL auto_increment,
+    `user_id` int(11) NOT NULL,
+    `view` enum('default', 'incboard') NOT NULL,
+    `log_action_id` int(11) NOT NULL,
+    `album_id` int(11),
+    `artist_music_title_id` int(11),
+    PRIMARY KEY(`id`),
+    CONSTRAINT `log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`),
+    CONSTRAINT `log_ibfk_2` FOREIGN KEY (`log_action_id`) REFERENCES `log_action`(`id`),
+    CONSTRAINT `log_ibfk_3` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
+    CONSTRAINT `log_ibfk_4` FOREIGN KEY (`artist_music_title_id`) REFERENCES `artist_music_title`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `log_created_trigger` BEFORE INSERT ON `log` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
