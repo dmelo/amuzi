@@ -35,6 +35,7 @@
         loadingPlaylistMessage = null;
 
     window.myPlaylist = null;
+    window.windowId = parseInt(Math.random() * 1000000);
     $.commands = new Commands();
 
     $.modalWrapper = "#load-modal-wrapper";
@@ -394,6 +395,7 @@
         $('#view').parent().append('<div class="side-view-thumb"><img src=""/></div>');
         refreshViewThumbnail();
         $('#view').change(refreshViewThumbnail);
+        $('#windowId').val(window.windowId);
     };
 
     function addElementAnimation(e) {
@@ -446,7 +448,8 @@
             playlist: window.myPlaylist.name,
             isAlbum: window.myPlaylist.isAlbum,
             artist: artist,
-            musicTitle: musicTitle
+            musicTitle: musicTitle,
+            windowId: window.windowId
         };
 
         $.bootstrapMessageLoading();
@@ -467,7 +470,8 @@
     $.addAlbum = function(albumId) {
         $.bootstrapMessage('Adding album...', 'info');
         $.get('/album/add', {
-            albumId: albumId
+            albumId: albumId,
+            windowId: window.windowId
         }, function (data) {
             var ele = $('#slide-search div[albumid=' + albumId + ']');
             if (ele.length > 0) {

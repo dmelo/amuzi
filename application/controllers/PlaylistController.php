@@ -140,6 +140,13 @@ class PlaylistController extends DZend_Controller_Action
                 );
 
                 $trackRow = $playlistRow->addTrack($trackInfo);
+                $this->_logModel->insert(
+                    $this->_request->getParam('windowId'),
+                    'add_track',
+                    null,
+                    $trackRow->id,
+                    null
+                );
 
                 if (isset($artistMusicTitleId)) {
                     $this->_musicTrackLinkModel->bond(

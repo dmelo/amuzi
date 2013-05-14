@@ -23,4 +23,5 @@
  */
 class DbTable_Log extends DZend_Db_Table
 {
+    protected $_allowRequestCache = true;
 }

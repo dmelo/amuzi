@@ -50,11 +50,21 @@ class User extends DZend_Model
 
     public function setSettings($params)
     {
-        // TODO: create log entry on db.
         $user = $this->_userDb->findCurrent();
         $user->name = $params['name'];
         $user->email = $params['email'];
         $user->privacy = $params['privacy'];
+        // User is switching view type.
+        if ($user->view !== $params['view']) {
+            $this->_logModel->insert(
+                $params['windowId'],
+                'change_view',
+                null,
+                null,
+                $params['view']
+            );
+
+        }
         $user->view = $params['view'];
         $user->save();
     }

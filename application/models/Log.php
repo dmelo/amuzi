@@ -23,4 +23,37 @@
  */
 class Log extends DZend_Model
 {
+    public function insert(
+        $windowId,
+        $action,
+        $albumId = null,
+        $trackId = null,
+        $view = null
+    )
+    {
+        $logActionRow = $this->_logActionDb->findRowByName($action);
+
+        if (null === $logActionRow) {
+            throw new Zend_Exception("Log action named $action doesn't exists");
+        } else {
+            $data = array(
+                'user_id' => $this->_session->user->id,
+                'window_id' => $windowId,
+                'log_action_id' => $logActionRow->id,
+                'album_id' => $albumId,
+                'track_id' => $trackId,
+                'view' => null === $view ? $this->_session->user->view : $view
+            );
+
+            try {
+                $this->_objDb->insert($data);
+            } catch (Exception $e) {
+                $this->_logger->err(
+                    "Tried to insert db log " . print_r($data, true)
+                    . " but an exception was throwed: " . $e->getMessage
+                );
+                throw $e;
+            }
+        }
+    }
 }
