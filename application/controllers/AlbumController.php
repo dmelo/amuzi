@@ -31,8 +31,12 @@ class AlbumController extends DZend_Controller_Action
 
     public function addAction()
     {
-        // TODO: create log entry on db.
         if (($albumId = $this->_request->getParam('albumId')) !== false) {
+            $this->_logModel->insert(
+                $this->_request->getParam('windowId'),
+                'add_album',
+                $albumId
+            );
             $this->view->output = $this->
                 _userListenAlbumModel->insert($albumId);
             $albumRow = $this->_albumModel->findRowById($albumId);

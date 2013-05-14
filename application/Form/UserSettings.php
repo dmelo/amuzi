@@ -70,6 +70,9 @@ class Form_UserSettings extends DZend_Form
         $element->setLabel($this->_t('Cancel'));
         $this->addElement($element);
 
+        $element = new Zend_Form_Element_Hidden('windowId');
+        $this->addElement($element);
+
         $this->setAction('/user/index');
         $this->setAttrib('id', 'usersettings');
 
