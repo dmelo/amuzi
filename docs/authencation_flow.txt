@@ -1,0 +1,33 @@
+1. New user
+    1.1 FB
+        a. Click on "Connect with facebook"
+        b. Accept and proceed on facebook terms
+        c. Done
+    1.2 Local account
+        a. Click on register
+        b. Fill registration form
+        c. Go to email and click on activation link
+        d. Fill login form and login
+        e. Done
+
+2. Returning user
+    2.1 FB (with account registered via FB)
+        a. Click on "Connect with facebook"
+        b. Done
+
+    2.2 Local account (with account registered via FB)
+        a. fill form and press login
+        b. go to email and click on activation link
+        c. fill form and press login
+        d. click on forgot password
+        e. fill email and press send
+        f. go to email and click on reset password link
+        g. reset password.
+        h. fill form and press login
+
+    2.3 FB account (with account registered via Amuzi)
+        a. Click on "Connect with facebook"
+        b. Done
+    2.4 Local account (with account registered via Amuzi)
+        a. Fill login form and click on login
+        b. Done
