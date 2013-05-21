@@ -25,9 +25,9 @@ class Feedback extends DZend_Model
 {
     public function insert($subject, $anonymous, $comment)
     {
-        if (isset($this->_session->user)) {
+        if (null !== $this->_getUserRow()) {
             $data = array(
-                'user_id' => $anonymous ? null : $this->_session->user->id,
+                'user_id' => $anonymous ? null : $this->_getUserId(),
                 'subject' => $subject,
                 'comment' => $comment
             );

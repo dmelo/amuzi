@@ -37,8 +37,7 @@ class DbTable_Playlist extends DZend_Db_Table
 
     public function findByName($name)
     {
-        $user = $this->_session->user;
-        return $this->findRowByUserIdAndName($user->id, $name);
+        return $this->findRowByUserIdAndName($this->_getUserId(), $name);
     }
 
     public function search($q, $limit = 10, $offset = 0)
@@ -46,7 +45,7 @@ class DbTable_Playlist extends DZend_Db_Table
         $where = $this->_db->quoteInto('name like ?', '%' . $q . '%');
         $where .= $this->_db->quoteInto(
             ' AND user_id = ?',
-            $this->_session->user->id
+            $this->_getUserId()
         );
         return $this->fetchAll(
             $this->select()
@@ -58,7 +57,7 @@ class DbTable_Playlist extends DZend_Db_Table
     {
         $select = $this->select()
             ->where(
-                $this->_db->quoteInto('user_id = ?', $this->_session->user->id)
+                $this->_db->quoteInto('user_id = ?', $this->_getUserId())
             )
             ->order('name');
         return $this->fetchAll($select);

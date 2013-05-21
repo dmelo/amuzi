@@ -118,7 +118,7 @@ class Album extends DZend_Model
     public function findAllFromUser()
     {
         $userListenAlbumRowSet = $this->_userListenAlbumDb
-            ->findByUserId($this->_session->user->id);
+            ->findByUserId($this->_getUserId());
 
         $albumIdSet = array();
         foreach ($userListenAlbumRowSet as $userListenAlbumRow) {
@@ -137,7 +137,7 @@ class Album extends DZend_Model
     {
         $userListenAlbumRow = $this->_userListenAlbumDb
             ->findRowByUserIdAndAlbumId(
-                $this->_session->user->id, $id
+                $this->_getUserId(), $id
             );
 
         if (null !== $userListenAlbumRow) {

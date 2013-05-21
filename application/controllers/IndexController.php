@@ -23,31 +23,20 @@
  */
 class IndexController extends DZend_Controller_Action
 {
-    /**
-     * indexAction
-     *
-     * @return void
-     */
-
-    public function __construct(
-        Zend_Controller_Request_Abstract $request,
-        Zend_Controller_Response_Abstract $response,
-        array $invokeArgs = array())
+    protected function _prepareSearch()
     {
-        parent::__construct($request, $response, $invokeArgs);
-
         $this->view->form = new Form_Search();
-        if (isset($this->_session->user)) {
-            $this->view->user = $this->_session->user;
-        }
+        $this->view->user = $this->_getUserRow();
     }
 
     public function indexAction()
     {
+        $this->_prepareSearch();
     }
 
     public function incboardAction()
     {
+        $this->_prepareSearch();
         $this->view->form->setAttrib('id', 'incboard-search');
     }
 
@@ -73,11 +62,9 @@ class IndexController extends DZend_Controller_Action
 
     public function testAction()
     {
-        try {
-            print_r($this->_amuziSearchModel->autocomplete('the', 'track'));
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $secs = $this->_request->getParam('secs');
+        sleep($secs);
+        echo "slept for $secs secs";
     }
 
     public function helpAction()

@@ -52,12 +52,12 @@ class UserController extends DZend_Controller_Action
 
     public function pingAction()
     {
-        $this->view->message = $this->_session->user->id;
+        $this->view->message = $this->_getUserId();
     }
 
     public function nextplaylistAction()
     {
-        $userRow = $this->_session->user;
+        $userRow = $this->_getUserRow();
         $message = array();
         $next = false;
         $itemRow = null;

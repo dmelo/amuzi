@@ -58,10 +58,11 @@ class AlbumController extends DZend_Controller_Action
     public function loadAction()
     {
         if (($id = $this->_request->getParam('id')) !== null
-            || ($id = $this->_session->user->currentAlbumId) !== null) {
+            || ($id = $this->_getUserRow()->currentAlbumId) !== null) {
             $albumRow = $this->_albumModel->findRowById($id);
-            $this->_session->user->currentAlbumId = $albumRow->id;
-            $this->_session->user->save();
+            $userRow = $this->_getUserRow();
+            $userRow->currentAlbumId = $albumRow->id;
+            $userRow->save();
 
             $album = $albumRow->getArray();
             $ret = array($album['trackList'], $album['name'], 0, 0, 0);

@@ -583,12 +583,22 @@
         setInterval(ping, 30000);
     }
 
+
     $(document).ready(function () {
         var ac,
             message,
             st;
 
         verifyView();
+
+        window.throwMany = function(n) {
+            if (n > 0) {
+                setTimeout("window.throwMany(" + (n - 1) + ")", 200);
+                $.get('/album/info/id/' + n);
+                console.log('throwing ' + n);
+            }
+        }
+
 
         checkBrowserCompatibility();
 
@@ -784,7 +794,9 @@
 
         $('#jquery_jplayer_1').bind($.jPlayer.event.error, function () {
             console.log('MUSIC ERROR');
-            window.myPlaylist.next();
+            if (myPlaylist.original.length !== 0) {
+                window.myPlaylist.next();
+            }
         });
 
         $.resizeEditPlaylist();

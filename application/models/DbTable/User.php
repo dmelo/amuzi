@@ -55,6 +55,6 @@ class DbTable_User extends DZend_Db_Table
 
     public function findCurrent()
     {
-        return $this->_session->user;
+        return $this->_getUserRow();
     }
 }
