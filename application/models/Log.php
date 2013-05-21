@@ -37,12 +37,12 @@ class Log extends DZend_Model
             throw new Zend_Exception("Log action named $action doesn't exists");
         } else {
             $data = array(
-                'user_id' => $this->_session->user->id,
+                'user_id' => $this->_getUserId(),
                 'window_id' => $windowId,
                 'log_action_id' => $logActionRow->id,
                 'album_id' => $albumId,
                 'track_id' => $trackId,
-                'view' => null === $view ? $this->_session->user->view : $view
+                'view' => null === $view ? $this->_getUserRow()->view : $view
             );
 
             try {

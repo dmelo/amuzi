@@ -27,14 +27,14 @@ class TutorialAccomplished extends DZend_Model
     {
         $row = $this->_tutorialDb->findRowByName($name);
         $this->_tutorialAccomplishedDb->setAccomplished(
-            $row->id, $this->_session->user->id
+            $row->id, $this->_getUserId()
         );
     }
 
     public function fetchAllByUser()
     {
         return $this->_tutorialAccomplishedDb->findByUserId(
-            $this->_session->user->id
+            $this->_getUserId()
         );
     }
 }

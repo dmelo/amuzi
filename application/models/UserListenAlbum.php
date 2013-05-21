@@ -31,13 +31,13 @@ class UserListenAlbum extends DZend_Model
             $ret = $this->_userListenAlbumDb->insert(
                 array(
                     'album_id' => $albumRow->id,
-                    'user_id' => $this->_session->user->id
+                    'user_id' => $this->_getUserId()
                 )
             );
             } catch (Zend_Db_Statement_Exception $e) {
                 $row = $this->_userListenAlbumDb->findRowByAlbumIdAndUserId(
                     $albumRow->id,
-                    $this->_session->user->id
+                    $this->_getUserId()
                 );
 
                 $ret = null !== $row ? $row->id : null;

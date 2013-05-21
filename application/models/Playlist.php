@@ -34,15 +34,15 @@ class Playlist extends DZend_Model
     public function create($name, $public = 'public')
     {
         $ret = null;
-        if (isset($this->_session->user)) {
+        if ($this->_getUserRow() !== null) {
             $ret = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id,
+                $this->_getUserId(),
                 $name
             );
             if (!$ret) {
                 try {
                     $ret = $this->_playlistDb->create(
-                        $this->_session->user->id, $name, $public
+                        $this->_getUserId(), $name, $public
                     );
                 } catch(Zend_Db_Table_Exception $e) {
                     $this->_logger->info($e->getMessage());
@@ -82,7 +82,7 @@ class Playlist extends DZend_Model
     {
         $ret = null;
         $playlistRow = null;
-        $user = $this->_session->user;
+        $user = $this->_getUserRow();
         if (gettype($name) === 'string') {
             if ('' === $name) { // if current is null, ret will be null.
                 if (null !== $user->currentPlaylistId) {
@@ -134,7 +134,7 @@ class Playlist extends DZend_Model
     {
         try {
             $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id, $name
+                $this->_getUserId(), $name
             );
             $playlistRow->repeat = "true" == $repeat ? 1 : 0;
             $playlistRow->save();
@@ -156,7 +156,7 @@ class Playlist extends DZend_Model
     {
         try {
             $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id, $name
+                $this->_getUserId(), $name
             );
             $playlistRow->shuffle = "true" == $shuffle ? 1 : 0;
             $playlistRow->save();
@@ -177,7 +177,7 @@ class Playlist extends DZend_Model
     public function findRowByName($name)
     {
         return $this->_playlistDb->findRowByUserIdAndName(
-            $this->_session->user->id, $name
+            $this->_getUserId(), $name
         );
     }
 
@@ -190,7 +190,7 @@ class Playlist extends DZend_Model
     public function findRowById($id)
     {
         return $this->_playlistDb->findRowByUserIdAndId(
-            $this->_session->user->id, $id
+            $this->_getUserId(), $id
         );
     }
 
@@ -239,7 +239,7 @@ class Playlist extends DZend_Model
     public function setCurrentTrack($name, $current)
     {
         $row = $this->_playlistDb->findRowByUserIdAndName(
-            $this->_session->user->id, $name
+            $this->_getUserId(), $name
         );
         $row->currentTrack = $current;
         $row->save();
@@ -278,16 +278,16 @@ class Playlist extends DZend_Model
     {
         try {
             $playlistRow = $this->_playlistDb->findRowByUserIdAndId(
-                $this->_session->user->id, $id
+                $this->_getUserId(), $id
             );
 
             if (null !== $playlistRow) {
                 // If its going to delete the current playlist, then it must
                 // first be removed from user->current_playlist_id
-                if ($this->_session->user->currentPlaylistId ===
+                if ($this->_getUserRow()->currentPlaylistId ===
                         $playlistRow->id) {
-                    $this->_session->user->currentPlaylistId = null;
-                    $this->_session->user->save();
+                    $this->_getUserRow()->currentPlaylistId = null;
+                    $this->_getUserRow()->save();
                 }
 
                 // If there is users who listen to this playlist, those records 
@@ -303,13 +303,13 @@ class Playlist extends DZend_Model
 
                 // If the default playlist is deleted, then choose another one
                 // to be the current_playlist_id.
-                if (null === $this->_session->user->current_playlist_id) {
+                if (null === $this->_getUserRow()->current_playlist_id) {
                     $newPlaylistRow = $this->_playlistDb->findRowByUserId(
-                        $this->_session->user->id
+                        $this->_getUserId()
                     );
-                    $this->_session->user->current_playlist_id =
+                    $this->_getUserRow()->current_playlist_id =
                         $newPlaylistRow->id;
-                    $this->_session->user->save();
+                    $this->_getUserRow()->save();
                 }
                 return true;
             } else {
@@ -334,7 +334,7 @@ class Playlist extends DZend_Model
     {
         try {
             $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_session->user->id, $name
+                $this->_getUserId(), $name
             );
             $playlistRow->privacy = $privacy;
             $playlistRow->save();
@@ -347,7 +347,7 @@ class Playlist extends DZend_Model
     public function getCurrentRow()
     {
         return $this->_playlistDb->findRowById(
-            $this->_session->user->currentPlaylistId
+            $this->_getUserRow()->currentPlaylistId
         );
     }
 }

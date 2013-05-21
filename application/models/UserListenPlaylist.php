@@ -46,7 +46,7 @@ class UserListenPlaylist extends DZend_Model
     public function addUserPlaylist($playlistRow, $userRow = null)
     {
         if (null === $userRow)
-            $userRow = $this->_session->user;
+            $userRow = $this->_getUserRow();
 
         if ($userRow instanceOf DbTable_UserRow &&
             $playlistRow instanceOf DbTable_PlaylistRow) {
