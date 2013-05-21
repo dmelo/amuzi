@@ -27,6 +27,7 @@ class AlbumController extends DZend_Controller_Action
     {
         parent::init();
         $this->_jsonify = true;
+        $this->_loginRequired = true;
     }
 
     public function addAction()
@@ -87,7 +88,6 @@ class AlbumController extends DZend_Controller_Action
                 $c->stop();
                 $this->_logger->debug("AlbumController::info $f " . $c->get());
             }
-
 
             $this->renderScript('playlist/info.phtml');
         }
