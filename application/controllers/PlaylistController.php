@@ -219,9 +219,12 @@ class PlaylistController extends DZend_Controller_Action
     public function loadAction()
     {
         if ($this->_request->isPost()) {
-            $userRow = DZend_Session_Namespace::get('session')->user;
-            $playlistRow = DZend_Session_Namespace::get('session')->playlist;
+            $session = DZend_Session_Namespace::get('session');
+            $userRow = $session->user;
+            $playlistRow = isset($session->playlist) ?
+                $session->playlist : null;
             DZend_Session_Namespace::close();
+            unset($session);
             if (isset($userRow)) {
                 $name = $this->_request->getPost('name');
                 $id = $this->_request->getPost('id');
