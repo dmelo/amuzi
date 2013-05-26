@@ -89,7 +89,7 @@ function fillImages($sub, $type)
 
         $query = '';
         if ('album_db' === $type) {
-            $query = 'select album.cover as cover, artist.name as artist, album.name as musicTitle from album join artist on album.artist_id = artist.id where ';
+            $query = 'select album.id as id, artist.name as artist, album.name as musicTitle, album.cover as cover from album join artist on album.artist_id = artist.id where ';
             $first = true;
             foreach ($sub as $r) {
                 if ($first) {
@@ -99,9 +99,20 @@ function fillImages($sub, $type)
                 }
                 $query .= '(artist.name = "' . $r['artist'] . '" AND album.name = "' . $r['musicTitle'] . '")';
             }
-
         } elseif ('track_db' === $type) {
+            $query = 'select artist_music_title.id as id, artist.name as artist, music_title.name as musicTitle from artist_music_title join artist on artist_music_title.artist_id = artist.id join music_title on artist_music_title.music_title_id = music_title.id where ';
+            $first = true;
+            foreach ($sub as $r) {
+                if ($first) {
+                    $first = false;
+                } else {
+                    $query .= ' OR ';
+                }
+
+                $query .= '(artist.name = "' . $r['artist'] . '" AND music_title.name = "' . $r['musicTitle'] . '")';
+            }
         }
+
         if ('' !== $query) {
             $result = mysql_query($query);
             while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
@@ -110,9 +121,12 @@ function fillImages($sub, $type)
                         $r['artist'] === strtolower($row[1])
                         && $r['musicTitle'] === strtolower($row[2])
                     ) {
+                        $r['objId'] = 'album_db' === $type ? - ((int) $row[0]) : (int) $row[0];
                         $r['artist'] = $row[1];
                         $r['musicTitle'] = $row[2];
-                        $r['cover'] = $row[0];
+                        if (array_key_exists(3, $row)) {
+                            $r['cover'] = $row[3];
+                        }
                         $r['name'] = $row[1] . ' - ' . $row[2];
                     }
                 }

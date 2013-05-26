@@ -119,6 +119,24 @@ class ApiController extends DZend_Controller_Action
     }
 
     /**
+     * Given a set of music/album, return the similarity matrix that binds
+     * them.
+     */
+    public function similaritymatrixAction()
+    {
+        $list = $this->_request->getPost('list');
+        $idList = array();
+        foreach ($list as $obj) {
+            if (array_key_exists('objId', $obj)) {
+                $idList[] = $obj['objId'];
+            }
+        }
+
+        $this->view->output = $this->_musicSimilarityModel
+            ->getSimilarByIds($idList);
+    }
+
+    /**
      * _getAlbum Get full information of the requested album.
      *
      * @param string $artist

@@ -121,7 +121,14 @@
                 console.log('results found');
                 console.log(data);
                 // TODO: create similarity matrix, first;
-                searchMusic(data, data.length);
+                $.post('/api/similaritymatrix', {
+                    list: data
+                }, function (matrix) {
+                    search.similarity = matrix;
+                    searchMusic(data, data.length);
+                }, 'json').error(function (e) {
+                    console.log("Could not load similarity information");
+                });
             }
         }, 'json').error(function (data) {
             $.bootstrapMessageAuto(data[0], data[1]);
