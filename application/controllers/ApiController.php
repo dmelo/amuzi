@@ -143,10 +143,21 @@ class ApiController extends DZend_Controller_Action
      * @param string $album
      * @return array Returns the array conversion of the album row.
      */
-    public function _getAlbum($artist, $album)
+    protected function _getAlbum($artist, $album)
     {
-        $albumRow = null;
-        if (($albumRow = $this->_albumModel->get($artist, $album)) === null ||
+        $albumRow = $this->_albumModel->get($artist, $album);
+        return $this->_getAlbumByRow($albumRow);
+    }
+
+    protected function _getAlbumById($albumId)
+    {
+        $albumRow = $this->_albumModel->findRowById($albumId);
+        return $this->_getAlbumByRow($albumRow);
+    }
+
+    protected function _getAlbumByRow($albumRow)
+    {
+        if ($albumRow === null ||
             count($albumRow->trackList) == 0) {
             $album = $this->_lastfmModel->getAlbum($artist, $album);
             $albumId = $this->_albumModel->insert($album);
@@ -161,14 +172,23 @@ class ApiController extends DZend_Controller_Action
         return $ret;
     }
 
-    public function _getMusic($artist, $musicTitle)
+    protected function _getMusic($artist, $musicTitle)
     {
-        $ret = null;
-
         $trackRow = $this->_musicTrackLinkModel->getTrack(
             $artist, $musicTitle, true
         );
+        return $this->_getMusicByRow($trackRow);
+    }
 
+    protected function _getMusicById($artistMusicTitleId)
+    {
+        $trackRow = $this->_musicTrackLinkModel->getTrackById($artistMusicTitleId);
+        return $this->_getMusicByRow($trackRow);
+    }
+
+    protected function _getMusicByRow(DZend_TrackRow $trackRow)
+    {
+        $ret = null;
         if (null !== $trackRow) {
             $ret = array_merge(
                 $trackRow->getArray(),
@@ -198,6 +218,8 @@ class ApiController extends DZend_Controller_Action
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) !== null) {
             $this->view->output = $this->_getMusic($artist, $musicTitle);
+        } elseif (($id = $this->_request->getParam('id')) !== null) {
+            $this->view->output = $this->_getMusicById($id);
         }
     }
 
@@ -206,6 +228,8 @@ class ApiController extends DZend_Controller_Action
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($album = $this->_request->getParam('album')) !== null) {
             $this->view->output = $this->_getAlbum($artist, $album);
+        } elseif (($id = $this->_request->getParam('id')) !== null) {
+            $this->view->output = $this->_getAlbumById($id);
         }
     }
 
