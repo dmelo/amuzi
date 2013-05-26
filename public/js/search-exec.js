@@ -73,22 +73,32 @@
         if (num > 0 && 'undefined' !== typeof m && null !== m) {
             if ('type' in m && 'album' === m.type) {
                 uri = '/api/searchalbum';
-                params = {
-                   artist: m.artist,
-                   album: 'musicTitle' in m ? m.musicTitle : m.name
-                };
+                if ('objId' in m) {
+                    params = {
+                        id: -m.objId
+                    };
+                } else {
+                    params = {
+                       artist: m.artist,
+                       album: 'musicTitle' in m ? m.musicTitle : m.name
+                    };
+                }
             } else if ('type' in m && 'track' === m.type) {
                 uri = '/api/searchmusic';
-                params = {
-                    artist: m.artist,
-                    musicTitle: m.musicTitle
-                };
+                if ('objId' in m) {
+                    params = {
+                        id: m.objId
+                    };
+                } else {
+                    params = {
+                        artist: m.artist,
+                        musicTitle: m.musicTitle
+                    };
+                }
             }
 
             if (null !== uri) {
                 $.get(uri, params, function(v) {
-                    console.log('response to searchMusic: ');
-                    console.log(v);
                     try {
                         var start = new Date().getTime();
                         if (null !== v && true === search.insert(v)) {
