@@ -109,19 +109,10 @@ class ApiController extends DZend_Controller_Action
                 $artist, $musicTitle, $type, $artistMusicTitleIdList
             );
         } elseif (($q = $this->_request->getParam('q')) != null) {
-            $item = $this->_artistMusicTitleModel->getBestGuess($q);
-            if (null === $item) {
-                $item = $this->_albumModel->getBestGuess($q);
-            }
-
-            $this->view->output = null === $item ?
-                $this->_error :
-                $this->_musicSimilarityModel->getSimilar(
-                    $item->artist,
-                    $item->musicTitle,
-                    $item->type,
-                    $artistMusicTitleIdList
-                );
+            $this->_logger->debug(
+                "ApiController::searchsimilarAction incomplete requests "
+                . "wont be treated anymore."
+            );
         } else {
             $this->view->output = $this->_error;
         }
@@ -195,31 +186,6 @@ class ApiController extends DZend_Controller_Action
         if (($artist = $this->_request->getParam('artist')) !== null &&
             ($album = $this->_request->getParam('album')) !== null) {
             $this->view->output = $this->_getAlbum($artist, $album);
-        }
-    }
-
-    /**
-     * Given the user's incomplete outputs the list of suggestions in Json.
-     *
-     * @return void
-     */
-    public function autocompleteAction()
-    {
-        if (null !== ($q = strtolower($this->_request->getParam('q')))) {
-            // Try to get from music_title and album.
-            $list = array();
-            $listMusicTitle = $this->_artistMusicTitleModel->autocomplete($q);
-            $listAlbum = $this->_albumModel->autocomplete($q);
-
-            $list = array_merge($listAlbum, $listMusicTitle);
-            $ret = array();
-            foreach ($list as $item) {
-                $ret[] = $item->getArray();
-            }
-
-            $this->view->output = $ret;
-        } else {
-            $this->view->output = $this->_error;
         }
     }
 
