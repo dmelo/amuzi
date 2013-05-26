@@ -173,6 +173,7 @@
             });
 
         }
+        window.search = search;
 
         $('.music-square, .album-square').live({mouseenter: function () {
             $(this).find('.description, .play').css('display', 'block');
@@ -186,10 +187,12 @@
         $('form.search').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                if ('error' in data) {
-                    console.log('error during searchsimilar: ' + data.error);
-                } else {
-                    loadSimilarMusic(data, 10);
+                if (null !== data) {
+                    if ('error' in data) {
+                        console.log('error during searchsimilar: ' + data.error);
+                    } else {
+                        loadSimilarMusic(data, 10);
+                    }
                 }
             },
             error: function (data) {
