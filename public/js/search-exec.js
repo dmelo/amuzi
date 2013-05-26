@@ -45,20 +45,22 @@
                     musicTitle = obj[1],
                     type = obj[2];
 
-                incrementSimilarRunning = true;
-                $.post('/api/searchsimilar', {
-                    q: artist + ' - ' + musicTitle,
-                    artist: artist,
-                    musicTitle: musicTitle,
-                    type: type,
-                    objIdList: search.ibb.getIdList()
-                }, function(data) {
-                    loadSimilarMusic(data, 10);
-                    incrementSimilarRunning = false;
-                    incrementSimilar();
-                }, 'json').error(function() {
-                    incrementSimilarRunning = false;
-                });
+                if (null != artist && null != musicTitle) {
+                    incrementSimilarRunning = true;
+                    $.post('/api/searchsimilar', {
+                        q: artist + ' - ' + musicTitle,
+                        artist: artist,
+                        musicTitle: musicTitle,
+                        type: type,
+                        objIdList: search.ibb.getIdList()
+                    }, function(data) {
+                        loadSimilarMusic(data, 10);
+                        incrementSimilarRunning = false;
+                        incrementSimilar();
+                    }, 'json').error(function() {
+                        incrementSimilarRunning = false;
+                    });
+                }
             }
         }
     }
@@ -85,6 +87,8 @@
 
             if (null !== uri) {
                 $.get(uri, params, function(v) {
+                    console.log('response to searchMusic: ');
+                    console.log(v);
                     try {
                         var start = new Date().getTime();
                         if (null !== v && true === search.insert(v)) {
@@ -108,7 +112,7 @@
     }
 
     function searchMulti(q) {
-        $.get('/api/autocomplete', {
+        $.get('/autocomplete.php', {
             q: q
         }, function(data) {
             if (0 === data.length) {
@@ -116,7 +120,7 @@
             } else {
                 console.log('results found');
                 console.log(data);
-
+                // TODO: create similarity matrix, first;
                 searchMusic(data, data.length);
             }
         }, 'json').error(function (data) {
