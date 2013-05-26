@@ -146,6 +146,13 @@ class ApiController extends DZend_Controller_Action
     protected function _getAlbum($artist, $album)
     {
         $albumRow = $this->_albumModel->get($artist, $album);
+        if ($albumRow === null ||
+            count($albumRow->trackList) == 0) {
+            $album = $this->_lastfmModel->getAlbum($artist, $album);
+            $albumId = $this->_albumModel->insert($album);
+            $albumRow = $this->_albumModel->findRowById($albumId);
+        }
+
         return $this->_getAlbumByRow($albumRow);
     }
 
@@ -157,13 +164,6 @@ class ApiController extends DZend_Controller_Action
 
     protected function _getAlbumByRow($albumRow)
     {
-        if ($albumRow === null ||
-            count($albumRow->trackList) == 0) {
-            $album = $this->_lastfmModel->getAlbum($artist, $album);
-            $albumId = $this->_albumModel->insert($album);
-            $albumRow = $this->_albumModel->findRowById($albumId);
-        }
-
         $ret = $albumRow->getArray();
         $ret['id'] = (int) $ret['id'];
         $ret['objId'] = -$ret['id'];
