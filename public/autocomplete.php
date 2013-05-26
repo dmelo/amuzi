@@ -139,7 +139,15 @@ function fillImages($sub, $type)
     return $sub;
 }
 
+function logDebug($str, $q)
+{
+    $fd = fopen('tmp/log-php.txt', 'a');
+    fwrite($fd, microtime(true) . ' q: ' . $q . ' - ' . $str . PHP_EOL);
+    fclose($fd);
+}
+
 $q = urldecode($_GET['q']);
+logDebug('start', $q);
 $q = str_replace(' - ', 'A', strtolower($q));
 $limit = 5;
 $dbLink = null;
@@ -158,4 +166,6 @@ foreach (array('album_db', 'track_db') as $type) {
     $ret[] = $sub;
 }
 
-echo json_encode(array_merge($ret[0], $ret[1]));
+$ret = array_merge($ret[0], $ret[1]);
+logDebug('end: ' . count($ret) . ' results', $q);
+echo json_encode($ret);
