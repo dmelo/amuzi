@@ -460,6 +460,29 @@ class MusicSimilarity extends DZend_Model
     }
 
     /**
+     * Given a set of ids (amt and album) return the similarity matrix for it.
+     */
+    public function getSimilarByIds($ids)
+    {
+
+        $similarList = $this->_replaceAlbumIdByAMTIds($ids);
+        $this->_logger->debug(
+            "MusicSimilarity::getSimilarByIds similarList: "
+            . print_r($ids, true)
+        );
+
+        $similarityMatrix = $this->_getSimilarityMatrix($similarList);
+        list($similarList, $translationList) = $this->_insertAlbumIds(
+            $similarList
+        );
+
+        return $this->_applyListTranslationToMatrix(
+            $similarityMatrix[0], $translationList
+        );
+    }
+
+
+    /**
      * getSimilarSync The sync version of getSimilar. It just request lastfm,
      * record the results on database and call getSimilar.
      */
@@ -500,47 +523,49 @@ class MusicSimilarity extends DZend_Model
     protected function _insertAlbumIds($artistMusicTitleIdList)
     {
         $translationList = array();
-        $albumAMTRowSet = $this->_albumHasArtistMusicTitleDb
-            ->fetchAllByArtistMusicTitleIdGrouped($artistMusicTitleIdList);
+        if (!empty($artistMusicTitleIdList)) {
+            $albumAMTRowSet = $this->_albumHasArtistMusicTitleDb
+                ->fetchAllByArtistMusicTitleIdGrouped($artistMusicTitleIdList);
 
-        $albumIdCount = array();
-        foreach ($albumAMTRowSet as $row) {
-            if (!array_key_exists($row->albumId, $albumIdCount)) {
-                $albumIdCount[$row->albumId] = array();
-            }
-            $albumIdCount[$row->albumId][] = $row->artistMusicTitleId;
-        }
-        $freq = array();
-        for ($i = 0; $i <= count($artistMusicTitleIdList); $i++) {
-            $freq[$i] = array();
-        }
-
-        foreach ($albumIdCount as $albumId => $amtList) {
-            $freq[count($amtList)][] = $albumId;
-        }
-
-        $maxReplacements = (int) count($artistMusicTitleIdList) / 2;
-
-        for ($i = count($artistMusicTitleIdList); $i >= 0; $i--) {
-            if ($maxReplacements <= 0) {
-                break;
-            }
-
-            foreach ($freq[$i] as $albumId) {
-                $translationList[$albumId] = array();
-                foreach ($albumIdCount[$albumId] as $amtId) {
-                    $translationList[$albumId][] = $amtId;
-                    if (
-                        ($key = array_search($amtId, $artistMusicTitleIdList))
-                        !== false
-                    ) {
-                        unset($artistMusicTitleIdList[$key]);
-                        $maxReplacements--;
-                    }
+            $albumIdCount = array();
+            foreach ($albumAMTRowSet as $row) {
+                if (!array_key_exists($row->albumId, $albumIdCount)) {
+                    $albumIdCount[$row->albumId] = array();
                 }
-                $artistMusicTitleIdList[] = -$albumId;
+                $albumIdCount[$row->albumId][] = $row->artistMusicTitleId;
+            }
+            $freq = array();
+            for ($i = 0; $i <= count($artistMusicTitleIdList); $i++) {
+                $freq[$i] = array();
+            }
+
+            foreach ($albumIdCount as $albumId => $amtList) {
+                $freq[count($amtList)][] = $albumId;
+            }
+
+            $maxReplacements = (int) count($artistMusicTitleIdList) / 2;
+
+            for ($i = count($artistMusicTitleIdList); $i >= 0; $i--) {
                 if ($maxReplacements <= 0) {
                     break;
+                }
+
+                foreach ($freq[$i] as $albumId) {
+                    $translationList[$albumId] = array();
+                    foreach ($albumIdCount[$albumId] as $amtId) {
+                        $translationList[$albumId][] = $amtId;
+                        if (
+                            ($key = array_search($amtId, $artistMusicTitleIdList))
+                            !== false
+                        ) {
+                            unset($artistMusicTitleIdList[$key]);
+                            $maxReplacements--;
+                        }
+                    }
+                    $artistMusicTitleIdList[] = -$albumId;
+                    if ($maxReplacements <= 0) {
+                        break;
+                    }
                 }
             }
         }
