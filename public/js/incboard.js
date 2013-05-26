@@ -281,6 +281,7 @@
                 this.ibb.insert(v, this.ibb.getPos(mostSimilar.objId));
                 this.resolveConflict(mostSimilar, v, []);
             } else {
+                console.log("Found no similar element");
                 this.ibb.insert(v);
             }
 

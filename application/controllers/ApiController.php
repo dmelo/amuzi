@@ -132,8 +132,18 @@ class ApiController extends DZend_Controller_Action
             }
         }
 
+        $this->_logger->debug(
+            "ApiController::similaritymatrix idList: " . print_r($idList, true)
+        );
+
         $this->view->output = $this->_musicSimilarityModel
             ->getSimilarByIds($idList);
+
+        $this->_logger->debug(
+            "ApiController::similaritymatrix matrix: " . print_r(
+                $this->view->output, true
+            )
+        );
     }
 
     /**
@@ -192,7 +202,7 @@ class ApiController extends DZend_Controller_Action
     }
 
     protected function _getMusicByRow(
-        DbTable_TrackRow $trackRow, $artist, $musicTitle
+        $trackRow, $artist, $musicTitle
     )
     {
         $ret = null;
