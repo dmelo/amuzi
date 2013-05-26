@@ -169,7 +169,10 @@ class MusicSimilarity extends DZend_Model
             foreach ($amtList as $i) {
                 $sum = 0;
                 foreach ($amtIdSet as $j) {
-                    $sum += $similarityMatrix[$i][$j];
+                    if (array_key_exists($i, $similarityMatrix) &&
+                        array_key_exists($j, $similarityMatrix[$i])) {
+                        $sum += $similarityMatrix[$i][$j];
+                    }
                 }
                 $similarityMatrix[$i][-$albumId] =
                     (int) $sum / count($amtIdSet);
@@ -181,7 +184,10 @@ class MusicSimilarity extends DZend_Model
                 $similarityMatrix[-$albumId][$j] = 0;
                 $sum = 0;
                 foreach ($amtIdSet as $i) {
-                    $sum += $similarityMatrix[$i][$j];
+                    if (array_key_exists($i, $similarityMatrix) &&
+                        array_key_exists($j, $similarityMatrix[$i])) {
+                        $sum += $similarityMatrix[$i][$j];
+                    }
                 }
                 $similarityMatrix[-$albumId][$j] =
                     (int) $sum / count($amtIdSet);
@@ -283,6 +289,7 @@ class MusicSimilarity extends DZend_Model
     {
         $ret = array();
         $albumIdList = array();
+        $translationList = array();
         foreach ($objIds as $id) {
             if ($id > 0) {
                 $ret[] = $id;
@@ -291,11 +298,13 @@ class MusicSimilarity extends DZend_Model
             }
         }
 
-        return array_merge(
-            $ret,
-            $this->_albumHasArtistMusicTitleDb
-                ->fetchAllAMTIdsFromAlbumIdList($albumIdList)
-        );
+        foreach ($albumIdList as $albumId) {
+            $albumRow = $this->_albumModel->findRowById($albumId);
+            $translationList[$albumId] = $albumRow->artistMusicTitleIdList;
+            $ret = array_merge($ret, $translationList[$albumId]);
+        }
+
+        return array($ret, $translationList);
     }
 
     /**
@@ -322,8 +331,9 @@ class MusicSimilarity extends DZend_Model
 
         // Get the AMTIds that are not yet on $extObjIdList neither is on
         // AMTIds owned by the albums.
+        list($allAMTId, $blank) = $this->_replaceAlbumIdByAMTIds($extObjIdList);
         $similarList = $this->_musicSimilarityDb->getSimilar(
-            $artistMusicTitleId, $this->_replaceAlbumIdByAMTIds($extObjIdList)
+            $artistMusicTitleId, $allAMTId
         );
 
         $this->_logger->debug(
@@ -464,17 +474,29 @@ class MusicSimilarity extends DZend_Model
      */
     public function getSimilarByIds($ids)
     {
+        foreach ($ids as $id) {
+            if ($id < 0) {
+                $albumId = -$id;
+                $albumRow = $this->_albumModel->findRowById($albumId);
+                $originalTranslationList[$albumId] = $albumRow
+                    ->artistMusicTitleIdList;
+            }
+        }
 
-        $similarList = $this->_replaceAlbumIdByAMTIds($ids);
-        $this->_logger->debug(
-            "MusicSimilarity::getSimilarByIds similarList: "
-            . print_r($ids, true)
-        );
+        $this->_logger->debug("getSimilarByIds ids A " . print_r($ids, true));
+
+        list($similarList, $translationList) = $this->_replaceAlbumIdByAMTIds($ids);
+
+        $this->_logger->debug("getSimilarByIds similarList B " . print_r($similarList, true) . '  ' . print_r($translationList, true));
+
 
         $similarityMatrix = $this->_getSimilarityMatrix($similarList);
+
+        /*
         list($similarList, $translationList) = $this->_insertAlbumIds(
             $similarList
         );
+        */
 
         return $this->_applyListTranslationToMatrix(
             $similarityMatrix[0], $translationList
