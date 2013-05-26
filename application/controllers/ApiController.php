@@ -177,16 +177,23 @@ class ApiController extends DZend_Controller_Action
         $trackRow = $this->_musicTrackLinkModel->getTrack(
             $artist, $musicTitle, true
         );
-        return $this->_getMusicByRow($trackRow);
+        return $this->_getMusicByRow($trackRow, $artist, $musicTitle);
     }
 
     protected function _getMusicById($artistMusicTitleId)
     {
         $trackRow = $this->_musicTrackLinkModel->getTrackById($artistMusicTitleId);
-        return $this->_getMusicByRow($trackRow);
+        $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById($artistMusicTitleId);
+        return $this->_getMusicByRow(
+            $trackRow,
+            $artistMusicTitleRow->getArtistName(),
+            $artistMusicTitleRow->getMusicTitleName()
+        );
     }
 
-    protected function _getMusicByRow(DZend_TrackRow $trackRow)
+    protected function _getMusicByRow(
+        DbTable_TrackRow $trackRow, $artist, $musicTitle
+    )
     {
         $ret = null;
         if (null !== $trackRow) {
