@@ -251,6 +251,18 @@ class PlaylistController extends DZend_Controller_Action
         $this->_logger->debug(print_r($this->view->playlist, true));
     }
 
+    public function infoAction()
+    {
+        $session = DZend_Session_Namespace::get('session');
+        $userRow = $session->user;
+        DZend_Session_Namespace::close();
+        if (($id = $this->_request->getParam('id')) !== false
+            && null !== $userRow) {
+                $this->view->collection = $this->_playlistModel
+                    ->findRowById($id);
+        }
+    }
+
     public function setrepeatAction()
     {
         $message = null;
