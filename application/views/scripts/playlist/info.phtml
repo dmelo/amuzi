@@ -15,11 +15,6 @@
         <div class="info">
             <?= $this->t('Nro Tracks') . ': ' . count($this->collection->getTrackListAsArray()); ?>
         </div>
-        <div class="info">
-            <?= $this->t('Share') . ': ' . '<a href="' . $this->collection->facebookUrl . '"><img class="icon" src="/img/facebook.png"/></a>'
-            . '<a href="' . $this->collection->shareUrl . '"><img class="icon" src="/img/link.png"/></a>' ; ?>
-        </div>
-
     </div>
     <table class="tracklist table table-striped">
         <caption><?= $this->t('Track list'); ?></caption>
