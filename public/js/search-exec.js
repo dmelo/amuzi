@@ -36,6 +36,7 @@
     }
 
     function incrementSimilar() {
+        console.log("incrementSimilar A");
         if (true === incrementSimilarRunning) {
             setTimeout(1000, incrementSimilar);
         } else {
@@ -45,6 +46,7 @@
                     musicTitle = obj[1],
                     type = obj[2];
 
+                console.log("incrementSimilar artist: " + artist + ". musicTitle: " + musicTitle + ". type: " + type);
                 if (null != artist && null != musicTitle) {
                     incrementSimilarRunning = true;
                     $.post('/api/searchsimilar', {
@@ -163,11 +165,17 @@
             search = new $.IncBoard();
 
             $('.music-large').live('click', function (e) {
-                searchSimilar($(this).parent());
+                var ele = $(this);
+                setTimeout(function () {
+                    searchSimilar(ele.parent());
+                }, 4000);
             });
 
             $('.incboard-cell').live('click', function (e) {
-                searchSimilar($(this));
+                var ele = $(this);
+                setTimeout(function () {
+                    searchSimilar(ele);
+                }, 4000);
             });
             $(window).bind('resize', $.proxy(search.ibb, 'resize'));
         } else if (1 === $('#search').length) {
