@@ -30,10 +30,6 @@ class Form_UserSettings extends DZend_Form
         $element->setLabel($this->_t('Name'));
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Text('email');
-        $element->setLabel($this->_t('Email'));
-        $this->addElement($element);
-
         $this->addElement(
             'Radio',
             'privacy',

@@ -52,7 +52,6 @@ class User extends DZend_Model
     {
         $user = $this->_userDb->findCurrent();
         $user->name = $params['name'];
-        $user->email = $params['email'];
         $user->privacy = $params['privacy'];
         // User is switching view type.
         if ($user->view !== $params['view']) {
