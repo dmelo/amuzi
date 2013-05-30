@@ -27,8 +27,8 @@
             cols = 14,
             cellSizeX = 56,
             cellSizeY = 44,
-            listByObjId = [],
-            listByPos = [],
+            listByObjId = [], // Have a list of the all indexed by the ObjId
+            listByPos = [], // Have a list of all cells indexed by it's position.
             size = 0,
             drawList = [],
             log = new Log(),

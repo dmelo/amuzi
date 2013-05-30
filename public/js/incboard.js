@@ -257,7 +257,6 @@
             self = this,
             ret;
 
-
         if (this.ibb.getByObjId(v.objId) !== undefined) {
             ret = false;
         } else {
@@ -265,7 +264,6 @@
             for (var objId in this.ibb.getAllMusic()) {
                 var e = this.ibb.getAllMusic()[objId];
 
-                console.log(self.similarity);
                 if (objId in self.similarity && v.objId in self.similarity[objId] && maxSimilarity < self.similarity[objId][v.objId]) {
                     maxSimilarity = self.similarity[objId][v.objId];
                     mostSimilar = e;

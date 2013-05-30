@@ -106,14 +106,12 @@ class MusicTrackLink extends DZend_Model
             $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById(
                 $artistMusicTitleId
             );
-            $artistRow = $this->_artistDb->findRowById(
-                $artistMusicTitleRow->artistId
-            );
-            $musicTitleRow = $this->_musicTitleDb->findRowById(
-                $artistMusicTitleRow->musicTitleId
-            );
-            return $this->getTrack(
-                $artistRow->name, $musicTitleRow->name, $sync
+
+            return $this->_getTrackByAMTId(
+                $artistMusicTitleId,
+                $sync,
+                $artistMusicTitleRow->getArtistName(),
+                $artistMusicTitleRow->getMusicTitleName()
             );
         }
 

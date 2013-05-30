@@ -72,6 +72,7 @@
             uri = null,
             params;
 
+        console.log("searchMusic: " + set.length + ", " + num);
         if (num > 0 && 'undefined' !== typeof m && null !== m) {
             if ('type' in m && 'album' === m.type) {
                 uri = '/api/searchalbum';
@@ -109,6 +110,8 @@
                             }
                             searchMusic(set, num - 1);
                         } else {
+                            console.log("searchMusic: failed to insert object");
+                            console.log(v);
                             searchMusic(set, num);
                         }
                         var end = new Date().getTime();
@@ -209,7 +212,7 @@
                     if ('error' in data) {
                         console.log('error during searchsimilar: ' + data.error);
                     } else {
-                        loadSimilarMusic(data, 10);
+                        loadSimilarMusic(data, 70);
                     }
                 }
             },
