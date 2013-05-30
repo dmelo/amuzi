@@ -317,6 +317,13 @@ class MusicSimilarity extends DZend_Model
         $artist, $musicTitle, $type, $extObjIdList = array(), $mayUseSync = true
     )
     {
+        $this->_logger->debug(
+            "MusicSimilarity::getSimilar -- extObjIdList: "
+            . print_r($extObjIdList, true)
+        );
+
+        $c = new DZend_Chronometer();
+        $c->start();
         if ('album' === $type) {
             $albumRow = $this->_albumModel->get($artist, $musicTitle);
             $extObjIdList[] = -$albumRow->id;
@@ -358,6 +365,11 @@ class MusicSimilarity extends DZend_Model
                         ->findRowById($artistMusicTitleId);
                     $artist = $artistMusicTitleRow->getArtistName();
                     $musicTitle = $artistMusicTitleRow->getMusicTitleName();
+                    $this->_logger->debug(
+                        'Calling getSimilarSync: ' . $artist
+                        . ' - ' . $musicTitle . ' # ' . $type . ' '
+                        . print_r($extObjIdList, true)
+                    );
                     $ret = $this->getSimilarSync(
                         $artist, $musicTitle, $type, $extObjIdList
                     );
@@ -413,6 +425,11 @@ class MusicSimilarity extends DZend_Model
                 $artist = $artistMusicTitleRow->getArtistName();
                 $musicTitle = $artistMusicTitleRow->getMusicTitleName();
 
+                $this->_logger->debug(
+                    'Calling from lowret getSimilarSync: ' . $artist
+                    . ' - ' . $musicTitle . ' # ' . $type . ' '
+                    . print_r($extObjIdList, true)
+                );
                 $ret = $this->getSimilarSync(
                     $artist, $musicTitle, $type, $extObjIdList
                 );
@@ -465,6 +482,11 @@ class MusicSimilarity extends DZend_Model
 
         $this->_logger->debug(
             'MusicSimilarity::getSimilar ret end -- ' . print_r($ret, true)
+        );
+
+        $c->stop();
+        $this->_logger->debug(
+            'MusicSimilarity::getSimilar timimg : ' . $c->get()
         );
 
         return $ret;

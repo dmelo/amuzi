@@ -98,15 +98,15 @@ class ApiController extends DZend_Controller_Action
      */
     public function searchsimilarAction()
     {
-        $artistMusicTitleIdList = $this->_request->getParam(
-            'artistMusicTitleIdList', array()
+        $objIdList = $this->_request->getParam(
+            'objIdList', array()
         );
 
         if (($artist = $this->_request->getParam('artist')) != null &&
             ($musicTitle = $this->_request->getParam('musicTitle')) != null &&
             ($type = $this->_request->getParam('type')) != null) {
             $this->view->output = $this->_musicSimilarityModel->getSimilar(
-                $artist, $musicTitle, $type, $artistMusicTitleIdList
+                $artist, $musicTitle, $type, $objIdList
             );
         } elseif (($q = $this->_request->getParam('q')) != null) {
             $this->_logger->debug(
@@ -192,7 +192,7 @@ class ApiController extends DZend_Controller_Action
 
     protected function _getMusicById($artistMusicTitleId)
     {
-        $trackRow = $this->_musicTrackLinkModel->getTrackById($artistMusicTitleId);
+        $trackRow = $this->_musicTrackLinkModel->getTrackById($artistMusicTitleId, true);
         $artistMusicTitleRow = $this->_artistMusicTitleModel->findRowById($artistMusicTitleId);
         return $this->_getMusicByRow(
             $trackRow,
