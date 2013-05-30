@@ -165,6 +165,7 @@ class MusicSimilarity extends DZend_Model
         }
 
         foreach ($translationList as $albumId => $amtIdSet) {
+            $total = count($amtIdSet);
             // Fill the column
             foreach ($amtList as $i) {
                 $sum = 0;
@@ -174,8 +175,8 @@ class MusicSimilarity extends DZend_Model
                         $sum += $similarityMatrix[$i][$j];
                     }
                 }
-                $similarityMatrix[$i][-$albumId] =
-                    (int) $sum / count($amtIdSet);
+                $similarityMatrix[$i][-$albumId] = $total > 0 ?
+                    (int) $sum / count($amtIdSet) : 0;
             }
 
             // Fill the row
@@ -189,8 +190,8 @@ class MusicSimilarity extends DZend_Model
                         $sum += $similarityMatrix[$i][$j];
                     }
                 }
-                $similarityMatrix[-$albumId][$j] =
-                    (int) $sum / count($amtIdSet);
+                $similarityMatrix[-$albumId][$j] = $total > 0 ?
+                    (int) $sum / count($amtIdSet) : 0;
             }
 
             $similarityMatrix[-$albumId][-$albumId] = 0;
