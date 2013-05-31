@@ -212,7 +212,7 @@
                     if ('error' in data) {
                         console.log('error during searchsimilar: ' + data.error);
                     } else {
-                        loadSimilarMusic(data, 70);
+                        loadSimilarMusic(data, 10);
                     }
                 }
             },
