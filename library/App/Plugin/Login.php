@@ -34,7 +34,8 @@ class App_Plugin_Login extends DZend_Plugin_Login
             array('default', 'index', 'help'),
             array('default', 'index', 'error'),
             array('default', 'index', 'test'),
-            array('default', 'index', 'login')
+            array('default', 'index', 'login'),
+            array('default', 'album', 'info')
         );
     }
 }
