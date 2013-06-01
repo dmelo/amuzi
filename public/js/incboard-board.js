@@ -406,6 +406,10 @@
             }
         }
 
+        // TODO: debugging only. take this away.
+        this.listByObjId = listByObjId;
+        this.listByPos = listByPos;
+
         this.fsck = function () {
             var counter = [],
                 self = this,
