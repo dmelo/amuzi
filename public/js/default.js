@@ -294,6 +294,10 @@
             $('div[albumid]').each(function(i, item) {
                 $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover', placement: 'right', selector: '#slide-music-manager'});
             });
+        }).error(function (data) {
+            $.bootstrapMessageAuto(
+                'Error loading your album list, please try again later', 'error'
+            );
         });
     }
 
@@ -372,6 +376,8 @@
                 } else if ('default' === data && '/' !== pathname) {
                     window.location.pathname = '/';
                 }
+            }).error(function (e) {
+                $.bootstrapMessageAuto('Error detecting your preferences, please try reloading', 'error');
             });
         }
     }
@@ -481,7 +487,11 @@
             }
             loadAlbumSet();
             $.bootstrapMessageAuto('Album added', 'success');
-        }, 'json');
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto(
+                'Error adding your album. Please, try again.', 'error'
+            );
+        });
     }
 
     function prepareVoteButton() {
@@ -591,9 +601,10 @@
 
         verifyView();
 
+        // For debugging purposes only.
         window.throwMany = function(n) {
             if (n > 0) {
-                setTimeout("window.throwMany(" + (n - 1) + ")", 200);
+                setTimeout("window.throwMany(" + (n - 1) + ")", 50);
                 $.get('/album/info/id/' + n);
                 console.log('throwing ' + n);
             }
@@ -694,7 +705,12 @@
                     }, 'json');
 
                     response(a);
-                }, 'json');
+                }, 'json').error(function (e) {
+                    $.bootstrapMessageAuto(
+                        'Error loaging suggestions. Please, try reloading your browser,',
+                        'error'
+                    );
+                });
             },
             change: function (e, ui) {
                 handleAutocompleteChoice(ui);
