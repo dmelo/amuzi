@@ -21,16 +21,16 @@ $(document).ready(function() {
 
     $(window).bind('resize', calculateMusicSquareSize);
     if ($('.mozaic').length > 0) {
-        $.get('/api/gettop', {},
-        function(data) {
-            data.forEach(function(item) {
-                console.log(item.cover);
-                $('.mozaic').append(resultSet.getMusicSquare(item));
-            });
+        $.get(
+            '/api/gettop', {},
+            function(data) {
+                data.forEach(function(item) {
+                    console.log(item.cover);
+                    $('.mozaic').append(resultSet.getMusicSquare(item));
+                });
 
-            calculateMusicSquareSize();
-
-
-        }, 'json');
+                calculateMusicSquareSize();
+            }, 'json'
+        );
     }
 });

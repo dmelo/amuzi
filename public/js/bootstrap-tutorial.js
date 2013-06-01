@@ -36,7 +36,9 @@ Tutorial.prototype.welcome = function() {
                 self.apply();
             });
         });
-    }, 'json');
+    }, 'json').error(function (e) {
+        console.log('Error loading welcome tutorial.');
+    });;
 }
 
 Tutorial.prototype.search = function() {
@@ -54,7 +56,9 @@ Tutorial.prototype.search = function() {
                 self.apply();
             });
         }
-    });
+    }).error(function (e) {
+        console.log('Error loading the search tutorial');
+    });;
 }
 
 Tutorial.prototype.slide = function() {
@@ -73,6 +77,8 @@ Tutorial.prototype.slide = function() {
                 self.apply();
             });
         });
+    }).error(function (e) {
+        console.log('Error loading the slide tutorial');
     });
 }
 
@@ -82,7 +88,9 @@ Tutorial.prototype.apply = function() {
         if (data.length > 0) {
             eval('self.' + data[0] + '()');
         }
-    }, 'json');
+    }, 'json').error(function (e) {
+        console.log('Error loading list of tutorials');
+    });
 }
 
 $(document).ready(function() {

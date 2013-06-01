@@ -41,7 +41,11 @@ Commands.prototype.runCommand = function(command) {
             if (window.myPlaylist.isAlbum) {
                 $.loadPlaylist(undefined, {playLast: true});
             }
-        }, 'json');
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto(
+                'Error loading track. Please, try reloading the page.', 'error'
+            );
+        });
 
     } else if ('p' === command[0]) {
         id = command.substr(1);
