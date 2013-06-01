@@ -45,6 +45,8 @@
             playlist: window.myPlaylist.original,
             name: window.myPlaylist.name
         }, function (data) {
+        }).error(function (data) {
+            $.bootstrapMessageAuto('Error saving playlist.', 'error');
         });
     }
 
@@ -163,7 +165,9 @@
                 callback(id, isPlaylist);
             }
             $.bootstrapMessageAuto(data[0], data[1]);
-        }, 'json');
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto('Error removing ' + controller, 'error');
+        });
     }
 
     $.initAmuzi = function () {
@@ -185,7 +189,9 @@
             if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
             }
-        }, 'json');
+        }, 'json').error(function (e) {
+            // TODO: fix the setcurrent.
+        });
     }
 
     function applyOverPlaylist() {
@@ -216,7 +222,9 @@
             if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
             }
-        }, 'json');
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto('Error saving settings', 'error');
+        });
     }
 
     function applyRepeatTriggers() {
@@ -238,7 +246,9 @@
             if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
             }
-        }, 'json');
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto('Error saving settings', 'error');
+        });
     }
 
     function applyShuffleTriggers() {
@@ -470,7 +480,11 @@
                     window.myPlaylist.add(pOpt, playNow);
                 }
             }
-        }, 'json');
+        }, 'json').error(function (e) {
+            $.bootstrapMessageAuto(
+                'Error adding track. Please, try again', 'error'
+            );
+        });
     }
 
     $.addAlbum = function(albumId) {
