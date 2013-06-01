@@ -62,7 +62,7 @@ var MESSAGE_WARNING = 'alert-warining',
         this.timeout = timeout;
 
         this.show = function() {
-            console.log('show');
+            console.log('show: ' + this.text + ", " + this.type + ", " + this.timeout);
             this.type = typeof(this.type) == 'undefined' ? MESSAGE_INFO : this.type;
             $('div.alert').removeClass(MESSAGE_WARNING)
                 .removeClass(MESSAGE_ERROR)
@@ -76,7 +76,7 @@ var MESSAGE_WARNING = 'alert-warining',
         };
 
         this.hide = function() {
-            console.log('hide');
+            console.log('hide: ' + this.text + ", " + this.type + ", " + this.timeout);
             $('div.alert').fadeTo('slow', 0.0, function() {
                 $('div.alert').css('display', 'none');
             });
@@ -99,6 +99,7 @@ var MESSAGE_WARNING = 'alert-warining',
             || (0 === currentMessage.timeout && now - currentMessage.start >= DEFAULT_TIMEOUT)
             || (0 !== currentMessage.timeout && now - currentMessage.start >= currentMessage.timeout))
         ) { // Replace the message by a newer one.
+            console.log(messageQueue);
             currentMessage = messageQueue.shift();
             currentMessage.start = now;
             currentMessage.show();
@@ -129,8 +130,6 @@ var MESSAGE_WARNING = 'alert-warining',
     }
 
     $.bootstrapMessageAuto = function(text, type) {
-        $.bootstrapMessage(text, type);
-        setTimeout($.bootstrapMessageOff, DEFAULT_TIMEOUT);
         messageQueue.push(new MessageEntry(text, type, DEFAULT_TIMEOUT));
     }
 
