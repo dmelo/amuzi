@@ -25,11 +25,15 @@
     function IncBoardBoard() {
         var rows = 7,
             cols = 14,
-            cellSizeX = 56,
-            cellSizeY = 44,
+            /* cellSizeX = 56,
+            cellSizeY = 44, */
+            cellSizeX = 120,
+            cellSizeY = 90,
             listByObjId = [], // Have a list of the all indexed by the ObjId
             listByPos = [], // Have a list of all cells indexed by it's position.
             size = 0,
+            topPadding = $('form.search').height() + $('form.search').offset().top + 20,
+            leftPadding = 296,
             drawList = [],
             log = new Log(),
             self = this;
@@ -221,8 +225,9 @@
             realWidth = b.maxX - (b.minX - 1) + 1;
             factorY = rows / realHeight;
             factorX = cols / realWidth;
-            // log.debug('incboard: minX(' + this.minX + ') maxX(' + this.maxX + ') minY(' + this.minY + ') maxY(' + this.maxY + ') cols: ' + this.cols + ", rows: " + this.rows);
             factor = Math.min(factorX, factorY);
+
+            console.log('real (' + cols + ', ' + rows + '). transformed (' + realWidth + ', ' + realHeight + ')');
 
             if (factor * cellSizeX > 120 || factor * cellSizeY > 90 || factor < 0) {
                 newCellSizeX = 120;
@@ -233,14 +238,14 @@
                 newCellSizeY = factor * cellSizeY;
             }
 
-
-
             newTop = (1 - factor) * cellSizeY * rows * 0.5;
-            newLeft = ((1 - factor) * cellSizeX * cols * 0.5);
+            newLeft = (1 - factor) * cellSizeX * cols * 0.5;
+
+            console.log('realHeight: ' + realHeight + ". realWidth: " + realWidth + ". newCellSize(" + newCellSizeX + ", " + newCellSizeY + ") newTop: " + newTop + ". newLeft: " + newLeft);
 
             $('#incboard').css('width', (newCellSizeX * cols) + 'px');
-            $('#incboard').css('top', newTop + 'px');
-            $('#incboard').css('left', newLeft + 'px');
+            $('#incboard').css('top', (newTop + topPadding) + 'px');
+            $('#incboard').css('left', (newLeft + leftPadding) + 'px');
 
 
             $.cssRule('.incboard-cell', 'width', newCellSizeX + 'px');
@@ -250,12 +255,11 @@
             // $.cssRule('.incboard-cell.album-square .side', 'width', (newCellSizeX - newCellSizeY) + 'px');
             $.cssRule('.incboard-cell.album-square .side', 'height', (newCellSizeY - 6) + 'px');
 
-
-            for (var i = 0; i < rows; i++) {
+            for (var i = b.minY; i <= b.maxY; i++) {
                 $.cssRule('.incboard-row-' + i, 'top', (i * newCellSizeY) + "px");
             }
 
-            for (var i = 0; i < cols; i++) {
+            for (var i = b.minX; i <= b.maxX; i++) {
                 $.cssRule('.incboard-col-' + i, 'left', (i * newCellSizeX) + "px");
             }
 
@@ -266,8 +270,8 @@
             if ($('form.search').length > 0) {
                 var boundaries;
 
-                cols = parseInt( ( $(window).width() - 296 ) / cellSizeX );
-                rows = parseInt( ( $(window).height() - $('form.search').height() - $('form.search').offset().top - $('.footer').height() ) / cellSizeY );
+                cols = parseInt( ( $(window).width() - leftPadding ) / cellSizeX );
+                rows = parseInt( ( $(window).height() - topPadding - $('.footer').height() ) / cellSizeY );
                 this.removeOutOfBorder();
                 this.centralizeItems();
                 this.flushDraw();
