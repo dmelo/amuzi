@@ -19,35 +19,103 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /**
  * A thin layer to better control bootstrap-alerts.js
  *
- * The "messageCode" can assume one of the following values:
+ * Insert the following html into the page:
+ *
+ * <div class="alert"><a class="close" href="#">x</a><p></p></div>
+ *
+ * You might want to use some CSS to make it invisible at first (when no
+ * message is being displayed).
+ *
+ * div.alert {
+ *      opacity: 0;
+ *      filter: alpha (opacity = 0);
+ * }
+ *
+ * The "type" can assume one of the following values:
  *      "warning"
  *      "error"
  *      "success"
  *      "info"
+ *
+ *
  */
 
-
-    var MESSAGE_WARNING = 'alert-warining';
-    var MESSAGE_ERROR = 'alert-error';
-    var MESSAGE_SUCCESS = 'alert-success';
-    var MESSAGE_INFO = 'alert-info';
+var MESSAGE_WARNING = 'alert-warining',
+    MESSAGE_ERROR = 'alert-error',
+    MESSAGE_SUCCESS = 'alert-success',
+    MESSAGE_INFO = 'alert-info',
+    DEFAULT_TIMEOUT = 5000;
 
 
 (function($) {
-    $.bootstrapMessage = function(text, messageCode) {
-        messageCode = typeof(messageCode) == 'undefined' ? MESSAGE_INFO : messageCode;
-        $('div.alert').removeClass(MESSAGE_WARNING)
-            .removeClass(MESSAGE_ERROR)
-            .removeClass(MESSAGE_SUCCESS)
-            .removeClass(MESSAGE_INFO);
-        $('div.alert').addClass('alert-' + messageCode);
+    var MessageEntry = function(text, type, timeout) {
+        var text,
+            type,
+            timeout;
 
-        $('div.alert p').html(text);
-        $('div.alert').css('display', 'block');
-        $('div.alert').fadeTo('fast', 1.0);
+        this.text = text;
+        this.type = type;
+        this.timeout = timeout;
+
+        this.show = function() {
+            console.log('show');
+            this.type = typeof(this.type) == 'undefined' ? MESSAGE_INFO : this.type;
+            $('div.alert').removeClass(MESSAGE_WARNING)
+                .removeClass(MESSAGE_ERROR)
+                .removeClass(MESSAGE_SUCCESS)
+                .removeClass(MESSAGE_INFO);
+            $('div.alert').addClass('alert-' + type);
+
+            $('div.alert p').html(this.text);
+            $('div.alert').css('display', 'block');
+            $('div.alert').fadeTo('fast', 1.0);
+        };
+
+        this.hide = function() {
+            console.log('hide');
+            $('div.alert').fadeTo('slow', 0.0, function() {
+                $('div.alert').css('display', 'none');
+            });
+        };
+    }
+
+    var messageQueue = [],
+        currentMessage = null;
+
+    window.messageQueue = messageQueue;
+    window.currentMessage = currentMessage;
+
+    $.bootstrapMessageRun = function() {
+        // See if it's time to have the next message and switch it.
+        var now = new Date().getTime();
+
+        if (
+            messageQueue.length > 0 &&
+            (null === currentMessage
+            || (0 === currentMessage.timeout && now - currentMessage.start >= DEFAULT_TIMEOUT)
+            || (0 !== currentMessage.timeout && now - currentMessage.start >= currentMessage.timeout))
+        ) { // Replace the message by a newer one.
+            currentMessage = messageQueue.shift();
+            currentMessage.start = now;
+            currentMessage.show();
+        } else if (0 === messageQueue.length && null !== currentMessage
+            && 0 !== currentMessage.timeout
+            && now - currentMessage.start >= currentMessage.timeout
+        ) { // Hide an outlived message.
+            currentMessage.hide();
+            currentMessage = null;
+        }
+    }
+
+    $.bootstrapMessage = function(text, type, timeout) {
+        if (undefined === typeof timeout) {
+            timeout = 0;
+        }
+        messageQueue.push(new MessageEntry(text, type, 0));
     }
 
     $.bootstrapMessageLoading = function() {
@@ -60,9 +128,10 @@
         });
     }
 
-    $.bootstrapMessageAuto = function(text, messageCode) {
-        $.bootstrapMessage(text, messageCode);
-        setTimeout($.bootstrapMessageOff, 5000);
+    $.bootstrapMessageAuto = function(text, type) {
+        $.bootstrapMessage(text, type);
+        setTimeout($.bootstrapMessageOff, DEFAULT_TIMEOUT);
+        messageQueue.push(new MessageEntry(text, type, DEFAULT_TIMEOUT));
     }
 
     $('.close-lightly').live('click', function(e) {
@@ -74,4 +143,7 @@
         $.bootstrapMessageOff();
     });
 
+    $(document).ready(function() {
+        setInterval($.bootstrapMessageRun, 1000);
+    });
 })(jQuery);
