@@ -33,7 +33,7 @@
             listByPos = [], // Have a list of all cells indexed by it's position.
             size = 0,
             topPadding = $('form.search').height() + $('form.search').offset().top + 20,
-            leftPadding = 296,
+            leftPadding = 127,
             drawList = [],
             log = new Log(),
             self = this;
@@ -271,7 +271,7 @@
                 var boundaries;
 
                 cols = parseInt( ( $(window).width() - leftPadding ) / cellSizeX );
-                rows = parseInt( ( $(window).height() - topPadding - $('.footer').height() ) / cellSizeY );
+                rows = parseInt( ( $(window).height() - topPadding - 170 - $('.footer').height() ) / cellSizeY );
                 this.removeOutOfBorder();
                 this.centralizeItems();
                 this.flushDraw();
