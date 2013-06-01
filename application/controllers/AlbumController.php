@@ -27,7 +27,7 @@ class AlbumController extends DZend_Controller_Action
     {
         foreach ($albumRow->getTrackListSync() as $track) {
             if (2 === count($track)) {
-                $this->_musicTrackLinkModel->getTrackListSync(
+                $this->_musicTrackLinkModel->getTrackSync(
                     $track['artist'], $track['musicTitle']
                 );
             }
