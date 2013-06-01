@@ -162,4 +162,9 @@ class Album extends DZend_Model
 
         return $ret;
     }
+
+    public function fetchNextAlbumRow($id)
+    {
+        return $this->_objDb->fetchNextAlbumRow($id);
+    }
 }

@@ -63,4 +63,13 @@ class DbTable_Album extends DZend_Db_Table
 
         return $db->fetchAll($select);
     }
+
+    public function fetchNextAlbumRow($id)
+    {
+        return $this->fetchRow(
+            $this->select()
+                ->where($this->_db->quoteInto('id > ?', $id))
+                ->order('id')
+        );
+    }
 }

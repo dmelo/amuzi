@@ -23,6 +23,17 @@
  */
 class AlbumController extends DZend_Controller_Action
 {
+    protected function _fullTrackList(DbTable_AlbumRow $albumRow)
+    {
+        foreach ($albumRow->getTrackListSync() as $track) {
+            if (2 === count($track)) {
+                $this->_musicTrackLinkModel->getTrackListSync(
+                    $track['artist'], $track['musicTitle']
+                );
+            }
+        }
+    }
+
     public function init()
     {
         parent::init();
@@ -40,19 +51,42 @@ class AlbumController extends DZend_Controller_Action
             );
             $this->view->output = $this->
                 _userListenAlbumModel->insert($albumId);
-            $albumRow = $this->_albumModel->findRowById($albumId);
-            $albumRow->getTrackListSync();
-            foreach ($albumRow->trackList as $track) {
-                if (2 === count($track)) {
-                    $artist = $track['artist'];
-                    $musicTitle = $track['musicTitle'];
-                    $this->_musicTrackLinkModel->getTrackSync(
-                        $artist, $musicTitle
-                    );
-                    // I don't have to store the value because it doesn't
-                    // return the album.
-                }
+            if (($albumRow = $this->_albumModel->findRowById($albumId)) !== null) {
+                $this->_fullTrackList($albumRow);
             }
+        }
+    }
+
+    public function forcefullalbumAction()
+    {
+        $this->view->output = false;
+        $filename = 'tmp/albumid.txt';
+        $fd = fopen($filename, 'r');
+        $id = 0;
+        if (false === $fd) {
+            $fd = fopen($filename, 'w');
+            if ($fd === false) {
+                $this->_logger->err(
+                    'It wasn\'t possible to create file ' . $filename
+                    . ', from album/forcealbum'
+                );
+                return;
+            } else {
+                fwrite($fd, '0');
+                fclose($fd);
+            }
+        } else {
+            $id = fscanf($fd, " %d ");
+            fclose($fd);
+        }
+
+        $albumRow = $this->_albumModel->fetchNextAlbumRow($id);
+        if (null !== $albumRow) {
+            $this->_fullTrackList($albumRow);
+            $fd = fopen($filename, 'w');
+            fwrite($fd, $albumRow->id);
+            fclose($fd);
+            $this->view->output = $albumRow->id;
         }
     }
 
