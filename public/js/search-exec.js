@@ -119,7 +119,10 @@
                         console.log(e.stack);
                         console.log(e);
                     }
-                }, 'json');
+                }, 'json').error(function (e) {
+                    console.log('Error loading music. uri: ' + uri);
+                    console.log(params);
+                });
             } else {
                 console.log('error: invalid parameters on searchMusic');
             }
@@ -146,7 +149,9 @@
                 });
             }
         }, 'json').error(function (data) {
-            $.bootstrapMessageAuto(data[0], data[1]);
+            $.bootstrapMessageAuto(
+                'Error loading music. Please, try again', 'error'
+            );
         });
     }
 
