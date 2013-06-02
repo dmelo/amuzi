@@ -255,8 +255,10 @@
             mostSimilar = null,
             nSwitches = 0,
             self = this,
-            ret;
+            ret,
+            rand = Math.floor(Math.random() * 1000);
 
+        console.log('INSERT ' + v.objId + ' - ' + rand + ' BEGIN');
 
         // Verify if element ins't already inserted.
         if (this.ibb.getByObjId(v.objId) !== undefined) {
@@ -290,6 +292,7 @@
             this.ibb.flushDraw();
             ret = true;
         }
+        console.log('INSERT ' + v.objId + ' - ' + rand + ' END');
 
         return ret;
     }

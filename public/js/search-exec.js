@@ -35,16 +35,24 @@
         $('#' + v.objId).addClass('center');
     }
 
-    function incrementSimilar() {
-        console.log("incrementSimilar A");
+    function incrementSimilar(ele) {
+        console.log("incrementSimilar Start");
+        if ('undefined' !== typeof ele) {
+            console.log("incrementSimilar push obj into searchSimilarList");
+            searchSimilarList.push(ele);
+        }
+
         if (true === incrementSimilarRunning) {
+            console.log("incrementSimilar is already running");
+
+            console.log("incrementSimilar call again within 1000 ms");
             setTimeout(1000, incrementSimilar);
         } else {
             if (searchSimilarList.length > 0) {
                 var obj = searchSimilarList.shift(),
-                    artist = obj[0],
-                    musicTitle = obj[1],
-                    type = obj[2];
+                    artist = obj.artist,
+                    musicTitle = obj.musicTitle,
+                    type = obj.type;
 
                 console.log("incrementSimilar artist: " + artist + ". musicTitle: " + musicTitle + ". type: " + type);
                 if (null != artist && null != musicTitle) {
@@ -57,12 +65,13 @@
                         objIdList: search.ibb.getIdList()
                     }, function(data) {
                         loadSimilarMusic(data, 10);
-                        incrementSimilarRunning = false;
                         incrementSimilar();
                     }, 'json').error(function() {
                         incrementSimilarRunning = false;
                     });
                 }
+            } else {
+                console.log("incrementSimilar there is nothing on the queue");
             }
         }
     }
@@ -126,6 +135,9 @@
             } else {
                 console.log('error: invalid parameters on searchMusic');
             }
+        } else {
+            incrementSimilarRunning = false;
+            incrementSimilar();
         }
     }
 
@@ -164,8 +176,12 @@
 
     function searchSimilar(ele) {
         var type = 'undefined' === typeof ele.attr('albumid') ? 'track' : 'album';
-        searchSimilarList.push([ele.attr('artist'), ele.attr('album' === type ? 'name' : 'musicTitle'), type]);
-        incrementSimilar();
+        obj = {
+            artist: ele.attr('artist'),
+            musicTitle: ele.attr('album' === type ? 'name' : 'musicTitle'),
+            type: type
+        };
+        incrementSimilar(obj);
     }
 
     $(document).ready(function() {
@@ -238,6 +254,12 @@
                 } else { // search in a way that many music can be retrieved.
                     searchMulti($('#q').val());
                 }
+
+                incrementSimilar(obj);
+                // IMPORTANT: Submitting will never be fulfilled, because we
+                // we must have a better control of searchsimilar.
+
+                return false;
             }
         });
     });
