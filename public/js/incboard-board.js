@@ -93,7 +93,6 @@
          */
         this.remove = function(objId) {
             log.debug("removing " + objId);
-            throw new Error('remove objId ' + objId);
             var pos = listByObjId[objId].getPos(),
                 key;
 
