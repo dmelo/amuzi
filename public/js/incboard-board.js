@@ -25,14 +25,14 @@
     function IncBoardBoard() {
         var rows = 7,
             cols = 14,
-            /* cellSizeX = 56,
-            cellSizeY = 44, */
-            cellSizeX = 120,
-            cellSizeY = 90,
+            cellSizeX = 56,
+            cellSizeY = 44,
+            /* cellSizeX = 120,
+            cellSizeY = 90, */
             listByObjId = [], // Have a list of the all indexed by the ObjId
             listByPos = [], // Have a list of all cells indexed by it's position.
             size = 0,
-            topPadding = $('form.search').height() + $('form.search').offset().top + 20,
+            topPadding = $('form.search').height() + 20,
             leftPadding = 127,
             drawList = [],
             log = new Log(),
@@ -93,6 +93,7 @@
          */
         this.remove = function(objId) {
             log.debug("removing " + objId);
+            throw new Error('remove objId ' + objId);
             var pos = listByObjId[objId].getPos(),
                 key;
 
@@ -271,7 +272,8 @@
                 var boundaries;
 
                 cols = parseInt( ( $(window).width() - leftPadding ) / cellSizeX );
-                rows = parseInt( ( $(window).height() - topPadding - 170 - $('.footer').height() ) / cellSizeY );
+                rows = parseInt( ( $(window).height() - topPadding - $('form.search').offset().top - $('.footer').height() ) / cellSizeY );
+
                 this.removeOutOfBorder();
                 this.centralizeItems();
                 this.flushDraw();
@@ -312,12 +314,17 @@
                 cell,
                 intPos;
 
+            console.log('Rows: ' + rows + ', cols: ' + cols);
+
             if ('undefined' === typeof pos) {
                 pos = [Math.floor(cols / 2), Math.floor(rows / 2)];
             }
             intPos = this.posToInt(pos);
 
-            if ('object' === typeof pos && 'object' === typeof obj && -1 === listByObjId.indexOf(obj.objId)) {
+            if ('object' === typeof pos
+                && 'object' === typeof obj
+                && -1 === listByObjId.indexOf(obj.objId)
+            ) {
                 cell = new $.IncBoardCell();
                 cell.setContent(obj);
                 cell.setPos(pos);

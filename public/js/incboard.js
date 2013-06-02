@@ -211,7 +211,7 @@
                         self.ibb.setPos(newMusic.objId, ncPos);
                     }
 
-                    // TODO: verify if this is correct or if Werr = Werr(newMusic) + Werr(mostSimilart).
+                    // TODO: verify if this is correct or if Werr = Werr(newMusic) + Werr(mostSimilar).
                     var currentWerr = self.calcError(newMusic, musicList);
                     if(currentWerr < bestWerr || (currentWerr == bestWerr && occupancy > self.ibb.isPosOccupied(pos))) {
                         bestWerr = currentWerr;
@@ -257,6 +257,8 @@
             self = this,
             ret;
 
+
+        // Verify if element ins't already inserted.
         if (this.ibb.getByObjId(v.objId) !== undefined) {
             ret = false;
         } else {
