@@ -22,3 +22,6 @@
 [submodule "external/zf1"]
 	path = external/zf1
 	url = git@github.com:zendframework/zf1.git
+[submodule "external/bootstrap-helpers"]
+	path = external/bootstrap-helpers
+	url = git@github.com:dmelo/bootstrap-helpers.git
