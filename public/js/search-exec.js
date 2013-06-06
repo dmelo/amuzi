@@ -23,7 +23,8 @@
 (function ($, undefined) {
     var search,
         searchSimilarList = [],
-        incrementSimilarRunning = false;
+        incrementSimilarRunning = false,
+        globalSearchId = 0;
 
     /**
      * The search object have to implement the following methods:
@@ -48,11 +49,25 @@
             console.log("incrementSimilar call again within 1000 ms");
             setTimeout(1000, incrementSimilar);
         } else {
-            if (searchSimilarList.length > 0) {
-                var obj = searchSimilarList.shift(),
-                    artist = obj.artist,
+            var obj = null;
+            while (searchSimilarList.length > 0) {
+                obj = searchSimilarList.shift();
+                console.log( "obj.searchId: " + obj.searchId + ". globalSearchId: " + globalSearchId +  ". === " + (obj.searchId === globalSearchId ? 'true' : 'false'));
+                console.log(obj);
+                if (obj.searchId === globalSearchId) {
+                    break;
+                } else {
+                    obj = null;
+                }
+            }
+
+            // If null !== obj then process the searchSimilar request.
+
+            if (null !== obj) {
+                var artist = obj.artist,
                     musicTitle = obj.musicTitle,
-                    type = obj.type;
+                    type = obj.type,
+                    searchId = obj.searchId;
 
                 console.log("incrementSimilar artist: " + artist + ". musicTitle: " + musicTitle + ". type: " + type);
                 if (null != artist && null != musicTitle) {
@@ -64,8 +79,14 @@
                         type: type,
                         objIdList: search.ibb.getIdList()
                     }, function(data) {
-                        loadSimilarMusic(data, 10);
-                        incrementSimilar();
+                        console.log("searchMusic:: on closure. searchId: " + searchId + ". globalSearchId: " + globalSearchId);
+                        if (searchId === globalSearchId) {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].searchId = searchId;
+                            }
+                            loadSimilarMusic(data, 10);
+                            incrementSimilar();
+                        }
                     }, 'json').error(function() {
                         incrementSimilarRunning = false;
                     });
@@ -79,61 +100,73 @@
     function searchMusic(set, num, callback) {
         var m = set.shift(),
             uri = null,
-            params;
+            params,
+            searchId;
 
         console.log("searchMusic: " + set.length + ", " + num);
         if (num > 0 && 'undefined' !== typeof m && null !== m) {
-            if ('type' in m && 'album' === m.type) {
-                uri = '/api/searchalbum';
-                if ('objId' in m) {
-                    params = {
-                        id: -m.objId
-                    };
-                } else {
-                    params = {
-                       artist: m.artist,
-                       album: 'musicTitle' in m ? m.musicTitle : m.name
-                    };
-                }
-            } else if ('type' in m && 'track' === m.type) {
-                uri = '/api/searchmusic';
-                if ('objId' in m) {
-                    params = {
-                        id: m.objId
-                    };
-                } else {
-                    params = {
-                        artist: m.artist,
-                        musicTitle: m.musicTitle
-                    };
-                }
-            }
-
-            if (null !== uri) {
-                $.get(uri, params, function(v) {
-                    try {
-                        var start = new Date().getTime();
-                        if (null !== v && true === search.insert(v)) {
-                            if ('function' === typeof callback) {
-                                callback(v, set, num);
-                            }
-                            searchMusic(set, num - 1);
-                        } else {
-                            console.log("searchMusic: failed to insert object");
-                            console.log(v);
-                            searchMusic(set, num);
-                        }
-                        var end = new Date().getTime();
-                    } catch(e) {
-                        console.log(e.stack);
-                        console.log(e);
+            searchId = 'searchId' in m ? m.searchId : null;
+            if (null === searchId || globalSearchId === searchId) {
+                if ('type' in m && 'album' === m.type) {
+                    uri = '/api/searchalbum';
+                    if ('objId' in m) {
+                        params = {
+                            id: -m.objId
+                        };
+                    } else {
+                        params = {
+                           artist: m.artist,
+                           album: 'musicTitle' in m ? m.musicTitle : m.name
+                        };
                     }
-                }, 'json').error(function (e) {
-                    console.log('Error loading music. uri: ' + uri);
-                    console.log(params);
-                });
+                } else if ('type' in m && 'track' === m.type) {
+                    uri = '/api/searchmusic';
+                    if ('objId' in m) {
+                        params = {
+                            id: m.objId
+                        };
+                    } else {
+                        params = {
+                            artist: m.artist,
+                            musicTitle: m.musicTitle
+                        };
+                    }
+                }
+
+                if (null !== uri) {
+                    $.get(uri, params, function(v) {
+                        try {
+                            var start = new Date().getTime();
+                            console.log("searchId: " + searchId + ". globalSearchId: " + globalSearchId);
+                            if (null === searchId || searchId === globalSearchId) {
+                                if (null !== v && true === search.insert(v)) {
+                                    if ('function' === typeof callback) {
+                                        callback(v, set, num);
+                                    }
+                                    searchMusic(set, num - 1);
+                                } else {
+                                    console.log("searchMusic: failed to insert object");
+                                    console.log(v);
+                                    searchMusic(set, num);
+                                }
+                            } else {
+                                console.log("searchId !== globalSearchId on response of searchMusic");
+                            }
+                            var end = new Date().getTime();
+                        } catch(e) {
+                            console.log(e.stack);
+                            console.log(e);
+                        }
+                    }, 'json').error(function (e) {
+                        console.log('Error loading music. uri: ' + uri);
+                        console.log(params);
+                    });
+                } else {
+                    console.log('error: invalid parameters on searchMusic');
+                }
+
             } else {
-                console.log('error: invalid parameters on searchMusic');
+                console.log("searchId: " + searchId + ". globalSearchId: " + globalSearchId);
             }
         } else {
             incrementSimilarRunning = false;
@@ -141,24 +174,34 @@
         }
     }
 
+    // TODO: implement searchId.
     function searchMulti(q) {
+        var searchId = globalSearchId;
         $.get('/autocomplete.php', {
             q: q
         }, function(data) {
-            if (0 === data.length) {
-                $.bootstrapMessageAuto('No results found', 'info');
+            if (searchId === globalSearchId) {
+                if (0 === data.length) {
+                    $.bootstrapMessageAuto('No results found', 'info');
+                } else {
+                    console.log('results found');
+                    console.log(data);
+                    // TODO: create similarity matrix, first;
+                    $.post('/api/similaritymatrix', {
+                        list: data
+                    }, function (matrix) {
+                        if (searchId === globalSearchId) {
+                            search.similarity = matrix;
+                            searchMusic(data, data.length);
+                        } else {
+                            console.log("searchId: " + searchId + ".globalSearchId: " + globalSearchId);
+                        }
+                    }, 'json').error(function (e) {
+                        console.log("Could not load similarity information");
+                    });
+                }
             } else {
-                console.log('results found');
-                console.log(data);
-                // TODO: create similarity matrix, first;
-                $.post('/api/similaritymatrix', {
-                    list: data
-                }, function (matrix) {
-                    search.similarity = matrix;
-                    searchMusic(data, data.length);
-                }, 'json').error(function (e) {
-                    console.log("Could not load similarity information");
-                });
+                console.log("searchId: " + searchId + ".globalSearchId: " + globalSearchId);
             }
         }, 'json').error(function (data) {
             $.bootstrapMessageAuto(
@@ -179,7 +222,8 @@
         obj = {
             artist: ele.attr('artist'),
             musicTitle: ele.attr('album' === type ? 'name' : 'musicTitle'),
-            type: type
+            type: type,
+            searchId: globalSearchId
         };
         incrementSimilar(obj);
     }
@@ -229,13 +273,8 @@
         $('form.search').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                if (null !== data) {
-                    if ('error' in data) {
-                        console.log('error during searchsimilar: ' + data.error);
-                    } else {
-                        loadSimilarMusic(data, 20);
-                    }
-                }
+                // Will never be reached. Since beforeSubmit always returns
+                // false.
             },
             error: function (data) {
                 $.bootstrapMessageAuto('Error searching for music', 'error');
@@ -243,11 +282,13 @@
             beforeSubmit: function() {
                 $('#subtitle').subtitleInit();
                 $.bootstrapMessage('Loading...', 'info');
+                globalSearchId++;
                 search.clean();
                 var obj = new Object();
                 obj.artist = $('#artist').val();
                 obj.musicTitle = $('#musicTitle').val();
                 obj.type = $('#type').val();
+                obj.searchId = globalSearchId;
                 console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
                 if ($.isSearchFormValid()) {
                     searchMusic([obj], 1, searchMusicCallbackCenter);
