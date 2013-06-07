@@ -488,7 +488,7 @@
     }
 
     $.addAlbum = function(albumId) {
-        $.bootstrapMessage('Adding album...', 'info');
+        var messageId = $.bootstrapMessage('Adding album...', 'info');
         $.get('/album/add', {
             albumId: albumId,
             windowId: window.windowId
@@ -500,6 +500,7 @@
                 $('.slide-next').trigger('click');
             }
             loadAlbumSet();
+            $.bootstrapMessageOff(messageId);
             $.bootstrapMessageAuto('Album added', 'success');
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto(

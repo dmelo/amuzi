@@ -32,8 +32,13 @@
      * .clean();
      */
 
-    function searchMusicCallbackCenter(v) {
+    function searchMusicCallbackCenter(v, set, num, m) {
+        console.log("searchMusicCallbackCenter");
+        console.log(m);
         $('#' + v.objId).addClass('center');
+        if (null !== m) {
+            $.bootstrapMessageOff(m.messageId);
+        }
     }
 
     function incrementSimilar(ele) {
@@ -141,7 +146,8 @@
                             if (null === searchId || searchId === globalSearchId) {
                                 if (null !== v && true === search.insert(v)) {
                                     if ('function' === typeof callback) {
-                                        callback(v, set, num);
+                                        console.log("searchMusic: calling callback");
+                                        callback(v, set, num, m);
                                     }
                                     searchMusic(set, num - 1);
                                 } else {
@@ -281,7 +287,7 @@
             },
             beforeSubmit: function() {
                 $('#subtitle').subtitleInit();
-                $.bootstrapMessage('Loading...', 'info');
+                var messageId = $.bootstrapMessageLoading();
                 globalSearchId++;
                 search.clean();
                 var obj = new Object();
@@ -289,6 +295,7 @@
                 obj.musicTitle = $('#musicTitle').val();
                 obj.type = $('#type').val();
                 obj.searchId = globalSearchId;
+                obj.messageId = messageId;
                 console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
                 if ($.isSearchFormValid()) {
                     searchMusic([obj], 1, searchMusicCallbackCenter);
