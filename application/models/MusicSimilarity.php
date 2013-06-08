@@ -508,9 +508,14 @@ class MusicSimilarity extends DZend_Model
 
         $this->_logger->debug("getSimilarByIds ids A " . print_r($ids, true));
 
-        list($similarList, $translationList) = $this->_replaceAlbumIdByAMTIds($ids);
+        list($similarList, $translationList) = $this->_replaceAlbumIdByAMTIds(
+            $ids
+        );
 
-        $this->_logger->debug("getSimilarByIds similarList B " . print_r($similarList, true) . '  ' . print_r($translationList, true));
+        $this->_logger->debug(
+            "getSimilarByIds similarList B " . print_r($similarList, true)
+            . '  ' . print_r($translationList, true)
+        );
 
 
         $similarityMatrix = $this->_getSimilarityMatrix($similarList);
@@ -600,7 +605,9 @@ class MusicSimilarity extends DZend_Model
                     foreach ($albumIdCount[$albumId] as $amtId) {
                         $translationList[$albumId][] = $amtId;
                         if (
-                            ($key = array_search($amtId, $artistMusicTitleIdList))
+                            ($key = array_search(
+                                $amtId, $artistMusicTitleIdList
+                            ))
                             !== false
                         ) {
                             unset($artistMusicTitleIdList[$key]);
