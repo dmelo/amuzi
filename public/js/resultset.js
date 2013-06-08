@@ -31,6 +31,8 @@
         this.searchString = "";
         this.searchPage = 1;
 
+        var idList = [];
+
         /**
          * Transform an integer from 0 to 100 to a leading 0 number with up to two digits.
          *
@@ -95,7 +97,11 @@
 
         this.insert = function (v) {
             if (0 === $('[trackId=' + v.id + ']').length) {
+                console.log("ResultSet::insert");
                 $('#result').append(this.getMusicLarge(v));
+                this.idList.push(v.objId);
+                console.log(this.idList);
+                console.log(v);
             }
             $('#more-results').css('display', 'block');
             $('#result').css('display', 'block');
@@ -103,19 +109,20 @@
             return true;
         };
 
+        this.clean = function() {
+            this.idList = [];
+
+            $('#result .music-large').remove();
+            $('#result').css('display', 'none');
+            $('#more-results').css('display', 'none');
+        };
+
+        this.getIdList = function() {
+            return this.idList;
+        }
     };
 
     var resultSet = new $.ResultSet();
-
-    /**
-     * Cleans the table of results and let it ready to a search.
-     */
-    $.ResultSet.prototype.clean = function () {
-        $('#result .music-large').remove();
-        $('#result').css('display', 'none');
-        $('#more-results').css('display', 'none');
-
-    };
 
     $.ResultSet.prototype.getAlbumDescription = function (v) {
         var duration = 'duration' in v ? '<div class="duration">' + this.secondsToHMS(v.duration) + '</div>' : '';
