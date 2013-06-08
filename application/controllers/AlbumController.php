@@ -51,7 +51,8 @@ class AlbumController extends DZend_Controller_Action
             );
             $this->view->output = $this->
                 _userListenAlbumModel->insert($albumId);
-            if (($albumRow = $this->_albumModel->findRowById($albumId)) !== null) {
+            if (($albumRow = $this->_albumModel->findRowById($albumId))
+                !== null) {
                 $this->_fullTrackList($albumRow);
             }
         }
