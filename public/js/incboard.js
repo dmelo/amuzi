@@ -35,6 +35,10 @@
         this.ibb.clean();
     };
 
+    IncBoard.prototype.getIdList = function() {
+        return this.ibb.getIdList();
+    };
+
     IncBoard.prototype.posGreaterThan = function(posA, posB) {
         var maxA = Math.max(Math.abs(posA[0]), Math.abs(posA[1])),
             maxB = Math.max(Math.abs(posB[0]), Math.abs(posB[1])),

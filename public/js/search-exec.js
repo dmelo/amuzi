@@ -82,7 +82,7 @@
                         artist: artist,
                         musicTitle: musicTitle,
                         type: type,
-                        objIdList: search.ibb.getIdList()
+                        objIdList: search.getIdList()
                     }, function(data) {
                         console.log("searchMusic:: on closure. searchId: " + searchId + ". globalSearchId: " + globalSearchId);
                         if (searchId === globalSearchId) {
