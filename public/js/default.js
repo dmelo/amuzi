@@ -158,7 +158,6 @@
         }
     }
 
-
     function rmPlaylist(id, isPlaylist, callback) {
         var controller = isPlaylist ? 'playlist' : 'album';
         $.bootstrapMessageLoading();

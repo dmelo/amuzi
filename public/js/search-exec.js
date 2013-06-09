@@ -24,7 +24,8 @@
     var search,
         searchSimilarList = [],
         incrementSimilarRunning = false,
-        globalSearchId = 0;
+        globalSearchId = 0,
+        similarList = [];
 
     /**
      * The search object have to implement the following methods:
@@ -85,6 +86,7 @@
                         objIdList: search.getIdList()
                     }, function(data) {
                         console.log("searchMusic:: on closure. searchId: " + searchId + ". globalSearchId: " + globalSearchId);
+                        similarList = data[0];
                         if (searchId === globalSearchId) {
                             for (var i = 0; i < data.length; i++) {
                                 data[i].searchId = searchId;
@@ -250,6 +252,7 @@
             $('#more-results').click(function (e) {
                 // TODO: implement the search-more button.
                 // resultSet.searchMore();
+                searchMusic(similarList, 10);
             });
 
             $('#result #close-results').live('click', function(e) {
