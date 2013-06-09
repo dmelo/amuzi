@@ -55,6 +55,7 @@
                 $('.incboard-img').css('display', 'block');
                 $('.incboard-cell').find('.inevidence').removeClass('inevidence');
                 $('.incboard-cell').removeClass('focus');
+
             });
 
             $('#subtitle li').live('hover', function (e) {
@@ -339,6 +340,9 @@
                 listByPos[intPos][obj.objId] = cell;
 
                 ret = true;
+                if (0 === size) {
+                    obj.isCenter = true;
+                }
                 size++;
                 if (drawList.indexOf(obj.objId) === -1) {
                     drawList.push(obj.objId);

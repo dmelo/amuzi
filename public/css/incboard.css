@@ -70,7 +70,7 @@
     margin: 5px;
 }
 
-.incboard-cell.focus, .incboard-cell.center {
+.incboard-cell.focus, .incboard-cell.incboard-center {
     margin-left: -2px;
     margin-top: -2px;
     border: 2px solid black;
