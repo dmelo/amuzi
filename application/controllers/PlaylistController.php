@@ -233,7 +233,6 @@ class PlaylistController extends DZend_Controller_Action
                     $name = (int) $id;
                 }
 
-
                 if ('' === $name && null === $id &&
                     null !== $userRow->currentAlbumId) {
                     $this->_helper->redirector('load', 'album');

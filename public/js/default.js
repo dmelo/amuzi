@@ -133,7 +133,11 @@
                     setInterfaceShuffle(parseInt(data[3], 10));
                     applyOverPlaylist();
 
-                    if (!isAlbum && 'number' === typeof options.id) {
+                    if (5 in data && 1 == data[5]) {
+                        window.myPlaylist.isAlbum = true;
+                    }
+
+                    if (!isAlbum && 'number' === typeof options.id && !(5 in data)) {
                         $('.playlist-square').removeClass('current-playlist');
                         $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                     }
