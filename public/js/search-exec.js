@@ -238,13 +238,6 @@
         if (1 === $('#incboard-search').length) {
             search = new $.IncBoard();
 
-            $('.music-large').live('click', function (e) {
-                var ele = $(this);
-                setTimeout(function () {
-                    searchSimilar(ele.parent());
-                }, 4000);
-            });
-
             $('.incboard-cell').live('click', function (e) {
                 var ele = $(this);
                 setTimeout(function () {
@@ -274,7 +267,6 @@
             $(this).find('.description, .play').css('display', 'none');
             $(this).find('.overlay').css('display', 'block');
         }});
-
 
         $('form.search').ajaxForm({
             dataType: 'json',
