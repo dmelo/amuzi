@@ -101,7 +101,7 @@ class AlbumController extends DZend_Controller_Action
             $userRow->save();
 
             $album = $albumRow->getArray();
-            $ret = array($album['trackList'], $album['name'], 0, 0, 0);
+            $ret = array($album['trackList'], $album['name'], 0, 0, 0, 1);
             $this->view->output = $ret;
         }
     }
