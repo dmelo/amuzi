@@ -59,6 +59,10 @@
                 console.log
                 e.removeClass();
                 e.addClass('incboard-cell incboard-row-' + self.row + ' incboard-col-' + self.col);
+                if ('isCenter' in v && true === v.isCenter) {
+                    e.addClass('incboard-center');
+                }
+
                 if ('album' === v.type) {
                     e.addClass('album-square');
                 } else {
