@@ -179,10 +179,11 @@ jPlayerPlaylist.prototype._highlight = function(index) {
     }
 };
 
+/*
 jPlayerPlaylist.prototype.next = function() {
     var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
 
-    if(this.loop) {
+    if (this.loop) {
         // See if we need to shuffle before looping to start, and only shuffle if more than 1 item.
         if(index === 0 && this.shuffled && this.options.playlistOptions.shuffleOnLoop && this.playlist.length > 1) {
             this.shuffle(true, true); // playNow
@@ -198,6 +199,7 @@ jPlayerPlaylist.prototype.next = function() {
         }
     }
 };
+*/
 
 $(document).ready(function() {
 });
