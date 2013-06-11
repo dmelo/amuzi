@@ -185,6 +185,7 @@
     }
 
     function callbackPlay(current) {
+        /*
         $.post('/playlist/setcurrent', {
             name: window.myPlaylist.name,
             current: current
@@ -195,6 +196,7 @@
         }, 'json').error(function (e) {
             // TODO: fix the setcurrent.
         });
+        */
     }
 
     function applyOverPlaylist() {
@@ -815,8 +817,9 @@
                 window.myPlaylist.next();
             } else if (progress == $.lastTrackProgress) {
                 if ($.stuckCountDown-- <= 0) {
-                    window.myPlaylist.next();
                     $.stuckCountDown = 20;
+                    console.log("REFRESHING COUNTDOWN: " + $.stuckCountDown);
+                    window.myPlaylist.next();
                 } else {
                     console.log("stuck! countdown: " + $.stuckCountDown);
                 }
