@@ -467,6 +467,7 @@ width: 30px;
 height:30px;
 padding:40px;
 background-color: rgba(255, 0, 0, 0.2);
+border: 2px solid black;
 }
 
 .intro-video img:hover {
