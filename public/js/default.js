@@ -613,6 +613,10 @@
         setInterval(ping, 30000);
     }
 
+    function showIntroVideo() {
+        $.bootstrapLoadModalDisplay('Introdução', '<iframe width="720" height="540" src="http://www.youtube.com/embed/UGl-sSa5ibI?autoplay=1" frameborder="0" allowfullscreen></iframe>', 'modal-wide');
+    }
+
 
     $(document).ready(function () {
         var ac,
@@ -807,7 +811,7 @@
         $("#jquery_jplayer_1").bind($.jPlayer.event.ended + ".repeat", function () {
             $(this).jPlayer("play");
         });
-        
+
         $.stuckCountDown = 20;
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, function () {
@@ -877,5 +881,32 @@
         loadAlbumSet();
         startPing();
         quoteAnimation();
+        $('.intro-video a').click(function(e) {
+            e.preventDefault();
+            showIntroVideo();
+        });
+
+    });
+
+    $(window).load(function () {
+        //alert("Document loaded, including graphics and embedded documents (like SVG)");
+        var a = document.getElementById("alphasvg");
+        var svgDoc = a.contentDocument; //get the inner DOM of alpha.svg
+        var delta = svgDoc.getElementById("c1"); //get the inner element by id
+        svgDoc.addEventListener("mouseover",function(){
+            delta.setAttribute('stroke', 'blue');
+            delta.setAttribute('fill-opacity', '0.3');
+        },false);
+
+        svgDoc.addEventListener("mouseout",function(){
+            delta.setAttribute('stroke', 'black');
+            delta.setAttribute('fill-opacity', '0.1');
+        },false);
+
+        svgDoc.addEventListener('click', function() {
+            showIntroVideo();
+        }, false);
+
+
     });
 }(jQuery, undefined));

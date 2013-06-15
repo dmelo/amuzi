@@ -29,16 +29,15 @@
         </div>
     </div>
 
+<? if (1 || isset($this->locale) && 'pt_BR' == $this->locale): ?>
+    <div class="intro-video"><a href="/index/introvideo"><img id="alphasvg" class="img-circle" src="/img/big_play.svg" type="image/svg+xml"/></div>
+<? endif; ?>
+
     <div class="controls controls-row">
-        <div class="span5">
-            <a href="#" id="facebook-connect"><img src="/img/facebook-connect.png" alt="Connect using Facebook"/></a>
-<?
-    if (isset($this->locale) && 'pt_BR' == $this->locale) {
-        echo '<br/><br/><iframe width="350" height="263" src="http://www.youtube.com/embed/UGl-sSa5ibI" frameborder="0" allowfullscreen></iframe>';
-    }
-?>
-        </div>
         <div class="span6">
+            <a href="#" id="facebook-connect"><img src="/img/facebook_connect.png" alt="Connect using Facebook"/></a>
+        </div>
+        <div class="span5">
             <?= $this->form; ?>
         </div>
 
