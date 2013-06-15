@@ -29,8 +29,8 @@
         </div>
     </div>
 
-<? if (1 || isset($this->locale) && 'pt_BR' == $this->locale): ?>
-    <div class="intro-video"><a href="/index/introvideo"><img id="alphasvg" class="img-circle" src="/img/big_play.svg" type="image/svg+xml"/></div>
+<? if (isset($this->locale) && 'pt_BR' == $this->locale): ?>
+    <div class="intro-video"><a href="/index/introvideo"><img data-content="Assista ao vídeo do projeto" class="img-circle" src="/img/big_play.svg" type="image/svg+xml"/></div>
 <? endif; ?>
 
     <div class="controls controls-row">
