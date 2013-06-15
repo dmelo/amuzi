@@ -886,26 +886,10 @@
             showIntroVideo();
         });
 
-    });
+        $('.intro-video a img').popover({
+            'trigger': 'hover'
+        });
 
-    $(window).load(function () {
-        //alert("Document loaded, including graphics and embedded documents (like SVG)");
-        var a = document.getElementById("alphasvg");
-        var svgDoc = a.contentDocument; //get the inner DOM of alpha.svg
-        var delta = svgDoc.getElementById("c1"); //get the inner element by id
-        svgDoc.addEventListener("mouseover",function(){
-            delta.setAttribute('stroke', 'blue');
-            delta.setAttribute('fill-opacity', '0.3');
-        },false);
-
-        svgDoc.addEventListener("mouseout",function(){
-            delta.setAttribute('stroke', 'black');
-            delta.setAttribute('fill-opacity', '0.1');
-        },false);
-
-        svgDoc.addEventListener('click', function() {
-            showIntroVideo();
-        }, false);
 
 
     });
