@@ -85,6 +85,11 @@ class User extends DZend_Model
         return $this->_userDb->findRowByEmail($email);
     }
 
+    public function findById($id)
+    {
+        return $this->_userDb->findRowById($id);
+    }
+
     /**
      * register Registers a new user and set it to be activated.
      *

@@ -175,17 +175,6 @@ dd#submit-element {
     color: black;
 }
 
-.alert {
-    z-index: 3;
-    width: 600px !important;
-    opacity: 0;
-    filter: alpha (opacity = 0);
-    position: fixed;
-    margin-top: 0px;
-    top: 52px;
-    display: none;
-}
-
 .loginRequired {
     opacity: 0;
     filter: alpha (opacity = 0);
@@ -214,7 +203,7 @@ dd#submit-element {
 
 
 #load-modal-wrapper {
-    max-height: 600px;
+    max-height: 640px;
     overflow: auto;
 }
 
@@ -467,4 +456,27 @@ dd {
 .quote-set .quote {
     display: none;
     min-height: 68px;
+}
+
+.intro-video {
+text-align: center;
+}
+
+.intro-video img {
+width: 100px;
+height: 100px;
+}
+
+.intro-video img:hover {
+
+    box-shadow: 0px 1px 5px #3a3e41;
+}
+
+.modal-wide {
+    width: 750px;
+    margin-left: -375px;
+}
+
+.modal-wide .modal-body {
+    max-height: 560px;
 }

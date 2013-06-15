@@ -106,6 +106,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             'resultset.css',
             'bootstrap.css',
             'github-badge.css',
+            'bootstrap-helpers.css',
             'default.css',
             'incboard.css',
             'jquery.subtitle.css',
