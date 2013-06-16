@@ -23,6 +23,7 @@ error_reporting(E_ALL);
 $ports = array(
     'album_db' => 3673, 'track_db' => 3674, 'album' => 3675, 'track' => 3676
 );
+$pdo = null;
 
 function openSocket($port)
 {
@@ -81,10 +82,17 @@ function fillImages($sub, $type)
 {
     try {
         $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-        if (null === $dbLink) {
+        if (null === $pdo) {
             $params = $config->resources->db->params;
-            $dbLink = mysql_connect($params->host, $params->username, $params->password) or die('connection to mysql failed');
-            mysql_select_db($params->dbname);
+            $dsn = 'mysql:dbname=' . $params->dbname  . ';host=' . $params->host;
+            $user = $params->username;
+            $password = $params->password;
+
+            try {
+                $pdo = new PDO($dsn, $user, $password);
+            } catch (PDOException $e) {
+                echo 'Connection failed: ' . $e->getMessage();
+            }
         }
 
         $query = '';
@@ -114,8 +122,7 @@ function fillImages($sub, $type)
         }
 
         if ('' !== $query) {
-            $result = mysql_query($query);
-            while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+            foreach ($pdo->query($query) as $row) {
                 foreach ($sub as &$r) {
                     if (
                         $r['artist'] === strtolower($row[1])
@@ -147,25 +154,31 @@ function logDebug($str, $q)
 }
 
 $q = urldecode($_GET['q']);
-logDebug('start', $q);
-$q = str_replace(' - ', 'A', strtolower($q));
-$limit = 5;
-$dbLink = null;
 
-$ret = array();
-foreach (array('album_db', 'track_db') as $type) {
-    $sub = getResult($q, $ports[$type]);
-    if (count($sub) > 0) {
-        $sub = fillImages($sub, $type);
-    }
-    if (count($sub) < $limit) {
-        $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
-        $sub = array_merge($sub, $complemet);
+$r = '/^ *$/';
+if (preg_match($r, $q) || strlen($q) < 3) {
+    return 0;
+} else {
+    logDebug('start', $q);
+    $q = str_replace(' - ', 'A', strtolower($q));
+    $limit = 5;
+    $dbLink = null;
+
+    $ret = array();
+    foreach (array('album_db', 'track_db') as $type) {
+        $sub = getResult($q, $ports[$type]);
+        if (count($sub) > 0) {
+            $sub = fillImages($sub, $type);
+        }
+        if (count($sub) < $limit) {
+            $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
+            $sub = array_merge($sub, $complemet);
+        }
+
+        $ret[] = $sub;
     }
 
-    $ret[] = $sub;
+    $ret = array_merge($ret[0], $ret[1]);
+    logDebug('end: ' . count($ret) . ' results', $q);
+    echo json_encode($ret);
 }
-
-$ret = array_merge($ret[0], $ret[1]);
-logDebug('end: ' . count($ret) . ' results', $q);
-echo json_encode($ret);
