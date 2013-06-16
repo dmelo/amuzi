@@ -463,17 +463,16 @@ text-align: center;
 }
 
 .intro-video img {
-width: 30px;
-height:30px;
-padding:40px;
-background-color: rgba(255, 0, 0, 0.2);
-border: 2px solid black;
+    width: 30px;
+    height:30px;
+    padding:40px;
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 2px solid black;
 }
 
 .intro-video img:hover {
-
     box-shadow: 0px 1px 5px #3a3e41;
-background-color: rgba(255, 0, 0, 0.6);
+    background-color: rgba(255, 0, 0, 0.6);
 }
 
 .modal-wide {
