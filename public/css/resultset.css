@@ -162,6 +162,7 @@
     position: absolute;
     width: 24px;
     height: 24px;
+    display: none;
 }
 
 .item-square .button img:hover {
@@ -179,6 +180,7 @@
     margin-left: -10px;
     width: 15px;
     position: absolute;
+    display: none;
 }
 
 .item-square .button.remove img:hover {
