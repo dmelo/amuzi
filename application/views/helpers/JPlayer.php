@@ -38,7 +38,7 @@ class View_Helper_JPlayer extends View_Helper_T
             "tabindex=\"1\" title=\"{$name}\">{$name}</a></li>";
     }
 
-    public function jPlayer()
+    public function jPlayer($class = '')
     {
         $controls = array(
             'previous', 'play',
@@ -59,7 +59,7 @@ class View_Helper_JPlayer extends View_Helper_T
             'repeat-off'
         );
 
-        echo '<div id="jp_container_1" class="jp-video jp-video-270p">
+        echo '<div id="jp_container_1" class="jp-video jp-video-270p ' . $class . '">
         <div class="jp-type-playlist">
         <div id="jquery_jplayer_1" class="jp-jplayer"></div>
         <div class="jp-gui">
