@@ -60,6 +60,10 @@ dd {
     top: -75px;
 }
 
+#jp_container_1.lonely {
+    top: 40px;
+}
+
 /*
 #jquery_jplayer_1 {
     height: 0px !important;
@@ -418,8 +422,13 @@ dd {
     display: inline-block;
 }
 
+
 .collection-info .cover img {
     height: 97px;
+}
+
+.container.regular .collection-info .cover img {
+    height: 180px;
 }
 
 .collection-info .caption {
