@@ -35,7 +35,7 @@
 
             <? if (false === $this->isAjax): ?>
                 <div class="info">
-                    <?= $this->t('Add this Album to your collection'); ?>
+                    <?= $this->a($this->collection->shareUrl, $this->t('Add this Album to your collection')); ?>
                 </div>
             <? endif; ?>
         <? endif; ?>
