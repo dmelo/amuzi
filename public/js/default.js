@@ -280,6 +280,10 @@
         return $('#userId').length > 0 ? $('#userId').html() : false;
     }
 
+    function isMainPage() {
+        return (isLoggedIn() && ['/', '/index/incboard', '/index/incboard/'].indexOf(window.location.pathname) != -1);
+    }
+
     function playlistCallback() {
         $('#playlistsettings').ajaxForm({
             success: function (data) {
@@ -872,9 +876,29 @@
         if ($('div.container.regular').length > 0) {
             $('body').css('overflow', 'auto');
         }
-        loadPlaylistSet();
-        loadAlbumSet();
-        startPing();
+
+        if (isMainPage()) {
+            loadPlaylistSet();
+            loadAlbumSet();
+            startPing();
+        } else if ($('#jp_container_1.lonely').length > 0) {
+            if (1 === $('#load-playlist').length) {
+                $.loadPlaylist($('#load-playlist').html(), {isAlbum: $('#load-playlist').attr('isAlbum')});
+            }
+
+            $(document).on('hover', '#jp_container_1.lonely', function() {
+                $('#jp_container_1 .jp-playlist').css('opacity', '1.0');
+                $('#jp_container_1').css('background-color', '#282828');
+                $('#jp_container_1').css('border-color', 'rgba(0, 0, 0, 0.05)');
+            });
+
+            $(document).on('mouseleave', '#jp_container_1.lonely', function() {
+                $('#jp_container_1 .jp-playlist').css('opacity', '0.2');
+                $('#jp_container_1').css('background-color', 'transparent');
+                $('#jp_container_1').css('border-color', 'rgba(0, 0, 0, 1.0)');
+            });
+
+        }
         quoteAnimation();
         $('.intro-video a').click(function(e) {
             e.preventDefault();

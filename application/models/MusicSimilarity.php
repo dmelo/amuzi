@@ -318,6 +318,9 @@ class MusicSimilarity extends DZend_Model
     )
     {
         $this->_logger->debug(
+            "MusicSimilarity::getSimilar($artist, $musicTitle, $type);"
+        );
+        $this->_logger->debug(
             "MusicSimilarity::getSimilar -- extObjIdList: "
             . print_r($extObjIdList, true)
         );
