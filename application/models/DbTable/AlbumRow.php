@@ -25,6 +25,17 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
     implements DbTable_iTrackCollectionRow
 {
     protected $_trackList = null;
+    protected $_artistRow = null;
+
+    protected function _getArtistRow()
+    {
+        if (null === $this->_artistRow) {
+            $artistDb = new DbTable_Artist();
+            $this->_artistRow = $artistDb->findRowById($this->artistId);
+        }
+
+        return $this->_artistRow;
+    }
 
     public function getArray()
     {
@@ -129,27 +140,14 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
 
     public function getCoverName()
     {
-        $artistDb = new DbTable_Artist();
-        $artistRow = $artistDb->findRowById($this->artistId);
-
-        if (null === $artistRow) {
-            $this->_logger->err(
-                "AlbumRow::getCoverName row " . $this->id
-                . " points to artist_id " . $this->artistId
-                . " but doesn't exists on table artist"
-            );
-        }
-
-        return $artistRow->name . ' - ' . $this->name;
+        return $this->name;
     }
 
     public function __get($name)
     {
 
         if ('artist' === $name) {
-            $artistDb = new DbTable_Artist();
-            $artistRow = $artistDb->findRowById($this->artistId);
-            return $artistRow->name;
+            return $this->_getArtistRow()->name;
         } elseif ('title' === $name) {
             return "{$this->artist} - {$this->name}";
         } elseif ('artistMusicTitleIdList' === $name) {

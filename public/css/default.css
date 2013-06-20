@@ -61,8 +61,20 @@ dd {
 }
 
 #jp_container_1.lonely {
+    background-color: transparent;
     top: 40px;
+    border: 1px solid (0, 0, 0, 0.05);
 }
+
+#jp_container_1 .jp-playlist {
+    opacity: 0.05;
+}
+
+#jp_container_1 .jp-playlist {
+    margin-top: -10px;
+}
+
+
 
 /*
 #jquery_jplayer_1 {

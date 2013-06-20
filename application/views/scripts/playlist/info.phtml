@@ -1,6 +1,8 @@
 <? if (!$this->isAjax): ?>
 <div class="container regular">
+    <div id="load-playlist" isAlbum="<?= 'album' === $this->collection->getType() ? 'true' : 'false'; ?>" class="invisible"><?= $this->collection->id; ?></div>
     <?= $this->jPlayer('lonely'); ?>
+
 <? endif; ?>
 
 <div class="collection-info">
@@ -8,6 +10,11 @@
         <img src="<?= $this->collection->getCover(); ?>"/>
     </div>
     <div class="caption">
+        <? if ('album' === $this->collection->getType()): ?>
+        <div class="info">
+            <?= $this->t('Artist') . ': ' . ($this->isAjax ? ucfirst($this->collection->artist) : $this->a('/artist/info/id/' . $this->collection->artistId, ucfirst($this->collection->artist))); ?>
+        </div>
+        <? endif; ?>
         <div class="info">
             <?= $this->t('Name') . ': ' . $this->collection->getCoverName(); ?>
         </div>
