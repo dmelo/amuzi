@@ -61,25 +61,13 @@ dd {
 }
 
 #jp_container_1.lonely {
-    background-color: transparent;
     top: 40px;
-    border: 1px solid (0, 0, 0, 0.05);
 }
+
 
 #jp_container_1.lonely .jp-playlist {
-    opacity: 0.05;
+    display: none;
 }
-
-#jp_container_1.lonely .jp-playlist {
-    margin-top: -10px;
-}
-
-/*
-#jquery_jplayer_1 {
-    height: 0px !important;
-    opacity: 0.0;
-}
-    */
 
 .ac_results li.ac_even {
     background-color: #d5d5d5;
@@ -438,7 +426,7 @@ dd {
 }
 
 .container.regular .collection-info .cover img {
-    height: 180px;
+    height: 260px;
 }
 
 .collection-info .caption {

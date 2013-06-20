@@ -888,15 +888,11 @@
             }
 
             $(document).on('hover', '#jp_container_1.lonely', function() {
-                $('#jp_container_1 .jp-playlist').css('opacity', '1.0');
-                $('#jp_container_1').css('background-color', '#282828');
-                $('#jp_container_1').css('border-color', 'rgba(0, 0, 0, 0.05)');
+                $('#jp_container_1 .jp-playlist').css('display', 'block');
             });
 
             $(document).on('mouseleave', '#jp_container_1.lonely', function() {
-                $('#jp_container_1 .jp-playlist').css('opacity', '0.2');
-                $('#jp_container_1').css('background-color', 'transparent');
-                $('#jp_container_1').css('border-color', 'rgba(0, 0, 0, 1.0)');
+                $('#jp_container_1 .jp-playlist').css('display', 'none');
             });
 
         }
