@@ -32,6 +32,12 @@
                 <?= $this->t('Share') . ': ' . '<a href="' . $this->collection->facebookUrl . '"><img class="icon" src="/img/facebook.png"/></a>'
                 . '<a href="' . $this->collection->shareUrl . '"><img class="icon" src="/img/link.png"/></a>' ; ?>
             </div>
+
+            <? if (false === $this->isAjax): ?>
+                <div class="info">
+                    <?= $this->t('Add this Album to your collection'); ?>
+                </div>
+            <? endif; ?>
         <? endif; ?>
 
     </div>

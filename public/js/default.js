@@ -283,6 +283,7 @@
     function isMainPage() {
         return (isLoggedIn() && ['/', '/index/incboard', '/index/incboard/'].indexOf(window.location.pathname) != -1);
     }
+    $.isMainPage = isMainPage;
 
     function playlistCallback() {
         $('#playlistsettings').ajaxForm({
