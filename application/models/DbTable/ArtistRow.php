@@ -23,4 +23,36 @@
  */
 class DbTable_ArtistRow extends DZend_Db_Table_Row
 {
+    public function getCover()
+    {
+        // if (null === $this->cover) {
+            $lastfmModel = new Lastfm();
+            $ret = $lastfmModel->getArtist($this->name);
+            /*
+            $this->cover = $ret['cover'];
+            $this->info = $ret['info'];
+            */
+            $this->save();
+        // }
+
+        Zend_Registry::get('logger')->debug('AAAAAAAAAAAAAAAAAAAAAAA ' . print_r($ret, true));
+
+
+        return $this->cover;
+    }
+
+    public function getInfo()
+    {
+        // if (null === $this->info) {
+            $lastfmModel = new Lastfm();
+            $ret = $lastfmModel->getArtist($this->name);
+            /*
+            $this->cover = $ret['cover'];
+            $this->info = $ret['info'];
+            */
+            $this->save();
+        // }
+
+        return $this->info;
+    }
 }

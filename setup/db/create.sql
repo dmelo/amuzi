@@ -1,12 +1,26 @@
 CREATE TABLE `artist` (
     `id` int(11) NOT NULL auto_increment,
     `name` varchar(63) collate utf8_swedish_ci NOT NULL,
+    `cover` varchar(2047) collate utf8_swedish_ci default NULL,
+    `info` text collate utf8_swedish_ci default NULL,
     PRIMARY KEY(`id`),
     UNIQUE(`name`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `artist_created_trigger` BEFORE INSERT ON `artist` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
+CREATE TABLE `artist_similarity` (
+    `id` int(11) NOT NULL auto_increment,
+    `f_artist_id` int(11) NOT NULL auto_increment,
+    `s_artist_id` int(11) NOT NULL auto_increment,
+    PRIMARY KEY(`id`),
+    UNIQUE(`f_artist_id`, `s_artist_id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `artist_created_trigger` BEFORE INSERT ON `artist` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+
 
 CREATE TABLE `music_title` (
     `id` int(11) NOT NULL auto_increment,

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Artist
+ * ArtistSimilarity
  *
  * @package Amuzi
  * @version 1.0
@@ -21,25 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class Artist extends DZend_Model
+class ArtistSimilarity extends DZend_Model
 {
-    public function insert($name)
-    {
-        return $this->_artistDb->insert(array('name' => $name));
-    }
-
-    public function preload($ids)
-    {
-        $this->_objDb->preload($ids);
-    }
-
-    public function findRowById($id)
-    {
-        return $this->_objDb->findRowById($id);
-    }
-
-    public function findRowByName($name)
-    {
-        return $this->_objDb->findRowByName($name);
-    }
 }
