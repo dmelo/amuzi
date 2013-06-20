@@ -110,9 +110,20 @@ class AlbumController extends DZend_Controller_Action
 
     public function infoAction()
     {
-        if (($id = $this->_request->getParam('id')) !== false) {
-            $collection = $this->view->collection = $this->_albumModel
-                ->findRowById($id);
+        if (($id = $this->_request->getParam('id')) !== null ||
+            (
+                ($name = $this->_request->getParam('name')) !== null &&
+                ($artist = $this->_request->getParam('artist')) !== null )
+            ) {
+            $collection = null;
+            if (null !== $id) {
+                $this->_logger->debug("AlbumController::info $id");
+                $collection = $this->_albumModel->findRowById($id);
+            } else {
+                $this->_logger->debug("AlbumController::info $artist - $name");
+                $collection =  $this->_albumModel->get($artist, $name);
+            }
+            $this->view->collection = $collection;
             $c = new DZend_Chronometer();
 
             $collection->getCoverName();
