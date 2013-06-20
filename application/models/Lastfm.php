@@ -150,6 +150,10 @@ class Lastfm extends DZend_Model
         return new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
 
+    public function _processResponseArtist($artist) {
+        var_dump($artist);
+    }
+
     public function _exploreDOM($xml, $func, $limit = null)
     {
         $c = new DZend_Chronometer();
@@ -282,6 +286,59 @@ class Lastfm extends DZend_Model
         return $albumRow;
     }
 
+    public function getArtist($name)
+    {
+        $key = sha1("Lastfm::getArtist#$name");
+        if (($xml = $this->_cache->load($key)) === false) {
+            $result = array();
+            $args = array(
+                'method' => 'artist.getinfo',
+                'artist' => $name
+            );
+            $xml = $this->_request($args, false);
+            var_dump($xml);
+
+            $this->_cache->save($xml, $key);
+        }
+
+        $xmlDoc = new DOMDocument();
+        $cover = null;
+        $info = null;
+        $similarList = array();
+        if ('' !== $xml) {
+            $xmlDoc->loadXML($xml);
+            $this->_logger->debug("XML: " . $xml);
+            $artist = $xmlDoc->getElementsByTagName('artist');
+            for ($e = $artist->item(0)->firstChild; null !== $e;
+                $e = $e->nextSibling) {
+                $value = $e->nodeValue;
+                switch ($e->nodeName) {
+                    case 'bio':
+                        $info = $value;
+                        break;
+                    case 'image':
+                        $cover = $value;
+                        break;
+                    case 'similar':
+                        for ($similar = $e->firstChild; null !== $similar; $similar = $similar->nextSibling) {
+                            if ('artist' === $similar->nodeName) {
+                                for ($child = $similar->firstChild; null !== $child; $child = $child->nextSibling) {
+                                    if ('name' === $child->nodeName) {
+                                        $similarList[] = $child->nodeValue;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+
+        return array('cover' => $cover, 'info' => $info, 'similarList' => $similarList);
+    }
+
+
     public function getSimilar($artist, $music)
     {
         $this->_logger->debug(
@@ -326,4 +383,5 @@ class Lastfm extends DZend_Model
 
         return $this->_exploreDOM($xml, '_processResponseGetTop', $limit);
     }
+
 }
