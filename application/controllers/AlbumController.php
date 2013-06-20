@@ -97,8 +97,10 @@ class AlbumController extends DZend_Controller_Action
             || ($id = $this->_getUserRow()->currentAlbumId) !== null) {
             $albumRow = $this->_albumModel->findRowById($id);
             $userRow = $this->_getUserRow();
-            $userRow->currentAlbumId = $albumRow->id;
-            $userRow->save();
+            if (null !== $userRow) {
+                $userRow->currentAlbumId = $albumRow->id;
+                $userRow->save();
+            }
 
             $album = $albumRow->getArray();
             $ret = array($album['trackList'], $album['name'], 0, 0, 0, 1);
