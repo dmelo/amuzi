@@ -12,14 +12,14 @@ CREATE TRIGGER `artist_created_trigger` BEFORE INSERT ON `artist` FOR EACH ROW S
 
 CREATE TABLE `artist_similarity` (
     `id` int(11) NOT NULL auto_increment,
-    `f_artist_id` int(11) NOT NULL auto_increment,
-    `s_artist_id` int(11) NOT NULL auto_increment,
+    `f_artist_id` int(11) NOT NULL,
+    `s_artist_id` int(11) NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE(`f_artist_id`, `s_artist_id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-CREATE TRIGGER `artist_created_trigger` BEFORE INSERT ON `artist` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+CREATE TRIGGER `artist_similarity_created_trigger` BEFORE INSERT ON `artist_similarity` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 
 CREATE TABLE `music_title` (
