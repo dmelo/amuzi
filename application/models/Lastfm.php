@@ -304,7 +304,7 @@ class Lastfm extends DZend_Model
         $xmlDoc = new DOMDocument();
         $cover = null;
         $info = null;
-        $similarList = array();
+        $similarityList = array();
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
             $this->_logger->debug("XML: " . $xml);
@@ -324,7 +324,7 @@ class Lastfm extends DZend_Model
                             if ('artist' === $similar->nodeName) {
                                 for ($child = $similar->firstChild; null !== $child; $child = $child->nextSibling) {
                                     if ('name' === $child->nodeName) {
-                                        $similarList[] = $child->nodeValue;
+                                        $similarityList[] = $child->nodeValue;
                                     }
                                 }
                             }
@@ -335,7 +335,7 @@ class Lastfm extends DZend_Model
         }
 
 
-        return array('cover' => $cover, 'info' => $info, 'similarList' => $similarList);
+        return array('cover' => $cover, 'info' => $info, 'similarityList' => $similarityList);
     }
 
 

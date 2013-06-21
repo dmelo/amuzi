@@ -1,7 +1,22 @@
+<? if (!$this->isAjax): ?>
+<div class="container regular">
+<? endif; ?>
+
+
 <div class="collection-info">
+    <? var_dump($this->artistRow->similarityList); ?>
     <div class="cover">
         <img src="<?= $this->artistRow->getCover(); ?>"/>
     </div>
     <div class="caption">
     </div>
+
+    <div class="span10">
+        <?= $this->artistRow->getInfo(); ?>
+    </div>
 </div>
+
+<? if (!$this->isAjax): ?>
+</div>
+<? endif; ?>
+

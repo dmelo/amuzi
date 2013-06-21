@@ -23,20 +23,24 @@
  */
 class DbTable_ArtistRow extends DZend_Db_Table_Row
 {
+    protected $_similarityList;
+
+    protected function _getDataFromLastfm()
+    {
+        $lastfmModel = new Lastfm();
+        $ret = $lastfmModel->getArtist($this->name);
+        $this->cover = $ret['cover'];
+        $this->info = $ret['info'];
+        $this->_similarityList = $ret['similarityList'];
+
+        $this->save();
+    }
+
     public function getCover()
     {
         // if (null === $this->cover) {
-            $lastfmModel = new Lastfm();
-            $ret = $lastfmModel->getArtist($this->name);
-            /*
-            $this->cover = $ret['cover'];
-            $this->info = $ret['info'];
-            */
-            $this->save();
+            $this->_getDataFromLastfm();
         // }
-
-        Zend_Registry::get('logger')->debug('AAAAAAAAAAAAAAAAAAAAAAA ' . print_r($ret, true));
-
 
         return $this->cover;
     }
@@ -44,15 +48,18 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
     public function getInfo()
     {
         // if (null === $this->info) {
-            $lastfmModel = new Lastfm();
-            $ret = $lastfmModel->getArtist($this->name);
-            /*
-            $this->cover = $ret['cover'];
-            $this->info = $ret['info'];
-            */
-            $this->save();
+            $this->_getDataFromLastfm();
         // }
 
         return $this->info;
+    }
+
+    public function __get($name)
+    {
+        if ('similarityList' === $name) {
+            return $this->_similarityList;
+        } else {
+            return parent::__get($name);
+        }
     }
 }
