@@ -43,10 +43,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $this->bootstrap('translate');
         $this->bootstrap('layout');
         $this->bootstrap('domain');
-        $this->bootstrap('logger');
-
-        $c = new DZend_Chronometer();
-        $c->start();
 
         $domain = Zend_Registry::get('domain');
         $layout = $this->getResource('layout');
@@ -123,19 +119,25 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->facebookSecret = $config->facebook->secret;
         $view->facebookChannel = $domain . '/channel.html';
 
-        $c->stop();
-        Zend_Registry::get('logger')->debug('_initView ' . $c->get());
     }
 
     public function _initDateTime()
     {
-        $this->bootstrap('logger');
-        $c = new DZend_Chronometer();
-        $c->start();
-
         date_default_timezone_set('America/Sao_Paulo');
+    }
 
-        $c->stop();
-        Zend_Registry::get('logger')->debug('_initDateTime ' . $c->get());
+    public function _initRoutes()
+    {
+        $router = Zend_Controller_Front::getInstance()->getRouter();
+        $router->addRoute(
+            'artist',
+            new Zend_Controller_Router_Route(
+                'artist/:name',
+                array(
+                    'controller' => 'artist',
+                    'action' => 'info'
+                )
+            )
+        );
     }
 }

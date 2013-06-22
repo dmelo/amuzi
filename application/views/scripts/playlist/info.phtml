@@ -12,7 +12,7 @@
     <div class="caption">
         <? if ('album' === $this->collection->getType()): ?>
         <div class="info">
-            <?= $this->t('Artist') . ': ' . ($this->isAjax ? ucfirst($this->collection->artist) : $this->a('/artist/info/id/' . $this->collection->artistId, ucfirst($this->collection->artist))); ?>
+            <?= $this->t('Artist') . ': ' . ($this->isAjax ? ucfirst($this->collection->artist) : $this->a('/artist/' . urlencode($this->collection->artist), ucfirst($this->collection->artist))); ?>
         </div>
         <? endif; ?>
         <div class="info">

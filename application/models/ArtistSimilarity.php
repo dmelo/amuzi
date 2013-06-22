@@ -23,4 +23,36 @@
  */
 class ArtistSimilarity extends DZend_Model
 {
+    public function insertSimilarities($artistId, $artistNameList)
+    {
+        $this->_logger->debug("ArtistSimilarity::insertSimilarities $artistId, " . print_r($artistNameList, true));
+        $artistIdSet = array();
+        foreach ($artistNameList as $artistName) {
+            $artistIdSet[] = $this->_artistModel->insert($artistName);
+        }
+
+
+        $this->_logger->debug("ArtistSimilarity::insertSimilarities $artistId, " . print_r($artistIdSet, true));
+
+        $fArtistId = 0;
+        $sArtistId = 0;
+        foreach ($artistIdSet as $artistIdB) {
+            $ret[] = $artistIdB;
+            list($fArtistId, $sArtistId) = $artistId < $artistIdB ?
+                array($artistId, $artistIdB):
+                array($artistIdB, $artistId);
+
+            try {
+                $this->_objDb->insert(
+                    array(
+                        'f_artist_id' => $fArtistId,
+                        's_artist_id' => $sArtistId
+                    )
+                );
+            } catch (Zend_Db_Statement_Exception $e) {
+            }
+        }
+
+        return $this->_artistModel->findById($artistIdSet);
+    }
 }

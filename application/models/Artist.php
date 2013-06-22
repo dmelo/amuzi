@@ -42,4 +42,9 @@ class Artist extends DZend_Model
     {
         return $this->_objDb->findRowByName($name);
     }
+
+    public function findById($idSet)
+    {
+        return $this->_objDb->findById($idSet);
+    }
 }

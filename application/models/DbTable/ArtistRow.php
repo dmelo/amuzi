@@ -31,7 +31,8 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
         $ret = $lastfmModel->getArtist($this->name);
         $this->cover = $ret['cover'];
         $this->info = $ret['info'];
-        $this->_similarityList = $ret['similarityList'];
+        $artistSimilarityModel = new ArtistSimilarity();
+        $this->_similarityList = $artistSimilarityModel->insertSimilarities($this->id, $ret['similarityList']);
 
         $this->save();
     }
@@ -47,11 +48,20 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
 
     public function getInfo()
     {
-        // if (null === $this->info) {
+        if (null === $this->info) {
             $this->_getDataFromLastfm();
-        // }
+        }
 
         return $this->info;
+    }
+
+    public function getSimilarityList()
+    {
+        if (null === $this->_similarityList) {
+            $this->_getDataFromLastfm();
+        }
+
+        return $this->_similarityList;
     }
 
     public function __get($name)
