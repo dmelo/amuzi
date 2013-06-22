@@ -26,10 +26,41 @@ class ArtistTopAlbum extends DZend_Model
     public function getList($artistId)
     {
         $topAlbumList = $this->_objDb->findByArtistId($artistId);
+        $albumRowSet = null;
         if (0 === count($topAlbumList)) {
             $artistRow = $this->_artistModel->findRowById($artistId);
             $ret = $this->_lastfmModel->getArtistTopAlbum($artistRow->name);
-            $this->_logger->debug('ArtistTopAlbum::getList ' . print_r($ret, true));
+            $this->_logger->debug('ArtistTopAlbum::getList AA 01 ' . print_r($ret, true));
+            $ids = array();
+            foreach ($ret as $album) {
+                $ids[] = $this->_albumModel->insertEmpty(
+                    $album['artist'], $album['name'], $album['cover']
+                );
+            }
+            $this->_logger->debug('ArtistTopAlbum::getList AA 02 ' . print_r($ids, true));
+
+            // TODO: continue here. checking if ids is empty
+            $albumRowSet = $this->_albumModel->findById($ids);
+            $this->_logger->debug('ArtistTopAlbum::getList AA 03');
+
+            foreach ($albumRowSet as $albumRow) {
+                $this->_objDb->insert(
+                    array(
+                        'artist_id' => $artistId,
+                        'album_id' => $albumRow->id
+                    )
+                );
+            }
+            $this->_logger->debug('ArtistTopAlbum::getList AA 04');
+        } else {
+            $ids = array();
+            foreach ($topAlbumList as $topAlbumRow) {
+                $ids[] = $topAlbumRow->albumId;
+            }
+            $this->_logger->debug('ArtistTopAlbum::getList BB 01 ' . print_r($ids, true));
+            $albumRowSet = $this->_albumModel->findById($ids);
         }
+
+        return $albumRowSet;
     }
 }

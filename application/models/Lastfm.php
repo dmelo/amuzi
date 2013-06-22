@@ -341,6 +341,7 @@ class Lastfm extends DZend_Model
         );
 
         $xml = $this->_request($args);
+        $this->_logger->debug('Lastfm::getArtistTopAlbum xml ' . $xml);
 
         $xmlDoc = new DOMDocument();
         $cover = null;
@@ -365,6 +366,9 @@ class Lastfm extends DZend_Model
                                     break;
                                 }
                             }
+                            break;
+                        case 'image':
+                            $item['cover'] = $e->nodeValue;
                             break;
                     }
                 }
