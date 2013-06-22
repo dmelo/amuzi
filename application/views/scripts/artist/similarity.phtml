@@ -1,0 +1,26 @@
+    <div class="similarity-list span12">
+        <h2><?= $this->t('Similar Artists'); ?></h2>
+        <?
+            foreach ($this->artistRow->getSimilarityList() as $artistRow) {
+                echo $this->lightSquare(
+                    '/artist/' . $artistRow->name,
+                    $artistRow->name,
+                    $artistRow->cover
+                );
+            }
+        ?>
+    </div>
+
+    <div class="similarity-list span12">
+        <h2><?= $this->t('Top Albums'); ?></h2>
+        <?
+            foreach ($this->artistRow->getTopAlbumList() as $albumRow) {
+                echo $this->lightSquare(
+                    '/album/' . urlencode($albumRow->artist) . '/' . urlencode($albumRow->name),
+                    $albumRow->name,
+                    $albumRow->cover
+                );
+            }
+        ?>
+    </div>
+

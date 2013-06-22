@@ -103,11 +103,17 @@ class AlbumController extends DZend_Controller_Action
             }
 
             $album = $albumRow->getArray();
-            if (0 === count($album['trackList'])) {
+            $ret = null;
+            // if (0 === count($album['trackList'])) {
                 // TODO: this was develooped offline. test it online.
-                $this->_lastfmModel->getAlbum($albumRow->artist, $albumRow->name);
-            }
-            $ret = array($album['trackList'], $album['name'], 0, 0, 0, 1);
+                // $album = $this->_lastfmModel->getAlbum($albumRow->artist, $albumRow->name);
+                // $albumId = $this->_albumModel->insert($album);
+                // $albumRow = $this->_albumModel->findRowById($albumId);
+                $this->_fullTrackList($albumRow);
+                $ret = array($albumRow->trackList, $albumRow->name, 0, 0, 0, 1);
+            // } else {
+            //    $ret = array($album['trackList'], $album['name'], 0, 0, 0, 1);
+            // }
             $this->view->output = $ret;
         }
     }
@@ -125,23 +131,28 @@ class AlbumController extends DZend_Controller_Action
                 $collection = $this->_albumModel->findRowById($id);
             } else {
                 $this->_logger->debug("AlbumController::info $artist - $name");
-                $collection =  $this->_albumModel->get($artist, $name);
-            }
-            $this->view->collection = $collection;
-            $c = new DZend_Chronometer();
-
-            $collection->getCoverName();
-
-            foreach (array(
-                'getCoverName', 'getType', 'playTime', 'getTrackListAsArray'
-                ) as $f) {
-                $c->start();
-                $collection->$f();
-                $c->stop();
-                $this->_logger->debug("AlbumController::info $f " . $c->get());
+                $collection = $this->_albumModel->fetch($artist, $name);
             }
 
-            $this->renderScript('playlist/info.phtml');
+            if (null !== $collection) {
+                $this->view->collection = $collection;
+                $c = new DZend_Chronometer();
+
+                $collection->getCoverName();
+                $this->view->artistRow = $this->_artistModel->findRowById($collection->artistId);
+
+                foreach (array(
+                    'getCoverName', 'getType', 'playTime', 'getTrackListAsArray'
+                    ) as $f) {
+                    $c->start();
+                    $collection->$f();
+                    $c->stop();
+                    $this->_logger->debug("AlbumController::info $f " . $c->get());
+                }
+
+                $this->renderScript('playlist/info.phtml');
+            } else {
+            }
         }
     }
 

@@ -155,14 +155,7 @@ class ApiController extends DZend_Controller_Action
      */
     protected function _getAlbum($artist, $album)
     {
-        $albumRow = $this->_albumModel->get($artist, $album);
-        if ($albumRow === null ||
-            count($albumRow->trackList) == 0) {
-            $album = $this->_lastfmModel->getAlbum($artist, $album);
-            $albumId = $this->_albumModel->insert($album);
-            $albumRow = $this->_albumModel->findRowById($albumId);
-        }
-
+        $albumRow = $this->_albumModel->fetch($artist, $album);
         return $this->_getAlbumByRow($albumRow);
     }
 

@@ -172,4 +172,18 @@ class Album extends DZend_Model
     {
         return $this->_objDb->fetchNextAlbumRow($id);
     }
+
+    // If album doesn't exists, fetch it from Lastfm.
+    public function fetch($artist, $name)
+    {
+        $albumRow = $this->get($artist, $name);
+        if ($albumRow === null ||
+            count($albumRow->trackList) == 0) {
+            $album = $this->_lastfmModel->getAlbum($artist, $name);
+            $albumId = $this->_albumModel->insert($album);
+            $albumRow = $this->_albumModel->findRowById($albumId);
+        }
+
+        return $albumRow;
+    }
 }
