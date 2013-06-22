@@ -12,7 +12,6 @@ class ArtistController extends DZend_Controller_Action
             $artistRow = $this->_artistModel->findRowByName($name);
         }
 
-
         if (null !== $artistRow) {
             $this->view->artistRow = $artistRow;
         }

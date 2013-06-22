@@ -16,11 +16,25 @@ CREATE TABLE `artist_similarity` (
     `s_artist_id` int(11) NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE(`f_artist_id`, `s_artist_id`),
+    CONSTRAINT `artist_similarity_ibfk_1` FOREIGN KEY (`f_artist_id`) REFERENCES `artist`(`id`),
+    CONSTRAINT `artist_similarity_ibfk_2` FOREIGN KEY (`s_artist_id`) REFERENCES `artist`(`id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `artist_similarity_created_trigger` BEFORE INSERT ON `artist_similarity` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
+CREATE TABLE `artist_top_album` (
+    `id` int(11) NOT NULL auto_increment,
+    `artist_id` int(11) NOT NULL,
+    `album_id` int(11) NOT NULL,
+    PRIMARY KEY(`id`),
+    UNIQUE(`artist_id`, `album_id`),
+    CONSTRAINT `artist_top_album_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`),
+    CONSTRAINT `artist_top_album_ibfk_2` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+CREATE TRIGGER `artist_top_album_created_trigger` BEFORE INSERT ON `artist_top_album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 CREATE TABLE `music_title` (
     `id` int(11) NOT NULL auto_increment,

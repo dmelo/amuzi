@@ -24,6 +24,7 @@
 class DbTable_ArtistRow extends DZend_Db_Table_Row
 {
     protected $_similarityList;
+    protected $_topAlbumList;
 
     protected function _getDataFromLastfm()
     {
@@ -32,7 +33,9 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
         $this->cover = $ret['cover'];
         $this->info = $ret['info'];
         $artistSimilarityModel = new ArtistSimilarity();
+        $artistTopAlbumModel = new ArtistTopAlbum();
         $this->_similarityList = $artistSimilarityModel->insertSimilarities($this->id, $ret['similarityList']);
+        $this->_topAlbumList = $artistTopAlbumModel->getList($this->id);
 
         $this->save();
     }
@@ -62,6 +65,15 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
         }
 
         return $this->_similarityList;
+    }
+
+    public function getTopAlbumList()
+    {
+        if (null === $this->_topAlbumList) {
+            $this->_getDataFromLastfm();
+        }
+
+        return $this->_topAlbumList;
     }
 
     public function __get($name)
