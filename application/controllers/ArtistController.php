@@ -15,8 +15,6 @@ class ArtistController extends DZend_Controller_Action
 
         if (null !== $artistRow) {
             $this->view->artistRow = $artistRow;
-            $artistRow->getCover();
-            $artistRow->getInfo();
         }
     }
 }

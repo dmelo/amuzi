@@ -150,10 +150,6 @@ class Lastfm extends DZend_Model
         return new LastfmEntry($name, $cover, $artist, $musicTitle);
     }
 
-    public function _processResponseArtist($artist) {
-        var_dump($artist);
-    }
-
     public function _exploreDOM($xml, $func, $limit = null)
     {
         $c = new DZend_Chronometer();
@@ -296,7 +292,6 @@ class Lastfm extends DZend_Model
                 'artist' => $name
             );
             $xml = $this->_request($args, false);
-            var_dump($xml);
 
             $this->_cache->save($xml, $key);
         }
@@ -307,7 +302,6 @@ class Lastfm extends DZend_Model
         $similarityList = array();
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
-            $this->_logger->debug("XML: " . $xml);
             $artist = $xmlDoc->getElementsByTagName('artist');
             for ($e = $artist->item(0)->firstChild; null !== $e;
                 $e = $e->nextSibling) {

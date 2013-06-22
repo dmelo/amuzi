@@ -1,22 +1,32 @@
-<? if (!$this->isAjax): ?>
-<div class="container regular">
+<? if (isset($this->artistRow)): ?>
+    <? if (!$this->isAjax): ?>
+    <div class="container regular">
+    <? endif; ?>
+
+    <div class="collection-info">
+        <h2><?= ucfirst($this->artistRow->name); ?></h2>
+        <div class="span3">
+            <img src="<?= $this->artistRow->getCover(); ?>"/>
+        </div>
+
+        <div class="span8" style="text-align: justify">
+            <?= $this->artistRow->getInfo(); ?>
+        </div>
+    </div>
+
+
+    <div class="similarity-list span12">
+        <h2><?= $this->t('Similar Artists'); ?></h2>
+        <?
+            foreach ($this->artistRow->getSimilarityList() as $artistRow) {
+                echo $this->artistSquare($artistRow);
+            }
+        ?>
+    </div>
+
+    <? if (!$this->isAjax): ?>
+    </div>
+    <? endif; ?>
+<? else: ?>
+    <p><?= $this->t('Artist not found!'); ?>
 <? endif; ?>
-
-
-<div class="collection-info">
-    <? var_dump($this->artistRow->similarityList); ?>
-    <div class="cover">
-        <img src="<?= $this->artistRow->getCover(); ?>"/>
-    </div>
-    <div class="caption">
-    </div>
-
-    <div class="span10">
-        <?= $this->artistRow->getInfo(); ?>
-    </div>
-</div>
-
-<? if (!$this->isAjax): ?>
-</div>
-<? endif; ?>
-

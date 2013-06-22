@@ -129,11 +129,7 @@
     opacity: 0.0;
 }
 
-.item-square[albumid] .name {
-    top: 0;
-}
-
-.item-square[playlistid] .name {
+.item-square .name {
     top: 0;
 }
 
