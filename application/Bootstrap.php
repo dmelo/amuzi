@@ -139,5 +139,16 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 )
             )
         );
+
+        $router->addRoute(
+            'album',
+            new Zend_Controller_Router_Route(
+                'album/:artist/:name',
+                array(
+                    'controller' => 'album',
+                    'action' => 'info'
+                )
+            )
+        );
     }
 }
