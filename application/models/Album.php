@@ -131,6 +131,11 @@ class Album extends DZend_Model
             array() : $this->_albumDb->findById($albumIdSet);
     }
 
+    public function findById($idSet)
+    {
+        return $this->_objDb->findById($idSet);
+    }
+
     public function remove($id)
     {
         $userListenAlbumRow = $this->_userListenAlbumDb

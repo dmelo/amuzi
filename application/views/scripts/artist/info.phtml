@@ -24,6 +24,18 @@
         ?>
     </div>
 
+    <div class="similarity-list span12">
+        <h2><?= $this->t('Top Albums'); ?></h2>
+        <?
+            foreach ($this->artistRow->getTopAlbumList() as $albumRow) {
+                echo $this->lightSquare(
+                    '/album/' . urlencode($albumRow->name) . '/' . urlencode($albumRow->artist),
+                    $albumRow->name,
+                    $albumRow->cover
+                );
+            }
+        ?>
+
     <? if (!$this->isAjax): ?>
     </div>
     <? endif; ?>
