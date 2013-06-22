@@ -332,6 +332,51 @@ class Lastfm extends DZend_Model
         return array('cover' => $cover, 'info' => $info, 'similarityList' => $similarityList);
     }
 
+    public function getArtistTopAlbum($artistName)
+    {
+        $args = array(
+            'method' => 'artist.getTopAlbums',
+            'artist' => $artistName,
+            'limit' => 10
+        );
+
+        $xml = $this->_request($args);
+
+        $xmlDoc = new DOMDocument();
+        $cover = null;
+        $info = null;
+        $similarityList = array();
+        $ret = array();
+        if ('' !== $xml) {
+            $xmlDoc->loadXML($xml);
+            $albumList = $xmlDoc->getElementsByTagName('album');
+            for($i = 0; $i < $albumList->length; $i++) {
+                $album = $albumList->item($i);
+                $item = array();
+                for ($e = $album->firstChild; null != $e; $e = $e->nextSibling) {
+                    switch ($e->nodeName) {
+                        case 'name':
+                            $item['name'] = $e->nodeValue;
+                            break;
+                        case 'artist':
+                            for ($artist = $e->firstChild; null != $artist; $artist = $artist->nextSibling) {
+                                if ('name' === $artist->nodeName) {
+                                    $item['artist'] = $artist->nodeValue;
+                                    break;
+                                }
+                            }
+                            break;
+                    }
+                }
+                $ret[] = $item;
+                $this->_logger->debug('Lastfm::getArtistTopAlbum ' . print_r($album, true));
+            }
+        }
+
+        return $ret;
+
+    }
+
 
     public function getSimilar($artist, $music)
     {
