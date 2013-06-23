@@ -284,17 +284,13 @@ class Lastfm extends DZend_Model
 
     public function getArtist($name)
     {
-        $key = sha1("Lastfm::getArtist#$name");
-        if (($xml = $this->_cache->load($key)) === false) {
-            $result = array();
-            $args = array(
-                'method' => 'artist.getinfo',
-                'artist' => $name
-            );
-            $xml = $this->_request($args, false);
+        $args = array(
+            'method' => 'artist.getinfo',
+            'artist' => $name
+        );
 
-            $this->_cache->save($xml, $key);
-        }
+        $xml = $this->_request($args, false);
+        $this->_logger->debug('Lastfm::getArtist xml ' . $xml);
 
         $xmlDoc = new DOMDocument();
         $cover = null;
@@ -315,19 +311,22 @@ class Lastfm extends DZend_Model
                         break;
                     case 'similar':
                         for ($similar = $e->firstChild; null !== $similar; $similar = $similar->nextSibling) {
+                            $item = array();
                             if ('artist' === $similar->nodeName) {
                                 for ($child = $similar->firstChild; null !== $child; $child = $child->nextSibling) {
                                     if ('name' === $child->nodeName) {
-                                        $similarityList[] = $child->nodeValue;
+                                        $item['name'] = $child->nodeValue;
+                                    } elseif ('image' === $child->nodeName) {
+                                        $item['cover'] = $child->nodeValue;
                                     }
                                 }
+                                $similarityList[] = $item;
                             }
                         }
                         break;
                 }
             }
         }
-
 
         return array('cover' => $cover, 'info' => $info, 'similarityList' => $similarityList);
     }
@@ -373,7 +372,6 @@ class Lastfm extends DZend_Model
                     }
                 }
                 $ret[] = $item;
-                $this->_logger->debug('Lastfm::getArtistTopAlbum ' . print_r($album, true));
             }
         }
 

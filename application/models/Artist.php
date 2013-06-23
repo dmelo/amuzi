@@ -23,9 +23,20 @@
  */
 class Artist extends DZend_Model
 {
-    public function insert($name)
+    public function insert($name, $cover = null)
     {
-        return $this->_artistDb->insert(array('name' => $name));
+        $id = $this->_objDb->insert(
+            array(
+                'name' => $name,
+                'cover' => $cover
+            )
+        );
+
+        $row = $this->findRowById($id);
+        $row->cover = $cover;
+        $row->save();
+
+        return $id;
     }
 
     public function preload($ids)

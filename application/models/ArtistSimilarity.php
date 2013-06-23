@@ -23,12 +23,12 @@
  */
 class ArtistSimilarity extends DZend_Model
 {
-    public function insertSimilarities($artistId, $artistNameList)
+    public function insertSimilarities($artistId, $similarityList)
     {
-        $this->_logger->debug("ArtistSimilarity::insertSimilarities $artistId, " . print_r($artistNameList, true));
+        $this->_logger->debug("ArtistSimilarity::insertSimilarities $artistId, " . print_r($similarityList, true));
         $artistIdSet = array();
-        foreach ($artistNameList as $artistName) {
-            $artistIdSet[] = $this->_artistModel->insert($artistName);
+        foreach ($similarityList as $artist) {
+            $artistIdSet[] = $this->_artistModel->insert($artist['name'], $artist['cover']);
         }
 
 
