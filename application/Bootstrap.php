@@ -134,6 +134,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 'artist/:name',
                 array(
+                    'module' => 'default',
                     'controller' => 'artist',
                     'action' => 'info'
                 )
@@ -145,6 +146,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             new Zend_Controller_Router_Route(
                 'album/:artist/:name',
                 array(
+                    'module' => 'default',
                     'controller' => 'album',
                     'action' => 'info'
                 )

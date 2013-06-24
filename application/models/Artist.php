@@ -25,18 +25,25 @@ class Artist extends DZend_Model
 {
     public function insert($name, $cover = null)
     {
-        $id = $this->_objDb->insert(
-            array(
-                'name' => $name,
-                'cover' => $cover
-            )
-        );
+        $row = null;
+        try {
+            $id = $this->_objDb->insert(
+                array(
+                    'name' => $name,
+                    'cover' => $cover
+                )
+            );
+            $row = $this->findRowById($id);
+        } catch (Zend_Db_Statement_Exception $e) {
+            $row = $this->findRowByName($name);
+        }
 
-        $row = $this->findRowById($id);
-        $row->cover = $cover;
-        $row->save();
+        if (null == $row->cover) {
+            $row->cover = $cover;
+            $row->save();
+        }
 
-        return $id;
+        return $row->id;
     }
 
     public function preload($ids)
