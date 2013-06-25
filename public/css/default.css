@@ -176,6 +176,7 @@ dd#submit-element {
 .loginRequired {
     opacity: 0;
     filter: alpha (opacity = 0);
+    display: none;
 }
 
 .invisible {
