@@ -23,6 +23,7 @@ body {
 
 .container.regular {
     margin-top: 100px;
+    margin-bottom: 50px;
     text-align: left;
 }
 
@@ -149,11 +150,6 @@ form.search input[type=submit] {
     100% {background:#282828;}
 }
 
-
-
-
-
-
 dd#submit-element {
     margin-left: 0px;
     margin-top: -2px;
@@ -166,7 +162,7 @@ dd#submit-element {
     bottom: 0px;
     width: 100%;
     text-align: center;
-    z-index: 3;
+    z-index: 100;
 }
 
 .popover {
