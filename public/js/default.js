@@ -745,7 +745,7 @@
                 handleAutocompleteChoice(ui);
             },
             select: function (e, ui) {
-                handleAutocompleteChoice(ui);
+                // handleAutocompleteChoice(ui);
             },
             focus: function (e, ui) {
                 $('#q').val(ui.item.value);
@@ -800,6 +800,8 @@
         setTimeout($.initAmuzi, 1500);
 
         if (isLoggedIn()) {
+            $('form.navbar-search').css('display', 'none');
+            $('.loginRequired').css('display', 'block');
             $('.loginRequired').fadeTo('slow', 1.0, function () {
                 $(this).css('filter', 'alpha (opacity = 100)');
             });
