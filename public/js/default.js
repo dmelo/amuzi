@@ -349,7 +349,7 @@
     }
 
     function handleAutocompleteChoice(e, ui) {
-        if (ui.item !== null && ui.item.value !== latestSearch) {
+        if (0 === $('#userId').length || (ui.item !== null && ui.item.value !== latestSearch)) {
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
@@ -626,6 +626,12 @@
     function openAutocomplete() {
         var left = $('.ui-autocomplete').position().left;
         $('.ui-autocomplete').css('left', (left + 15) + 'px');
+
+        if (0 === $('#userId').length) {
+            $('.ui-autocomplete').addClass('ui-autocomplete-logout');
+        } else {
+            $('.ui-autocomplete').addClass('ui-autocomplete-login');
+        }
     }
 
     function nothing() {
@@ -736,7 +742,7 @@
                     currentCategory = "";
                 $.each( items, function( index, item ) {
                     if ( item.category != currentCategory ) {
-                        var t = 'track' === item.category ? 'Tracks' : 'Albums';
+                        var t = item.category.charAt(0).toUpperCase() + item.category.slice(1) + 's';
                         ul.append( "<li class='ui-autocomplete-category " + item.category + "'>" + t + "</li>" );
                         currentCategory = item.category;
                     }
@@ -751,8 +757,10 @@
                 $.get('/autocomplete.php', {
                     q: request.term,
                 }, callbackAutocomplete, 'json').error(acError);
-            },
-            change: handleAutocompleteChoice,
+            }, messages: {
+                noResults: '',
+                results: function() {}
+            }, change: handleAutocompleteChoice,
             select: handleAutocompleteChoice,
             focus: nothing,
             close: nothing,

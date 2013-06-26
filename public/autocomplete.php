@@ -21,8 +21,15 @@ error_reporting(E_ALL);
 
 
 $ports = array(
-    'album_db' => 3673, 'track_db' => 3674, 'album' => 3675, 'track' => 3676
+    'artist_db' => 3671,
+    'album_db' => 3672,
+    'track_db' => 3673,
+    'artist' => 3674,
+    'album' => 3675,
+    'track' => 3676
 );
+
+
 $pdo = null;
 
 function openSocket($port)
@@ -43,6 +50,7 @@ function openSocket($port)
 
 function getResult($q, $port, $limit = 5)
 {
+    $typeList = array('artist', 'album', 'track');
     $sock = openSocket($port);
 
     socket_write($sock, $q, strlen($q));
@@ -59,14 +67,15 @@ function getResult($q, $port, $limit = 5)
         foreach ($resultList as $result) {
             if (strlen($result) > 0) {
                 list($artistName, $name) = explode('A', $result);
-                $artistName = $artistName;
-                $name = $name;
+                $artistName = ucfirst($artistName);
+                $name = ucfirst($name);
+                logDebug('KKKKKKKKKKK' . (($port - 3671) % 3) . $typeList[($port - 3671) % 3]);
                 $ret[] = array(
-                    'name' => "$artistName - $name",
+                    'name' => '' === $name ? $artistName : "$artistName - $name",
                     'cover' => '/img/album.png',
                     'artist' => $artistName,
                     'musicTitle' => $name,
-                    'type' => $port % 2 ? 'album': 'track'
+                    'type' => $typeList[($port - 3671) % 3]
                 );
                 if (count($ret) >= $limit) {
                     break;
@@ -154,6 +163,8 @@ function logDebug($str, $q)
 }
 
 $q = urldecode($_GET['q']);
+$logout = array_key_exists('logout', $_GET) && 'true' === $_GET['logout'];
+logDebug("logout: " . print_r($logout, true));
 
 $r = '/^ *$/';
 if (preg_match($r, $q) || strlen($q) < 3) {
@@ -165,9 +176,14 @@ if (preg_match($r, $q) || strlen($q) < 3) {
     $dbLink = null;
 
     $ret = array();
-    foreach (array('album_db', 'track_db') as $type) {
+    $types = $logout ?
+        array('artist_db', 'album_db'):
+        array('album_db', 'track_db');
+
+    logDebug('types: ' . print_r($types, true));
+    foreach ($types as $type) {
         $sub = getResult($q, $ports[$type]);
-        if (count($sub) > 0) {
+        if (count($sub) > 0 && 'album_db' === $type) {
             $sub = fillImages($sub, $type);
         }
         if (count($sub) < $limit) {
@@ -178,7 +194,12 @@ if (preg_match($r, $q) || strlen($q) < 3) {
         $ret[] = $sub;
     }
 
-    $ret = array_merge($ret[0], $ret[1]);
+    $r = array();
+    foreach ($ret as $part) {
+        $r = array_merge($r, $part);
+    }
+    $ret = $r;
     logDebug('end: ' . count($ret) . ' results', $q);
+    logDebug('ret: ' . print_r($ret, true));
     echo json_encode($ret);
 }

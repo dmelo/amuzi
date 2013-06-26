@@ -303,6 +303,14 @@ ul.ui-autocomplete li .cover {
 
 ul.ui-autocomplete {
     position: absolute !important;
+}
+
+ul.ui-autocomplete-logout {
+    top: 41px !important;
+    width: 366px !important;
+}
+
+ul.ui-autocomplete-login {
     top: 149px !important;
     width: 300px !important;
 }

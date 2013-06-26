@@ -284,7 +284,9 @@
                 $('#subtitle').subtitleInit();
                 var messageId = $.bootstrapMessageLoading();
                 globalSearchId++;
-                search.clean();
+                if ('undefined' !== typeof search) {
+                    search.clean();
+                }
                 var obj = new Object();
                 obj.artist = $('#artist').val();
                 obj.musicTitle = $('#musicTitle').val();
@@ -292,13 +294,28 @@
                 obj.searchId = globalSearchId;
                 obj.messageId = messageId;
                 console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
-                if ($.isSearchFormValid()) {
-                    searchMusic([obj], 1, searchMusicCallbackCenter);
-                } else { // search in a way that many music can be retrieved.
-                    searchMulti($('#q').val());
+                if (1 === $('#userId').length) {
+                    if ($.isSearchFormValid()) {
+                        searchMusic([obj], 1, searchMusicCallbackCenter);
+                    } else { // search in a way that many music can be retrieved.
+                        searchMulti($('#q').val());
+                    }
+                    incrementSimilar(obj);
+                } else {
+                    console.log('BEFORE SUBMIT LOGGEDOUT');
+                    console.log('/artist/' + obj.artist);
+                    console.log(obj.type);
+                    var uri = '/';
+
+                    if ('album' === obj.type) {
+                        uri = '/album/' + obj.artist + '/' + obj.musicTitle;
+                    } else if ('artist' === obj.type) {
+                        uri = '/artist/' + obj.artist;
+                    }
+
+                    window.location.pathname = uri;
                 }
 
-                incrementSimilar(obj);
                 // IMPORTANT: Submitting will never be fulfilled, because we
                 // we must have a better control of searchsimilar.
 
