@@ -51,6 +51,7 @@ function openSocket($port)
 function getResult($q, $port, $limit = 5)
 {
     $typeList = array('artist', 'album', 'track');
+    logDebug("getResult $q $port $limit");
     $sock = openSocket($port);
 
     socket_write($sock, $q, strlen($q));
@@ -171,7 +172,7 @@ if (preg_match($r, $q) || strlen($q) < 3) {
     return 0;
 } else {
     logDebug('start', $q);
-    $q = str_replace(' - ', 'A', strtolower($q));
+    $q = strtolower($q);
     $limit = 5;
     $dbLink = null;
 
@@ -182,10 +183,34 @@ if (preg_match($r, $q) || strlen($q) < 3) {
 
     logDebug('types: ' . print_r($types, true));
     foreach ($types as $type) {
-        $sub = getResult($q, $ports[$type]);
+        $sub = array();
+        $start = microtime(true);
+        if (false === strpos($q, ' - ')) {
+            $words = explode(' ', $q);
+            for ($i = 0; $i <= count($words); $i++) {
+                $w1 = implode(' ', array_slice($words, 0, $i));
+                $w2 = implode(' ', array_slice($words, $i));
+                $sub = array_merge(
+                    $sub,
+                    getResult("${w1}A${w2}", $ports[$type]),
+                    getResult("${w2}A${w1}", $ports[$type])
+                );
+            }
+        } else {
+            $words = explode(' - ', $q);
+            $w1 = array_key_exists(0, $words) ? $words[0] : '';
+            $w2 = array_key_exists(1, $words) ? $words[1] : '';
+            $sub = array_merge($sub, getResult("${w1}A${w2}", $ports[$type]));
+            $sub = array_merge($sub, getResult("${w2}A${w1}", $ports[$type]));
+        }
+        $end = microtime(true);
+        logDebug('atom time ' . ($end - $start) . " on " . $q .PHP_EOL);
+
+
         if (count($sub) > 0 && 'album_db' === $type) {
             $sub = fillImages($sub, $type);
         }
+
         if (count($sub) < $limit) {
             $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
             $sub = array_merge($sub, $complemet);
