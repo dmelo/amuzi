@@ -21,12 +21,19 @@ error_reporting(E_ALL);
 
 
 $ports = array(
-    'artist_db' => 3671,
-    'album_db' => 3672,
-    'track_db' => 3673,
-    'artist' => 3674,
-    'album' => 3675,
-    'track' => 3676
+    'artist_db' =>   3671,
+    'album_db' =>    3672,
+    'track_db' =>    3673,
+    'artist' =>      3674,
+    'album' =>       3675,
+    'track' =>       3676,
+
+    'artist_r_db' => 3681,
+    'album_r_db' =>  3682,
+    'track_r_db' =>  3683,
+    'artist_r' =>    3684,
+    'album_r' =>     3685,
+    'track_r' =>     3686,
 );
 
 
