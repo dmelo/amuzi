@@ -28,10 +28,10 @@ $ports = array(
     'album' =>       3675,
     'track' =>       3676,
 
-    'artist_r_db' => 3681,
+
     'album_r_db' =>  3682,
     'track_r_db' =>  3683,
-    'artist_r' =>    3684,
+
     'album_r' =>     3685,
     'track_r' =>     3686,
 );
