@@ -24,13 +24,15 @@ $ports = array(
     'artist_db' =>   3671,
     'album_db' =>    3672,
     'track_db' =>    3673,
-    'artist' =>      3674,
-    'album' =>       3675,
-    'track' =>       3676,
-
 
     'album_r_db' =>  3682,
     'track_r_db' =>  3683,
+
+
+
+    'artist' =>      3674,
+    'album' =>       3675,
+    'track' =>       3676,
 
     'album_r' =>     3685,
     'track_r' =>     3686,
