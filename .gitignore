@@ -8,7 +8,6 @@ tests/tmp/*
 public/tmp/*
 !public/tmp/README
 tests/report/
-library/EasyBib
 html/
 latex/
 setup/apache.conf
