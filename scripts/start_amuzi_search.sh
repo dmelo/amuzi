@@ -20,7 +20,8 @@ do
         if ! [ '_r.txt' = $SUFFIX -a 'artist' = $TYPE ]
         then
             FILE="../../../public/data/artist_$TYPE$SUFFIX"
-            cd library/amuzi_search/env_$TYPE$SUFFIX-d/
+            DATAPATH=library/amuzi_search/env_$TYPE$SUFFIX-d/
+            cd $DATAPATH $PORT
             if [[ $# -eq 1 && "$1" == 'debug' ]]
             then
                 echo 'debug'
