@@ -104,16 +104,8 @@ class AlbumController extends DZend_Controller_Action
 
             $album = $albumRow->getArray();
             $ret = null;
-            // if (0 === count($album['trackList'])) {
-                // TODO: this was develooped offline. test it online.
-                // $album = $this->_lastfmModel->getAlbum($albumRow->artist, $albumRow->name);
-                // $albumId = $this->_albumModel->insert($album);
-                // $albumRow = $this->_albumModel->findRowById($albumId);
-                $this->_fullTrackList($albumRow);
-                $ret = array($albumRow->trackList, $albumRow->name, 0, 0, 0, 1);
-            // } else {
-            //    $ret = array($album['trackList'], $album['name'], 0, 0, 0, 1);
-            // }
+            // $this->_fullTrackList($albumRow);
+            $ret = array($albumRow->getTrackListSync(), $albumRow->name, 0, 0, 0, 1);
             $this->view->output = $ret;
         }
     }

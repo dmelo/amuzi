@@ -242,6 +242,7 @@ class Lastfm extends DZend_Model
 
     public function getAlbum($artist, $album)
     {
+        $ret = null;
         $args = array(
             'method' => 'album.getInfo',
             'album' => $album,
@@ -252,7 +253,7 @@ class Lastfm extends DZend_Model
 
         $albumName = $artist = $cover = '';
         $xmlDoc = new DOMDocument();
-        if ('' !== $xml) {
+        if (!empty($xml)) {
             $xmlDoc->loadXML($xml);
             $this->_logger->debug("XML: " . $xml);
             $album = $xmlDoc->getElementsByTagName('album');
@@ -271,15 +272,15 @@ class Lastfm extends DZend_Model
                         break;
                 }
             }
+
+            $trackList = $this->_exploreDOM($xml, '_processResponseSearch', 1000);
+
+            $ret = new LastfmAlbum($albumName, $cover, $artist, $trackList);
         }
 
-        $trackList = $this->_exploreDOM($xml, '_processResponseSearch', 1000);
+        $this->_logger->debug('Lastfm::getAlbum - ' . $ret);
 
-        $albumRow = new LastfmAlbum($albumName, $cover, $artist, $trackList);
-
-        $this->_logger->debug('Lastfm::getAlbum - ' . $albumRow);
-
-        return $albumRow;
+        return $ret;
     }
 
     public function getArtist($name)
