@@ -45,7 +45,7 @@ class Lastfm extends DZend_Model
         if (($xml = $this->_cache->load($key)) === false) {
             $url = $this->_baseUrl . '?' . implode('&', $final);
             $this->_logger->debug('Lastfm::_request - ' . $url);
-            $xml = file_get_contents($url);
+            $xml = @file_get_contents($url);
             if ($useCache) {
                 $this->_cache->save($xml, $key);
             }
@@ -296,7 +296,7 @@ class Lastfm extends DZend_Model
         $cover = null;
         $info = null;
         $similarityList = array();
-        if ('' !== $xml) {
+        if (!empty($xml)) {
             $xmlDoc->loadXML($xml);
             $artist = $xmlDoc->getElementsByTagName('artist');
             for ($e = $artist->item(0)->firstChild; null !== $e;

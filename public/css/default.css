@@ -2,6 +2,10 @@ body {
     overflow: hidden;
 }
 
+#content {
+    margin-top: 50px;
+}
+
 #amazingly-free {
     background-color: white;
 }
