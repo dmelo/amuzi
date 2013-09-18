@@ -134,7 +134,7 @@ class AlbumController extends DZend_Controller_Action
                 $this->view->artistRow = $this->_artistModel->findRowById($collection->artistId);
 
                 foreach (array(
-                    'getCoverName', 'getType', 'playTime', 'getTrackListAsArray'
+                    'getCoverName', 'getType', 'playTime', 'getTrackListSync'
                     ) as $f) {
                     $c->start();
                     $collection->$f();
