@@ -45,7 +45,7 @@
         <caption><?= $this->t('Track list'); ?></caption>
         <thead></thead>
         <tbody>
-        <? $count = 0; foreach ($this->collection->getTrackListAsArray() as $track): ?>
+        <? $count = 0; foreach ($this->collection->getTrackListSync() as $track): ?>
             <? if (!array_key_exists('title', $track)) continue; ?>
             <tr>
                 <td><?= ++$count; ?></div>
@@ -61,9 +61,7 @@
 
 
 </div>
-    <?= $this->render('artist/similarity.phtml'); ?>
-
 <? if (!$this->isAjax): ?>
-</div>
+    <?= $this->render('artist/similarity.phtml'); ?>
 <? endif; ?>
 

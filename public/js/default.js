@@ -32,7 +32,8 @@
         current,
         latestSearch,
         popup,
-        loadingPlaylistMessage = null;
+        loadingPlaylistMessage = null,
+        globalResponse;
 
     window.myPlaylist = null;
     window.windowId = parseInt(Math.random() * 1000000);
@@ -347,8 +348,8 @@
         element.removeClass('opacity-full');
     }
 
-    function handleAutocompleteChoice(ui) {
-        if (ui.item !== null && ui.item.value !== latestSearch) {
+    function handleAutocompleteChoice(e, ui) {
+        if (0 === $('#userId').length || (ui.item !== null && ui.item.value !== latestSearch)) {
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
@@ -622,6 +623,44 @@
         $.bootstrapLoadModalDisplay('Introdução', '<iframe width="720" height="540" src="http://www.youtube.com/embed/UGl-sSa5ibI?autoplay=1" frameborder="0" allowfullscreen></iframe>', 'modal-wide');
     }
 
+    function openAutocomplete() {
+        var left = $('.ui-autocomplete').position().left;
+        $('.ui-autocomplete').css('left', (left + 15) + 'px');
+
+        if (0 === $('#userId').length) {
+            $('.ui-autocomplete').addClass('ui-autocomplete-logout');
+        } else {
+            $('.ui-autocomplete').addClass('ui-autocomplete-login');
+        }
+    }
+
+    function nothing() {
+    }
+
+    var callbackAutocomplete = function(data) {
+        var end = new Date();
+        var count = 0;
+        var a =  $.map(data, function (row) {
+            return {
+                data: row,
+                label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
+                category: row.type,
+                value: row.name,
+                artist: row.artist,
+                musicTitle: row.musicTitle,
+                type: row.type
+            };
+        }, 'json');
+
+        globalResponse(a);
+    };
+
+    function acError(e) {
+        $.bootstrapMessageAuto(
+            'Error loaging suggestions. Please, try reloading your browser,',
+            'error'
+        );
+    }
 
     $(document).ready(function () {
         var ac,
@@ -703,7 +742,7 @@
                     currentCategory = "";
                 $.each( items, function( index, item ) {
                     if ( item.category != currentCategory ) {
-                        var t = 'track' === item.category ? 'Tracks' : 'Albums';
+                        var t = item.category.charAt(0).toUpperCase() + item.category.slice(1) + 's';
                         ul.append( "<li class='ui-autocomplete-category " + item.category + "'>" + t + "</li>" );
                         currentCategory = item.category;
                     }
@@ -712,51 +751,33 @@
             }
         });
 
-        ac = $('#q').catcomplete({
+        var acOption = {
             source: function (request, response) {
-                var start = new Date();
+                globalResponse = response;
                 $.get('/autocomplete.php', {
                     q: request.term,
-                }, function (data) {
-                    var end = new Date();
-                    console.log("AUTOCOMPLETE: " + (end.getTime() - start.getTime()));
-                    var count = 0;
-                    var a =  $.map(data, function (row) {
-                        return {
-                            data: row,
-                            label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
-                            category: row.type,
-                            value: row.name,
-                            artist: row.artist,
-                            musicTitle: row.musicTitle,
-                            type: row.type
-                        };
-                    }, 'json');
+                }, callbackAutocomplete, 'json').error(acError);
+            }, messages: {
+                noResults: '',
+                results: function() {}
+            }, change: handleAutocompleteChoice,
+            select: handleAutocompleteChoice,
+            focus: nothing,
+            close: nothing,
+            open: openAutocomplete
+        };
 
-                    response(a);
-                }, 'json').error(function (e) {
-                    $.bootstrapMessageAuto(
-                        'Error loaging suggestions. Please, try reloading your browser,',
-                        'error'
-                    );
-                });
-            },
-            change: function (e, ui) {
-                handleAutocompleteChoice(ui);
-            },
-            select: function (e, ui) {
-                handleAutocompleteChoice(ui);
-            },
-            focus: function (e, ui) {
-                $('#q').val(ui.item.value);
-            },
-            close: function (e, ui) {
-            },
-            open: function () {
-                var left = $('.ui-autocomplete').position().left;
-                $('.ui-autocomplete').css('left', (left + 15) + 'px');
-            }
-        });
+        $('#incboard-search #q').catcomplete(acOption);
+
+        acOption.source = function (request, response) {
+            globalResponse = response;
+            $.get('/autocomplete.php', {
+                logout: true,
+                q: request.term,
+            }, callbackAutocomplete, 'json').error(acError);
+        };
+
+        $('form.navbar-search input.search-query').catcomplete(acOption);
 
         if ($('#status-message').length > 0) {
             message = $('#status-message p').html();
@@ -800,6 +821,8 @@
         setTimeout($.initAmuzi, 1500);
 
         if (isLoggedIn()) {
+            $('form.navbar-search').css('display', 'none');
+            $('.loginRequired').css('display', 'block');
             $('.loginRequired').fadeTo('slow', 1.0, function () {
                 $(this).css('filter', 'alpha (opacity = 100)');
             });

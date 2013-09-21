@@ -129,7 +129,7 @@ class User extends DZend_Model
 
     public function sendActivateAccountEmail($userRow)
     {
-        $mail = new Zend_Mail('UTF-8');
+        $mail = new DZend_Mail('UTF-8');
 
         $msg = $this->_translate->_(
             "Hi %s,<br/><br/>Welcome to AMUZI. To activate your account "

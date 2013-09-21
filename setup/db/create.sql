@@ -23,18 +23,18 @@ CREATE TABLE `artist_similarity` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `artist_similarity_created_trigger` BEFORE INSERT ON `artist_similarity` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
-CREATE TABLE `artist_top_album` (
+CREATE TABLE `album` (
     `id` int(11) NOT NULL auto_increment,
-    `artist_id` int(11) NOT NULL,
-    `album_id` int(11) NOT NULL,
-    PRIMARY KEY(`id`),
-    UNIQUE(`artist_id`, `album_id`),
-    CONSTRAINT `artist_top_album_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`),
-    CONSTRAINT `artist_top_album_ibfk_2` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
+    `name` varchar(255) NOT NULL,
+    `cover` varchar(2047) collate utf8_swedish_ci default NULL,
+    `artist_id` int(11) NOT NULL, -- In case there is many artist ("Various Artists" from last.fm) then this info is not recorded.
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
-    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(`id`),
+    UNIQUE(`name`, `artist_id`),
+    CONSTRAINT `album_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-CREATE TRIGGER `artist_top_album_created_trigger` BEFORE INSERT ON `artist_top_album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+CREATE TRIGGER `album_created_trigger` BEFORE INSERT ON `album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 CREATE TABLE `music_title` (
     `id` int(11) NOT NULL auto_increment,
@@ -89,7 +89,6 @@ CREATE TABLE `user` (
     `current_album_id` int(11),
     PRIMARY KEY(`id`),
     UNIQUE(`email`),
-    CONSTRAINT `user_ibfk_1` FOREIGN KEY(`current_playlist_id`) REFERENCES `playlist`(`id`),
     CONSTRAINT `user_ibfk_2` FOREIGN KEY(`current_album_id`) REFERENCES `album`(`id`),
     `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
     `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -161,6 +160,7 @@ CREATE TRIGGER `playlist_created_trigger` BEFORE INSERT ON `playlist` FOR EACH R
 ALTER TABLE `playlist` auto_increment = 80000;
 
 ALTER TABLE `user` ADD CONSTRAINT `user_playlist_id_ibfk_1` FOREIGN KEY (`current_playlist_id`) REFERENCES `playlist`(`id`);
+
 
 CREATE TABLE `playlist_has_track` (
     `id` int(11) NOT NULL auto_increment,
@@ -274,18 +274,18 @@ CREATE TABLE `tutorial_accomplished` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 CREATE TRIGGER `tutorial_accomplished_created_trigger` BEFORE INSERT ON `tutorial_accomplished` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
-CREATE TABLE `album` (
+CREATE TABLE `artist_top_album` (
     `id` int(11) NOT NULL auto_increment,
-    `name` varchar(255) NOT NULL,
-    `cover` varchar(2047) collate utf8_swedish_ci default NULL,
-    `artist_id` int(11) NOT NULL, -- In case there is many artist ("Various Artists" from last.fm) then this info is not recorded.
-    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
-    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `artist_id` int(11) NOT NULL,
+    `album_id` int(11) NOT NULL,
     PRIMARY KEY(`id`),
-    UNIQUE(`name`, `artist_id`),
-    CONSTRAINT `album_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`)
+    UNIQUE(`artist_id`, `album_id`),
+    CONSTRAINT `artist_top_album_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist`(`id`),
+    CONSTRAINT `artist_top_album_ibfk_2` FOREIGN KEY (`album_id`) REFERENCES `album`(`id`),
+    `created` TIMESTAMP DEFAULT '0000-00-00 00:00:00',
+    `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-CREATE TRIGGER `album_created_trigger` BEFORE INSERT ON `album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
+CREATE TRIGGER `artist_top_album_created_trigger` BEFORE INSERT ON `artist_top_album` FOR EACH ROW SET NEW.created = CURRENT_TIMESTAMP;
 
 CREATE TABLE `album_has_artist_music_title` (
     `id` int(11) NOT NULL auto_increment,

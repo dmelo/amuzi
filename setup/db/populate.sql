@@ -9,6 +9,8 @@ INSERT INTO `user`(`name`, `email`, `password`)
 
 INSERT INTO `playlist`(user_id, name) VALUES(last_insert_id(), 'Diogo Melo');
 
+update user set current_playlist_id = (select id from playlist where name = 'Diogo Melo' limit 1) where name = 'Diogo Melo';
+
 INSERT INTO `task_type`(`name`, `duration`) values('SearchSimilar', 60 * 60 * 24 * 30), ('SearchString', 60 * 60 * 24 * 30 * 6);
 
 INSERT INTO `tutorial`(`name`) values('welcome'), ('search'), ('slide');

@@ -1,13 +1,13 @@
 *.swp
 *.swo
 public/api/*
-public/data/*.php
+public/data/*
 public/phpinfo.php
 docs/api
-tests/tmp
-public/tmp
+tests/tmp/*
+public/tmp/*
+!public/tmp/README
 tests/report/
-library/EasyBib
 html/
 latex/
 setup/apache.conf

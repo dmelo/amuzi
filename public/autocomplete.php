@@ -21,8 +21,24 @@ error_reporting(E_ALL);
 
 
 $ports = array(
-    'album_db' => 3673, 'track_db' => 3674, 'album' => 3675, 'track' => 3676
+    'artist_db' =>   3671,
+    'album_db' =>    3672,
+    'track_db' =>    3673,
+
+    'album_r_db' =>  3682,
+    'track_r_db' =>  3683,
+
+
+
+    'artist' =>      3674,
+    'album' =>       3675,
+    'track' =>       3676,
+
+    'album_r' =>     3685,
+    'track_r' =>     3686,
 );
+
+
 $pdo = null;
 
 function openSocket($port)
@@ -43,6 +59,8 @@ function openSocket($port)
 
 function getResult($q, $port, $limit = 5)
 {
+    $typeList = array('artist', 'album', 'track');
+    logDebug("getResult $q $port $limit");
     $sock = openSocket($port);
 
     socket_write($sock, $q, strlen($q));
@@ -59,14 +77,15 @@ function getResult($q, $port, $limit = 5)
         foreach ($resultList as $result) {
             if (strlen($result) > 0) {
                 list($artistName, $name) = explode('A', $result);
-                $artistName = $artistName;
-                $name = $name;
+                $artistName = ucfirst($artistName);
+                $name = ucfirst($name);
+                logDebug('KKKKKKKKKKK' . (($port - 3671) % 3) . $typeList[($port - 3671) % 3]);
                 $ret[] = array(
-                    'name' => "$artistName - $name",
+                    'name' => '' === $name ? $artistName : "$artistName - $name",
                     'cover' => '/img/album.png',
                     'artist' => $artistName,
                     'musicTitle' => $name,
-                    'type' => $port % 2 ? 'album': 'track'
+                    'type' => $typeList[($port - 3671) % 3]
                 );
                 if (count($ret) >= $limit) {
                     break;
@@ -154,22 +173,53 @@ function logDebug($str, $q)
 }
 
 $q = urldecode($_GET['q']);
+$logout = array_key_exists('logout', $_GET) && 'true' === $_GET['logout'];
+logDebug("logout: " . print_r($logout, true));
 
 $r = '/^ *$/';
 if (preg_match($r, $q) || strlen($q) < 3) {
     return 0;
 } else {
     logDebug('start', $q);
-    $q = str_replace(' - ', 'A', strtolower($q));
+    $q = strtolower($q);
     $limit = 5;
     $dbLink = null;
 
     $ret = array();
-    foreach (array('album_db', 'track_db') as $type) {
-        $sub = getResult($q, $ports[$type]);
-        if (count($sub) > 0) {
+    $types = $logout ?
+        array('artist_db', 'album_db'):
+        array('album_db', 'track_db');
+
+    logDebug('types: ' . print_r($types, true));
+    foreach ($types as $type) {
+        $sub = array();
+        $start = microtime(true);
+        if (false === strpos($q, ' - ')) {
+            $words = explode(' ', $q);
+            for ($i = 0; $i <= count($words); $i++) {
+                $w1 = implode(' ', array_slice($words, 0, $i));
+                $w2 = implode(' ', array_slice($words, $i));
+                $sub = array_merge(
+                    $sub,
+                    getResult("${w1}A${w2}", $ports[$type]),
+                    getResult("${w2}A${w1}", $ports[$type])
+                );
+            }
+        } else {
+            $words = explode(' - ', $q);
+            $w1 = array_key_exists(0, $words) ? $words[0] : '';
+            $w2 = array_key_exists(1, $words) ? $words[1] : '';
+            $sub = array_merge($sub, getResult("${w1}A${w2}", $ports[$type]));
+            $sub = array_merge($sub, getResult("${w2}A${w1}", $ports[$type]));
+        }
+        $end = microtime(true);
+        logDebug('atom time ' . ($end - $start) . " on " . $q .PHP_EOL);
+
+
+        if (count($sub) > 0 && 'album_db' === $type) {
             $sub = fillImages($sub, $type);
         }
+
         if (count($sub) < $limit) {
             $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
             $sub = array_merge($sub, $complemet);
@@ -178,7 +228,12 @@ if (preg_match($r, $q) || strlen($q) < 3) {
         $ret[] = $sub;
     }
 
-    $ret = array_merge($ret[0], $ret[1]);
+    $r = array();
+    foreach ($ret as $part) {
+        $r = array_merge($r, $part);
+    }
+    $ret = $r;
     logDebug('end: ' . count($ret) . ' results', $q);
+    logDebug('ret: ' . print_r($ret, true));
     echo json_encode($ret);
 }

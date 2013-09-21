@@ -39,6 +39,13 @@
         </div>
         <div class="span5">
             <?= $this->form; ?>
+            <div class="span2">
+                <?= $this->a('/Auth/index/forgotpassword', $this->t('Forgot password')); ?>
+            </div>
+            <div class="span1">|</div>
+            <div class="span1">
+                <?= $this->a('/Auth/index/register', $this->t('Register')); ?>
+            </div>
         </div>
 
     </div>
