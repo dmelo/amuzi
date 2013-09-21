@@ -223,6 +223,8 @@ if (preg_match($r, $q) || strlen($q) < 3) {
         if (count($sub) < $limit) {
             $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
             $sub = array_merge($sub, $complemet);
+        } else {
+            $sub = array_slice($sub, 0, $limit);
         }
 
         $ret[] = $sub;

@@ -767,7 +767,7 @@
             open: openAutocomplete
         };
 
-        $('#incboard-search #q').catcomplete(acOption);
+        $('.form-search #q').catcomplete(acOption);
 
         acOption.source = function (request, response) {
             globalResponse = response;
