@@ -393,7 +393,7 @@ class Lastfm extends DZend_Model
                 'track.getSimilar',
                 array(
                     'artist' => $artist,
-                    'track' => $track
+                    'track' => $music
                 )
             )
         );

@@ -39,7 +39,7 @@ class LastfmRequest
         } elseif ($required) {
             throw new LastfmException(
                 'Could not find required attribute ' . $attr
-                . ' in argument array ' . print_r($this->_dirtyArgs)
+                . ' in argument array ' . print_r($this->_dirtyArgs, true)
                 . ' for method ' . $this->_method
             );
         }
