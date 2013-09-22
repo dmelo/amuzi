@@ -25,14 +25,22 @@ class ArtistSimilarity extends DZend_Model
 {
     public function insertSimilarities($artistId, $similarityList)
     {
-        $this->_logger->debug("ArtistSimilarity::insertSimilarities $artistId, " . print_r($similarityList, true));
+        $this->_logger->debug(
+            "ArtistSimilarity::insertSimilarities $artistId, "
+            . print_r($similarityList, true)
+        );
         $artistIdSet = array();
         foreach ($similarityList as $artist) {
-            $artistIdSet[] = $this->_artistModel->insert($artist['name'], $artist['cover']);
+            $artistIdSet[] = $this->_artistModel->insert(
+                $artist['name'], $artist['cover']
+            );
         }
 
 
-        $this->_logger->debug("ArtistSimilarity::insertSimilarities $artistId, " . print_r($artistIdSet, true));
+        $this->_logger->debug(
+            "ArtistSimilarity::insertSimilarities $artistId, "
+            . print_r($artistIdSet, true)
+        );
 
         $fArtistId = 0;
         $sArtistId = 0;

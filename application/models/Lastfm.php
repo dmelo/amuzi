@@ -46,8 +46,8 @@ class Lastfm extends DZend_Model
 
         $c->stop();
         $this->_logger->debug(
-            'Lastfm::_request ' . print_r($request->getArgs(), true) . '. useCache: '
-            . $useCache . '. ' . $c->get()
+            'Lastfm::_request ' . print_r($request->getArgs(), true)
+            . '. useCache: ' . $useCache . '. ' . $c->get()
         );
 
         return $xml;
@@ -256,7 +256,10 @@ class Lastfm extends DZend_Model
             $album = $xmlDoc->getElementsByTagName('album');
             for ($e = $album->item(0)->firstChild; null !== $e;
                 $e = $e->nextSibling) {
-                $this->_logger->debug('Lastfm::getAlbum nodeName: ' . $e->nodeName . '. nodeValue: ' . $e->nodeValue);
+                $this->_logger->debug(
+                    'Lastfm::getAlbum nodeName: '
+                    . $e->nodeName . '. nodeValue: ' . $e->nodeValue
+                );
                 $value = $e->nodeValue;
                 switch ($e->nodeName) {
                     case 'name':
@@ -271,7 +274,9 @@ class Lastfm extends DZend_Model
                 }
             }
 
-            $trackList = $this->_exploreDOM($xml, '_processResponseSearch', 1000);
+            $trackList = $this->_exploreDOM(
+                $xml, '_processResponseSearch', 1000
+            );
 
             $ret = new LastfmAlbum($albumName, $cover, $artist, $trackList);
         }
@@ -309,10 +314,17 @@ class Lastfm extends DZend_Model
                         $cover = $value;
                         break;
                     case 'similar':
-                        for ($similar = $e->firstChild; null !== $similar; $similar = $similar->nextSibling) {
+                        for (
+                            $similar = $e->firstChild; null !== $similar;
+                            $similar = $similar->nextSibling
+                        ) {
                             $item = array();
                             if ('artist' === $similar->nodeName) {
-                                for ($child = $similar->firstChild; null !== $child; $child = $child->nextSibling) {
+                                for (
+                                    $child = $similar->firstChild;
+                                    null !== $child;
+                                    $child = $child->nextSibling
+                                ) {
                                     if ('name' === $child->nodeName) {
                                         $item['name'] = $child->nodeValue;
                                     } elseif ('image' === $child->nodeName) {
@@ -327,7 +339,11 @@ class Lastfm extends DZend_Model
             }
         }
 
-        return array('cover' => $cover, 'info' => $info, 'similarityList' => $similarityList);
+        return array(
+            'cover' => $cover,
+            'info' => $info,
+            'similarityList' => $similarityList
+        );
     }
 
     public function getArtistTopAlbum($artistName)
@@ -351,16 +367,21 @@ class Lastfm extends DZend_Model
         if ('' !== $xml) {
             $xmlDoc->loadXML($xml);
             $albumList = $xmlDoc->getElementsByTagName('album');
-            for($i = 0; $i < $albumList->length; $i++) {
+            for ($i = 0; $i < $albumList->length; $i++) {
                 $album = $albumList->item($i);
                 $item = array();
-                for ($e = $album->firstChild; null != $e; $e = $e->nextSibling) {
+                for (
+                    $e = $album->firstChild; null != $e; $e = $e->nextSibling
+                ) {
                     switch ($e->nodeName) {
                         case 'name':
                             $item['name'] = $e->nodeValue;
                             break;
                         case 'artist':
-                            for ($artist = $e->firstChild; null != $artist; $artist = $artist->nextSibling) {
+                            for (
+                                $artist = $e->firstChild; null != $artist;
+                                $artist = $artist->nextSibling
+                             ) {
                                 if ('name' === $artist->nodeName) {
                                     $item['artist'] = $artist->nodeValue;
                                     break;

@@ -27,18 +27,25 @@ class ArtistTopAlbum extends DZend_Model
     {
         $topAlbumList = $this->_objDb->findByArtistId($artistId);
         $albumRowSet = null;
-        $this->_logger->debug('ArtistTopAlbum::getList AA 00 - artistId: ' . $artistId . '. topAlbum: ' . print_r(count($topAlbumList), true));
+        $this->_logger->debug(
+            'ArtistTopAlbum::getList AA 00 - artistId: '
+            . $artistId . '. topAlbum: ' . print_r(count($topAlbumList), true)
+        );
         if (0 === count($topAlbumList)) {
             $artistRow = $this->_artistModel->findRowById($artistId);
             $ret = $this->_lastfmModel->getArtistTopAlbum($artistRow->name);
-            $this->_logger->debug('ArtistTopAlbum::getList AA 01 ' . print_r($ret, true));
+            $this->_logger->debug(
+                'ArtistTopAlbum::getList AA 01 ' . print_r($ret, true)
+            );
             $ids = array();
             foreach ($ret as $album) {
                 $ids[] = $this->_albumModel->insertEmpty(
                     $album['artist'], $album['name'], $album['cover']
                 );
             }
-            $this->_logger->debug('ArtistTopAlbum::getList AA 02 ' . print_r($ids, true));
+            $this->_logger->debug(
+                'ArtistTopAlbum::getList AA 02 ' . print_r($ids, true)
+            );
 
             if (!empty($ids)) {
                 $albumRowSet = $this->_albumModel->findById($ids);
@@ -59,7 +66,9 @@ class ArtistTopAlbum extends DZend_Model
             foreach ($topAlbumList as $topAlbumRow) {
                 $ids[] = $topAlbumRow->albumId;
             }
-            $this->_logger->debug('ArtistTopAlbum::getList BB 01 ' . print_r($ids, true));
+            $this->_logger->debug(
+                'ArtistTopAlbum::getList BB 01 ' . print_r($ids, true)
+            );
             $albumRowSet = $this->_albumModel->findById($ids);
         }
 

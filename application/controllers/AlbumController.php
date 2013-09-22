@@ -105,7 +105,9 @@ class AlbumController extends DZend_Controller_Action
             $album = $albumRow->getArray();
             $ret = null;
             // $this->_fullTrackList($albumRow);
-            $ret = array($albumRow->getTrackListSync(), $albumRow->name, 0, 0, 0, 1);
+            $ret = array(
+                $albumRow->getTrackListSync(), $albumRow->name, 0, 0, 0, 1
+            );
             $this->view->output = $ret;
         }
     }
@@ -131,7 +133,9 @@ class AlbumController extends DZend_Controller_Action
                 $c = new DZend_Chronometer();
 
                 $collection->getCoverName();
-                $this->view->artistRow = $this->_artistModel->findRowById($collection->artistId);
+                $this->view->artistRow = $this->_artistModel->findRowById(
+                    $collection->artistId
+                );
 
                 foreach (array(
                     'getCoverName', 'getType', 'playTime', 'getTrackListSync'
@@ -139,7 +143,9 @@ class AlbumController extends DZend_Controller_Action
                     $c->start();
                     $collection->$f();
                     $c->stop();
-                    $this->_logger->debug("AlbumController::info $f " . $c->get());
+                    $this->_logger->debug(
+                        "AlbumController::info $f " . $c->get()
+                    );
                 }
 
                 $this->renderScript('playlist/info.phtml');

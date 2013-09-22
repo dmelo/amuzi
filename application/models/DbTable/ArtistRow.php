@@ -28,16 +28,24 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
 
     protected function _getDataFromLastfm()
     {
-        $this->_logger->debug('DbTable_ArtistRow::_getDataFromLastfm 01 ' . $this->id);
+        $this->_logger->debug(
+            'DbTable_ArtistRow::_getDataFromLastfm 01 ' . $this->id
+        );
         $lastfmModel = new Lastfm();
         $ret = $lastfmModel->getArtist($this->name);
         $this->cover = $ret['cover'];
         $this->info = $ret['info'];
         $artistSimilarityModel = new ArtistSimilarity();
         $artistTopAlbumModel = new ArtistTopAlbum();
-        $this->_logger->debug('DbTable_ArtistRow::_getDataFromLastfm 02 ' . $this->id);
-        $this->_similarityList = $artistSimilarityModel->insertSimilarities($this->id, $ret['similarityList']);
-        $this->_logger->debug('DbTable_ArtistRow::_getDataFromLastfm 03 ' . $this->id);
+        $this->_logger->debug(
+            'DbTable_ArtistRow::_getDataFromLastfm 02 ' . $this->id
+        );
+        $this->_similarityList = $artistSimilarityModel->insertSimilarities(
+            $this->id, $ret['similarityList']
+        );
+        $this->_logger->debug(
+            'DbTable_ArtistRow::_getDataFromLastfm 03 ' . $this->id
+        );
         $this->_topAlbumList = $artistTopAlbumModel->getList($this->id);
 
         $this->save();

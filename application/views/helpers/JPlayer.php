@@ -59,7 +59,8 @@ class View_Helper_JPlayer extends View_Helper_T
             'repeat-off'
         );
 
-        echo '<div id="jp_container_1" class="jp-video jp-video-270p ' . $class . '">
+        echo '<div id="jp_container_1" class="jp-video jp-video-270p '
+        . $class . '">
         <div class="jp-type-playlist">
         <div id="jquery_jplayer_1" class="jp-jplayer"></div>
         <div class="jp-gui">
