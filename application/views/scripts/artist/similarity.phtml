@@ -1,4 +1,4 @@
-<div class="similarity-list span12">
+<div class="similarity-list">
     <h2><?= $this->t('Top Albums'); ?></h2>
     <?
         foreach ($this->artistRow->getTopAlbumList() as $albumRow) {
@@ -11,7 +11,7 @@
     ?>
 </div>
 
-<div class="similarity-list span12">
+<div class="similarity-list">
     <h2><?= $this->t('Similar Artists'); ?></h2>
     <?
         foreach ($this->artistRow->getSimilarityList() as $artistRow) {

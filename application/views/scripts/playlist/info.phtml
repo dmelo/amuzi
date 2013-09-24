@@ -10,35 +10,29 @@
         <img src="<?= $this->collection->getCover(); ?>"/>
     </div>
     <div class="caption">
-        <? if ('album' === $this->collection->getType()): ?>
-        <div class="info">
-            <?= $this->t('Artist') . ': ' . ($this->isAjax ? ucfirst($this->collection->artist) : $this->a('/artist/' . urlencode($this->collection->artist), ucfirst($this->collection->artist))); ?>
-        </div>
-        <? endif; ?>
-        <div class="info">
-            <?= $this->t('Name') . ': ' . $this->collection->getCoverName(); ?>
-        </div>
-        <div class="info">
-            <?= $this->t('Type') . ': ' . $this->t(ucfirst($this->collection->getType())); ?>
-        </div>
-        <div class="info">
-            <?= $this->t('Duration') . ': ' . $this->secsToTime($this->collection->playTime()); ?>
-        </div>
-        <div class="info">
-            <?= $this->t('Nro Tracks') . ': ' . count($this->collection->getTrackListAsArray()); ?>
-        </div>
-        <? if ($this->collection instanceof DbTable_AlbumRow): ?>
-            <div class="info">
-                <?= $this->t('Share') . ': ' . '<a href="' . $this->collection->facebookUrl . '"><img class="icon" src="/img/facebook.png"/></a>'
-                . '<a href="' . $this->collection->shareUrl . '"><img class="icon" src="/img/link.png"/></a>' ; ?>
-            </div>
+        <?
+            $data = array();
+            if ('album' === $this->collection->getType()) {
+                $data['Artist'] = $this->isAjax ? ucfirst($this->collection->artist) : $this->a('/artist/' . urlencode($this->collection->artist), ucfirst($this->collection->artist));
+            }
 
-            <? if (false === $this->isAjax): ?>
-                <div class="info">
-                    <?= $this->a($this->collection->shareUrl, $this->t('Add this Album to your collection')); ?>
-                </div>
-            <? endif; ?>
-        <? endif; ?>
+            $data['Name'] = $this->collection->getCoverName();
+            $data['Type'] = $this->t(ucfirst($this->collection->getType()));
+            $data['Duration'] = $this->secsToTime($this->collection->playTime());
+            $data['Nro Tracks'] = count($this->collection->getTrackListAsArray());
+
+            if ($this->collection instanceof DbTable_AlbumRow) {
+                $data['Share'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png"/>')
+                    . $this->a($this->collection->shareUrl, '<img class="icon" src="/img/link.png"/>');
+            }
+
+        ?>
+
+        <? foreach ($data as $key => $value): ?>
+            <div class="info">
+                <?= $this->t($key) . ': ' . $value; ?>
+            </div>
+        <? endforeach; ?>
 
     </div>
     <table class="tracklist table table-striped">
@@ -61,7 +55,6 @@
 
 
 </div>
-<? if (!$this->isAjax): ?>
-    <?= $this->render('artist/similarity.phtml'); ?>
-<? endif; ?>
+
+<?= $this->render('artist/similarity.phtml'); ?>
 
