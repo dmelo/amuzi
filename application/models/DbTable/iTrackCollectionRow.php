@@ -24,12 +24,12 @@
 interface DbTable_iTrackCollectionRow
 {
     /**
-     * getTrackListAsArray An array containing the tracks collection, with the
+     * getTrackListSync An array containing the tracks collection, with the
      * tracks also represented as array
      *
      * @return void
      */
-    public function getTrackListAsArray();
+    public function getTrackListSync();
 
     /**
      * playTime The sum of tracks duration

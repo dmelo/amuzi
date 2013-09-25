@@ -111,6 +111,11 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row
         return $ret;
     }
 
+    public function getTrackListSync()
+    {
+        return $this->getTrackListAsArray();
+    }
+
     public function playTime()
     {
         $time = 0;

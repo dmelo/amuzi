@@ -29,11 +29,13 @@
                 $data['Share'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png"/>')
                     . $this->a($this->collection->shareUrl, '<img class="icon" src="/img/link.png"/>');
             }
-            $data['This page'] = $this->a(
-                $this->collection->pageUrl,
-                $this->collection->getCoverName(),
-                $this->isAjax ? array('target' => '_blank') : array()
-            );
+            if ('album' === $this->collection->getType()) {
+                $data['This page'] = $this->a(
+                    $this->collection->pageUrl,
+                    $this->collection->getCoverName(),
+                    $this->isAjax ? array('target' => '_blank') : array()
+                );
+            }
 
         ?>
 
@@ -65,5 +67,6 @@
 
 </div>
 
-<?= $this->render('artist/similarity.phtml'); ?>
-
+<? if ('album' === $this->collection->getType()): ?>
+    <?= $this->render('artist/similarity.phtml'); ?>
+<? endif; ?>
