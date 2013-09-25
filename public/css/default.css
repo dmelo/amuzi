@@ -499,3 +499,9 @@ text-align: center;
 .modal-wide .modal-body {
     max-height: 560px;
 }
+
+.embed-image {
+    width: 220px;
+    float: left;
+    padding:15px;
+}

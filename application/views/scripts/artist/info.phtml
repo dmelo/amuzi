@@ -5,11 +5,11 @@
 
     <div class="collection-info">
         <h2><?= ucfirst($this->artistRow->name); ?></h2>
-        <div class="span3">
+        <div class="embed-image">
             <img src="<?= $this->artistRow->getCover(); ?>"/>
         </div>
 
-        <div class="span8" style="text-align: justify">
+        <div class="" style="text-align: justify; min-height: 380px;">
             <?= $this->artistRow->getInfo(); ?>
         </div>
     </div>
