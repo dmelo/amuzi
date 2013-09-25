@@ -91,6 +91,9 @@ class DbTable_ArtistRow extends DZend_Db_Table_Row
     {
         if ('similarityList' === $name) {
             return $this->_similarityList;
+        } elseif ('pageUrl' === $name) {
+            $domain = Zend_Registry::get('domain');
+            return $domain . '/artist/' . urlencode($this->name);
         } else {
             return parent::__get($name);
         }

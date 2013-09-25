@@ -143,6 +143,11 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
         return $this->name;
     }
 
+    public function getArtistRow()
+    {
+        return $this->_getArtistRow();
+    }
+
     public function __get($name)
     {
 
@@ -169,6 +174,10 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
         } elseif ('facebookUrl' === $name) {
             return 'http://facebook.com/share.php?u='
                 . urlencode($this->shareUrl);
+        } elseif ('pageUrl' === $name) {
+            $domain = Zend_Registry::get('domain');
+            return $domain . '/album/' . urlencode($this->artist) . '/'
+                . urlencode($this->name);
         } else {
             return parent::__get($name);
         }

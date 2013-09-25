@@ -13,7 +13,11 @@
         <?
             $data = array();
             if ('album' === $this->collection->getType()) {
-                $data['Artist'] = $this->isAjax ? ucfirst($this->collection->artist) : $this->a('/artist/' . urlencode($this->collection->artist), ucfirst($this->collection->artist));
+                $data['Artist'] = $this->a(
+                    $this->collection->getArtistRow()->pageUrl,
+                    ucfirst($this->collection->artist),
+                    $this->isAjax ? array('target' => '_blank') : array()
+                );
             }
 
             $data['Name'] = $this->collection->getCoverName();
@@ -25,6 +29,11 @@
                 $data['Share'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png"/>')
                     . $this->a($this->collection->shareUrl, '<img class="icon" src="/img/link.png"/>');
             }
+            $data['This page'] = $this->a(
+                $this->collection->pageUrl,
+                $this->collection->getCoverName(),
+                $this->isAjax ? array('target' => '_blank') : array()
+            );
 
         ?>
 
