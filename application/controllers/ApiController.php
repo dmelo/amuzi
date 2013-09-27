@@ -33,60 +33,6 @@ class ApiController extends DZend_Controller_Action
     }
 
     /**
-     * searchAction API search call that outputs a list of track objects.
-     *
-     * @return void
-     *
-     */
-    public function searchAction()
-    {
-        try {
-            $q = $this->_request->getParam('q');
-            $list = array();
-            if (null !== $q) {
-                $limit = $this->_request->getParam('limit', 9);
-                $offset = $this->_request->getParam('offset', 1);
-                $complement = array();
-                $artist = $this->_request->getParam('artist');
-                $musicTitle = $this->_request->getParam('musicTitle');
-                $complement = null !== $artist && null !== $musicTitle ?
-                    array(
-                        'artist' => $artist,
-                        'musicTitle' => $musicTitle,
-                        'artistMusicTitleId' => $this->
-                            _artistMusicTitleModel->insert(
-                                $artist, $musicTitle
-                            )
-                    ): array();
-
-                $resultSet = $this->_youtubeModel->search(
-                    $q, $limit, $offset, $complement
-                );
-                if (!empty($complement)) {
-                    $list = $this->_trackModel->insertMany(
-                        $resultSet, $artist, $musicTitle
-                    );
-                } else {
-                    foreach ($resultSet as $result) {
-                        $list[] = $result->getArray();
-                    }
-                }
-
-                if (!empty($complement)) {
-                    $resultSet = $this->_albumModel->search($q);
-                    $list = array_merge($list, $resultSet);
-                }
-
-                $this->view->output = $list;
-            } else {
-                $this->view->output = $this->_error;
-            }
-        } catch(Exception $e) {
-            $this->view->exception = $e;
-        }
-    }
-
-    /**
      * searchsimilarAction API call that searches for similar artist/music and
      * compile a list of music objects.
      *
