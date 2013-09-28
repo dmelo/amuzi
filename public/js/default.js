@@ -817,7 +817,8 @@
         //$('.loadModal').bootstrapLoadModal();
         $.bootstrapLoadModalInit();
 
-        // For some reason, i can't call loadPlaylist right the way, it must wait for some initialization stuff.
+        // For some reason, i can't call loadPlaylist right the way, it must
+        // wait for some initialization stuff.
         setTimeout($.initAmuzi, 1500);
 
         if (isLoggedIn()) {
@@ -885,6 +886,8 @@
 
         $('.playlist-square[albumid] .play').live('click', function (e) {
             e.preventDefault();
+            console.log("CLICK CLICK");
+            console.log($(this).parent().attr('albumid'));
             $.loadPlaylist($(this).parent().attr('albumid'), {isAlbum: true});
         });
 

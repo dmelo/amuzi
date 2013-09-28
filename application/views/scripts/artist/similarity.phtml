@@ -2,11 +2,15 @@
     <h2><?= $this->t('Top Albums'); ?></h2>
     <?
         foreach ($this->artistRow->getTopAlbumList() as $albumRow) {
-            echo $this->lightSquare(
-                '/album/' . urlencode($albumRow->artist) . '/' . urlencode($albumRow->name),
-                $albumRow->name,
-                $albumRow->cover
-            );
+            if ($this->isAjax) {
+                echo $this->playlistSquare($albumRow);
+            } else {
+                echo $this->lightSquare(
+                    '/album/' . urlencode($albumRow->artist) . '/' . urlencode($albumRow->name),
+                    $albumRow->name,
+                    $albumRow->cover
+                );
+            }
         }
     ?>
 </div>
