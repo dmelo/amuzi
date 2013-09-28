@@ -826,6 +826,12 @@
             $('.loginRequired').fadeTo('slow', 1.0, function () {
                 $(this).css('filter', 'alpha (opacity = 100)');
             });
+        } else if ('/' !== window.location.pathname) {
+            $('.logoffRequired').css('display', 'block');
+            $('.logoffRequired').fadeTo('slow', 1.0, function () {
+                $(this).css('filter', 'alpha (opacity = 100)');
+            });
+
         }
 
         $('#toc').tableOfContents(null, {startLevel: 2});

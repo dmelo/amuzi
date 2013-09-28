@@ -177,7 +177,7 @@ dd#submit-element {
     color: black;
 }
 
-.loginRequired {
+.loginRequired, .logoffRequired {
     opacity: 0;
     filter: alpha (opacity = 0);
     display: none;
