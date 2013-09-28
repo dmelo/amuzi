@@ -1,5 +1,7 @@
 <?php
 
+$start = microtime(true);
+
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
@@ -41,6 +43,57 @@ $ports = array(
 
 $pdo = null;
 
+function getObjType($port)
+{
+    $type = null;
+    switch ($port) {
+        case 3671:
+        case 3674:
+            $type = 'artist';
+            break;
+        case 3672:
+        case 3682:
+        case 3675:
+        case 3685:
+            $type = 'album';
+            break;
+        case 3673:
+        case 3683:
+        case 3676:
+        case 3686:
+            $type = 'track';
+            break;
+    };
+
+    if (null === $type) {
+        logDebug("ERROR: on getObjType port == $port");
+    }
+
+    return $type;
+}
+
+function getPorts($type)
+{
+    $ports = array();
+    switch ($type) {
+        case 'artist':
+            $ports = array(3671, 3674);
+            break;
+        case 'album':
+            $ports = array(3672, 3682, 3675, 3685);
+            break;
+        case 'track':
+            $ports = array(3673, 3683, 3676, 3686);
+            break;
+    };
+
+    if (empty($ports)) {
+        logDebug("ERROR: on getPorts type == $type");
+    }
+
+    return $ports;
+}
+
 function openSocket($port)
 {
     $sock = false;
@@ -50,7 +103,7 @@ function openSocket($port)
     }
 
     if (($r = socket_connect($sock, 'localhost', $port)) === false) {
-        echo "AmuziSearch::autocomplete error on socket_connect $type. Reason: " . socket_strerror(socket_last_error($sock)) . PHP_EOL;
+        echo "AmuziSearch::autocomplete error on socket_connect $type, port $port. Reason: " . socket_strerror(socket_last_error($sock)) . PHP_EOL;
         exit(1);
     }
 
@@ -59,12 +112,13 @@ function openSocket($port)
 
 function getResult($q, $port, $limit = 5)
 {
-    $typeList = array('artist', 'album', 'track');
-    logDebug("getResult $q $port $limit");
     $sock = openSocket($port);
 
     socket_write($sock, $q, strlen($q));
-    $str = socket_read($sock, 4096 * 1024, PHP_BINARY_READ);
+    $str = '';
+    while (($strAux = socket_read($sock, 4096 * 1024, PHP_BINARY_READ)) !== false && strlen($strAux) !== 0) {
+        $str .= $strAux;
+    }
     socket_shutdown($sock);
     socket_close($sock);
     $ret = array();
@@ -73,19 +127,23 @@ function getResult($q, $port, $limit = 5)
         echo "failed reading from socket" . PHP_EOL;
         exit(1);
     } else {
-        $resultList = "0\n" === $str ? array() : array_slice(explode("\n", $str), 0, 5 * $limit);
+        $resultList = "0\n" === $str ? array() : explode("\n", $str);
         foreach ($resultList as $result) {
             if (strlen($result) > 0) {
                 list($artistName, $name) = explode('A', $result);
                 $artistName = ucfirst($artistName);
                 $name = ucfirst($name);
-                logDebug('KKKKKKKKKKK' . (($port - 3671) % 3) . $typeList[($port - 3671) % 3]);
+                if ($port > 3680) {
+                    $aux = $artistName;
+                    $artistName = $name;
+                    $name = $aux;
+                }
                 $ret[] = array(
                     'name' => '' === $name ? $artistName : "$artistName - $name",
                     'cover' => '/img/album.png',
                     'artist' => $artistName,
                     'musicTitle' => $name,
-                    'type' => $typeList[($port - 3671) % 3]
+                    'type' => getObjType($port)
                 );
                 if (count($ret) >= $limit) {
                     break;
@@ -144,8 +202,8 @@ function fillImages($sub, $type)
             foreach ($pdo->query($query) as $row) {
                 foreach ($sub as &$r) {
                     if (
-                        $r['artist'] === strtolower($row[1])
-                        && $r['musicTitle'] === strtolower($row[2])
+                        strtolower($r['artist']) === strtolower($row[1])
+                        && strtolower($r['musicTitle']) === strtolower($row[2])
                     ) {
                         $r['objId'] = 'album_db' === $type ? - ((int) $row[0]) : (int) $row[0];
                         $r['artist'] = $row[1];
@@ -163,6 +221,29 @@ function fillImages($sub, $type)
     }
 
     return $sub;
+}
+
+function getEntries($q)
+{
+    $ret = array();
+    if (strpos($q, ' - ') === false) {
+        $words = explode(' ', $q);
+        for ($i = 0; $i < count($words); $i++) {
+            $w1 = implode(' ', array_slice($words, 0, $i));
+            $w2 = implode(' ', array_slice($words, $i));
+            $ret[] = "${w1}A${w2}";
+            $ret[] = "${w2}A${w1}";
+        }
+        $ret[] = $q;
+    } else {
+        $pieces = explode(' - ', $q);
+        $w1 = array_key_exists(0, $pieces) ? $pieces[0] : '';
+        $w2 = array_key_exists(1, $pieces) ? $pieces[1] : '';
+        $ret[] = "${w1}A${w2}";
+        $ret[] = "${w2}A${w1}";
+    }
+
+    return $ret;
 }
 
 function logDebug($str, $q)
@@ -187,55 +268,41 @@ if (preg_match($r, $q) || strlen($q) < 3) {
 
     $ret = array();
     $types = $logout ?
-        array('artist_db', 'album_db'):
-        array('album_db', 'track_db');
+        array('artist', 'album'):
+        array('album', 'track');
 
-    logDebug('types: ' . print_r($types, true));
     foreach ($types as $type) {
         $sub = array();
-        $start = microtime(true);
-        if (false === strpos($q, ' - ')) {
-            $words = explode(' ', $q);
-            for ($i = 0; $i <= count($words); $i++) {
-                $w1 = implode(' ', array_slice($words, 0, $i));
-                $w2 = implode(' ', array_slice($words, $i));
-                $sub = array_merge(
-                    $sub,
-                    getResult("${w1}A${w2}", $ports[$type]),
-                    getResult("${w2}A${w1}", $ports[$type])
-                );
+        foreach (getPorts($type) as $port) {
+            $aux = array();
+            foreach (getEntries($q, $type) as $entry) {
+                if (count($sub) < $limit) {
+                    $aux = array_merge($aux, getResult($entry, $port));
+                }
             }
-        } else {
-            $words = explode(' - ', $q);
-            $w1 = array_key_exists(0, $words) ? $words[0] : '';
-            $w2 = array_key_exists(1, $words) ? $words[1] : '';
-            $sub = array_merge($sub, getResult("${w1}A${w2}", $ports[$type]));
-            $sub = array_merge($sub, getResult("${w2}A${w1}", $ports[$type]));
+            if (in_array($port, array(3672, 3682))) {
+                $aux = fillImages($aux, 'album_db');
+            }
+            foreach ($aux as $newResult) {
+                $isUnique = true;
+                foreach ($sub as $result) {
+                    if ($result['name'] === $newResult['name']) {
+                        $isUnique = false;
+                        break;
+                    }
+                }
+                if ($isUnique && count($sub) < $limit) {
+                    $sub[] = $newResult;
+                }
+            }
         }
-        $end = microtime(true);
-        logDebug('atom time ' . ($end - $start) . " on " . $q .PHP_EOL);
-
-
-        if (count($sub) > 0 && 'album_db' === $type) {
-            $sub = fillImages($sub, $type);
-        }
-
-        if (count($sub) < $limit) {
-            $complemet = getResult($q, $ports[str_replace('_db', '', $type)], $limit - count($sub));
-            $sub = array_merge($sub, $complemet);
-        } else {
-            $sub = array_slice($sub, 0, $limit);
-        }
-
-        $ret[] = $sub;
+        $ret = array_merge($ret, $sub);
     }
 
-    $r = array();
-    foreach ($ret as $part) {
-        $r = array_merge($r, $part);
-    }
-    $ret = $r;
     logDebug('end: ' . count($ret) . ' results', $q);
     logDebug('ret: ' . print_r($ret, true));
     echo json_encode($ret);
 }
+
+$end = microtime(true);
+logDebug("Total time: " . ($end - $start));

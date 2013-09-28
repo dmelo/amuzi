@@ -26,7 +26,8 @@ for SUFFIX in $SUFFIXES
 do
     for TYPE in $TYPES
     do
-        rm /tmp/artist_${TYPE}_db.txt
+        FILE="/tmp/artist_${TYPE}_db${SUFFIX}"
+        rm $FILE
 
         SELECT=''
         case $TYPE in
@@ -58,9 +59,8 @@ do
         if ! [ 'artist' = $TYPE -a '_r.txt' = $SUFFIX ]
         then
             echo $SELECT
-            FILE="/tmp/artist_${TYPE}_db${SUFFIX}"
             echo "$SELECT" | mysql -u $DB_USER -h $DB_HOST -p$DB_PASS $DB_NAME > ${FILE}.tmp
-            tail -n +3 /tmp/artist_${TYPE}_db.txt.tmp > ${FILE}
+            tail -n +2 ${FILE}.tmp > ${FILE}
             rm ${FILE}.tmp
             DATA_PATH="library/amuzi_search/env_${TYPE}_db${SUFFIX}-d"
             mkdir -p $DATA_PATH/data
