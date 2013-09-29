@@ -718,10 +718,10 @@
             addElement($(this).parent(), false);
         });
 
-        // $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play').live('click', function (e) {
-        $('.music-large .play, .music-square .play, .album-square .play').live('click', function (e) {
+        $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            $('.modal .close').trigger('click');
             addElement($(this).parent(), true);
         });
 
@@ -895,17 +895,14 @@
 
         $.slideInit();
 
-        $('.playlist-square[playlistid] .play').live('click', function (e) {
+        $('.music-manager .playlist-square .play').live('click', function (e) {
             e.preventDefault();
-            $.loadPlaylist($(this).parent().attr('playlistid'));
+            $.loadPlaylist($(this).parent().attr('albumid'), {
+                isAlbum: $(this).parent().attr('albumid') !== undefined
+            });
         });
 
-        $('.playlist-square[albumid] .play').live('click', function (e) {
-            e.preventDefault();
-            $.loadPlaylist($(this).parent().attr('albumid'), {isAlbum: true});
-        });
-
-        $('.playlist-square .remove').live('click', function (e) {
+        $('.music-manager .playlist-square .remove').live('click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure?')) {
                 var name = $(this).parent().find('.name').html(),
@@ -954,7 +951,9 @@
 
         $(document).on('hover', '.item-square', function(e) {
             $(this).find('.name').css('opacity', '1.0');
-            $(this).find('.remove').css('display', 'block');
+            if ($(this).parent().parent().hasClass('music-manager')) {
+                $(this).find('.remove').css('display', 'block');
+            }
             $(this).find('.info').css('display', 'block');
         });
 
