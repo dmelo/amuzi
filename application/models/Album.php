@@ -83,14 +83,21 @@ class Album extends DZend_Model
                 $track->artist, $track->musicTitle
             );
 
-            $this->_albumHasArtistMusicTitleDb->insert(
-                array(
-                    'album_id' => $id,
-                    'artist_music_title_id' => $artistMusicTitleId,
-                    'sort' => $sort
-                )
-            );
-            $sort++;
+            try {
+                $this->_albumHasArtistMusicTitleDb->insert(
+                    array(
+                        'album_id' => $id,
+                        'artist_music_title_id' => $artistMusicTitleId,
+                        'sort' => $sort
+                    )
+                );
+                $sort++;
+            } catch (Zend_Db_Statement_Exception $e) {
+                $this->_logger->debug(
+                    'Apparentely the track is already inserted: '
+                    . $e->getMessage() . '. Trace: ' . $e->getStackAsString()
+                );
+            }
         }
 
         return $id;

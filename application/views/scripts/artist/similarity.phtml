@@ -22,7 +22,8 @@
             echo $this->lightSquare(
                 '/artist/' . $artistRow->name,
                 $artistRow->name,
-                $artistRow->cover
+                $artistRow->cover,
+                $this->isAjax
             );
         }
     ?>
