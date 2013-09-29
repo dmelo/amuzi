@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class View_Helper_T extends Zend_View_Helper_Abstract
+class View_Helper_T extends DZend_View_Helper_AImg
 {
     public $view;
 

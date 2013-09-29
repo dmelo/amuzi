@@ -30,22 +30,36 @@ class View_Helper_PlaylistSquare extends View_Helper_T
         DbTable_iTrackCollectionRow $playlistRow, $current = false
     )
     {
+        $aPlay = $this->aImg(
+            '#', '/img/play_icon_square.png',
+            array(
+                'class' => 'play button'
+            )
+        );
+
+        $aInfo = $this->aImg(
+            '/' . $playlistRow->getType() . '/info/id/' . $playlistRow->id,
+            '/img/info_icon.png"',
+            array(
+                'class' => 'info button loadModal',
+                'title' => $this->t(ucfirst($playlistRow->getType()))
+                    . ' ' . $this->t('details')
+            )
+        );
+
+        $aRm = $this->aImg(
+            '#', '/img/remove_icon_square.png',
+            array(
+                'class' => 'remove button'
+            )
+        );
+
         return '<div class="item-square playlist-square object-playlist '
             . ($current ? 'current-playlist' : '') . '" '
             . $playlistRow->getType() . 'id="' . $playlistRow->id . '">'
             . '<div class="cover"><img src="' . $playlistRow->getCover()
             . '"/></div>' . '<div class="name">' . $playlistRow->getCoverName()
-            . '</div>'
-            . '<a href="#" class="play button"><img src="/img/play_icon_'
-            . 'square.png"/></a>'
-            . '<a href="/' . $playlistRow->getType() . '/info/id/'
-            . $playlistRow->id
-            . '" class="info button loadModal" title="'
-            . $this->t(ucfirst($playlistRow->getType()))
-            . ' ' . $this->t('details') . '"><img src="/img/info_icon.png"/>'
-            . '</a>'
-            . '<a href="#" class="remove button"><img src="/img/remove_icon_'
-            . 'square.png"/></a>'
+            . '</div>' . $aPlay . $aInfo . $aRm
             . '</div>';
     }
 }

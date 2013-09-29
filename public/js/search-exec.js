@@ -264,10 +264,10 @@
         window.search = search;
 
         $('.music-square, .album-square').live({mouseenter: function () {
-            $(this).find('.description, .play').css('display', 'block');
+            $(this).find('.description, .play, .addplaylist').css('display', 'block');
             $(this).find('.overlay').css('display', 'none');
         }, mouseleave: function () {
-            $(this).find('.description, .play').css('display', 'none');
+            $(this).find('.description, .play, .addplaylist').css('display', 'none');
             $(this).find('.overlay').css('display', 'block');
         }});
 

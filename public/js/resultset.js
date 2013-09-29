@@ -77,8 +77,15 @@
         };
 
         this.getControl = function (v) {
-            var url = 'url' in v ? v.url : v.objId;
-            return '<a href="' + url + '" title="' + v.title + '" class="addplaylist"><img src="/img/play_icon.png"/></a>';
+            var url = 'url' in v ? v.url : v.objId, ret = '',
+                classes = ['play', 'addplaylist'];
+            
+
+            for (var i = 0; i < classes.length; i++) {
+                ret += '<div class="' + classes[i] + '"><a href="' + v.url + '" title="' + v.title + '"><img src="/img/' + classes[i] + '_icon.png"/></a></div>';
+            }
+            
+            return ret;
         };
 
         this.getDescription = function (v) {
@@ -92,7 +99,7 @@
         };
 
         this.getMusicLarge = function (v) {
-            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" ' + v.type + 'id="' + v.id + '"><div class="image"><img src="' + v.cover + '"/></div>' + this.getDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
+            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" ' + v.type + 'id="' + v.id + '"><div class="image"><img src="' + v.cover + '"/></div>' + this.getDescription(v) + this.getControl(v);
         };
 
         this.insert = function (v) {
@@ -131,7 +138,7 @@
 
 
     $.ResultSet.prototype.getMusicSquare = function (v) {
-        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div>' + this.getDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
+        return '<div class="music-square" trackId="' + v.id + '" artist="' + v.artist + '" musicTitle="' + v.musicTitle + '"><div class="cover"><img src="' + v.cover + '" alt="cover"/></div>' + this.getControl(v) + this.getDescription(v);
     };
 
     $.ResultSet.prototype.getAlbumSquare = function (v) {

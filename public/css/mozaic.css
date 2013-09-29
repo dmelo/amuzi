@@ -11,10 +11,10 @@
     height: 300px;
 }
 
-.mozaic .music-square .description, .mozaic .music-square .play {
+.mozaic .music-square .description, .mozaic .music-square .play, .addplaylist {
     z-index: 1;
     position: relative;
-    bottom: 100%
+    bottom: 100%;
 }
 
 .mozaic .music-square .description {
@@ -22,17 +22,33 @@
 }
 
 .mozaic .music-square .play {
+    z-index: 2;
     float:right;
-    margin-top: -26px;
+    margin-top: 5px;
 }
 
 .music-square:hover {
     cursor: pointer;
 }
 
-.music-square .description, .music-square .play, .album-square .play {
+.music-square .description, .music-square .play, .album-square .play,
+.addplaylist {
     display: none;
 }
+
+.addplaylist {
+    z-index: 100;
+    float: left;
+    margin-top: 0px;
+    top: -30px;
+
+}
+
+.addplaylist img {
+    width: 25px;
+}
+
+
 
 .music-square .cover {
     opacity: 0.3;
