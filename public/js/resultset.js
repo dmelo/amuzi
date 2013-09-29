@@ -142,6 +142,6 @@
     };
 
     $.ResultSet.prototype.getAlbumSquare = function (v) {
-        return '<div class="album-square music-square" albumid="' + v.id + '" artist="' + v.artist + '" name="' + v.name + '"><div class="cover"><div class="side"><img src="/img/album-side.png"/></div><img src="' + v.cover + '" alt="cover" class="cover-img" /></div><div class="overlay"></div>' + this.getAlbumDescription(v) + '<div class="play">' + this.getControl(v) + '</div>';
+        return '<div class="album-square music-square" albumid="' + v.id + '" artist="' + v.artist + '" name="' + v.name + '"><div class="cover"><div class="side"><img src="/img/album-side.png"/></div><img src="' + v.cover + '" alt="cover" class="cover-img" /></div><div class="overlay"></div>' + this.getAlbumDescription(v) + this.getControl(v) + '</div>';
     };
 }(jQuery, undefined));
