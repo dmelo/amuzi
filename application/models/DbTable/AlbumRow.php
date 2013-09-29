@@ -161,6 +161,14 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
             $ret = array();
             $ahamtRowset = $albumHasArtistMusicTitleDb
                 ->findByAlbumId($this->id);
+
+            if (0 === count($ahamtRowset)) {
+                $lastfmModel = new Lastfm();
+                $albumModel = new Album();
+                $albumModel->insert(
+                    $lastfmModel->getAlbum($this->artist, $this->name)
+                );
+            }
             foreach ($ahamtRowset as $row) {
                 $ret[] = $row->artistMusicTitleId;
             }

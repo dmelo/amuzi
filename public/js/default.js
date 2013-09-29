@@ -718,6 +718,7 @@
             addElement($(this).parent(), false);
         });
 
+        // $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play').live('click', function (e) {
         $('.music-large .play, .music-square .play, .album-square .play').live('click', function (e) {
             e.preventDefault();
             e.stopPropagation();

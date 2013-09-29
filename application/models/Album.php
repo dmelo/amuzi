@@ -183,8 +183,8 @@ class Album extends DZend_Model
                 ($album = $this->_lastfmModel->getAlbum($artist, $name))
                 !== null
             ) {
-                $albumId = $this->_albumModel->insert($album);
-                $albumRow = $this->_albumModel->findRowById($albumId);
+                $albumId = $this->insert($album);
+                $albumRow = $this->findRowById($albumId);
             } else {
                 $albumRow = null;
             }
