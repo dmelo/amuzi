@@ -80,11 +80,6 @@
             e.preventDefault();
             $.slideMove(1);
         });
-
-        $('#screen-search').html('<img src="/img/search.png"/>');
-        $('#screen-music').html('<img src="/img/music-dark.png"/>');
-
-
     };
 
     $.slideMove = function(dir) {
@@ -94,8 +89,9 @@
             $('.slide').each(function() {
                 var offset = $(this).offset();
                 offset.left -= dir * slideWidth;
-                $('#screen-search img').attr('src', '/img/search' + (1 === dir ? '-dark' : '') + '.png');
-                $('#screen-music img').attr('src', '/img/music' + (1 === dir ? '' : '-dark') + '.png');
+                $('.screen').removeClass('light').removeClass('dark');
+                $('#screen-search').addClass(1 === dir ? 'dark' : 'light');
+                $('#screen-music').addClass(1 === dir ? 'light' : 'dark');
 
                 $(this).animate(offset, function() {
                     $('.slide-' + (1 === dir ? 'next' : 'prev')).removeClass('active');
