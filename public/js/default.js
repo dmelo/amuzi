@@ -895,8 +895,9 @@
 
         $('.music-manager .playlist-square .play').live('click', function (e) {
             e.preventDefault();
-            $.loadPlaylist($(this).parent().attr('albumid'), {
-                isAlbum: $(this).parent().attr('albumid') !== undefined
+            var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
+            $.loadPlaylist($(this).parent().attr(type), {
+                isAlbum: 'albumid' === type 
             });
         });
 
