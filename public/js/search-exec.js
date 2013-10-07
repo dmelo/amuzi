@@ -271,6 +271,17 @@
             $(this).find('.overlay').css('display', 'block');
         }});
 
+        $('.music-large').live({mouseenter: function () {
+            $(this).find('.play, .addplaylist').css('display', 'block');
+            $(this).find('.overlay').css('display', 'none');
+        }, mouseleave: function () {
+            $(this).find('.play, .addplaylist').css('display', 'none');
+            $(this).find('.overlay').css('display', 'block');
+        }});
+
+
+        
+
         $('form.search').ajaxForm({
             dataType: 'json',
             success: function (data) {
