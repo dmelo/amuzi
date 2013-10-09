@@ -1,26 +1,6 @@
-require 'rubygems'
-require 'test/unit'
-require 'watir'
-require 'watir-webdriver'
-require 'headless'
+load 'Base.rb'
 
-class BootstrapMessage < Test::Unit::TestCase
-    def setup
-        if ENV['HEADLESS']
-            @headless = Headless.new
-            @headless.start
-        end
-        @browser = Watir::Browser.new :chrome
-        @browser.goto 'http://amuzi.localhost'
-    end
-
-    def teardown
-        @browser.close
-        if ENV['HEADLESS']
-            @headless.destroy
-        end
-    end
-
+class BootstrapMessage < Base
     def testClose
         @browser.execute_script("$.bootstrapMessage('blabla', 'error');");
         Watir::Wait.until {
