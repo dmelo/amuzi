@@ -40,7 +40,7 @@ jPlayerPlaylist.prototype.rmTrack = function(trackId, playlistName) {
     }, function (data) {
         $.bootstrapMessageAuto(data[0], data[1]);
         if ('error' === data[1]) {
-            $.loadPlaylist(playlistName);
+            $.loadPlaylist();
         }
     }, 'json').error(function (e) {
         $.bootstrapMessageAuto('An error occured while trying to remove the track from your playlist.', 'error');
@@ -171,10 +171,11 @@ jPlayerPlaylist.prototype.play = function(index) {
 };
 
 jPlayerPlaylist.prototype._highlight = function(index) {
+    $(this.cssSelector.title + " li:first").html('Playlist: ' + this.name);
+    $(this.cssSelector.title + " li:last").html(' ');
     if(this.playlist.length && index !== undefined) {
         $(this.cssSelector.playlist + " .jp-playlist-current").removeClass("jp-playlist-current");
         $(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").addClass("jp-playlist-current").find(".jp-playlist-item").addClass("jp-playlist-current");
-        $(this.cssSelector.title + " li:first").html('Playlist: ' + this.name);
         $(this.cssSelector.title + " li:last").html(this.playlist[index].title + (this.playlist[index].artist ? " <span class='jp-artist'>by " + this.playlist[index].artist + "</span>" : ""));
     }
 };

@@ -83,8 +83,9 @@ class Playlist extends DZend_Model
         $ret = null;
         $playlistRow = null;
         $user = $this->_getUserRow();
+        $this->_logger->debug('Playlist ---- ' . $id . '#' . gettype($id));
 
-        if ('integer' === gettype($id) && 0 !== $id) {
+        if (0 != $id) {
             $playlistRow = $this->_playlistDb->findRowById($id);
         } elseif (null !== $user->currentPlaylistId) {
             $playlistRow = $this->_playlistDb->findRowById($user->currentPlaylistId);

@@ -79,7 +79,7 @@
             if ('error' === data[1]) {
                 $.bootstrapMessageAuto(data[0], data[1]);
             } else {
-                $.loadPlaylist(data[0], {isAlbum: data[1]});
+                $.loadPlaylist(parseInt(data[0], 10), {isAlbum: data[1]});
             }
         }, 'json').error(function(data) {
             $.bootstrapMessageAuto('Coundn\'t load next album/playlist', 'error');
@@ -96,7 +96,6 @@
      */
     $.loadPlaylist = function (id, opt) {
         var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false;
-        name = name || null;
         window.myPlaylist.removeAll();
         window.myPlaylist.id = id;
         window.myPlaylist.type = isAlbum ? 'album' : 'playlist';
@@ -117,6 +116,7 @@
                 if (null !== data) {
                     $('.jp-title').css('display', 'block');
                     window.myPlaylist.name = data.name;
+                    window.myPlaylist._highlight(0);
                     $.each(data.trackList, function (i, v) {
                         window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
                     });
@@ -315,7 +315,7 @@
         $('form#newPlaylist').ajaxForm({
             dataType: 'json',
             success: function (data) {
-                $.loadPlaylist($('input[name=name]').val());
+                $.loadPlaylist(parseInt(data[2], 10));
                 $.bootstrapMessageAuto(data[0], data[1]);
                 $($.modalWrapper).modal('hide');
                 loadPlaylistSet();
@@ -472,14 +472,14 @@
         $.post('/playlist/addtrack', options, function (data) {
             $.bootstrapMessageAuto(data[0], data[1]);
             if ('error' === data[1]) {
-                $.loadPlaylist(window.myPlaylist.name);
+                $.loadPlaylist();
             } else if ('success' === data[1]) {
                 if (!window.myPlaylist.isAlbum) {
                     var v = data[2],
                         pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
                     window.myPlaylist.add(pOpt, playNow);
                 } else if (playNow) {
-                    $.loadPlaylist($('.current-playlist').attr('playlistid'), {playLast: true});
+                    $.loadPlaylist(parseInt($('.current-playlist').attr('playlistid'), 10), {playLast: true});
                 }
             }
         }, 'json').error(function (e) {
@@ -505,7 +505,7 @@
             $.bootstrapMessageOff(messageId);
             $.bootstrapMessageAuto('Album added', 'success');
             if (playNow) {
-                $.loadPlaylist(albumId, { isAlbum: true });
+                $.loadPlaylist(parseInt(albumId, 10), { isAlbum: true });
             }
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto(
@@ -899,7 +899,7 @@
                     id = $(this).parent().attr(isPlaylist ? 'playlistid' : 'albumid');
                 rmPlaylist(id, isPlaylist, removePlaylistSquareCallback);
                 if (name === window.myPlaylist.name) {
-                    $.loadPlaylist('');
+                    $.loadPlaylist();
                 }
             }
         });
@@ -915,7 +915,7 @@
             startPing();
         } else if ($('#jp_container_1.lonely').length > 0) {
             if (1 === $('#load-playlist').length) {
-                $.loadPlaylist($('#load-playlist').html(), {isAlbum: $('#load-playlist').attr('isAlbum')});
+                $.loadPlaylist(parseInt($('#load-playlist').html(), 10), {isAlbum: $('#load-playlist').attr('isAlbum')});
             }
 
             $(document).on('hover', '#jp_container_1.lonely', function() {

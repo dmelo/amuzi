@@ -332,15 +332,18 @@ class PlaylistController extends DZend_Controller_Action
             $row = $this->_playlistModel->create(
                 $name, $public ? 'public' : 'private'
             );
-            if($row)
-                $this->view->message = array($this->view->t('Playlist created'),
-                    'success'
+            if($row) {
+                $this->view->message = array(
+                    $this->view->t('Playlist created'),
+                    'success',
+                    $row->id
                 );
-            else
+            } else {
                 $this->view->message = array(
                     $this->view->t('Error creating playlist'),
                     'error'
                 );
+            }
         }
         $this->view->form = $form;
     }
