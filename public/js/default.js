@@ -65,6 +65,9 @@
     }
 
     function setInterfaceRepeat(repeat) {
+        console.log("setInterfaceRepeat");
+        console.log(repeat);
+
         $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
         $('.jp-repeat').css('display', repeat ? 'none' : 'block');
     }

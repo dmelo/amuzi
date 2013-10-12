@@ -228,7 +228,7 @@ class PlaylistController extends DZend_Controller_Action
             if (isset($userRow)) {
                 $id = $this->_request->getPost('id');
 
-                if (null === $id &&
+                if (null == $id &&
                     null !== $userRow->currentAlbumId) {
                     $this->_helper->redirector('load', 'album');
                 } else {
@@ -243,18 +243,6 @@ class PlaylistController extends DZend_Controller_Action
         }
 
         $this->_logger->debug(print_r($this->view->playlist, true));
-    }
-
-    public function loadimprovedAction()
-    {
-        $a = new stdClass();
-        $a->a = 'jjjj';
-        $a->b = array(
-            't' => 'i'
-        );
-
-        echo Zend_Json::encode($a);
-
     }
 
     public function infoAction()

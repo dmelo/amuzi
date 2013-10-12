@@ -80,29 +80,29 @@ class Playlist extends DZend_Model
      */
     public function export($id)
     {
+        $id = (int) $id;
+        $playlistId = null;
         $ret = null;
         $playlistRow = null;
         $user = $this->_getUserRow();
         $this->_logger->debug('Playlist ---- ' . $id . '#' . gettype($id));
 
-        if (0 != $id) {
-            $playlistRow = $this->_playlistDb->findRowById($id);
-        } elseif (null !== $user->currentPlaylistId) {
-            $playlistRow = $this->_playlistDb->findRowById($user->currentPlaylistId);
+        if (0 === $id && null !== $user->currentPlaylistId) {
+            $playlistId = $user->currentPlaylistId;
+        } else {
+            $playlistId = $id;
         }
+        $playlistRow = $this->_playlistDb->findRowById($playlistId);
 
         // Prevent from accessing a playlist which he doesn't have access.
-        if ($playlistRow->userId != $user->id && $playlistRow->privacy != 'public') {
+        if (null !== $playlistRow && $playlistRow->userId != $user->id && $playlistRow->privacy != 'public') {
             $playlistRow = null;
         }
 
-        if (null !== $playlistRow) {
-            $user->currentPlaylistId = $id;
+        if (null !== $playlistRow && null !== $playlistId) {
+            $user->currentPlaylistId = $playlistId;
             $user->currentAlbumId = null;
             $user->save();
-        }
-
-        if (null !== $playlistRow) {
             $ret = $playlistRow->export();
         }
 
