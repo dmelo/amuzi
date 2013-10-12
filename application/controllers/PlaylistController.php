@@ -234,9 +234,9 @@ class PlaylistController extends DZend_Controller_Action
                 } else {
                     $playlist = $this->_playlistModel->export($id);
                     $this->view->playlist = $playlist;
+                    $userRow->currentPlaylistId = $id;
+                    $userRow->save();
                 }
-            } elseif (isset($playlistRow)) {
-                $this->view->playlist = $playlistRow;
             } else {
                 $this->view->playlist = null;
             }

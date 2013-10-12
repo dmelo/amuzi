@@ -97,6 +97,12 @@ class Playlist extends DZend_Model
         }
 
         if (null !== $playlistRow) {
+            $user->currentPlaylistId = $id;
+            $user->currentAlbumId = null;
+            $user->save();
+        }
+
+        if (null !== $playlistRow) {
             $ret = $playlistRow->export();
         }
 
