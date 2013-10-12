@@ -167,13 +167,13 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row
 
     public function export()
     {
-        $trackCollection = new TrackCollection();
-        $trackCollection->trackList = $this->getTrackListAsArray();
-        $trackCollection->name = $this->name;
-        $trackCollection->repeat = $this->repeat;
-        $trackCollection->shuffle = $this->shuffle;
-        $trackCollection->currentTrack = $this->currentTrack;
+        $ret = new TrackCollection();
+        $ret->trackList = $this->getTrackListAsArray();
+        $ret->name = $this->name;
+        $ret->repeat = $this->repeat;
+        $ret->shuffle = $this->shuffle;
+        $ret->currentTrack = $this->currentTrack;
 
-        return $trackCollection;
+        return $ret;
     }
 }
