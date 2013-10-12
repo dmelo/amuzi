@@ -1,4 +1,5 @@
 require 'rubygems'
+# require 'minitest/autorun'
 require 'test/unit'
 require 'watir'
 require 'watir-webdriver'
@@ -40,6 +41,14 @@ class Base < Test::Unit::TestCase
         }
         @browser.select_list(:id => 'view').select modeName
         @browser.form(:id => 'usersettings').button(:name => 'submit').click
+        sleep 1
+        if 'IncBoard' == modeName
+            assert @browser.url.index('/index/incboard') != nil
+        else
+            assert @browser.url.index('/index/incboard') == nil
+        end
+
+
     end
 
 end
