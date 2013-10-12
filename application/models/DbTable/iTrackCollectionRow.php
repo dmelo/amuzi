@@ -58,4 +58,10 @@ interface DbTable_iTrackCollectionRow
      * @return string Returns the name of the collection.
      */
     public function getCoverName();
+
+    /**
+     * Export the collection to an object ready to be transformed into the JSON
+     * that will be interpreted by the client.
+     */
+    public function export();
 }

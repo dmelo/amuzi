@@ -64,11 +64,6 @@
         $('.jp-shuffle').css('display', shuffle ? 'none' : 'block');
     }
 
-    function setRepeatAndCurrent(repeat, current) {
-        window.myPlaylist.loop = repeat;
-        window.myPlaylist.newCurrent = current;
-    }
-
     function setInterfaceRepeat(repeat) {
         $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
         $('.jp-repeat').css('display', repeat ? 'none' : 'block');
@@ -99,11 +94,12 @@
      * playlist.
      * @return void
      */
-    $.loadPlaylist = function (name, opt) {
+    $.loadPlaylist = function (id, opt) {
         var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false;
         name = name || null;
         window.myPlaylist.removeAll();
-        window.myPlaylist.isAlbum = isAlbum;
+        window.myPlaylist.id = id;
+        window.myPlaylist.type = isAlbum ? 'album' : 'playlist';
 
         var options,
             uri = isAlbum ? '/album/load' : '/playlist/load',
@@ -111,34 +107,26 @@
 
         if (null === loadingPlaylistMessage) {
             loadingPlaylistMessage = 'Already loading ' + item + ', please wait.';
-            if (typeof (name) === 'number' || (typeof (name) === 'string' && parseInt(name, 10) >= 0)) {
-                // It's an ID
-                if (typeof (name) === 'string') {
-                    name = parseInt(name, 10);
-                }
-                options = { id: name };
-
+            if (typeof (id) === 'number' || typeof (id) === 'undefined') {
+                options = { id: id };
             } else {
-                // It's a name
-                options = { name: name };
+                throw "First argument must be a number."
             }
 
             $.post(uri, options, function (data) {
                 if (null !== data) {
                     $('.jp-title').css('display', 'block');
-                    window.myPlaylist.name = data[1];
-                    $.each(data[0], function (i, v) {
+                    window.myPlaylist.name = data.name;
+                    $.each(data.trackList, function (i, v) {
                         window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
                     });
-                    setRepeatAndCurrent(parseInt(data[2], 10), parseInt(data[4], 10));
-                    setInterfaceShuffle(parseInt(data[3], 10));
+                    window.myPlaylist.loop = data.repeat;
+                    setInterfaceRepeat(data.repeat)
+                    window.myPlaylist.newCurrent = data.currentTrack;
+                    setInterfaceShuffle(data.shuffle);
                     applyOverPlaylist();
 
-                    if (5 in data && 1 == data[5]) {
-                        window.myPlaylist.isAlbum = true;
-                    }
-
-                    if (!isAlbum && 'number' === typeof options.id && !(5 in data)) {
+                    if (!isAlbum && 'number' === typeof options.id) {
                         $('.playlist-square').removeClass('current-playlist');
                         $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                     }
@@ -146,6 +134,7 @@
                     if ('undefined' !== typeof opt && 'playLast' in opt && opt.playLast) {
                         window.myPlaylist.setCurrent(-1);
                     }
+
                     window.myPlaylist.play();
                 }
             }, 'json').complete(function () {
@@ -896,8 +885,8 @@
         $('.music-manager .playlist-square .play').live('click', function (e) {
             e.preventDefault();
             var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
-            $.loadPlaylist($(this).parent().attr(type), {
-                isAlbum: 'albumid' === type 
+            $.loadPlaylist(parseInt($(this).parent().attr(type), 10), {
+                isAlbum: 'albumid' === type
             });
         });
 

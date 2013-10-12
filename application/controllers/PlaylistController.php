@@ -226,18 +226,13 @@ class PlaylistController extends DZend_Controller_Action
             DZend_Session_Namespace::close();
             unset($session);
             if (isset($userRow)) {
-                $name = $this->_request->getPost('name');
                 $id = $this->_request->getPost('id');
 
-                if (null === $name && null !== $id) {
-                    $name = (int) $id;
-                }
-
-                if ('' === $name && null === $id &&
+                if (null === $id &&
                     null !== $userRow->currentAlbumId) {
                     $this->_helper->redirector('load', 'album');
                 } else {
-                    $playlist = $this->_playlistModel->export($name);
+                    $playlist = $this->_playlistModel->export($id);
                     $this->view->playlist = $playlist;
                 }
             } elseif (isset($playlistRow)) {
@@ -248,6 +243,18 @@ class PlaylistController extends DZend_Controller_Action
         }
 
         $this->_logger->debug(print_r($this->view->playlist, true));
+    }
+
+    public function loadimprovedAction()
+    {
+        $a = new stdClass();
+        $a->a = 'jjjj';
+        $a->b = array(
+            't' => 'i'
+        );
+
+        echo Zend_Json::encode($a);
+
     }
 
     public function infoAction()

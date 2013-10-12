@@ -78,45 +78,25 @@ class Playlist extends DZend_Model
      * @param mixed $name Playlist's name.
      * @return array List of tracks on jplaylist's format.
      */
-    public function export($name)
+    public function export($id)
     {
         $ret = null;
         $playlistRow = null;
         $user = $this->_getUserRow();
-        if (gettype($name) === 'string') {
-            if ('' === $name) { // if current is null, ret will be null.
-                if (null !== $user->currentPlaylistId) {
-                    $playlistRow = $this->_playlistDb->findRowById(
-                        $user->currentPlaylistId
-                    );
-                }
-            } else {
-                $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                    $user->id, $name
-                );
-            }
-        } elseif (gettype($name) === 'integer') {
-            $playlistRow = $this->_playlistDb->findRowById($name);
-            if ($playlistRow->userId !== $user->id
-                    && 'public' !== $playlistRow->privacy)
-                $playlistRow = null;
-            else
-                $this->_userListenPlaylistModel->addUserPlaylist($playlistRow);
+
+        if ('integer' === gettype($id) && 0 !== $id) {
+            $playlistRow = $this->_playlistDb->findRowById($id);
+        } elseif (null !== $user->currentPlaylistId) {
+            $playlistRow = $this->_playlistDb->findRowById($user->currentPlaylistId);
+        }
+
+        // Prevent from accessing a playlist which he doesn't have access.
+        if ($playlistRow->userId != $user->id && $playlistRow->privacy != 'public') {
+            $playlistRow = null;
         }
 
         if (null !== $playlistRow) {
-            $ret = array();
-            $user->currentPlaylistId = $playlistRow->id;
-            $user->currentAlbumId = null;
-            $user->save();
-            $trackList = $playlistRow->getTrackListAsArray();
-            $ret = array(
-                $trackList,
-                $playlistRow->name,
-                $playlistRow->repeat,
-                $playlistRow->shuffle,
-                $playlistRow->currentTrack
-            );
+            $ret = $playlistRow->export();
         }
 
         return $ret;

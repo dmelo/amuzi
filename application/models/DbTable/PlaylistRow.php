@@ -164,4 +164,16 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row
     {
         return $this->name;
     }
+
+    public function export()
+    {
+        $trackCollection = new TrackCollection();
+        $trackCollection->trackList = $this->getTrackListAsArray();
+        $trackCollection->name = $this->name;
+        $trackCollection->repeat = $this->repeat;
+        $trackCollection->shuffle = $this->shuffle;
+        $trackCollection->currentTrack = $this->currentTrack;
+
+        return $trackCollection;
+    }
 }
