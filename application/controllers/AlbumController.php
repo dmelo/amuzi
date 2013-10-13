@@ -39,6 +39,11 @@ class AlbumController extends DZend_Controller_Action
         parent::init();
         $this->_jsonify = true;
         $this->_loginRequired = true;
+        $this->_messageFail = array(
+            $this->view->t('Failed saving setting'),
+            'error'
+        );
+
     }
 
     public function addAction()
@@ -176,5 +181,46 @@ class AlbumController extends DZend_Controller_Action
         }
 
         $this->view->output = $message;
+    }
+
+    protected function _adjustSetting($setting, $id, $value)
+    {
+        $message = $this->_messageFail;
+
+        if (is_string($setting) && null !== $id && null !== $value) {
+            try {
+                $row = $this->_userListenAlbumModel->findByAlbumId(
+                    $id
+                );
+                $row->$setting = $value;
+                $row->save();
+                $message = array($this->view->t('Setting saved'), true);
+            } catch (Zend_Exception $e) {
+                $message = $this->_messageFail;
+                $this->_logger->debug(
+                    $e->getMessage() . ' # ' . $e->getStackAsString()
+                );
+            }
+        }
+
+        return $message;
+    }
+
+    public function setrepeatAction()
+    {
+        $this->view->output = $this->_adjustSetting(
+            'repeat',
+            $this->_request->getPost('id'),
+            $this->_request->getPost('repeat')
+        );
+    }
+
+    public function setshuffleAction()
+    {
+        $this->view->output = $this->_adjustSetting(
+            'shuffle',
+            $this->_request->getPost('id'),
+            $this->_request->getPost('shuffle')
+        );
     }
 }

@@ -67,22 +67,6 @@
 
     }
 
-    /*
-    function setInterfaceRepeat(repeat) {
-        repeat = parseInt(repeat, 10);
-        window.myPlaylist.setLoop(repeat);
-        console.log("setInterfaceRepeat");
-        console.log(repeat);
-        $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
-        $('.jp-repeat').css('display', repeat ? 'none' : 'block');
-        console.log(repeat ? "off block, none" : "off none, block");
-        console.log($('.jp-repeat-off').length);
-        console.log($('.jp-repeat').length);
-        console.log($('.jp-repeat-off').css('display'));
-    }
-    $.setInterfaceRepeat = setInterfaceRepeat;
-    */
-
     function unloadPlaylist() {
         window.myPlaylist.name = null;
         window.myPlaylist.removeAll();
@@ -130,6 +114,7 @@
                     $('.jp-title').css('display', 'block');
                     window.myPlaylist.id = data.id;
                     window.myPlaylist.name = data.name;
+                    window.myPlaylist.type = data.type;
                     setInterfaceShuffle(data.shuffle);
                     console.log(data.repeat);
                     console.log(1 == parseInt(data.repeat, 10));
@@ -231,7 +216,6 @@
     function setRepeat(repeat) {
         var uri = window.myPlaylist.type == 'album' ? '/album' : '/playlist';
         uri += '/setrepeat';
-        // setInterfaceRepeat(repeat);
 
         $.post(uri, {
             id: window.myPlaylist.id,

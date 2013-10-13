@@ -35,7 +35,7 @@ class UserListenAlbum extends DZend_Model
                 )
             );
             } catch (Zend_Db_Statement_Exception $e) {
-                $row = $this->_userListenAlbumDb->findRowByAlbumIdAndUserId(
+                $row = $this->_objDb->findRowByAlbumIdAndUserId(
                     $albumRow->id,
                     $this->_getUserId()
                 );
@@ -45,5 +45,13 @@ class UserListenAlbum extends DZend_Model
         }
 
         return $ret;
+    }
+
+    public function findByAlbumId($albumId)
+    {
+        return $this->_objDb->findRowByUserIdAndAlbumId(
+            $this->_getUserId(),
+            $albumId
+        );
     }
 }
