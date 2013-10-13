@@ -75,5 +75,39 @@ class Search < Base
         
         assert 'Playlist: ' + cell.attribute_value(:name) == @browser.div(:class => 'jp-title').li.text
     end
+end
 
+class Player < Base
+    def testRepeatAndShuffle
+        selectSearchMode('IncBoard')
+        repeatOff = @browser.element(:class => 'jp-repeat-off')
+        repeatOn = @browser.element(:class => 'jp-repeat')
+
+        shuffleOff = @browser.element(:class => 'jp-shuffle-off')
+        shuffleOn = @browser.element(:class => 'jp-shuffle')
+
+        clickScreen("music")
+        if repeatOff.visible?
+            repeatOff.click
+        end
+
+        if shuffleOff.visible?
+            shuffleOff.click
+        end
+
+        refresh
+        clickScreen("music")
+
+        assert repeatOn.visible?
+        assert shuffleOn.visible?
+
+        repeatOn.click
+        shuffleOn.click
+
+        refresh
+        clickScreen("music")
+
+        assert repeatOff.visible?
+        assert shuffleOff.visible?
+    end
 end

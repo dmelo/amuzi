@@ -1,5 +1,4 @@
 require 'rubygems'
-# require 'minitest/autorun'
 require 'test/unit'
 require 'watir'
 require 'watir-webdriver'
@@ -47,8 +46,28 @@ class Base < Test::Unit::TestCase
         else
             assert @browser.url.index('/index/incboard') == nil
         end
-
-
     end
 
+    def clickScreen(screen)
+        slide = ''
+        if "search" == screen
+            slide = 'next'
+        else
+            slide = 'prev'
+        end
+
+        id = "screen-" + screen
+        waitId = 'slide-' + slide
+        @browser.div(:id => id).click
+        Watir::Wait.until {
+            1 == @browser.execute_script("return $('." + waitId + ".active').length")
+        }
+    end
+
+    def refresh
+        @browser.refresh
+        Watir::Wait.until {
+            4 == @browser.execute_script("return $('#jquery_jplayer_1').data('jPlayer').status.readyState")
+        }
+    end
 end
