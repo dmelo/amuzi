@@ -193,13 +193,15 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
 
     public function export()
     {
+        $userListenAlbumModel = new UserListenAlbum();
+        $listenRow = $userListenAlbumModel->findByAlbumId($this->id);
         $ret = new TrackCollection();
         $ret->trackList = $this->getTrackListAsArray();
         $ret->type = 'album';
         $ret->id = $this->id;
         $ret->name = $this->name;
-        $ret->repeat = 0; // $this->repeat
-        $ret->shuffle = 0; //$this->shuffle
+        $ret->repeat = null !== $listenRow ? $listenRow->repeat : 0; // $this->repeat
+        $ret->shuffle = null !== $listenRow ? $listenRow->shuffle : 0; //$this->shuffle
         $ret->currentTrack = 0; // $this->currentTrack
 
         return $ret;

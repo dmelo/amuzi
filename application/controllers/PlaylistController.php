@@ -257,49 +257,48 @@ class PlaylistController extends DZend_Controller_Action
         }
     }
 
-    public function setrepeatAction()
+    protected function _adjustSetting($setting, $id, $value)
     {
-        $message = null;
-        if ($this->_request->isPost()) {
-            $id = $this->_request->getPost('id');
-            $repeat = $this->_request->getPost('repeat');
+        $message = $this->_messageFail;
+        if (is_string($setting) && null !== $id && null !== $value) {
             $playlistRow = $this->_playlistModel->findRowById($id);
             try {
                 if (null !== $playlistRow) {
-                    $playlistRow->repeat = $repeat;
+                    $playlistRow->$setting = $value;
                     $playlistRow->save();
                     $message = array($this->view->t('Setting saved'), true);
                 } else {
-                    throw new Zend_Exception('returned a null playlistRow for id ' . $id);
+                    throw new Zend_Exception(
+                        'returned a null playlistRow for id ' . $id
+                    );
                 }
             } catch (Zend_Exception $e) {
-                $this->_logger->debug($e->getMessage() . ' # ' . $e->getStackAsString());
+                $this->_logger->debug(
+                    $e->getMessage() . ' # ' . $e->getStackAsString()
+                );
                 $message = $this->_messageFail;
             }
         }
-        $this->view->message = $message;
+
+        return $message;
+    }
+
+    public function setrepeatAction()
+    {
+        $this->view->message = $this->_adjustSetting(
+            'repeat',
+            $this->_request->getPost('id'),
+            $this->_request->getPost('repeat')
+        );
     }
 
     public function setshuffleAction()
     {
-        $message = null;
-        if ($this->_request->isPost()) {
-            $id = $this->_request->getPost('id');
-            $shuffle = $this->_request->getPost('shuffle');
-            $playlistRow = $this->_playlistModel->findRowById($id);
-            try {
-                if (null !== $playlistRow) {
-                    $playlistRow->shuffle = $shuffle;
-                    $playlistRow->save();
-                    $message = array($this->view->t('Setting saved'), true);
-                } else {
-                    throw new Zend_Exception('returned a null playlistRow');
-                }
-            } catch (Zend_Exception $e) {
-                $message = $this->_messageFail;
-            }
-        }
-        $this->view->message = $message;
+        $this->view->message = $this->_adjustSetting(
+            'shuffle',
+            $this->_request->getPost('id'),
+            $this->_request->getPost('shuffle')
+        );
     }
 
     public function setcurrentAction()
