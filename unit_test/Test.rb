@@ -72,6 +72,7 @@ class Search < Base
         Watir::Wait.until {
             'Playlist: ' + cell.attribute_value(:name) == @browser.div(:class => 'jp-title').li.text
         }
+        checkPlaylistLoaded
         
         assert 'Playlist: ' + cell.attribute_value(:name) == @browser.div(:class => 'jp-title').li.text
     end
@@ -80,6 +81,7 @@ end
 class Player < Base
     def testRepeatAndShuffle
         selectSearchMode('IncBoard')
+        checkPlaylistLoaded
         repeatOff = @browser.element(:class => 'jp-repeat-off')
         repeatOn = @browser.element(:class => 'jp-repeat')
 
@@ -113,4 +115,29 @@ class Player < Base
 end
 
 class OfflineEnv < Base
+    def testArtistSearch
+        searchOffline
+        artistEle = @browser.elements(:class, 'ui-autocomplete').first.element(:class => 'artist', :class => 'ui-menu-item')
+        assert artistEle.exists?
+        assert artistEle.visible?
+        artistEle.click
+        @browser.div(:class => 'collection-info').wait_until_present
+
+        assert @browser.div(:class => 'collection-info').exists?
+        assert @browser.div(:class => 'similarity-list').exists?
+        assert @browser.elements(:class, 'item-square').length > 4
+    end
+
+    def testAlbumSearch
+        searchOffline
+        albumEle = @browser.ul(:class => 'ui-autocomplete').elements(:class => 'album').last
+        assert albumEle.exists?
+        assert albumEle.visible?
+        albumEle.click
+        checkPlaylistLoaded
+        assert @browser.div(:class => 'collection-info').exists?
+        assert @browser.div(:class => 'cover').exists?
+        assert @browser.div(:class => 'similarity-list').exists?
+        assert @browser.elements(:class, 'item-square').length > 4
+    end
 end

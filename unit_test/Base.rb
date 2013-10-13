@@ -70,10 +70,29 @@ class Base < Test::Unit::TestCase
         }
     end
 
-    def refresh
-        @browser.refresh
+    def checkPlaylistLoaded
         Watir::Wait.until {
             4 == @browser.execute_script("return $('#jquery_jplayer_1').data('jPlayer').status.readyState")
         }
+        assert @browser.elements(:class => 'playlist-row').length >= 1
+        assert 'undefined' != @browser.execute_script('return window.myPlaylist.id');
+    end
+
+    def refresh
+        @browser.refresh
+        if @browser.element(:id => 'jquery_jplayer_1').exists?
+            checkPlaylistLoaded
+        end
+    end
+
+    def searchOffline
+        @browser.text_field(:id => 'q').focus
+        @browser.text_field(:id => 'q').set 'stratovarius'
+        Watir::Wait.until {
+            @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length >= 1
+        }
+
+        assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'artist').length >= 1
+        assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length >= 1
     end
 end
