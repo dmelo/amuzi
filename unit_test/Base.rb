@@ -34,6 +34,12 @@ class Base < Test::Unit::TestCase
             loginLocal()
         end
 
+        url = @browser.url;
+
+        if ('IncBoard' == modeName && url.index('/index/incboard') ) || 'Classic View' == modeName
+            return
+        end
+
         @browser.a(:href => '/user', :class => 'loadModal').click
         Watir::Wait.until {
             @browser.select_list(:id => 'view').exists?

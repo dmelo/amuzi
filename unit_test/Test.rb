@@ -111,3 +111,6 @@ class Player < Base
         assert shuffleOff.visible?
     end
 end
+
+class OfflineEnv < Base
+end
