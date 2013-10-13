@@ -221,8 +221,6 @@ class PlaylistController extends DZend_Controller_Action
         if ($this->_request->isPost()) {
             $session = DZend_Session_Namespace::get('session');
             $userRow = $session->user;
-            $playlistRow = isset($session->playlist) ?
-                $session->playlist : null;
             DZend_Session_Namespace::close();
             unset($session);
             if (isset($userRow)) {
@@ -234,8 +232,10 @@ class PlaylistController extends DZend_Controller_Action
                 } else {
                     $playlist = $this->_playlistModel->export($id);
                     $this->view->playlist = $playlist;
-                    $userRow->currentPlaylistId = $id;
-                    $userRow->save();
+                    if (null != $id) {
+                        $userRow->currentPlaylistId = $id;
+                        $userRow->save();
+                    }
                 }
             } else {
                 $this->view->playlist = null;
@@ -261,14 +261,21 @@ class PlaylistController extends DZend_Controller_Action
     {
         $message = null;
         if ($this->_request->isPost()) {
-            $repeat = $this->_playlistModel->setRepeat(
-                $this->_request->getPost('name'),
-                $this->_request->getPost('repeat')
-            );
-            if ($repeat)
-                $message = array($this->view->t('Setting saved'), true);
-            else
+            $id = $this->_request->getPost('id');
+            $repeat = $this->_request->getPost('repeat');
+            $playlistRow = $this->_playlistModel->findRowById($id);
+            try {
+                if (null !== $playlistRow) {
+                    $playlistRow->repeat = $repeat;
+                    $playlistRow->save();
+                    $message = array($this->view->t('Setting saved'), true);
+                } else {
+                    throw new Zend_Exception('returned a null playlistRow for id ' . $id);
+                }
+            } catch (Zend_Exception $e) {
+                $this->_logger->debug($e->getMessage() . ' # ' . $e->getStackAsString());
                 $message = $this->_messageFail;
+            }
         }
         $this->view->message = $message;
     }
@@ -277,14 +284,20 @@ class PlaylistController extends DZend_Controller_Action
     {
         $message = null;
         if ($this->_request->isPost()) {
-            $shuffle = $this->_playlistModel->setShuffle(
-                $this->_request->getPost('name'),
-                $this->_request->getPost('shuffle')
-            );
-            if ($shuffle)
-                $message = array($this->view->t('Setting saved'), true);
-            else
+            $id = $this->_request->getPost('id');
+            $shuffle = $this->_request->getPost('shuffle');
+            $playlistRow = $this->_playlistModel->findRowById($id);
+            try {
+                if (null !== $playlistRow) {
+                    $playlistRow->shuffle = $shuffle;
+                    $playlistRow->save();
+                    $message = array($this->view->t('Setting saved'), true);
+                } else {
+                    throw new Zend_Exception('returned a null playlistRow');
+                }
+            } catch (Zend_Exception $e) {
                 $message = $this->_messageFail;
+            }
         }
         $this->view->message = $message;
     }

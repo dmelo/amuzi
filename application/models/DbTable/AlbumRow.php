@@ -196,6 +196,7 @@ class DbTable_AlbumRow extends DZend_Db_Table_Row
         $ret = new TrackCollection();
         $ret->trackList = $this->getTrackListAsArray();
         $ret->type = 'album';
+        $ret->id = $this->id;
         $ret->name = $this->name;
         $ret->repeat = 0; // $this->repeat
         $ret->shuffle = 0; //$this->shuffle

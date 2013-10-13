@@ -169,6 +169,7 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row
     {
         $ret = new TrackCollection();
         $ret->trackList = $this->getTrackListAsArray();
+        $ret->id = $this->id;
         $ret->name = $this->name;
         $ret->type = 'playlist';
         $ret->repeat = $this->repeat;

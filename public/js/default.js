@@ -59,18 +59,29 @@
     }
 
     function setInterfaceShuffle(shuffle) {
-        window.myPlaylist.shuffle(shuffle);
+        shuffle = parseInt(shuffle, 10);
+        console.log("setInterfaceShuffle " + shuffle);
+        window.myPlaylist.shuffle(shuffle, true);
         $('.jp-shuffle-off').css('display', shuffle ? 'block' : 'none');
         $('.jp-shuffle').css('display', shuffle ? 'none' : 'block');
+
     }
 
+    /*
     function setInterfaceRepeat(repeat) {
+        repeat = parseInt(repeat, 10);
+        window.myPlaylist.setLoop(repeat);
         console.log("setInterfaceRepeat");
         console.log(repeat);
-
         $('.jp-repeat-off').css('display', repeat ? 'block' : 'none');
         $('.jp-repeat').css('display', repeat ? 'none' : 'block');
+        console.log(repeat ? "off block, none" : "off none, block");
+        console.log($('.jp-repeat-off').length);
+        console.log($('.jp-repeat').length);
+        console.log($('.jp-repeat-off').css('display'));
     }
+    $.setInterfaceRepeat = setInterfaceRepeat;
+    */
 
     function unloadPlaylist() {
         window.myPlaylist.name = null;
@@ -100,7 +111,6 @@
     $.loadPlaylist = function (id, opt) {
         var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false;
         window.myPlaylist.removeAll();
-        window.myPlaylist.id = id;
         window.myPlaylist.type = isAlbum ? 'album' : 'playlist';
 
         var options,
@@ -118,15 +128,22 @@
             $.post(uri, options, function (data) {
                 if (null !== data) {
                     $('.jp-title').css('display', 'block');
+                    window.myPlaylist.id = data.id;
                     window.myPlaylist.name = data.name;
-                    window.myPlaylist._highlight(0);
+                    setInterfaceShuffle(data.shuffle);
+                    console.log(data.repeat);
+                    console.log(1 == parseInt(data.repeat, 10));
+                    console.log(data.repeat);
+                    if (1 === parseInt(data.repeat, 10)) {
+                        $('#jquery_jplayer_1').data('jPlayer').repeat()
+                    } else {
+                        $('#jquery_jplayer_1').data('jPlayer').repeatOff()
+                    }
+
                     $.each(data.trackList, function (i, v) {
                         window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
                     });
-                    window.myPlaylist.loop = data.repeat;
-                    setInterfaceRepeat(data.repeat)
                     window.myPlaylist.newCurrent = data.currentTrack;
-                    setInterfaceShuffle(data.shuffle);
                     applyOverPlaylist();
 
                     if (!isAlbum && 'number' === typeof options.id) {
@@ -212,9 +229,12 @@
 
     // Repeat
     function setRepeat(repeat) {
-        setInterfaceRepeat(repeat);
-        $.post('/playlist/setrepeat', {
-            name: window.myPlaylist.name,
+        var uri = window.myPlaylist.type == 'album' ? '/album' : '/playlist';
+        uri += '/setrepeat';
+        // setInterfaceRepeat(repeat);
+
+        $.post(uri, {
+            id: window.myPlaylist.id,
             repeat: repeat
         }, function (data) {
             if ('error' === data[1]) {
@@ -227,18 +247,21 @@
 
     function applyRepeatTriggers() {
         $('.jp-repeat').click(function (e) {
-            setRepeat(true);
+            setRepeat(1);
         });
 
         $('.jp-repeat-off').click(function (e) {
-            setRepeat(false);
+            setRepeat(0);
         });
     }
 
     // Shuffle
     function setShuffle(shuffle) {
-        $.post('/playlist/setshuffle', {
-            name: window.myPlaylist.name,
+        var uri = window.myPlaylist.type === 'album' ? '/album' : '/playlist';
+        uri += '/setshuffle';
+
+        $.post(uri, {
+            id: window.myPlaylist.id,
             shuffle: shuffle
         }, function (data) {
             if ('error' === data[1]) {
@@ -251,11 +274,11 @@
 
     function applyShuffleTriggers() {
         $('.jp-shuffle').click(function (e) {
-            setShuffle(true);
+            setShuffle(1);
         });
 
         $('.jp-shuffle-off').click(function (e) {
-            setShuffle(false);
+            setShuffle(0);
         });
     }
 
@@ -679,7 +702,6 @@
             if (n > 0) {
                 setTimeout("window.throwMany(" + (n - 1) + ")", 50);
                 $.get('/album/info/id/' + n);
-                console.log('throwing ' + n);
             }
         }
 
@@ -800,7 +822,10 @@
         jplayerCss = "#jp_container_1";
         window.myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
-            cssSelectorAncestor: jplayerCss
+            cssSelectorAncestor: jplayerCss,
+            repeat: function(e) {
+                console.log(e);
+            }
         }, [], {supplied: 'flv', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
 
         $(jplayerCss + ' ul:last').sortable({

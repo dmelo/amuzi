@@ -110,28 +110,6 @@ class Playlist extends DZend_Model
     }
 
     /**
-     * setRepeat Set a playlist to (or not to) loop the tracks.
-     *
-     * @param string $name Playlist's name
-     * @param string $repeat "true" for repeating, any other string otherwise.
-     * @return boolean Returns true if the adjustment was successful, false
-     * otherwise.
-     */
-    public function setRepeat($name, $repeat)
-    {
-        try {
-            $playlistRow = $this->_playlistDb->findRowByUserIdAndName(
-                $this->_getUserId(), $name
-            );
-            $playlistRow->repeat = "true" == $repeat ? 1 : 0;
-            $playlistRow->save();
-            return true;
-        } catch(Zend_Exception $e) {
-            return false;
-        }
-    }
-
-    /**
      * setShuffle Set a playlist to (or not to) shuffle the tracks.
      *
      * @param string $name Playlist's name
