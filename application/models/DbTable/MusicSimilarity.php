@@ -82,11 +82,19 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
                 "or s_artist_music_title_id = $artistMusicTitleId ) ";
         }
 
+        $exclusionList = array();
+
         foreach ($artistMusicTitleIdList as $amtId) {
             if ($amtId != $artistMusicTitleId) {
-            $where .= " AND f_artist_music_title_id != $amtId "
-                . "AND s_artist_music_title_id != $amtId ";
+                $exclusionList[] = $amtId;
             }
+        }
+
+        if (count($exclusionList) > 0) {
+            $where .= ' AND f_artist_music_title_id not in ( '
+                . implode(', ', $exclusionList). ' ) AND '
+                . ' s_artist_music_title_id not in ( '
+                . implode(', ', $exclusionList) . ' )';
         }
 
         Zend_Registry::get('logger')->debug(

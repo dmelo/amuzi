@@ -217,16 +217,18 @@
         var uri = window.myPlaylist.type == 'album' ? '/album' : '/playlist';
         uri += '/setrepeat';
 
-        $.post(uri, {
-            id: window.myPlaylist.id,
-            repeat: repeat
-        }, function (data) {
-            if ('error' === data[1]) {
-                $.bootstrapMessageAuto(data[0], data[1]);
-            }
-        }, 'json').error(function (e) {
-            $.bootstrapMessageAuto('Error saving settings', 'error');
-        });
+        if (isLoggedIn()) {
+            $.post(uri, {
+                id: window.myPlaylist.id,
+                repeat: repeat
+            }, function (data) {
+                if ('error' === data[1]) {
+                    $.bootstrapMessageAuto(data[0], data[1]);
+                }
+            }, 'json').error(function (e) {
+                $.bootstrapMessageAuto('Error saving settings', 'error');
+            });
+        }
     }
 
     function applyRepeatTriggers() {
@@ -244,16 +246,18 @@
         var uri = window.myPlaylist.type === 'album' ? '/album' : '/playlist';
         uri += '/setshuffle';
 
-        $.post(uri, {
-            id: window.myPlaylist.id,
-            shuffle: shuffle
-        }, function (data) {
-            if ('error' === data[1]) {
-                $.bootstrapMessageAuto(data[0], data[1]);
-            }
-        }, 'json').error(function (e) {
-            $.bootstrapMessageAuto('Error saving settings', 'error');
-        });
+        if (isLoggedIn()) {
+            $.post(uri, {
+                id: window.myPlaylist.id,
+                shuffle: shuffle
+            }, function (data) {
+                if ('error' === data[1]) {
+                    $.bootstrapMessageAuto(data[0], data[1]);
+                }
+            }, 'json').error(function (e) {
+                $.bootstrapMessageAuto('Error saving settings', 'error');
+            });
+        }
     }
 
     function applyShuffleTriggers() {
