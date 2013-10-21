@@ -62,9 +62,9 @@ class IndexController extends DZend_Controller_Action
 
     public function testAction()
     {
-        $secs = $this->_request->getParam('secs');
-        sleep($secs);
-        echo "slept for $secs secs";
+        $this->_logger->debug('FACEBOOK');
+        $this->_logger->debug(print_r($this->_request->getParams(), true));
+        $this->_logger->debug(print_r($_COOKIE, true));
     }
 
     public function helpAction()

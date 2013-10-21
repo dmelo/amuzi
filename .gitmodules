@@ -25,3 +25,6 @@
 [submodule "external/bootstrap-helpers"]
 	path = external/bootstrap-helpers
 	url = git@github.com:dmelo/bootstrap-helpers.git
+[submodule "external/facebook-php-sdk"]
+	path = external/facebook-php-sdk
+	url = https://github.com/facebook/facebook-php-sdk.git

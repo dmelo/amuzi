@@ -26,10 +26,7 @@ function authenticate() {
     FB.api('/me', function(response) {
         if ('undefined' !== typeof response) {
             console.log('redirecting');
-            $('#email').val(response.email);
-            $('#name').val(response.name);
-            $('#authority').val('facebook');
-            $('#submit').click();
+            $('form#fblogin').submit();
         }
         console.log('Good to see you, ' + response.name + '.' + response.email);
     });
