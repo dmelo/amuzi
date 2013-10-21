@@ -119,6 +119,9 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->facebookSecret = $config->facebook->secret;
         $view->facebookChannel = $domain . '/channel.html';
 
+        Zend_Registry::set('facebookId', $config->facebook->id);
+        Zend_Registry::set('facebookSecret', $config->facebook->secret);
+
     }
 
     public function _initDateTime()
