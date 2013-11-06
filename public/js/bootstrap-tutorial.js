@@ -94,6 +94,8 @@ Tutorial.prototype.apply = function() {
 }
 
 $(document).ready(function() {
-    var tutorial = new Tutorial();
-    tutorial.apply();
+    if (window.isLoggedIn()) {
+        var tutorial = new Tutorial();
+        tutorial.apply();
+    }
 });

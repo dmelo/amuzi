@@ -284,6 +284,8 @@
         return $('#userId').length > 0 ? $('#userId').html() : false;
     }
 
+    window.isLoggedIn = isLoggedIn;
+
     function isMainPage() {
         return (isLoggedIn() && ['/', '/index/incboard', '/index/incboard/'].indexOf(window.location.pathname) != -1);
     }
