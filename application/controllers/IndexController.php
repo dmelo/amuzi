@@ -70,8 +70,4 @@ class IndexController extends DZend_Controller_Action
     public function helpAction()
     {
     }
-
-    public function innerloginAction()
-    {
-    }
 }

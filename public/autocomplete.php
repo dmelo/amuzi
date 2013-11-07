@@ -294,7 +294,7 @@ if (preg_match($r, $q) || strlen($q) < 3) {
             foreach ($aux as $newResult) {
                 $isUnique = true;
                 foreach ($sub as $result) {
-                    if ($result['name'] === $newResult['name']) {
+                    if (strtoupper($result['name']) === strtoupper($newResult['name'])) {
                         $isUnique = false;
                         break;
                     }
