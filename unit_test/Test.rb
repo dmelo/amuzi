@@ -46,6 +46,37 @@ class Search < Base
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'track').length == 6
     end
 
+    def autocompleteUniqueElements(text)
+        loginLocal()
+        @browser.text_field(:class => 'search').focus
+        @browser.text_field(:class => 'search').set text
+        Watir::Wait.until {
+            @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length > 0
+        }
+        ['album', 'track'].each do |type|
+            titles = Array.new
+            @browser.element(:class => 'ui-autocomplete').elements(:class, type).each do |li|
+                if li.element(:class => 'description').span.exists?
+                    t = li.element(:class => 'description').span.text
+                    assert(titles.include?(t) == false, titles.join(', ') + ' do have ' + t)
+                    titles << t
+                end
+            end
+        end
+    end
+
+    def testAutocompleteUniqueElements1
+        autocompleteUniqueElements('rolling stones aftermath')
+    end
+
+    def testAutocompleteUniqueElements2
+        autocompleteUniqueElements('coldplay')
+    end
+
+    def testAutocompleteUniqueElements3
+        autocompleteUniqueElements('u2 sweetest')
+    end
+
     def testClassicSearchView
         selectSearchMode("Classic View")
         selectSearchMode("IncBoard")

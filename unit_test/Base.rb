@@ -23,9 +23,22 @@ class Base < Test::Unit::TestCase
     end
 
     def setMute
-        clickScreen('music')
-        @browser.execute_script("return $('.jp-mute').trigger('click')")
-        clickScreen('search')
+        switch = @browser.element(:class, 'jp-mute').visible? == false
+        if switch
+            @browser.element(:id, 'screen-music').click
+            Watir::Wait.until {
+                @browser.element(:class, 'jp-mute').visible?
+            }
+        end
+        @browser.element(:class, 'jp-mute').click
+
+        if switch
+            @browser.element(:id, 'screen-search').click
+            Watir::Wait.until {
+                @browser.element(:id, 'jp_container_1').visible? == false
+            }
+        end
+
     end
 
 
@@ -34,7 +47,7 @@ class Base < Test::Unit::TestCase
        @browser.text_field(:name => 'password').set '123456'
        @browser.button(:name => 'submit').click
        assert @browser.a(:id => 'userEmail').text != ''
-       setMute()
+       # setMute()
     end
 
     def selectSearchMode(modeName)
@@ -43,11 +56,11 @@ class Base < Test::Unit::TestCase
         end
 
         url = @browser.url;
+        setMute()
 
         if ('IncBoard' == modeName && url.index('/index/incboard') ) || 'Classic View' == modeName
             return
         end
-        setMute()
 
         @browser.a(:href => '/user', :class => 'loadModal').click
         Watir::Wait.until {
@@ -61,7 +74,6 @@ class Base < Test::Unit::TestCase
         else
             assert @browser.url.index('/index/incboard') == nil
         end
-        setMute()
     end
 
     def clickScreen(screen)
