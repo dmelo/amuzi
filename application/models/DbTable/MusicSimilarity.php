@@ -66,6 +66,8 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
 
     public function getSimilar($artistMusicTitleId, $artistMusicTitleIdList)
     {
+        $c = new DZend_Chronometer();
+        $c->start();
         $db = $this->getAdapter();
 
         $where = '';
@@ -107,7 +109,62 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
             $ret[] = $artistMusicTitleId == $row->fArtistMusicTitleId ?
                 $row->sArtistMusicTitleId : $row->fArtistMusicTitleId;
         }
+        $c->stop();
+        $this->_logger->debug(
+            "DbTable_MusicSimilarity::getSimilar time: " . $c->get()
+        );
 
         return $ret;
+    }
+
+    public function insertMulti($artistMusicTitleId, array $rowSet)
+    {
+        $where = '';
+        $first = true;
+        foreach ($rowSet as $row) {
+            if ($first) {
+                $first = false;
+            } else {
+                $where .= ' OR ';
+            }
+
+            $where .= ' (f_artist_music_title_id = ' . $artistMusicTitleId
+                . ' AND s_artist_music_title_id = ' . $row->id . ') OR ('
+                . 'f_artist_music_title_id = ' . $row->id . ' AND '
+                . 's_artist_music_title_id = ' . $artistMusicTitleId . ') ';
+        }
+
+        $msRowSet = $this->fetchAll($where);
+        $similarities = array();
+        foreach ($msRowSet as $row) {
+            $f = $row->fArtistMusicTitleId;
+            $s = $row->sArtistMusicTitleId;
+            if (!array_key_exists($f, $similarities)) {
+                $similarities[$f] = array();
+            }
+
+            if (!array_key_exists($s, $similarities)) {
+                $similarities[$s] = array();
+            }
+
+            $similarities[$f][$s] = $row->similarity;
+            $similarities[$s][$f] = $row->similarity;
+        }
+
+        foreach ($rowSet as $row) {
+            if (!array_key_exists($row->id, $similarities)
+                || !array_key_exists(
+                    $artistMusicTitleId, $similarities[$row->id]
+                ) || $row->similarity != $similarities[$row->id][$artistMusicTitleId]
+                ) {
+                $this->insert(
+                    array(
+                        'f_artist_music_title_id' => $artistMusicTitleId,
+                        's_artist_music_title_id' => $row->id,
+                        'similarity' => $row->similarity
+                    )
+                );
+            }
+        }
     }
 }

@@ -144,7 +144,7 @@ class MusicSimilarity extends DZend_Model
         }
 
         $this->_logger->debug(
-            'MusicSimilarity::_getSimilarityMatrix D ' .
+            'MS::_getSimilarityMatrix D ' .
             microtime(true) . "#" . $count
         );
 
@@ -322,7 +322,6 @@ class MusicSimilarity extends DZend_Model
         );
         $this->_logger->debug(
             "MusicSimilarity::getSimilar -- extObjIdList: "
-            . print_r($extObjIdList, true)
         );
 
         $c = new DZend_Chronometer();
@@ -371,7 +370,6 @@ class MusicSimilarity extends DZend_Model
                     $this->_logger->debug(
                         'Calling getSimilarSync: ' . $artist
                         . ' - ' . $musicTitle . ' # ' . $type . ' '
-                        . print_r($extObjIdList, true)
                     );
                     $ret = $this->getSimilarSync(
                         $artist, $musicTitle, $type, $extObjIdList
@@ -431,7 +429,6 @@ class MusicSimilarity extends DZend_Model
                 $this->_logger->debug(
                     'Calling from lowret getSimilarSync: ' . $artist
                     . ' - ' . $musicTitle . ' # ' . $type . ' '
-                    . print_r($extObjIdList, true)
                 );
                 $ret = $this->getSimilarSync(
                     $artist, $musicTitle, $type, $extObjIdList
@@ -443,7 +440,6 @@ class MusicSimilarity extends DZend_Model
                 // refresh current data.
                 $this->_logger->debug(
                     "MusicSimilarity::getSimilar $artist $musicTitle "
-                    . print_r($type, true)
                 );
                 $this->_taskRequestModel->addTask(
                     'SearchSimilar', $artist, $musicTitle, $type
@@ -457,7 +453,7 @@ class MusicSimilarity extends DZend_Model
         }
 
         $this->_logger->debug(
-            'MusicSimilarity::getSimilar ret -- ' . print_r($ret, true)
+            'MusicSimilarity::getSimilar ret -- '
         );
 
         if (array_key_exists(0, $ret)) {
@@ -484,7 +480,7 @@ class MusicSimilarity extends DZend_Model
         }
 
         $this->_logger->debug(
-            'MusicSimilarity::getSimilar ret end -- ' . print_r($ret, true)
+            'MusicSimilarity::getSimilar ret end -- '
         );
 
         $c->stop();
@@ -509,15 +505,14 @@ class MusicSimilarity extends DZend_Model
             }
         }
 
-        $this->_logger->debug("getSimilarByIds ids A " . print_r($ids, true));
+        $this->_logger->debug("getSimilarByIds ids A ");
 
         list($similarList, $translationList) = $this->_replaceAlbumIdByAMTIds(
             $ids
         );
 
         $this->_logger->debug(
-            "getSimilarByIds similarList B " . print_r($similarList, true)
-            . '  ' . print_r($translationList, true)
+            "getSimilarByIds similarList B "
         );
 
 
@@ -543,6 +538,9 @@ class MusicSimilarity extends DZend_Model
         $artist, $musicTitle, $type, $artistMusicTitleIdList = array()
     )
     {
+        $c = new DZend_Chronometer();
+        $c2 = new DZend_Chronometer();
+        $c->start();
         $rowSet = $this->_lastfmModel->getSimilar($artist, $musicTitle);
         $artistMusicTitleId = $this->_artistMusicTitleModel->insert(
             $artist, $musicTitle
@@ -554,23 +552,27 @@ class MusicSimilarity extends DZend_Model
             'artistMusicTitleId' => $artistMusicTitleId
         ));
 
-        foreach ($rowSet as $row) {
-            $sArtistMusicTitleId = $this->_artistMusicTitleModel->insert(
-                $row->artist, $row->musicTitle
-            );
+        $c2->start();
 
-            if (null !== $sArtistMusicTitleId) {
-                $this->insert(
-                    $artistMusicTitleId,
-                    $sArtistMusicTitleId,
-                    $row->similarity
-                );
-            }
-        }
+        $rowSet = $this->_artistMusicTitleModel->insertMulti($rowSet);
+        $rowSet = $this->_objDb->insertMulti($artistMusicTitleId, $rowSet);
 
-        return $this->getSimilar(
+        $c2->stop();
+
+        $ret = $this->getSimilar(
             $artist, $musicTitle, $type, $artistMusicTitleIdList, false
         );
+
+        $c->stop();
+        $this->_logger->debug(
+            'MusicSimilarity::getSimilarSync time: ' . $c->get()
+        );
+        $this->_logger->debug(
+            'MusicSimilarity::getSimilarSync time c2: ' . $c2->get()
+        );
+
+
+        return $ret;
     }
 
     protected function _insertAlbumIds($artistMusicTitleIdList)

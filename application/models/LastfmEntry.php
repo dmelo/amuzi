@@ -39,6 +39,7 @@ class LastfmEntry extends AbstractEntry
     )
     {
         $this->_fields = array(
+            'id',
             'name',
             'cover',
             'artist',
@@ -48,7 +49,7 @@ class LastfmEntry extends AbstractEntry
             'type'
         );
         foreach ($this->_fields as $field) {
-            if (null !== $$field) {
+            if (isset($$field) && null !== $$field) {
                 $this->_data[$field] = $$field;
             }
         }

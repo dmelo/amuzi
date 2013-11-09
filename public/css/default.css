@@ -474,6 +474,10 @@ dd {
     min-height: 68px;
 }
 
+.quote-set .quote p, .quote-set .quote small {
+    padding-left: 80px;
+}
+
 .intro-video {
 text-align: center;
 }

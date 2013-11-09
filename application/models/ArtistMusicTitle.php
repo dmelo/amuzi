@@ -71,4 +71,44 @@ class ArtistMusicTitle extends DZend_Model
     {
         return $this->_artistMusicTitleDb->findRowById($id);
     }
+
+    public function insertMulti(array $rowSet)
+    {
+        $c = new DZend_Chronometer();
+        $c->start();
+        $amtRowSet = $this->_objDb->fetchAllByArtistAndMusicTitle($rowSet);
+        $map = array();
+        foreach ($amtRowSet as $row) {
+            $artist = strtolower($row['artist']);
+            $musicTitle = strtolower($row['musicTitle']);
+            if (!array_key_exists($artist, $map)) {
+                $map[$artist] = array();
+            }
+            $map[$artist][$musicTitle] = $row['id'];
+        }
+
+
+        foreach ($rowSet as &$row) {
+            $artist = strtolower($row->artist);
+            $musicTitle = strtolower($row->musicTitle);
+
+            if (!array_key_exists($artist, $map) || !array_key_exists($musicTitle, $map[$artist])) {
+                $row->id = $this->insert($row->artist, $row->musicTitle);
+            } else {
+                $row->id = $map[$artist][$musicTitle];
+            }
+        }
+
+
+        $c->stop();
+        $this->_logger->debug(
+            'ArtistMusicTitle::insertMultiple ' . print_r($rowSet, true)
+        );
+
+        $this->_logger->debug(
+            'ArtistMusicTitle::insertMultiple ' . $c->get()
+        );
+
+        return $rowSet;
+    }
 }

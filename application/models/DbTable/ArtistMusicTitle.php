@@ -49,4 +49,37 @@ class DbTable_ArtistMusicTitle extends DZend_Db_Table
 
         return $db->fetchAll($select);
     }
+
+    public function fetchAllByArtistAndMusicTitle($rowSet)
+    {
+        $db = $this->getAdapter();
+        $where = '';
+        $first = true;
+        foreach ($rowSet as $row) {
+            if ($first) {
+                $first = false;
+            } else {
+                $where .= ' OR ';
+            }
+            $where .= $db->quoteInto(' ( a.name = ? AND ', $row->artist)
+                . $db->quoteInto(' m.name = ? ) ', $row->musicTitle);
+        }
+
+        $select = $db->select()->from(
+            array('amt' => 'artist_music_title'),
+            array('id' => 'id')
+        )->join(
+            array('a' => 'artist'),
+            'a.id = amt.artist_id',
+            array('artist' => 'name')
+        )->join(
+            array('m' => 'music_title'),
+            'm.id = amt.music_title_id',
+            array('musicTitle' => 'name')
+        )->where($where);
+
+        $this->_logger->debug('ArtistMusicTitle::insertMulti query ' . $select);
+
+        return $db->fetchAll($select);
+    }
 }
