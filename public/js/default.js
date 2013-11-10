@@ -58,10 +58,11 @@
         $('.jp-playlist').scrollTop($('.jp-playlist').prop('scrollHeight'));
     }
 
-    function setInterfaceShuffle(shuffle) {
+    function setInterfaceShuffle(shuffle, playNow) {
+        playNow = 'undefined' == typeof(playNow) ? true : playNow;
         shuffle = parseInt(shuffle, 10);
-        console.log("setInterfaceShuffle " + shuffle);
-        window.myPlaylist.shuffle(shuffle, true);
+        console.log("setInterfaceShuffle " + shuffle + ". playNow: " + playNow);
+        window.myPlaylist.shuffle(shuffle, playNow);
         $('.jp-shuffle-off').css('display', shuffle ? 'block' : 'none');
         $('.jp-shuffle').css('display', shuffle ? 'none' : 'block');
 
@@ -93,19 +94,23 @@
      * @return void
      */
     $.loadPlaylist = function (id, opt) {
-        var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false,
-            forcePlaylist = 'undefined' !== typeof opt && 'forcePlaylist' in opt ? opt.forcePlaylist : false;
-        window.myPlaylist.removeAll();
-        window.myPlaylist.type = isAlbum ? 'album' : 'playlist';
+        var baseOpt = {
+            isAlbum: false,
+            forcePlaylist: false,
+            playNow: false
+        },  opt = $.extend(baseOpt, opt),
+            uri = opt.isAlbum ? '/album/load' : '/playlist/load',
+            item = opt.isAlbum ? 'album' : 'playlist',
+            options;
 
-        var options,
-            uri = isAlbum ? '/album/load' : '/playlist/load',
-            item = isAlbum ? 'album' : 'playlist';
+
+        window.myPlaylist.removeAll();
+        window.myPlaylist.type = opt.isAlbum ? 'album' : 'playlist';
 
         if (null === loadingPlaylistMessage) {
             loadingPlaylistMessage = 'Already loading ' + item + ', please wait.';
             if (typeof (id) === 'number' || typeof (id) === 'undefined') {
-                options = { id: id, forcePlaylist: forcePlaylist};
+                options = { id: id, forcePlaylist: opt.forcePlaylist};
             } else {
                 throw "First argument must be a number."
             }
@@ -113,10 +118,11 @@
             $.post(uri, options, function (data) {
                 if (null !== data) {
                     $('.jp-title').css('display', 'block');
+                    $("#jquery_jplayer_1").data("jPlayer").status.paused = true;
                     window.myPlaylist.id = data.id;
                     window.myPlaylist.name = data.name;
                     window.myPlaylist.type = data.type;
-                    setInterfaceShuffle(data.shuffle);
+                    setInterfaceShuffle(data.shuffle, opt.playNow);
                     console.log(data.repeat);
                     console.log(1 == parseInt(data.repeat, 10));
                     console.log(data.repeat);
@@ -132,7 +138,7 @@
                     window.myPlaylist.newCurrent = data.currentTrack;
                     applyOverPlaylist();
 
-                    if (!isAlbum && 'number' === typeof options.id) {
+                    if (!opt.isAlbum && 'number' === typeof options.id) {
                         $('.playlist-square').removeClass('current-playlist');
                         $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                     }
@@ -141,7 +147,12 @@
                         window.myPlaylist.setCurrent(-1);
                     }
 
-                    window.myPlaylist.play();
+                    console.log("DECIDING TO PLAY: " + (opt.playNow ? "yes": "no"));
+                    if (opt.playNow) {
+                        window.myPlaylist.play();
+                    } else {
+                        window.myPlaylist.pause();
+                    }
                 }
             }, 'json').complete(function () {
                 loadingPlaylistMessage = null;
