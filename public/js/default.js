@@ -533,7 +533,7 @@
             $.bootstrapMessageOff(messageId);
             $.bootstrapMessageAuto('Album added', 'success');
             if (playNow) {
-                $.loadPlaylist(parseInt(albumId, 10), { isAlbum: true });
+                $.loadPlaylist(parseInt(albumId, 10), { isAlbum: true, playNow: playNow });
             }
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto(
@@ -918,7 +918,8 @@
             e.preventDefault();
             var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
             $.loadPlaylist(parseInt($(this).parent().attr(type), 10), {
-                isAlbum: 'albumid' === type
+                isAlbum: 'albumid' === type,
+                playNow: true
             });
         });
 

@@ -292,39 +292,44 @@
                 $.bootstrapMessageAuto('Error searching for music', 'error');
             },
             beforeSubmit: function() {
-                $('#subtitle').subtitleInit();
-                var messageId = $.bootstrapMessageLoading();
-                globalSearchId++;
-                if ('undefined' !== typeof search) {
-                    search.clean();
-                }
-                var obj = new Object();
-                obj.artist = $('#artist').val();
-                obj.musicTitle = $('#musicTitle').val();
-                obj.type = $('#type').val();
-                obj.searchId = globalSearchId;
-                obj.messageId = messageId;
-                console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
-                if (1 === $('#userId').length) {
-                    if ($.isSearchFormValid()) {
-                        searchMusic([obj], 1, searchMusicCallbackCenter);
-                    } else { // search in a way that many music can be retrieved.
-                        searchMulti($('#q').val());
+                if ($('#q').val().length >= 3) {
+                    $('#subtitle').subtitleInit();
+                    var messageId = $.bootstrapMessageLoading();
+                    globalSearchId++;
+                    if ('undefined' !== typeof search) {
+                        search.clean();
                     }
-                    incrementSimilar(obj);
+
+                    var obj = new Object();
+                    obj.artist = $('#artist').val();
+                    obj.musicTitle = $('#musicTitle').val();
+                    obj.type = $('#type').val();
+                    obj.searchId = globalSearchId;
+                    obj.messageId = messageId;
+                    console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
+                    if (1 === $('#userId').length) {
+                        if ($.isSearchFormValid()) {
+                            searchMusic([obj], 1, searchMusicCallbackCenter);
+                        } else { // search in a way that many music can be retrieved.
+                            searchMulti($('#q').val());
+                        }
+                        incrementSimilar(obj);
+                    } else {
+                        console.log('BEFORE SUBMIT LOGGEDOUT');
+                        console.log('/artist/' + obj.artist);
+                        console.log(obj.type);
+                        var uri = '/';
+
+                        if ('album' === obj.type) {
+                            uri = '/album/' + obj.artist + '/' + obj.musicTitle;
+                        } else if ('artist' === obj.type) {
+                            uri = '/artist/' + obj.artist;
+                        }
+
+                        window.location.pathname = uri;
+                    }
                 } else {
-                    console.log('BEFORE SUBMIT LOGGEDOUT');
-                    console.log('/artist/' + obj.artist);
-                    console.log(obj.type);
-                    var uri = '/';
-
-                    if ('album' === obj.type) {
-                        uri = '/album/' + obj.artist + '/' + obj.musicTitle;
-                    } else if ('artist' === obj.type) {
-                        uri = '/artist/' + obj.artist;
-                    }
-
-                    window.location.pathname = uri;
+                    $.bootstrapMessageAuto('Too short', 'error');
                 }
 
                 // IMPORTANT: Submitting will never be fulfilled, because we
