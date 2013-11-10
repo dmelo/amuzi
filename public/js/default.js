@@ -93,7 +93,8 @@
      * @return void
      */
     $.loadPlaylist = function (id, opt) {
-        var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false;
+        var isAlbum = 'undefined' !== typeof opt && 'isAlbum' in opt ? opt.isAlbum : false,
+            forcePlaylist = 'undefined' !== typeof opt && 'forcePlaylist' in opt ? opt.forcePlaylist : false;
         window.myPlaylist.removeAll();
         window.myPlaylist.type = isAlbum ? 'album' : 'playlist';
 
@@ -104,7 +105,7 @@
         if (null === loadingPlaylistMessage) {
             loadingPlaylistMessage = 'Already loading ' + item + ', please wait.';
             if (typeof (id) === 'number' || typeof (id) === 'undefined') {
-                options = { id: id };
+                options = { id: id, forcePlaylist: forcePlaylist};
             } else {
                 throw "First argument must be a number."
             }
@@ -478,7 +479,7 @@
         options = {
             id: trackId,
             playlist: window.myPlaylist.name,
-            isAlbum: window.myPlaylist.isAlbum,
+            isAlbum: window.myPlaylist.type === 'album',
             artist: artist,
             musicTitle: musicTitle,
             windowId: window.windowId
@@ -490,12 +491,12 @@
             if ('error' === data[1]) {
                 $.loadPlaylist();
             } else if ('success' === data[1]) {
-                if (!window.myPlaylist.isAlbum) {
+                if ('playlist' == window.myPlaylist.type) {
                     var v = data[2],
                         pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
                     window.myPlaylist.add(pOpt, playNow);
-                } else if (playNow) {
-                    $.loadPlaylist(parseInt($('.current-playlist').attr('playlistid'), 10), {playLast: true});
+                } else if ('album' === data[1] && playNow) {
+                    $.loadPlaylist(undefined, {playLast: true, forcePlaylist: true});
                 }
             }
         }, 'json').error(function (e) {
@@ -685,7 +686,9 @@
             message,
             st;
 
-        verifyView();
+        if (isLoggedIn()) {
+            verifyView();
+        }
 
         // For debugging purposes only.
         window.throwMany = function(n) {
@@ -930,7 +933,9 @@
         if (isMainPage()) {
             loadPlaylistSet();
             loadAlbumSet();
-            startPing();
+            if (isLoggedIn()) {
+                startPing();
+            }
         } else if ($('#jp_container_1.lonely').length > 0) {
             if (1 === $('#load-playlist').length) {
                 $.loadPlaylist(parseInt($('#load-playlist').html(), 10), {isAlbum: $('#load-playlist').attr('isAlbum')});

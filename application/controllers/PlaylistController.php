@@ -227,7 +227,8 @@ class PlaylistController extends DZend_Controller_Action
                 $id = $this->_request->getPost('id');
 
                 if (null == $id &&
-                    null !== $userRow->currentAlbumId) {
+                    null !== $userRow->currentAlbumId &&
+                    !$this->_request->getPost('forcePlaylist')) {
                     $this->_helper->redirector('load', 'album');
                 } else {
                     $playlist = $this->_playlistModel->export($id);
