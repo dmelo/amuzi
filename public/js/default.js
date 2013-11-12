@@ -147,7 +147,6 @@
                         window.myPlaylist.setCurrent(-1);
                     }
 
-                    console.log("DECIDING TO PLAY: " + (opt.playNow ? "yes": "no"));
                     if (opt.playNow) {
                         window.myPlaylist.play();
                     } else {
@@ -506,8 +505,8 @@
                     var v = data[2],
                         pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
                     window.myPlaylist.add(pOpt, playNow);
-                } else if ('album' === data[1] && playNow) {
-                    $.loadPlaylist(undefined, {playLast: true, forcePlaylist: true});
+                } else if ('album' === window.myPlaylist.type && playNow) {
+                    $.loadPlaylist(undefined, {playLast: true, forcePlaylist: true, playNow: playNow});
                 }
             }
         }, 'json').error(function (e) {
@@ -515,7 +514,7 @@
                 'Error adding track. Please, try again', 'error'
             );
         });
-    }
+    };
 
     $.addAlbum = function(albumId, playNow) {
         var messageId = $.bootstrapMessage('Adding album...', 'info');
@@ -540,7 +539,7 @@
                 'Error adding your album. Please, try again.', 'error'
             );
         });
-    }
+    };
 
     function prepareVoteButton() {
     }
