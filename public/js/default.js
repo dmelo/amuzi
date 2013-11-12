@@ -741,6 +741,11 @@
             addElement($(this).parent(), true);
         });
 
+        $('.object-playlist .cover').live('click', function(e) {
+            e.preventDefault();
+            $(this).parent().find('.play').trigger('click');
+        });
+
         $('.youtube-link, .download').live('click', function (e) {
             e.stopPropagation();
             window.myPlaylist.pause();
