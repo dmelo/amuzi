@@ -36,8 +36,9 @@
 
         $('.slide-prev').removeClass('active');
         $('.slide-next').addClass('active');
-        $('#screen-search img').attr('src', '/img/search.png');
-        $('#screen-music img').attr('src', '/img/music-dark.png');
+        $('#screen-music').removeClass('light').addClass('dark');
+        $('#screen-search').removeClass('dark').addClass('light');
+
         $.resizeEditPlaylist();
     };
 
