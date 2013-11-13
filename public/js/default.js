@@ -445,7 +445,7 @@
         var clone = e.clone();
 
         e.parent().append(clone);
-        clone.animate({left: $(window).width()}, {
+        clone.animate({left: "100%"}, {
             duration: 1500,
             complete: function () {
                 clone.remove();

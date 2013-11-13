@@ -47,7 +47,6 @@ class Base < Test::Unit::TestCase
        @browser.text_field(:name => 'password').set '123456'
        @browser.button(:name => 'submit').click
        assert @browser.a(:id => 'userEmail').text != ''
-       # setMute()
     end
 
     def selectSearchMode(modeName)
@@ -56,7 +55,6 @@ class Base < Test::Unit::TestCase
         end
 
         url = @browser.url;
-        setMute()
 
         if ('IncBoard' == modeName && url.index('/index/incboard') ) || 'Classic View' == modeName
             return
