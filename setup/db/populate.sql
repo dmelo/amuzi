@@ -5,7 +5,7 @@ INSERT INTO `bond`(`id`, `name`, `priority`, `comment`)
           (4, 'vote_down', 16, 'The user gave a negative vote to the track');
 
 INSERT INTO `user`(`name`, `email`, `password`)
-    VALUES('Diogo Melo', 'dmelo87@gmail.com', '30a8caa8b6a0ff02a958c31d8c5f7f622f12232c');
+    VALUES('Diogo Melo', 'dmelo87@gmail.com', sha1('123456'));
 
 INSERT INTO `playlist`(user_id, name) VALUES(last_insert_id(), 'Diogo Melo');
 
