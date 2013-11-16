@@ -28,3 +28,6 @@
 [submodule "external/facebook-php-sdk"]
 	path = external/facebook-php-sdk
 	url = https://github.com/facebook/facebook-php-sdk.git
+[submodule "external/incboardjs"]
+	path = external/incboardjs
+	url = git@github.com:dmelo/incboardjs.git
