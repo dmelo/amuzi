@@ -46,7 +46,7 @@ Tutorial.prototype.search = function() {
     $.get('/tutorial/search', function(data) {
         var e = 'form.search .input-append';
         $(e).attr('data-content', data);
-        $(e).popover({placement: 'top'});
+        $(e).popover({placement: 'bottom'});
         $(e).popover('show');
         window.tutorialCloseSearch = function() {
             $(e).popover('hide');
