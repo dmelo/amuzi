@@ -38,7 +38,8 @@ class App_Plugin_Login extends DZend_Plugin_Login
             array('default', 'artist', 'info'),
             array('default', 'album', 'info'),
             array('default', 'album', 'load'),
-            array('default', 'album', 'forcefullalbum')
+            array('default', 'album', 'forcefullalbum'),
+            array('default', 'incboard'),
         );
     }
 }

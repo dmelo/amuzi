@@ -1,0 +1,20 @@
+<? if (isset($this->num)): ?>
+<div id="description-top">
+    <p>Number of elements: <span id="nro"></span></p>
+    <p>Time to insert: <span id="time"></span>ms</p>
+    <p>Quality: <span id="quality"></span></p>
+    <p>Threashold: <span id="threashold"></span></p>
+    <p><a href="/incboard">Back</a></p>
+</div>
+<? endif; ?>
+
+<div class="container">
+    <?
+    if (!isset($this->num)) {
+        echo $this->form;
+    }
+    ?>
+    <div class="subtitle"></div>
+    <div id="incboard-result">
+    </div>
+</div>

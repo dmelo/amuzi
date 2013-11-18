@@ -1,1 +1,1 @@
-../../external/incboardjs/src/incboard-board.js
+../../external/incboardjs/src/js/incboard-board.js

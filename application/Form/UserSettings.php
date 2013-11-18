@@ -58,9 +58,7 @@ class Form_UserSettings extends DZend_Form
 
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Submit('submit');
-        $element->setLabel($this->_t('Save'));
-        $this->addElement($element);
+        $this->addSubmit($this->_t('Save'));
 
         $element = new Zend_Form_Element_Button('cancel');
         $element->setLabel($this->_t('Cancel'));
