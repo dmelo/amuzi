@@ -67,14 +67,14 @@
         $.incBoard.stochasticLength = parseFloat(getURLParameter('threashold'));
         $.num = parseInt(getURLParameter('num'));
 
-        if ($.count >= 100) {
-            $.count = 0;
-            $.incBoard.stochasticLength += 0.05;
-        } else {
+        // if ($.count >= 100) {
+        //     $.count = 0;
+        //     $.incBoard.stochasticLength += 0.05;
+        // } else {
             $.count++;
-        }
+        // }
 
-        if ($.incBoard.stochasticLength >= 1) {
+        if ($.incBoard.stochasticLength > 1) {
             return;
         }
 

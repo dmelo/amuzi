@@ -92,7 +92,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             'search-exec.js',
             'bootstrap-tutorial.js',
             'jquery.subtitle.js',
-            'incboard-intro.js',
         );
         Zend_Registry::set('js', $js);
 
