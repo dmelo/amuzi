@@ -93,6 +93,17 @@ class MusicSimilarity extends DZend_Model
         return $this->_musicSimilarityDb->getRandomArtistMusicTitleId();
     }
 
+    public function _similarityToDissimilarity($m)
+    {
+        foreach ($m as $i => $row) {
+            foreach ($row as $j => $val) {
+                $m[$i][$j] = 10000 - $m[$i][$j];
+            }
+        }
+
+        return $m;
+    }
+
     /**
      * _getSimilarityMatrix Calculate the similarity matrix for a given set of
      * elements
@@ -402,6 +413,9 @@ class MusicSimilarity extends DZend_Model
             $similarityMatrixResponse[0] = $this->_applyListTranslationToMatrix(
                 $similarityMatrixResponse[0], $translationList
             );
+            $similarityMatrixResponse[0] = $this->_similarityToDissimilarity(
+                $similarityMatrixResponse[0]
+            );
             $completeIdList = $this->_applyListTranslationToList(
                 $completeIdList, $translationList
             );
@@ -524,8 +538,10 @@ class MusicSimilarity extends DZend_Model
         );
         */
 
-        return $this->_applyListTranslationToMatrix(
-            $similarityMatrix[0], $translationList
+        return $this->_similarityToDissimilarity(
+            $this->_applyListTranslationToMatrix(
+                $similarityMatrix[0], $translationList
+            )
         );
     }
 

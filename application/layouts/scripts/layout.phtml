@@ -102,6 +102,7 @@
 </div>
 <!-- end div#footer -->
 
+<? if ('production' === APPLICATION_ENV): ?>
 <!-- Google analytics -->
 <script type="text/javascript">
 
@@ -116,6 +117,7 @@
   })();
 
 </script>
+<? endif; ?>
 
         <?= $this->headScript(); ?>
 
