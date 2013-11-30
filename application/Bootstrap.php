@@ -63,6 +63,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $js = array(
             'ie-compatibility.js',
             'jquery.js',
+            'stacktrace.js',
             'log.js',
             'facebook-connect.js',
             'bootstrap.js',

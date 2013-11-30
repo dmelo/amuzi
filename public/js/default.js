@@ -93,12 +93,12 @@
      * playlist.
      * @return void
      */
-    $.loadPlaylist = function (id, opt) {
+    $.loadPlaylist = function (id, optArg) {
         var baseOpt = {
             isAlbum: false,
             forcePlaylist: false,
             playNow: false
-        },  opt = $.extend(baseOpt, opt),
+        },  opt = $.extend(baseOpt, optArg),
             uri = opt.isAlbum ? '/album/load' : '/playlist/load',
             item = opt.isAlbum ? 'album' : 'playlist',
             options;
@@ -112,7 +112,7 @@
             if (typeof (id) === 'number' || typeof (id) === 'undefined') {
                 options = { id: id, forcePlaylist: opt.forcePlaylist};
             } else {
-                throw "First argument must be a number."
+                throw "First argument must be a number.";
             }
 
             $.post(uri, options, function (data) {
@@ -127,9 +127,9 @@
                     console.log(1 == parseInt(data.repeat, 10));
                     console.log(data.repeat);
                     if (1 === parseInt(data.repeat, 10)) {
-                        $('#jquery_jplayer_1').data('jPlayer').repeat()
+                        $('#jquery_jplayer_1').data('jPlayer').repeat();
                     } else {
-                        $('#jquery_jplayer_1').data('jPlayer').repeatOff()
+                        $('#jquery_jplayer_1').data('jPlayer').repeatOff();
                     }
 
                     $.each(data.trackList, function (i, v) {
@@ -162,7 +162,7 @@
         } else {
             $.bootstrapMessageAuto(loadingPlaylistMessage, 'info');
         }
-    }
+    };
 
     function rmPlaylist(id, isPlaylist, callback) {
         var controller = isPlaylist ? 'playlist' : 'album';
@@ -183,7 +183,7 @@
         if (1 === $('#userId').length) {
             $.loadPlaylist();
         }
-        setTimeout('$.commands.runProgram()', 1500);
+        setTimeout("$.commands.runProgram()", 1500);
     };
 
     function setPlaylistRepeat(name, repeat) {
@@ -564,11 +564,7 @@
         var artist = $('#artist').val(),
             musicTitle = $('#musicTitle').val();
 
-        if (
-            '' !== artist
-                && '' !== musicTitle
-                && $('#q').val() === artist + ' - ' + musicTitle
-        ) {
+        if ('' !== artist && '' !== musicTitle && $('#q').val() === artist + ' - ' + musicTitle) {
             return true;
         }
 
@@ -605,7 +601,7 @@
         if ($('.quote-set').length > 0) {
             var prev = $('.quote-set .quote-active'),
                 cur = $('.quote-set .quote-active').next();
-            if (0 == cur.length) {
+            if (0 === cur.length) {
                 cur = $('.quote-set .quote').first();
             }
             $('.quote-set .quote').removeClass('quote-active');
@@ -667,7 +663,7 @@
         var a =  $.map(data, function (row) {
             return {
                 data: row,
-                label: '<div class="cover"><img src="' + ('' == row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
+                label: '<div class="cover"><img src="' + ('' === row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
                 category: row.type,
                 value: row.name,
                 artist: row.artist,
@@ -709,7 +705,7 @@
                 setTimeout("window.throwMany(" + (n - 1) + ")", 50);
                 $.get('/album/info/id/' + n);
             }
-        }
+        };
 
 
         checkBrowserCompatibility();
@@ -935,7 +931,7 @@
             if (confirm('Are you sure?')) {
                 var name = $(this).parent().find('.name').html(),
                     p = $(this).parent(),
-                    isPlaylist = undefined !== p.attr('playlistid'),
+                    isPlaylist = (undefined !== p.attr('playlistid')),
                     id = $(this).parent().attr(isPlaylist ? 'playlistid' : 'albumid');
                 rmPlaylist(id, isPlaylist, removePlaylistSquareCallback);
                 if (name === window.myPlaylist.name) {

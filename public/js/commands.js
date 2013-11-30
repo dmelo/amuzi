@@ -101,4 +101,4 @@ Commands.prototype.runProgram = function() {
             $.cookie('commandc', program, {path: '/'});
         }
     }
-}
+};

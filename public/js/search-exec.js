@@ -67,8 +67,6 @@
                 }
             }
 
-            // If null !== obj then process the searchSimilar request.
-
             if (null !== obj) {
                 var artist = obj.artist,
                     musicTitle = obj.musicTitle,
@@ -76,8 +74,10 @@
                     searchId = obj.searchId;
 
                 console.log("incrementSimilar artist: " + artist + ". musicTitle: " + musicTitle + ". type: " + type);
-                if (null != artist && null != musicTitle) {
+                if (null !== artist && null !== musicTitle) {
                     incrementSimilarRunning = true;
+                    console.log("calling ajax /api/searchsimilar");
+                    console.log(printStackTrace().join("\n\n"));
                     $.post('/api/searchsimilar', {
                         q: artist + ' - ' + musicTitle,
                         artist: artist,
@@ -85,7 +85,6 @@
                         type: type,
                         objIdList: search.getIdList()
                     }, function(data) {
-                        console.log("searchMusic:: on closure. searchId: " + searchId + ". globalSearchId: " + globalSearchId);
                         similarList = data[0];
                         if (searchId === globalSearchId) {
                             for (var i = 0; i < data.length; i++) {
@@ -110,15 +109,24 @@
             params,
             searchId;
 
+        if (!$.isArray(set)) {
+            throw "First parameter must be an array";
+        }
+
+        if ('number' !== typeof num) {
+            throw "Second parameter must be a number";
+        }
+
         console.log("searchMusic: " + set.length + ", " + num);
-        if (num > 0 && 'undefined' !== typeof m && null !== m) {
+        if (num > 0) {
             searchId = 'searchId' in m ? m.searchId : null;
             if (null === searchId || globalSearchId === searchId) {
+                // Determine what parameters and what uri to call.
                 if ('type' in m && 'album' === m.type) {
                     uri = '/api/searchalbum';
                     if ('objId' in m) {
                         params = {
-                            id: -m.objId
+                            id: Math.abs(m.objId)
                         };
                     } else {
                         params = {
@@ -170,7 +178,7 @@
                         console.log(params);
                     });
                 } else {
-                    console.log('error: invalid parameters on searchMusic');
+                    throw 'error: invalid parameters on searchMusic';
                 }
 
             } else {
@@ -183,6 +191,7 @@
     }
 
     // TODO: implement searchId.
+    // TODO: try to transform it into searchMusic(data, data.length)
     function searchMulti(q) {
         var searchId = globalSearchId;
         $.get('/autocomplete.php', {
@@ -279,19 +288,14 @@
             $(this).find('.overlay').css('display', 'block');
         }});
 
-
-        
-
         $('form.search').ajaxForm({
             dataType: 'json',
             success: function (data) {
                 // Will never be reached. Since beforeSubmit always returns
                 // false.
-            },
-            error: function (data) {
+            }, error: function (data) {
                 $.bootstrapMessageAuto('Error searching for music', 'error');
-            },
-            beforeSubmit: function() {
+            }, beforeSubmit: function() {
                 if ($('#q').val().length >= 3) {
                     $('#subtitle').subtitleInit();
                     var messageId = $.bootstrapMessageLoading();
@@ -300,12 +304,13 @@
                         search.clean();
                     }
 
-                    var obj = new Object();
-                    obj.artist = $('#artist').val();
-                    obj.musicTitle = $('#musicTitle').val();
-                    obj.type = $('#type').val();
-                    obj.searchId = globalSearchId;
-                    obj.messageId = messageId;
+                    var obj = {
+                        artist: $('#artist').val(),
+                        musicTitle: $('#musicTitle').val(),
+                        type: $('#type').val(),
+                        searchId: globalSearchId,
+                        messageId: messageId,
+                    };
                     console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
                     if (1 === $('#userId').length) {
                         if ($.isSearchFormValid()) {
@@ -313,7 +318,9 @@
                         } else { // search in a way that many music can be retrieved.
                             searchMulti($('#q').val());
                         }
-                        incrementSimilar(obj);
+                        console.log("CALLING INCREMENT SIMILAR");
+                        console.log(printStackTrace().join("\n\n"));
+                        // incrementSimilar(obj);
                     } else {
                         console.log('BEFORE SUBMIT LOGGEDOUT');
                         console.log('/artist/' + obj.artist);
