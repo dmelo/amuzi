@@ -319,10 +319,6 @@ ul.ui-autocomplete-login {
     width: 300px !important;
 }
 
-.ui-autocomplete-loading {
-    background:url('/img/autocomplete-loader.gif') no-repeat right center;
-}
-
 .share-link {
     text-align: center;
 }
