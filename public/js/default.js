@@ -505,7 +505,6 @@
                 if ('playlist' == window.myPlaylist.type) {
                     var v = data[2],
                         pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
-                    setInterfaceShuffle(0);
                     window.myPlaylist.add(pOpt, playNow);
                 } else if ('album' === window.myPlaylist.type && playNow) {
                     $.loadPlaylist(undefined, {playLast: true, forcePlaylist: true, playNow: playNow});

@@ -38,9 +38,6 @@ Commands.prototype.runCommand = function(command) {
         }, function(data) {
             $.addTrack(data.id, undefined, undefined, true);
             $('.slide-next').trigger('click');
-            if (window.myPlaylist.isAlbum) {
-                $.loadPlaylist(undefined, {playLast: true});
-            }
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto(
                 'Error loading track. Please, try reloading the page.', 'error'
