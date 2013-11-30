@@ -211,6 +211,10 @@ class PlaylistController extends DZend_Controller_Action
         $this->view->message = $message;
     }
 
+    protected function _aaa($a) {
+        return $a ? 'true' : 'false';
+    }
+
     /**
      * loadAction Loads the user's playlist.
      *
@@ -219,16 +223,13 @@ class PlaylistController extends DZend_Controller_Action
     public function loadAction()
     {
         if ($this->_request->isPost()) {
-            $session = DZend_Session_Namespace::get('session');
-            $userRow = $session->user;
-            DZend_Session_Namespace::close();
-            unset($session);
+            $userRow = $this->_getUserRow();
             if (isset($userRow)) {
                 $id = $this->_request->getPost('id');
 
                 if (null == $id &&
                     null !== $userRow->currentAlbumId &&
-                    !$this->_request->getPost('forcePlaylist')) {
+                    $this->_request->getPost('forcePlaylist') == 'false') {
                     $this->_helper->redirector('load', 'album');
                 } else {
                     $playlist = $this->_playlistModel->export($id);
