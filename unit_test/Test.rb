@@ -80,12 +80,7 @@ class Search < Base
     end
 
     def testIncBoard
-        selectSearchMode('IncBoard')
-        @browser.text_field(:class => 'search').focus
-        @browser.text_field(:class => 'search').set 'stratova'
-        Watir::Wait.until {
-            @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
-        }
+        inputTextOnAC('stratov')
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'track').length == 6
         @browser.execute_script("$('.ui-autocomplete a').trigger('click')")

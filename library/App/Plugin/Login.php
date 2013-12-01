@@ -35,6 +35,7 @@ class App_Plugin_Login extends DZend_Plugin_Login
             array('default', 'index', 'error'),
             array('default', 'index', 'test'),
             array('default', 'index', 'login'),
+            array('default', 'index', 'ping'),
             array('default', 'artist', 'info'),
             array('default', 'album', 'info'),
             array('default', 'album', 'load'),

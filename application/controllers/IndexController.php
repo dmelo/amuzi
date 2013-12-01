@@ -60,6 +60,12 @@ class IndexController extends DZend_Controller_Action
         // action body
     }
 
+    public function pingAction()
+    {
+        $id = $this->_getUserId();
+        $this->view->message = null === $id ? 0 : $id;
+    }
+
     public function testAction()
     {
         $this->_logger->debug('FACEBOOK');

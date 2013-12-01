@@ -50,11 +50,6 @@ class UserController extends DZend_Controller_Action
         $this->view->view = $this->_userModel->getView();
     }
 
-    public function pingAction()
-    {
-        $this->view->message = $this->_getUserId();
-    }
-
     public function nextplaylistAction()
     {
         $userRow = $this->_getUserRow();

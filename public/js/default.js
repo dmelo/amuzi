@@ -631,7 +631,11 @@
     }
 
     function ping() {
-        $.get('/user/ping');
+        $.get('/index/ping', {}, function(data) {
+            if (0 == data) {
+                window.location.pathname = '/';
+            }
+        }, 'json');
     }
 
     function startPing() {
