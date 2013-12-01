@@ -37,11 +37,7 @@ end
 class Search < Base
     def testAutocompleteLoad
         loginLocal()
-        @browser.text_field(:class => 'search').focus
-        @browser.text_field(:class => 'search').set 'stratova'
-        Watir::Wait.until {
-            @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
-        }
+        inputTextOnAC :statovarius
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'track').length == 6
     end
@@ -143,6 +139,42 @@ class Player < Base
         assert repeatOff.visible?
         assert shuffleOff.visible?
     end
+
+    def testReloadTheSamePlaylist
+        loginLocal()
+        selectSearchMode("IncBoard")
+        inputTextOnAC :stratovarius
+        acSet = @browser.element(:class => 'ui-autocomplete')
+        assert acSet.elements(:class, 'album').length == 6
+        assert acSet.elements(:class, 'track').length == 6
+        acSet.elements(:class, 'album').last.click
+        Watir::Wait.until {
+            @browser.elements(:class, 'incboard-cell').length > 0
+        }
+
+        currentAlbumId = 0
+        currentAlbumName = ''
+        @browser.elements(:class, 'incboard-cell').each {
+            |ele|
+            if ele.attribute_value('albumid') != nil
+                currentAlbumId = ele.attribute_value('albumid')
+                currentAlbumName = ele.attribute_value('name')
+                ele.click
+                break
+            end
+        }
+        Watir::Wait.until {
+            @browser.execute_script('return myPlaylist.name') == currentAlbumName
+        }
+        @browser.refresh
+        Watir::Wait.until {
+            @browser.execute_script('return myPlaylist.name') == currentAlbumName
+        }
+
+        assert @browser.execute_script('return myPlaylist.name') == currentAlbumName
+        assert @browser.execute_script('return myPlaylist.type') == 'album'
+    end
+
 end
 
 class OfflineEnv < Base

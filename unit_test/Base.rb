@@ -56,6 +56,9 @@ class Base < Test::Unit::TestCase
 
         url = @browser.url;
 
+        puts "modeName: " + modeName
+        puts "url: " + url
+
         if ('IncBoard' == modeName && url.index('/index/incboard') ) || 'Classic View' == modeName
             return
         end
@@ -114,5 +117,14 @@ class Base < Test::Unit::TestCase
 
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'artist').length >= 1
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length >= 1
+    end
+
+    def inputTextOnAC(text)
+        ac = @browser.text_field(:class => 'search')
+        ac.focus
+        ac.set 'stratova'
+        Watir::Wait.until {
+            @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
+        }
     end
 end
