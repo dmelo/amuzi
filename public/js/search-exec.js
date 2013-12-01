@@ -104,6 +104,9 @@
     }
 
     function searchMusic(set, num, callback) {
+        console.log("searchMusic");
+        console.log(set);
+        console.log(printStackTrace().join('\n\n'));
         var m = set.shift(),
             uri = null,
             params,
@@ -231,7 +234,9 @@
         $.bootstrapMessageOff();
         var total = 0;
         search.similarity = data[1];
-        searchMusic(data[0], num, callback);
+        if (data[0].length > 0) {
+            searchMusic(data[0], num, callback);
+        }
     }
 
     function searchSimilar(ele) {
@@ -320,7 +325,7 @@
                         }
                         console.log("CALLING INCREMENT SIMILAR");
                         console.log(printStackTrace().join("\n\n"));
-                        // incrementSimilar(obj);
+                        incrementSimilar(obj);
                     } else {
                         console.log('BEFORE SUBMIT LOGGEDOUT');
                         console.log('/artist/' + obj.artist);

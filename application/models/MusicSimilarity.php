@@ -570,8 +570,10 @@ class MusicSimilarity extends DZend_Model
 
         $c2->start();
 
-        $rowSet = $this->_artistMusicTitleModel->insertMulti($rowSet);
-        $rowSet = $this->_objDb->insertMulti($artistMusicTitleId, $rowSet);
+        $rowSet = count($rowSet) > 0 ?
+            $this->_artistMusicTitleModel->insertMulti($rowSet) : array();
+        $rowSet = count($rowSet) > 0 ?
+            $this->_objDb->insertMulti($artistMusicTitleId, $rowSet) : array();
 
         $c2->stop();
 
