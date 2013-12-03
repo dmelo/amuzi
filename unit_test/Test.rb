@@ -80,6 +80,8 @@ class Search < Base
     end
 
     def testIncBoard
+        loginLocal()
+        selectSearchMode("IncBoard")
         inputTextOnAC('stratov')
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
         assert @browser.element(:class => 'ui-autocomplete').elements(:class, 'track').length == 6
