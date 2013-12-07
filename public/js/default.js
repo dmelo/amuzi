@@ -740,7 +740,7 @@
             addElement($(this).parent(), false);
         });
 
-        $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description').live('click', function (e) {
+        $('.music-large .play, .music-square .play, .album-square .play, .object-playlist .play, .music-square .description').live('click', function (e) {
             e.preventDefault();
             $('.modal .close').trigger('click');
             addElement($(this).parent(), true);

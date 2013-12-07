@@ -45,6 +45,15 @@
             </div>
         <? endforeach; ?>
 
+        <? if ('album' === $this->collection->getType() && $this->isAjax):?>
+            <div class="object-playlist single" albumid="<?= $this->collection->id; ?>">
+                <a href="#" class="play button">
+                    <img src="/img/play_icon_square.png"/>
+                </a>
+            </div>
+        <? endif; ?>
+
+
     </div>
     <table class="tracklist table table-striped">
         <caption><?= $this->t('Track list'); ?></caption>

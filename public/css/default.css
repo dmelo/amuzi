@@ -509,3 +509,8 @@ text-align: center;
 #describing-top {
     background-color: transparent;
 }
+
+.single .play img {
+    width: 30px;
+    height: 30px;
+}
