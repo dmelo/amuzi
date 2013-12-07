@@ -37,6 +37,10 @@
 
     window.myPlaylist = null;
     window.windowId = parseInt(Math.random() * 1000000);
+    $.isLoggedIn = function() {
+        return $('#email').length === 1;
+    };
+
     $.commands = new Commands();
 
     $.modalWrapper = "#load-modal-wrapper";
@@ -713,7 +717,7 @@
 
         checkBrowserCompatibility();
 
-        if ($('#email').length === 1) {
+        if ($.isLoggedIn()) {
             $('#userEmail').html($('#email').html());
         }
 
@@ -743,8 +747,12 @@
         });
 
         $('.object-playlist .cover').live('click', function(e) {
-            e.preventDefault();
-            $(this).parent().find('.play').trigger('click');
+            if ($.isLoggedIn()) {
+                e.preventDefault();
+                $(this).parent().find('.play').trigger('click');
+            } else {
+                $.bootstrapMessageLoading();
+            }
         });
 
         $('.youtube-link, .download').live('click', function (e) {
