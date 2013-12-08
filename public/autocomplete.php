@@ -74,7 +74,7 @@ function getObjType($port)
     };
 
     if (null === $type) {
-        logDebug("ERROR: on getObjType port == $port");
+        logDebug("ERROR: on getObjType port == $port", '---');
     }
 
     return $type;
@@ -96,7 +96,7 @@ function getPorts($type)
     };
 
     if (empty($ports)) {
-        logDebug("ERROR: on getPorts type == $type");
+        logDebug("ERROR: on getPorts type == $type", '---');
     }
 
     return $ports;
@@ -263,7 +263,7 @@ function logDebug($str, $q)
 
 $q = urldecode($_GET['q']);
 $logout = array_key_exists('logout', $_GET) && 'true' === $_GET['logout'];
-logDebug("logout: " . print_r($logout, true));
+logDebug("logout: " . print_r($logout, true), $q);
 
 $r = '/^ *$/';
 if (preg_match($r, $q) || strlen($q) < 3) {
@@ -308,9 +308,9 @@ if (preg_match($r, $q) || strlen($q) < 3) {
     }
 
     logDebug('end: ' . count($ret) . ' results', $q);
-    logDebug('ret: ' . print_r($ret, true));
+    logDebug('ret: ' . print_r($ret, true), $q);
     echo json_encode($ret);
 }
 
 $end = microtime(true);
-logDebug("Total time: " . ($end - $start));
+logDebug("Total time: " . ($end - $start), $q);
