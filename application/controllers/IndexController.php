@@ -63,6 +63,12 @@ class IndexController extends DZend_Controller_Action
     public function pingAction()
     {
         $id = $this->_getUserId();
+        if (null !== $id) {
+            $this->_logModel->insert(
+                $this->_request->getParam('windowId'),
+                'ping'
+            );
+        }
         $this->view->message = null === $id ? 0 : $id;
     }
 
