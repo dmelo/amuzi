@@ -6,7 +6,7 @@ $r = file_get_contents('http://amuzi.me/autocomplete.php?q=coldpl');
 $data = json_decode($r);
 $logger = Zend_Registry::get('logger');
 
-if (count($data) === 11) {
+if (count($data) === 10) {
     $logger->info('Autocomplete OK');
 } else {
     $logger->err('Autocomplete ERROR');
