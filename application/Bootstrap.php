@@ -64,6 +64,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             $js = array(
                 'ie-compatibility.js',
                 'jquery.js',
+                'jquery.url.js',
                 'stacktrace.js',
                 'facebook-connect.js',
                 'bootstrap.js',
@@ -83,7 +84,6 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'commands.js',
                 'jquery.bootstrapMessage.js',
                 'jquery.bootstrapLoadModal.js',
-                'jquery.url.js',
                 'bootstrap-slide.js',
                 'cssrule.js',
                 'default.js',
@@ -99,6 +99,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             $js = array(
                 'ie-compatibility.js',
                 'jquery.js',
+                'jquery.url.js',
                 'all-p1.js',
                 'all-p2.js',
                 'default.js',

@@ -1,5 +1,3 @@
-"use strict";
-
 function Log() {
     if (Log.prototype.singletonInstance) {
         return Log.prototype.singletonInstance;

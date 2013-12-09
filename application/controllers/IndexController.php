@@ -72,13 +72,6 @@ class IndexController extends DZend_Controller_Action
         $this->view->message = null === $id ? 0 : $id;
     }
 
-    public function testAction()
-    {
-        $this->_logger->debug('FACEBOOK');
-        $this->_logger->debug(print_r($this->_request->getParams(), true));
-        $this->_logger->debug(print_r($_COOKIE, true));
-    }
-
     public function helpAction()
     {
     }
