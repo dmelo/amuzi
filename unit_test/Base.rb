@@ -56,9 +56,6 @@ class Base < Test::Unit::TestCase
 
         url = @browser.url;
 
-        puts "modeName: " + modeName
-        puts "url: " + url
-
         if ('IncBoard' == modeName && url.index('/index/incboard') ) || 'Classic View' == modeName
             return
         end
