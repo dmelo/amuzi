@@ -60,56 +60,82 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         );
         $view->addScriptPath('../application/views/scripts');
 
-        $js = array(
-            'ie-compatibility.js',
-            'jquery.js',
-            'stacktrace.js',
-            'log.js',
-            'facebook-connect.js',
-            'bootstrap.js',
-            'jquery.browser.min.js',
-            'jquery.jplayer.js',
-            'jplayer.playlist.js',
-            'jplayer.playlist.ext.js',
-            'themeswitcher.js',
-            'jquery-ui-1.9.2.custom.js',
-            'jquery.progressbar.js',
-            'jquery.placeholder.min.js',
-            'jquery.form.js',
-            'jquery.tableofcontents.js',
-            'resultset.js',
-            'jquery.cookie.js',
-            'commands.js',
-            'jquery.bootstrapMessage.js',
-            'jquery.bootstrapLoadModal.js',
-            'jquery.url.js',
-            'bootstrap-slide.js',
-            'cssrule.js',
-            'default.js',
-            'mozaic.js',
-            'incboard-cell.js',
-            'incboard-board.js',
-            'incboard.js',
-            'search-exec.js',
-            'bootstrap-tutorial.js',
-            'jquery.subtitle.js',
-        );
+        if ('production' !== APPLICATION_ENV) {
+            $js = array(
+                'ie-compatibility.js',
+                'jquery.js',
+                'jquery.url.js',
+                'stacktrace.js',
+                'facebook-connect.js',
+                'bootstrap.js',
+                'jquery.browser.min.js',
+                'jquery.jplayer.js',
+                'jplayer.playlist.js',
+                'jplayer.playlist.ext.js',
+                'themeswitcher.js',
+                'jquery-ui-1.9.2.custom.js',
+                'jquery.progressbar.js',
+                'jquery.placeholder.min.js',
+                'jquery.form.js',
+                'jquery.tableofcontents.js',
+                'log.js',
+                'resultset.js',
+                'jquery.cookie.js',
+                'commands.js',
+                'jquery.bootstrapMessage.js',
+                'jquery.bootstrapLoadModal.js',
+                'bootstrap-slide.js',
+                'cssrule.js',
+                'default.js',
+                'mozaic.js',
+                'incboard-cell.js',
+                'incboard-board.js',
+                'incboard.js',
+                'search-exec.js',
+                'bootstrap-tutorial.js',
+                'jquery.subtitle.js',
+            );
+        } else {
+            $js = array(
+                'ie-compatibility.js',
+                'jquery.js',
+                'jquery.url.js',
+                'all-p1.js',
+                'all-p2.js',
+                'default.js',
+                'mozaic.js',
+                'incboard-cell.js',
+                'incboard-board.js',
+                'incboard.js',
+                'search-exec.js',
+                'bootstrap-tutorial.js',
+                'jquery.subtitle.js'
+            );
+        }
+
         Zend_Registry::set('js', $js);
 
-        $css = array(
-            'jplayer.pink.flag.css',
-            'player.css',
-            'miniplayer.css',
-            'resultset.css',
-            'bootstrap.css',
-            'github-badge.css',
-            'bootstrap-helpers.css',
-            'default.css',
-            'incboard.css',
-            'jquery.subtitle.css',
-            'bootstrap-slide.css',
-            'mozaic.css'
-        );
+        if ('production' !== APPLICATION_ENV) {
+            $css = array(
+                'jplayer.pink.flag.css',
+                'player.css',
+                'miniplayer.css',
+                'resultset.css',
+                'bootstrap.css',
+                'github-badge.css',
+                'bootstrap-helpers.css',
+                'default.css',
+                'incboard.css',
+                'jquery.subtitle.css',
+                'bootstrap-slide.css',
+                'mozaic.css'
+            );
+        } else {
+            $css = array(
+                'all.css'
+            );
+        }
+
         Zend_Registry::set('css', $css);
 
         $config = new Zend_Config_Ini(

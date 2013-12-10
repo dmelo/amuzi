@@ -11,3 +11,5 @@ tests/report/
 html/
 latex/
 setup/apache.conf
+public/css/all.css
+public/js/all-*.js
