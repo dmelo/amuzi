@@ -21,7 +21,7 @@
 	url = https://github.com/dmelo/zend-module-login.git
 [submodule "external/zf1"]
 	path = external/zf1
-	url = https://github.com:zendframework/zf1.git
+	url = https://github.com/zendframework/zf1.git
 [submodule "external/bootstrap-helpers"]
 	path = external/bootstrap-helpers
 	url = https://github.com/dmelo/bootstrap-helpers.git
