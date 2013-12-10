@@ -1,12 +1,12 @@
 [submodule "public/api"]
 	path = public/api
-	url = git@github.com:dmelo/you2better.git
+    url = https://github.com/dmelo/you2better.git
 [submodule "library/LightningPackerHelper"]
 	path = library/LightningPackerHelper
-	url = git@github.com:dmelo/LightningPackerHelper.git
+	url = https://github.com/dmelo/LightningPackerHelper.git
 [submodule "library/DZend"]
 	path = library/DZend
-	url = git@github.com:dmelo/DZend.git
+	url = https://github.com/dmelo/DZend.git
 [submodule "external/EasyBib"]
 	path = external/EasyBib
 	url = git://github.com/easybib/EasyBib_Form_Decorator.git
@@ -15,19 +15,19 @@
 	url = git://github.com/happyworm/jPlayer.git
 [submodule "library/amuzi_search"]
 	path = library/amuzi_search
-	url = git@github.com:dmelo/amuzi_search.git
+	url = https://github.com/dmelo/amuzi_search.git
 [submodule "application/modules/Auth"]
 	path = application/modules/Auth
-	url = git@github.com:dmelo/zend-module-login.git
+	url = https://github.com/dmelo/zend-module-login.git
 [submodule "external/zf1"]
 	path = external/zf1
-	url = git@github.com:zendframework/zf1.git
+	url = https://github.com:zendframework/zf1.git
 [submodule "external/bootstrap-helpers"]
 	path = external/bootstrap-helpers
-	url = git@github.com:dmelo/bootstrap-helpers.git
+	url = https://github.com/dmelo/bootstrap-helpers.git
 [submodule "external/facebook-php-sdk"]
 	path = external/facebook-php-sdk
 	url = https://github.com/facebook/facebook-php-sdk.git
 [submodule "external/incboardjs"]
 	path = external/incboardjs
-	url = git@github.com:dmelo/incboardjs.git
+	url = https://github.com/dmelo/incboardjs.git
