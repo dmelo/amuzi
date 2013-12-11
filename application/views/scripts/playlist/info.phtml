@@ -7,7 +7,7 @@
 
 <div class="collection-info">
     <div class="cover">
-    <img src="<?= $this->collection->getCover(); ?>" alt="<?= htmlspecialchars($this->collection->artist); ?>" />
+        <img src="<?= $this->collection->getCover(); ?>" alt="<?= htmlspecialchars($this->collection->artist); ?>" />
     </div>
     <div class="caption">
         <?
@@ -26,8 +26,8 @@
             $data['Nro Tracks'] = count($this->collection->getTrackListAsArray());
 
             if ($this->collection instanceof DbTable_AlbumRow) {
-                $data['Share'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png"/>')
-                    . $this->a($this->collection->shareUrl, '<img class="icon" src="/img/link.png"/>');
+                $data['Share'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png" alt="Share on facebook"/>')
+                    . $this->a($this->collection->shareUrl, '<img class="icon" src="/img/link.png" alt="Direct link"/>');
             }
             if ('album' === $this->collection->getType()) {
                 $data['This page'] = $this->a(
@@ -52,8 +52,6 @@
                 </a>
             </div>
         <? endif; ?>
-
-
     </div>
     <table class="tracklist table table-striped">
         <caption><?= $this->t('Track list'); ?></caption>
@@ -63,19 +61,19 @@
             <? if (!array_key_exists('title', $track)) continue; ?>
             <tr>
                 <td><?= ++$count; ?></td>
-                <td><img src="<?= $track['cover']; ?>"/></td>
+                <td><img src="<?= $track['cover']; ?>" alt="<?= htmlspecialchars($track['title']); ?>"/></td>
                 <td>
-                    <div class="info"><?=  $this->t('Name') . ': ' . $track['title']; ?></div>
+                    <div class="info"><?=  $this->t('Name') . ': ' . htmlspecialchars($track['title']); ?></div>
                     <div class="info"><?= $this->t('Duration') . ': ' . $this->secsToTime($track['duration']); ?></div>
                 </td>
             </tr>
         <? endforeach; ?>
         </tbody>
     </table>
-
-
 </div>
 
 <? if ('album' === $this->collection->getType()): ?>
     <?= $this->render('artist/similarity.phtml'); ?>
 <? endif; ?>
+
+</div>
