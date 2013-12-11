@@ -20,7 +20,7 @@
     <?
         foreach ($this->artistRow->getSimilarityList() as $artistRow) {
             echo $this->lightSquare(
-                '/artist/' . $artistRow->name,
+                '/artist/' . urlencode($artistRow->name),
                 $artistRow->name,
                 $artistRow->cover,
                 $this->isAjax

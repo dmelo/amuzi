@@ -7,7 +7,7 @@
 
 <div class="collection-info">
     <div class="cover">
-        <img src="<?= $this->collection->getCover(); ?>"/>
+    <img src="<?= $this->collection->getCover(); ?>" alt="<?= htmlspecialchars($this->collection->artist); ?>" />
     </div>
     <div class="caption">
         <?
@@ -62,7 +62,7 @@
         <? $count = 0; foreach ($this->collection->getTrackListSync() as $track): ?>
             <? if (!array_key_exists('title', $track)) continue; ?>
             <tr>
-                <td><?= ++$count; ?></div>
+                <td><?= ++$count; ?></td>
                 <td><img src="<?= $track['cover']; ?>"/></td>
                 <td>
                     <div class="info"><?=  $this->t('Name') . ': ' . $track['title']; ?></div>
