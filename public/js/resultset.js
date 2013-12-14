@@ -78,11 +78,12 @@
 
         this.getControl = function (v) {
             var url = 'url' in v ? v.url : v.objId, ret = '',
-                classes = ['play', 'addplaylist'];
+                classes = ['play', 'addplaylist'],
+                subtitles = ['Play it', 'Add to your collection'];
             
 
             for (var i = 0; i < classes.length; i++) {
-                ret += '<div class="' + classes[i] + '"><a href="' + v.url + '" title="' + v.title + '"><img src="/img/' + classes[i] + '_icon.png"/></a></div>';
+                ret += '<div class="' + classes[i] + '"><a href="' + v.url + '" title="' + v.title + '"><img alt="' + subtitles[i] + '" src="/img/' + classes[i] + '_icon.png"/></a></div>';
             }
             
             return ret;
@@ -99,7 +100,7 @@
         };
 
         this.getMusicLarge = function (v) {
-            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" ' + v.type + 'id="' + v.id + '"><div class="image"><img src="' + v.cover + '"/></div>' + this.getDescription(v) + this.getControl(v);
+            return '<div class="music-large object-' + v.type + '" fid="' + v.fid + '" fcode="' + v.fcode + '" ' + v.type + 'id="' + v.id + '"><div class="image"><img src="' + v.cover + '"/></div>' + this.getDescription(v) + '<span class="description-type">Type: ' + v.type + '</span>' + this.getControl(v);
         };
 
         this.insert = function (v) {

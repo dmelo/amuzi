@@ -104,6 +104,21 @@ class MusicSimilarity extends DZend_Model
         return $m;
     }
 
+    public function _logSparsity($m)
+    {
+        $total = 0;
+        $zeros = 0;
+
+        foreach ($m as $i => $row) {
+            foreach ($row as $j => $val) {
+                $total++;
+                $zeros += 10000 === $m[$i][$j] ? 1 : 0;
+            }
+        }
+
+        $this->_logModel->insertSparsity($zeros, $total);
+    }
+
     /**
      * _getSimilarityMatrix Calculate the similarity matrix for a given set of
      * elements
@@ -416,6 +431,8 @@ class MusicSimilarity extends DZend_Model
             $similarityMatrixResponse[0] = $this->_similarityToDissimilarity(
                 $similarityMatrixResponse[0]
             );
+
+            $this->_logSparsity($similarityMatrixResponse[0]);
             $completeIdList = $this->_applyListTranslationToList(
                 $completeIdList, $translationList
             );
@@ -538,11 +555,15 @@ class MusicSimilarity extends DZend_Model
         );
         */
 
-        return $this->_similarityToDissimilarity(
+        $ret = $this->_similarityToDissimilarity(
             $this->_applyListTranslationToMatrix(
                 $similarityMatrix[0], $translationList
             )
         );
+
+        $this->_logSparsity($ret);
+
+        return $ret;
     }
 
 

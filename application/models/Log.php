@@ -50,7 +50,32 @@ class Log extends DZend_Model
             } catch (Exception $e) {
                 $this->_logger->err(
                     "Tried to insert db log " . print_r($data, true)
-                    . " but an exception was throwed: " . $e->getMessage
+                    . " but an exception was throwed: " . $e->getMessage()
+                );
+                throw $e;
+            }
+        }
+    }
+
+    public function insertSparsity($zeros, $total)
+    {
+        $logActionRow = $this->_logActionDb->findRowByName('matrix_sparsity');
+        if (null === $logActionRow) {
+            throw new Zend_Exception("Log action named $action doesn't exists");
+        } else {
+            $data = array(
+                'user_id' => $this->_getUserId(),
+                'log_action_id' => $logActionRow->id,
+                'zeros' => $zeros,
+                'total' => $total
+            );
+
+            try {
+                $this->_objDb->insert($data);
+            } catch (Exception $e) {
+                $this->_logger->err(
+                    "Tried to insert db log " . print_r($data, true)
+                    . " but an exception was throwed: " . $e->getMessage()
                 );
                 throw $e;
             }
