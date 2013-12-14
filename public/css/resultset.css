@@ -1,15 +1,22 @@
-.music-large, .playlist-square {
+.playlist-square, .music-large {
     margin: 10px;
-    display: inline-block;
-    width: 250px;
     min-height: 60px;
     position: relative;
     z-index: 25 !important;
+}
+
+.playlist-square {
+    display: inline-block;
+    width: 250px;
     -webkit-transition: background 300ms ease-in 0ms;
     -moz-transition: background 300ms ease-in 0ms;
     -o-transition: background 300ms ease-in 0ms;
     transition: background 300ms ease-in 0ms;
     box-shadow: 0px 0px 8px #3a3e41;
+}
+
+.music-large {
+    margin-right: 40px;
 }
 
 .current-playlist {
@@ -91,15 +98,18 @@
     top: 36px;
 }
 
+.music-large .addplaylist {
+    top: 5px;
+    left: 100%;
+    margin-left: -30px;
+}
+
 .music-large .play {
     width: 24px;
     height: 24px;
-    left: 225px;
+    left: 100%;
+    margin-left: -30px;
     display: none;
-}
-
-.music-large .play .download {
-    padding-right: 2px;
 }
 
 #more-results {

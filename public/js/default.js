@@ -742,13 +742,21 @@
 
         $('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist').live('click', function (e) {
             e.preventDefault();
+            e.stopPropagation();
             addElement($(this).parent(), false);
         });
 
         $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description').live('click', function (e) {
             e.preventDefault();
+            e.stopPropagation();
             $('.modal .close').trigger('click');
             addElement($(this).parent(), true);
+        });
+
+        $('.music-large').live('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            addElement($(this), true);
         });
 
         $('.object-playlist .cover').live('click', function(e) {
