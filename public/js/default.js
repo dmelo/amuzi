@@ -667,9 +667,9 @@
     }
 
     var callbackAutocomplete = function(data) {
-        var end = new Date();
-        var count = 0;
-        var a =  $.map(data, function (row) {
+        var end = new Date(),
+            count = 0,
+            a = null !== data ? $.map(data, function (row) {
             return {
                 data: row,
                 label: '<div class="cover"><img src="' + ('' === row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
@@ -679,7 +679,7 @@
                 musicTitle: row.musicTitle,
                 type: row.type
             };
-        }, 'json');
+        }, 'json') : [];
 
         globalResponse(a);
     };
@@ -706,6 +706,9 @@
 
         if (isLoggedIn()) {
             verifyView();
+            if ($('.search-inner').length > 0) {
+                $('.search-loggedoff').remove();
+            }
         }
 
         // For debugging purposes only.
