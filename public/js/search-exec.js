@@ -317,15 +317,13 @@
                         messageId: messageId,
                     };
                     console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
-                    if (1 === $('#userId').length) {
+                    if (isLoggedIn()) {
                         if ($.isSearchFormValid()) {
                             searchMusic([obj], 1, searchMusicCallbackCenter);
+                            incrementSimilar(obj);
                         } else { // search in a way that many music can be retrieved.
                             searchMulti($('#q').val());
                         }
-                        console.log("CALLING INCREMENT SIMILAR");
-                        console.log(printStackTrace().join("\n\n"));
-                        incrementSimilar(obj);
                     } else {
                         console.log('BEFORE SUBMIT LOGGEDOUT');
                         console.log('/artist/' + obj.artist);
