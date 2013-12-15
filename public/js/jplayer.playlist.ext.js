@@ -33,12 +33,12 @@ jPlayerPlaylist.prototype._createListItem = function(media) {
 // TODO: take away the playlistName
 jPlayerPlaylist.prototype.rmTrack = function(trackId, playlistName) {
     playlistName = playlistName || 'default';
-    $.bootstrapMessageLoading();
+    // $.bootstrapMessageLoading();
     $.post('/playlist/rmtrack', {
         playlist: playlistName,
         trackId: trackId
     }, function (data) {
-        $.bootstrapMessageAuto(data[0], data[1]);
+        // $.bootstrapMessageAuto(data[0], data[1]);
         if ('error' === data[1]) {
             $.loadPlaylist();
         }
@@ -69,7 +69,7 @@ jPlayerPlaylist.prototype.remove = function(index) {
             if (0 <= index && index < this.playlist.length) {
                 this.removing = true;
 
-                if (false == myPlaylist.isAlbum) {
+                if ('playlist' === myPlaylist.type) {
                     console.log('delete track index ' + index);
                     var trackId = $($('.jp-playlist-item-remove')[index]).parent().parent().attr('track_id')
                     myPlaylist.rmTrack(trackId, myPlaylist.name);
