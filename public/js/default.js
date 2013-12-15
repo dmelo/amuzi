@@ -751,10 +751,12 @@
             addElement($(this).parent(), true);
         });
 
-        $('.music-large').live('click', function(e) {
+        $('.music-large, .incboard-cell').live('click', function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            addElement($(this), true);
+            var ele = $(e.target.parentNode.parentNode);
+            if (!ele.hasClass('play')  && !ele.hasClass('addplaylist')) {
+                addElement($(this), true);
+            }
         });
 
         $('.object-playlist .cover').live('click', function(e) {
@@ -860,7 +862,9 @@
         $(jplayerCss + ' ul:last').sortable({
             update: function () {
                 window.myPlaylist.scan();
-                savePlaylist();
+                if ('playlist' === window.myPlaylist.type) {
+                    savePlaylist();
+                }
             }
         });
 
