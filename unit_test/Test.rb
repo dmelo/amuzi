@@ -91,7 +91,7 @@ class Search < Base
         }
         cell = @browser.elements(:class, 'incboard-cell').first
         cell.hover
-        cell.div(:class => 'play').a.click
+        cell.click
         @browser.div(:id => 'screen-music').click
         Watir::Wait.until {
             'Playlist: ' + cell.attribute_value(:name) == @browser.div(:class => 'jp-title').li.text
