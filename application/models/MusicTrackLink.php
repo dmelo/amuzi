@@ -76,10 +76,11 @@ class MusicTrackLink extends DZend_Model
 
                 // If the current bond has higher priority than the new bond,
                 // then don't do the new bond
-                if($currentBondRow->priority > $bondRow->priority)
+                if($currentBondRow->priority > $bondRow->priority) {
                     return null;
-                else
+                } else {
                     $currentMusicTrackLinkRow->delete();
+                }
             }
 
             $data = array(
@@ -153,16 +154,16 @@ class MusicTrackLink extends DZend_Model
                     $points[$row->trackId] = 0;
 
                 switch ($row->bondId) {
-                    case 0: // search
+                    case 1: // search
                         $points[$row->trackId] += 1;
                         break;
-                    case 1: // insert_playlist
+                    case 2: // insert_playlist
                         $points[$row->trackId] += 4;
                         break;
-                    case 2: // vote_up
+                    case 3: // vote_up
                         $points[$row->trackId] += 16;
                         break;
-                    case 3:
+                    case 4:
                         $points[$row->trackId] -= 16;
                         break;
                 }
