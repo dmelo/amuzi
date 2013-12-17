@@ -412,12 +412,13 @@ class PlaylistController extends DZend_Controller_Action
             ) !== null) {
             if (null === $this->_musicTrackLinkModel->bond(
                 $artistMusicTitleId, $trackId, $this->_bondModel->{$bond}
-            ))
+            )) {
                 $message = array('Error while registering vote', 'error');
-            else
+            } else {
                 $message = array(
                     'Vote saved!! Thank you for your help!', 'success'
                 );
+            }
         };
 
         $this->view->message = $message;
