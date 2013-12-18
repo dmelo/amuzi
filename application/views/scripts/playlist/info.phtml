@@ -26,10 +26,7 @@
             $data['Nro Tracks'] = count($this->collection->getTrackListAsArray());
 
             if ($this->collection instanceof DbTable_AlbumRow) {
-                $data['Share'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png" alt="Share on facebook"/>')
-                    . $this->a($this->collection->shareUrl, '<img class="icon" src="/img/link.png" alt="Direct link"/>');
-            }
-            if ('album' === $this->collection->getType()) {
+                $data['Share on Facebook'] = $this->a($this->collection->facebookUrl, '<img class="icon" src="/img/facebook.png" alt="Share on facebook"/>', array('target' => '_blank'));
                 $data['This page'] = $this->a(
                     $this->collection->pageUrl,
                     $this->collection->getCoverName(),
