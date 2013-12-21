@@ -700,6 +700,12 @@
     }
 
     function addElement(ele, playNow) {
+        if (ele.hasClass('incboard-cell')) {
+            setTimeout(function () {
+                searchSimilar(ele);
+            }, 4000);
+        }
+
         if (undefined !== ele.attr('albumid')) {
             $.addAlbum(ele.attr('albumid'), playNow);
         } else {

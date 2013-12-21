@@ -252,12 +252,6 @@
         if (1 === $('#incboard-search').length) {
             search = new $.IncBoard();
 
-            $('.incboard-cell').live('click', function (e) {
-                var ele = $(this);
-                setTimeout(function () {
-                    searchSimilar(ele);
-                }, 4000);
-            });
             $(window).bind('resize', $.proxy(search.ibb, 'resize'));
         } else if (1 === $('#search').length) {
             search = new $.ResultSet();
