@@ -461,7 +461,8 @@
     function addToPlaylist(e, playNow, callback) {
         var trackId = e.attr('trackId'),
             artist = e.attr('artist'),
-            musicTitle = e.attr('musicTitle');
+            musicTitle = e.attr('musicTitle'),
+            isMozaic = e.hasClass('music-square');
 
         if ($('.playlist-row[track_id=' + trackId + ']').length > 0) {
             if (!confirm('You already have this track on your playlist. Are you sure you want to insert it again?')) {
@@ -483,13 +484,16 @@
             }
         }
 
-        $.addTrack(trackId, artist, musicTitle, playNow);
+        $.addTrack(trackId, artist, musicTitle, playNow, isMozaic);
 
         addElementAnimation(e);
     }
 
-    $.addTrack = function(trackId, artist, musicTitle, playNow) {
+    $.addTrack = function(trackId, artist, musicTitle, playNow, isMozaic) {
         var options;
+
+        console.log("ADDTRACK");
+        console.log(isMozaic);
 
         options = {
             id: trackId,
@@ -497,7 +501,11 @@
             isAlbum: window.myPlaylist.type === 'album',
             artist: artist,
             musicTitle: musicTitle,
-            windowId: window.windowId
+            windowId: window.windowId,
+            isMozaic: isMozaic,
+            isTest: 'bla',
+            isTest2: false,
+            isTest3: isMozaic,
         };
 
         $.bootstrapMessageLoading();

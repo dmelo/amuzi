@@ -123,10 +123,19 @@ class ApiController extends DZend_Controller_Action
 
     protected function _getMusic($artist, $musicTitle)
     {
+        $c = new DZend_Chronometer();
+        $c->start();
         $trackRow = $this->_musicTrackLinkModel->getTrack(
             $artist, $musicTitle, true
         );
-        return $this->_getMusicByRow($trackRow, $artist, $musicTitle);
+        $c->stop();
+        $this->_logger->debug('api::_getMusic getTrack ' . $c->get());
+        $c->start();
+        $ret = $this->_getMusicByRow($trackRow, $artist, $musicTitle);
+        $c->stop();
+        $this->_logger->debug('api::_getMusic getMusicByRow ' . $c->get());
+
+        return $ret;
     }
 
     protected function _getMusicById($artistMusicTitleId)
@@ -275,18 +284,32 @@ class ApiController extends DZend_Controller_Action
         $cache = Cache::get('cache');
         $key = sha1('ApiController::gettop' . date('Ymd', time(null)));
         $ret = array();
-        if (($ret = $cache->load($key)) === false) {
+        // if (($ret = $cache->load($key)) === false) {
+            $c = new DZend_Chronometer();
+            $c->start();
             $resultSet = $this->_lastfmModel->getTop();
+            $c->stop();
+            $this->_logger->debug('api::gettop time for lastfm ' . $c->get());
+            $counter = 0;
             foreach ($resultSet as $row) {
+                $this->_logger->debug('api::gettop ' . print_r($row, true));
+                $c->start();
                 $track = $this->_getMusic($row->artist, $row->musicTitle);
                 $track['cover'] = '' === $row->cover ?
                     '/img/album.png' : $row->cover;
+                $c->stop();
+                $this->_logger->debug('api::gettop ' . $c->get() . '. track: ' . print_r($track, true));
+                $counter++;
+                if ($counter > 12) {
+                    // $track['title'] = 'blabla';
+                }
                 $ret[] = $track;
             }
+            // $ret = $this->utf8_encode_all($ret);
 
             $cache->save($ret, $key);
-        }
+        // }
 
-        $this->view->resultSet = $ret;
+        $this->view->output = $ret;
     }
 }

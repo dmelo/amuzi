@@ -105,8 +105,6 @@
 
     function searchMusic(set, num, callback) {
         console.log("searchMusic");
-        console.log(set);
-        console.log(printStackTrace().join('\n\n'));
         var m = set.shift(),
             uri = null,
             params,
