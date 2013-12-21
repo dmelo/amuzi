@@ -147,7 +147,7 @@ class PlaylistController extends DZend_Controller_Action
                     'add_track',
                     null,
                     $trackRow->id,
-                    null
+                    true == $this->_request->getPost('isMozaic') ? 'mozaic' : null
                 );
 
                 if (isset($artistMusicTitleId)) {

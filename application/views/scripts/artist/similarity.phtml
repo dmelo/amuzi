@@ -1,3 +1,4 @@
+<? if (count($this->artistRow->getTopAlbumList())): ?>
 <div class="similarity-list">
     <h2><?= $this->t('Top Albums'); ?></h2>
     <?
@@ -14,7 +15,9 @@
         }
     ?>
 </div>
+<? endif; ?>;
 
+<? if (count($this->artistRow->getSimilarityList())): ?>
 <div class="similarity-list">
     <h2><?= $this->t('Similar Artists'); ?></h2>
     <?
@@ -28,3 +31,4 @@
         }
     ?>
 </div>
+<? endif; ?>

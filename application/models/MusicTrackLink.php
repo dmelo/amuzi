@@ -26,7 +26,10 @@ class MusicTrackLink extends DZend_Model
     private $_cache;
     private function _getCacheKey($artist, $musicTitle)
     {
-        return sha1('MusicTrackLink' . $artist . $musicTitle);
+        return sha1(
+            'MusicTrackLinkID'
+            . $this->_artistMusicTitleModel->insert($artist, $musicTitle)
+        );
     }
 
     private function _getCacheIdKey($artistMusicTitleId)

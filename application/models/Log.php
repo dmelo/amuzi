@@ -81,4 +81,16 @@ class Log extends DZend_Model
             }
         }
     }
+
+    public function findFilteredByLogActionId($logActionId)
+    {
+        $where = 'user_id != 1 and created > \'2013-12-10\'';
+        if (is_int($logActionId)) {
+            $where .= ' and log_action_id = ' . $logActionId;
+        } elseif (is_array($logActionId)) {
+            $where .= ' and log_action_id in ( ' . implode(', ', $logActionId) . ')';
+        }
+
+        return $this->_objDb->fetchAll($where);
+    }
 }
