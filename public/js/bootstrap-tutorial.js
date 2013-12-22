@@ -46,7 +46,7 @@ Tutorial.prototype.search = function() {
     $.get('/tutorial/search', function(data) {
         var e = 'form.search .input-append';
         $(e).attr('data-content', data);
-        $(e).popover({placement: 'bottom'});
+        $(e).popover({placement: 'bottom', trigger: 'manual'});
         $(e).popover('show');
         window.tutorialCloseSearch = function() {
             $(e).popover('hide');
@@ -64,13 +64,12 @@ Tutorial.prototype.search = function() {
 Tutorial.prototype.slide = function() {
     var self = this;
     $.get('/tutorial/slide', function(data) {
-        var ele = $('.screens .screen img:first');
+        var ele = $('#screen-music');
         ele.attr('data-content', data);
-        ele.popover({placement: 'bottom'});
+        ele.popover({placement: 'bottom', trigger: 'manual'});
         ele.popover('show');
         ele.click(function(e) {
             ele.popover('hide');
-            ele.unbind('click');
             $.get('/tutorial/setaccomplished', {
                 name: 'slide'
             }, function() {
