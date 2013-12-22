@@ -514,3 +514,51 @@ text-align: center;
     width: 30px;
     height: 30px;
 }
+
+.screens .popover, form.search .popover {
+    margin-left: -2px;
+    margin-top: -2px;
+    z-index: 20;
+    font-weight: bold;
+
+    animation:tutorialfocus 5s;
+    animation-iteration-count: infinite;
+
+    -moz-animation:tutorialfocus 5s; /* Firefox */
+    -moz-animation-iteration-count: infinite;
+
+    -webkit-animation:tutorialfocus 5s; /* Safari and Chrome */
+    -webkit-animation-iteration-count: infinite;
+
+    -o-animation:tutorialfocus 5s; /* Opera */
+    -o-animation-iteration-count: infinite;
+}
+
+@keyframes tutorialfocus
+{
+    0% {background:#f77}
+    50% {background:#fff}
+    100% {background:#f77}
+}
+
+@-moz-keyframes tutorialfocus
+{
+    0% {background:#f77}
+    50% {background:#fff}
+    100% {background:#f77}
+}
+
+@-webkit-keyframes tutorialfocus
+{
+    0% {background:#f77}
+    50% {background:#fff}
+    100% {background:#f77}
+}
+
+@-o-keyframes tutorialfocus
+{
+    0% {background:#f77}
+    50% {background:#fff}
+    100% {background:#f77}
+}
+

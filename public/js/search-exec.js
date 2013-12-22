@@ -120,7 +120,7 @@
 
         console.log("searchMusic: " + set.length + ", " + num);
         if (num > 0) {
-            searchId = 'searchId' in m ? m.searchId : null;
+            searchId = 'undefined' !== typeof m && 'searchId' in m ? m.searchId : null;
             if (null === searchId || globalSearchId === searchId) {
                 // Determine what parameters and what uri to call.
                 if ('type' in m && 'album' === m.type) {
@@ -333,6 +333,11 @@
                 } else {
                     $.bootstrapMessageAuto('Too short', 'error');
                 }
+
+                if ('function' === typeof (window.tutorialCloseSearch)) {
+                    window.tutorialCloseSearch();
+                }
+
 
                 // IMPORTANT: Submitting will never be fulfilled, because we
                 // we must have a better control of searchsimilar.
