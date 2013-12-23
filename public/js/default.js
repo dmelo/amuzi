@@ -701,9 +701,7 @@
 
     function addElement(ele, playNow) {
         if (ele.hasClass('incboard-cell')) {
-            setTimeout(function () {
-                searchSimilar(ele);
-            }, 4000);
+            ele.trigger('searchsimilar');
         }
 
         if (undefined !== ele.attr('albumid')) {
