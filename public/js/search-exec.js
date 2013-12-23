@@ -267,6 +267,14 @@
             });
 
         }
+
+        $('.incboard-cell').live('searchsimilar', function(e) {
+            var ele = $(this);
+            setTimeout(function () {
+                searchSimilar(ele);
+            }, 4000);
+        });
+
         window.search = search;
 
         $('.music-square, .album-square').live({mouseenter: function () {
