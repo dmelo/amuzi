@@ -1026,5 +1026,9 @@
             $(this).find('.remove').css('display', 'none');
             $(this).find('.info').css('display', 'none');
         });
+
+        $('#facebook-connect').click(function(e) {
+            $.bootstrapMessage('Make sure your browser is not blocking Facebook\'s POP-UP!', 'warning');
+        });
     });
 }(jQuery, undefined));
