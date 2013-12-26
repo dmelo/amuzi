@@ -562,3 +562,47 @@ text-align: center;
     100% {background:#f77}
 }
 
+
+#login-button-menu {
+    animation:loginblink 5s;
+    animation-iteration-count: infinite;
+
+    -moz-animation:loginblink 5s; /* Firefox */
+    -moz-animation-iteration-count: infinite;
+
+    -webkit-animation:loginblink 5s; /* Safari and Chrome */
+    -webkit-animation-iteration-count: infinite;
+
+    -o-animation:loginblink 5s; /* Opera */
+    -o-animation-iteration-count: infinite;
+}
+
+@keyframes loginblink
+{
+    0% {background:transparent}
+    50% {background:#660}
+    100% {background:transparent}
+}
+
+@-moz-keyframes loginblink
+{
+    0% {background:transparent}
+    50% {background:#660}
+    100% {background:transparent}
+
+}
+
+@-webkit-keyframes loginblink
+{
+    0% {background:transparent}
+    50% {background:#660}
+    100% {background:transparent}
+}
+
+@-o-keyframes loginblink
+{
+    0% {background:transparent}
+    50% {background:#660}
+    100% {background:transparent}
+}
+
