@@ -142,12 +142,13 @@ class PlaylistController extends DZend_Controller_Action
                 );
 
                 $trackRow = $playlistRow->addTrack($trackInfo);
+                $this->_logger->debug('DDDDIIIII ' . ('true' === $this->_request->getPost('isMozaic') ? 'SIM' : 'NAO') . '. ' . print_r($this->_request->getPost('isMozaic'), true));
                 $this->_logModel->insert(
                     $this->_request->getParam('windowId'),
                     'add_track',
                     null,
                     $trackRow->id,
-                    true == $this->_request->getPost('isMozaic') ? 'mozaic' : null
+                    'true' === $this->_request->getPost('isMozaic') ? 'mozaic' : null
                 );
 
                 if (isset($artistMusicTitleId)) {

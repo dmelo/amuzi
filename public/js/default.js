@@ -462,7 +462,7 @@
         var trackId = e.attr('trackId'),
             artist = e.attr('artist'),
             musicTitle = e.attr('musicTitle'),
-            isMozaic = e.hasClass('music-square');
+            isMozaic = e.hasClass('music-square') && !e.hasClass('incboard-cell');
 
         if ($('.playlist-row[track_id=' + trackId + ']').length > 0) {
             if (!confirm('You already have this track on your playlist. Are you sure you want to insert it again?')) {
