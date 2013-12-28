@@ -137,8 +137,9 @@ class MusicSimilarity extends DZend_Model
         $matrix = array();
         foreach ($list as $a) {
             $matrix[$a] = array();
-            foreach ($list as $b)
+            foreach ($list as $b) {
                 $matrix[$a][$b] = 0;
+            }
         }
         $this->_logger->debug(
             'MS::_getSimilarityMatrix C ' . microtime(true) .
@@ -185,6 +186,21 @@ class MusicSimilarity extends DZend_Model
         $similarityMatrix, $translationList
     )
     {
+        $rows = 0;
+        $cols = 0;
+
+        foreach ($similarityMatrix as $row) {
+            $rows++;
+            foreach ($row as $cell) {
+                $cols++;
+            }
+        }
+
+        if ($rows > 0) {
+            $cols /= $rows;
+        }
+        $this->_logger->debug("MusicSimilarity::_applyListTranslationToMatrix A0 rows $rows. cols $cols");
+
         $amtList = array();
         foreach ($similarityMatrix as $id => $cols) {
             $amtList[] = $id;
@@ -222,6 +238,10 @@ class MusicSimilarity extends DZend_Model
 
             $similarityMatrix[-$albumId][-$albumId] = 0;
 
+            $amtList[] = -$albumId;
+        }
+
+        foreach ($translationList as $albumId => $amtIdSet) {
             // erase replaced rows.
             foreach ($amtIdSet as $i) {
                 unset($similarityMatrix[$i]);
@@ -233,15 +253,23 @@ class MusicSimilarity extends DZend_Model
                     unset($similarityMatrix[$i][$j]);
                 }
             }
-
-            // replace on amtList;
-            foreach ($amtIdSet as $i) {
-                if (($key = array_search($i, $amtList)) !== false) {
-                    unset($amtList[$key]);
-                }
-            }
-            $amtList[] = -$albumId;
         }
+
+        $rows = 0;
+        $cols = 0;
+
+        foreach ($similarityMatrix as $row) {
+            $rows++;
+            foreach ($row as $cell) {
+                $cols++;
+            }
+        }
+
+        if ($rows > 0) {
+            $cols /= $rows;
+        }
+        $this->_logger->debug("MusicSimilarity::_applyListTranslationToMatrix A0 rows $rows. cols $cols");
+
 
         return $similarityMatrix;
     }

@@ -209,8 +209,16 @@
                         list: data
                     }, function (matrix) {
                         if (searchId === globalSearchId) {
+                            var idList = [];
+                            for (var id in matrix) {
+                                var o = {
+                                    objId: id,
+                                    type: id > 0 ? 'track' : 'album'
+                                };
+                                idList.push(o);
+                            }
                             search.similarity = matrix;
-                            searchMusic(data, data.length);
+                            searchMusic(idList, idList.length);
                         } else {
                             console.log("searchId: " + searchId + ".globalSearchId: " + globalSearchId);
                         }
