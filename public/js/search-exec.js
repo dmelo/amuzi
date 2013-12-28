@@ -33,15 +33,6 @@
      * .clean();
      */
 
-    function searchMusicCallbackCenter(v, set, num, m) {
-        console.log("searchMusicCallbackCenter");
-        console.log(m);
-        $('#' + v.objId).addClass('center');
-        if (null !== m) {
-            $.bootstrapMessageOff(m.messageId);
-        }
-    }
-
     function incrementSimilar(ele) {
         console.log("incrementSimilar Start");
         if ('undefined' !== typeof ele) {
@@ -118,6 +109,11 @@
             throw "Second parameter must be a number";
         }
 
+        if (0 === num && 'number' === typeof $.searchMusicMessageId) {
+            $.bootstrapMessageOff($.searchMusicMessageId);
+            delete $.searchMusicMessageId;
+        }
+
         console.log("searchMusic: " + set.length + ", " + num);
         if (num > 0) {
             searchId = 'undefined' !== typeof m && 'searchId' in m ? m.searchId : null;
@@ -156,7 +152,7 @@
                             console.log("searchId: " + searchId + ". globalSearchId: " + globalSearchId);
                             if (null === searchId || searchId === globalSearchId) {
                                 if (null !== v && true === search.insert(v)) {
-                                    if ('function' === typeof callback) {
+                                    if ('function' === typeof 0 === callback && set.length) {
                                         console.log("searchMusic: calling callback");
                                         callback(v, set, num, m);
                                     }
@@ -202,9 +198,6 @@
                 if (0 === data.length) {
                     $.bootstrapMessageAuto('No results found', 'info');
                 } else {
-                    console.log('results found');
-                    console.log(data);
-                    // TODO: create similarity matrix, first;
                     $.post('/api/similaritymatrix', {
                         list: data
                     }, function (matrix) {
@@ -311,7 +304,7 @@
             }, beforeSubmit: function() {
                 if ($('#q').val().length >= 3) {
                     $('#subtitle').subtitleInit();
-                    var messageId = $.bootstrapMessageLoading();
+                    $.searchMusicMessageId = $.bootstrapMessageLoading();
                     globalSearchId++;
                     if ('undefined' !== typeof search) {
                         search.clean();
@@ -322,14 +315,14 @@
                         musicTitle: $('#musicTitle').val(),
                         type: $('#type').val(),
                         searchId: globalSearchId,
-                        messageId: messageId,
                     };
                     console.log('artist: ' + obj.artist + '. musicTitle: ' + obj.musicTitle + '. type: ' + obj.type);
                     if (isLoggedIn()) {
                         if ($.isSearchFormValid()) {
-                            searchMusic([obj], 1, searchMusicCallbackCenter);
+                            searchMusic([obj], 1);
                             incrementSimilar(obj);
                         } else { // search in a way that many music can be retrieved.
+                            $('.form-search #q').data('catcomplete').close();
                             searchMulti($('#q').val());
                         }
                     } else {

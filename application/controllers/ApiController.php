@@ -75,6 +75,11 @@ class ApiController extends DZend_Controller_Action
         foreach ($list as $obj) {
             if (array_key_exists('objId', $obj)) {
                 $idList[] = $obj['objId'];
+            } elseif (array_key_exists('type', $obj) && 'track' === $obj['type']
+                && array_key_exists('artist', $obj)
+                && array_key_exists('musicTitle', $obj)) {
+                $idList[] = $this->_artistMusicTitleModel
+                    ->insert($obj['artist'], $obj['musicTitle']);
             }
         }
 
