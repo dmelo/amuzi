@@ -49,6 +49,13 @@ class MusicTrackLink extends DZend_Model
             $artistMusicTitleRow = $this->_artistMusicTitleDb->findRowById(
                 $artistMusicTitleId
             );
+            if (null === $artistMusicTitleRow) {
+                try {
+                    throw new Zend_Exception('ee');
+                } catch (Zend_Exception $e) {
+                    $this->_logger->err("MusicTrackLink::bond ($artistMusicTitleId, $trackId, $bondName) didn't find artistMusicTitleRow with id == $artistMusicTitleId --> " . $e->getTraceAsString());
+                }
+            }
             $artistRow = $this->_artistDb->findRowById(
                 $artistMusicTitleRow->artistId
             );

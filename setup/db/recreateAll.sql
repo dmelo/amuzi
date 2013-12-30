@@ -6,4 +6,5 @@ source triggers.sql;
 source update0.sql;
 source update1.sql;
 source update2.sql;
+source update3.sql;
 source populate.sql;

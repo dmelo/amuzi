@@ -93,7 +93,7 @@ class MusicSimilarity extends DZend_Model
         return $this->_musicSimilarityDb->getRandomArtistMusicTitleId();
     }
 
-    public function _similarityToDissimilarity($m)
+    private function _similarityToDissimilarity($m)
     {
         foreach ($m as $i => $row) {
             foreach ($row as $j => $val) {
@@ -104,19 +104,86 @@ class MusicSimilarity extends DZend_Model
         return $m;
     }
 
-    public function _logSparsity($m)
+    private function _matrixToString($m)
     {
+        $s = '';
+        foreach ($m as $i => $row) {
+            foreach ($row as $j => $cell) {
+                $s .= sprintf(' %05d', $cell);
+            }
+            $s .= PHP_EOL;
+        }
+
+        return $s;
+    }
+
+    private function _logSparsity($m)
+    {
+        $c = new DZend_Chronometer();
+        $mSquared = array();
+        $c->start();
         $total = 0;
         $zeros = 0;
+        $zerosSquared = 0;
+
+
+        $cols = 0;
+        $rows = 0;
+
+        // Uncomment for the detailed log
+        /*
+        $this->_logger->debug(
+            'MusicSimilarity::_logSparsity M ' . PHP_EOL
+            . $this->_matrixToString($m)
+        );
+        */
 
         foreach ($m as $i => $row) {
+            $rows++;
             foreach ($row as $j => $val) {
                 $total++;
-                $zeros += 10000 === $m[$i][$j] ? 1 : 0;
+                $zeros += 0 === $m[$i][$j] ? 1 : 0;
+                $cols++;
             }
         }
 
-        $this->_logModel->insertSparsity($zeros, $total);
+        if ($rows > 0) {
+            $cols /= $rows;
+        }
+
+        if ($cols == $rows) {
+            foreach ($m as $i => $row) {
+                foreach ($row as $j => $cell) {
+                    if (!array_key_exists($i, $mSquared)) {
+                        $mSquared[$i] = array();
+                    }
+                    if (!array_key_exists($j, $mSquared[$i])) {
+                        $mSquared[$i][$j] = (int) 0;
+                    }
+
+                    foreach ($row as $k => $cell) {
+                        $mSquared[$i][$j] += (int) ($m[$i][$k] * $m[$k][$j]);
+                        if ($mSquared[$i][$j] > 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach ($mSquared as $i => $row) {
+                foreach ($row as $j => $cell) {
+                    if (0 === $cell) {
+                        $zerosSquared++;
+                    }
+                }
+            }
+        } else {
+            $this->_logger->err("There is a similarity matrix that have $rows rows and $cols cols.");
+        }
+
+        $this->_logModel->insertSparsity($zeros, $zerosSquared, $total);
+        $c->stop();
+        $this->_logger->debug('MusicSimilarity::_logSparsity time: ' . $c->get());
     }
 
     /**
@@ -456,11 +523,13 @@ class MusicSimilarity extends DZend_Model
             $similarityMatrixResponse[0] = $this->_applyListTranslationToMatrix(
                 $similarityMatrixResponse[0], $translationList
             );
+
+            $this->_logSparsity($similarityMatrixResponse[0]);
+
             $similarityMatrixResponse[0] = $this->_similarityToDissimilarity(
                 $similarityMatrixResponse[0]
             );
 
-            $this->_logSparsity($similarityMatrixResponse[0]);
             $completeIdList = $this->_applyListTranslationToList(
                 $completeIdList, $translationList
             );
@@ -583,13 +652,13 @@ class MusicSimilarity extends DZend_Model
         );
         */
 
-        $ret = $this->_similarityToDissimilarity(
-            $this->_applyListTranslationToMatrix(
-                $similarityMatrix[0], $translationList
-            )
+        $ret = $this->_applyListTranslationToMatrix(
+            $similarityMatrix[0], $translationList
         );
-
         $this->_logSparsity($ret);
+
+        $ret = $this->_similarityToDissimilarity($ret);
+
 
         return $ret;
     }

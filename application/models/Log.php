@@ -57,7 +57,7 @@ class Log extends DZend_Model
         }
     }
 
-    public function insertSparsity($zeros, $total)
+    public function insertSparsity($zeros, $zerosSquared, $total)
     {
         $logActionRow = $this->_logActionDb->findRowByName('matrix_sparsity');
         if (null === $logActionRow) {
@@ -67,6 +67,7 @@ class Log extends DZend_Model
                 'user_id' => $this->_getUserId(),
                 'log_action_id' => $logActionRow->id,
                 'zeros' => $zeros,
+                'zeros_squared' => $zerosSquared,
                 'total' => $total
             );
 
