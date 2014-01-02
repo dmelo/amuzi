@@ -159,7 +159,11 @@ jPlayerPlaylist.prototype.setCurrent = function(current) {
 
 jPlayerPlaylist.prototype.play = function(index) {
     index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
-    this.options.callbackPlay(index);
+
+    if ('function' === typeof this.options.callbackPlay) {
+        this.options.callbackPlay(index);
+    }
+
     if (0 <= index && index < this.playlist.length) {
         if (this.playlist.length) {
             this.select(index);
