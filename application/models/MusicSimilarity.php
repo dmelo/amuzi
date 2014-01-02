@@ -97,7 +97,7 @@ class MusicSimilarity extends DZend_Model
     {
         foreach ($m as $i => $row) {
             foreach ($row as $j => $val) {
-                $m[$i][$j] = 10000 - $m[$i][$j];
+                $m[$i][$j] = 1.0 - $m[$i][$j];
             }
         }
 
@@ -115,6 +115,72 @@ class MusicSimilarity extends DZend_Model
         }
 
         return $s;
+    }
+
+    private function _enhanceMatrix($m)
+    {
+        $c = new DZend_Chronometer();
+        $c->start();
+        $mIsSquared = true;
+        $rows = 0;
+        $colsSet = array();
+        // Normalize
+        foreach ($m as $i => $row) {
+            $totalRow = 0;
+            $rows++;
+            foreach ($row as $j => $cell) {
+                if (!array_key_exists($i, $colsSet)) {
+                    $colsSet[$i] = 0;
+                }
+                $colsSet[$i]++;
+                $totalRow += $cell;
+            }
+
+            if ($totalRow > 0) {
+                foreach ($row as $j => $cell) {
+                    $m[$i][$j] = $cell / $totalRow;
+                }
+            }
+        }
+
+        foreach ($colsSet as $cols) {
+            if ($cols !== $rows) {
+                $mIsSquared = false;
+                break;
+            }
+        }
+
+        if (!$mIsSquared) {
+            $ret = null;
+        } else {
+            // Multiply by itself
+            $mSquared = array();
+            foreach ($m as $i => $row) {
+                foreach ($row as $j => $cell) {
+                    $mSquared[$i][$j] = 0;
+                    foreach ($row as $k => $aux) {
+                        $mSquared[$i][$j] += $m[$i][$k] * $m[$k][$j];
+                    }
+                }
+            }
+
+            // Aggregate the two matrices
+            foreach ($m as $i => $row) {
+                foreach ($row as $j => $cell) {
+                    if (0 == $cell) {
+                        $m[$i][$j] = $mSquared[$i][$j];
+                    }
+                }
+            }
+
+            $ret = $m;
+        }
+
+
+        $c->stop();
+        $this->_logger->debug('MusicSimilarity::_enhanceMatrix time: ' . $c->get());
+
+        return $ret;
     }
 
     private function _logSparsity($m)
@@ -447,6 +513,7 @@ class MusicSimilarity extends DZend_Model
 
         $c = new DZend_Chronometer();
         $c->start();
+        // Get the center object.
         if ('album' === $type) {
             $albumRow = $this->_albumModel->get($artist, $musicTitle);
             $extObjIdList[] = -$albumRow->id;
@@ -525,6 +592,7 @@ class MusicSimilarity extends DZend_Model
             );
 
             $this->_logSparsity($similarityMatrixResponse[0]);
+            $similarityMatrixResponse[0] = $this->_enhanceMatrix($similarityMatrixResponse[0]);
 
             $similarityMatrixResponse[0] = $this->_similarityToDissimilarity(
                 $similarityMatrixResponse[0]
@@ -656,6 +724,7 @@ class MusicSimilarity extends DZend_Model
             $similarityMatrix[0], $translationList
         );
         $this->_logSparsity($ret);
+        $ret = $this->_enhanceMatrix($ret);
 
         $ret = $this->_similarityToDissimilarity($ret);
 
