@@ -834,4 +834,9 @@ class MusicSimilarity extends DZend_Model
 
         return array($artistMusicTitleIdList, $translationList);
     }
+
+    public function insertMulti($artistMusicTitleId, $rowSet)
+    {
+        return $this->_objDb->insertMulti($artistMusicTitleId, $rowSet);
+    }
 }

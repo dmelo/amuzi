@@ -1,6 +1,8 @@
 <?php
 
 return array(
+    'a' => 'a',
+/*
     'Create' => 'Criar',
     'List' => 'Listar',
     'Remove' => 'Remover',
@@ -14,4 +16,5 @@ return array(
     'To play the media you will need to either update your browser to a ' .
         'recent version or update your ' => 'To play the media you will ' .
         'need to either update your browser to a recent version or update your '
+        */
 );
