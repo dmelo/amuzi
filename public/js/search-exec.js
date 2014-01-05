@@ -250,6 +250,7 @@
     }
 
     $(document).ready(function() {
+        window.searchId = 0;
         if (1 === $('#incboard-search').length) {
             search = new $.IncBoard();
 
@@ -302,6 +303,8 @@
             }, error: function (data) {
                 $.bootstrapMessageAuto('Error searching for music', 'error');
             }, beforeSubmit: function() {
+                console.log('BEFORE SUBMIT');
+                window.searchId = parseInt(Math.random() * 1000000000);
                 if ($('#q').val().length >= 3) {
                     $('#subtitle').subtitleInit();
                     $.searchMusicMessageId = $.bootstrapMessageLoading();

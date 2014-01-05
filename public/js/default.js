@@ -503,9 +503,7 @@
             musicTitle: musicTitle,
             windowId: window.windowId,
             isMozaic: isMozaic,
-            isTest: 'bla',
-            isTest2: false,
-            isTest3: isMozaic,
+            searchId: isMozaic ? 0 : window.searchId,
         };
 
         $.bootstrapMessageLoading();
@@ -534,7 +532,8 @@
         var messageId = $.bootstrapMessage('Adding album...', 'info');
         $.get('/album/add', {
             albumId: albumId,
-            windowId: window.windowId
+            windowId: window.windowId,
+            searchId: window.searchId,
         }, function (data) {
             var ele = $('#slide-search div[albumid=' + albumId + ']');
             if (ele.length > 0) {
