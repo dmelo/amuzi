@@ -148,7 +148,8 @@ class PlaylistController extends DZend_Controller_Action
                     null,
                     $trackRow->id,
                     'true' === $this->_request->getPost('isMozaic') ? 'mozaic' : null,
-                    $this->_request->getPost('searchId')
+                    $this->_request->getPost('searchId'),
+                    $this->_request->getPost('rfDepth')
                 );
 
                 if (isset($artistMusicTitleId)) {

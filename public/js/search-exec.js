@@ -76,6 +76,7 @@
                         type: type,
                         objIdList: search.getIdList()
                     }, function(data) {
+                        window.rfDepth++;
                         similarList = data[0];
                         if (searchId === globalSearchId) {
                             for (var i = 0; i < data.length; i++) {
@@ -251,6 +252,7 @@
 
     $(document).ready(function() {
         window.searchId = 0;
+        window.rfDepth = 0;
         if (1 === $('#incboard-search').length) {
             search = new $.IncBoard();
 
@@ -305,6 +307,7 @@
             }, beforeSubmit: function() {
                 console.log('BEFORE SUBMIT');
                 window.searchId = parseInt(Math.random() * 1000000000);
+                window.rfDepth = 0;
                 if ($('#q').val().length >= 3) {
                     $('#subtitle').subtitleInit();
                     $.searchMusicMessageId = $.bootstrapMessageLoading();

@@ -29,7 +29,8 @@ class Log extends DZend_Model
         $albumId = null,
         $trackId = null,
         $view = null,
-        $searchId = null
+        $searchId = null,
+        $rfDepth = null
     )
     {
         $logActionRow = $this->_logActionDb->findRowByName($action);
@@ -44,7 +45,8 @@ class Log extends DZend_Model
                 'album_id' => $albumId,
                 'track_id' => $trackId,
                 'view' => null === $view ? $this->_getUserRow()->view : $view,
-                'search_id' => $searchId
+                'search_id' => $searchId,
+                'rf_depth' => $rfDepth
             );
 
             try {

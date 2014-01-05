@@ -504,6 +504,7 @@
             windowId: window.windowId,
             isMozaic: isMozaic,
             searchId: isMozaic ? 0 : window.searchId,
+            rfDepth: window.rfDepth,
         };
 
         $.bootstrapMessageLoading();
@@ -534,6 +535,7 @@
             albumId: albumId,
             windowId: window.windowId,
             searchId: window.searchId,
+            rfDepth: window.rfDepth,
         }, function (data) {
             var ele = $('#slide-search div[albumid=' + albumId + ']');
             if (ele.length > 0) {

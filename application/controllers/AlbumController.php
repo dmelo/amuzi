@@ -55,7 +55,8 @@ class AlbumController extends DZend_Controller_Action
                 $albumId,
                 null,
                 null,
-                $this->_request->getParam('searchId')
+                $this->_request->getParam('searchId'),
+                $this->_request->getParam('rfDepth')
             );
             $this->view->output = $this->
                 _userListenAlbumModel->insert($albumId);
