@@ -64,18 +64,22 @@ Tutorial.prototype.search = function() {
 Tutorial.prototype.slide = function() {
     var self = this;
     $.get('/tutorial/slide', function(data) {
-        var ele = $('#screen-music');
+        var ele = $('#screen-music'),
+            accomplishedCallback = function(e) {
+                ele.popover('hide');
+                $.get('/tutorial/setaccomplished', {
+                    name: 'slide'
+                }, function() {
+                    ele.off('valid-keyup');
+                    self.apply();
+                });
+            };
         ele.attr('data-content', data);
-        ele.popover({placement: 'bottom', trigger: 'manual'});
+        ele.popover({placement: 'bottom', trigger: 'manual', html: true});
         ele.popover('show');
-        ele.click(function(e) {
-            ele.popover('hide');
-            $.get('/tutorial/setaccomplished', {
-                name: 'slide'
-            }, function() {
-                self.apply();
-            });
-        });
+        ele.click(accomplishedCallback);
+        ele.on('valid-keyup', accomplishedCallback);
+
     }).error(function (e) {
         console.log('Error loading the slide tutorial');
     });

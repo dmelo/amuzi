@@ -59,6 +59,11 @@
                         break;
                     case 39:
                         $('.slide-next').trigger('click');
+
+                        // TODO: It's used to trigger the tutorial accomplished, only.
+                        // As it is specific for an application, it must be taken away.
+                        $('#screen-music').trigger('valid-keyup');
+
                         break;
                 }
             }

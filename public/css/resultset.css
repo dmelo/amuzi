@@ -217,7 +217,12 @@
     overflow: hidden;
 }
 
+/*
+ * TODO: disabling this now, but why was it here in the first place? What is it
+ * preventing?
+ *
 .popover img {
     display: none;
 }
+*/
 
