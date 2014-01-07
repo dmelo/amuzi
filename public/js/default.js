@@ -137,7 +137,9 @@
                     }
 
                     $.each(data.trackList, function (i, v) {
-                        window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
+                        if ('url' in v) {
+                            window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
+                        }
                     });
                     window.myPlaylist.newCurrent = data.currentTrack;
                     applyOverPlaylist();
