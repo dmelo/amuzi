@@ -58,10 +58,12 @@ echo "Total # of users: " . count($userSet) . PHP_EOL;
 echo PHP_EOL;
 
 echo "ratio of objs added on each search mode per user" . PHP_EOL;
+$r = array();
 foreach ($userCount as $searchMode => $set) {
+    $r[] = $objCount[$searchMode] / count($set);
     echo "$searchMode: " . $objCount[$searchMode] / count($set) . PHP_EOL;
 }
-echo PHP_EOL;
+echo "comp: "  . ($r[1] / $r[0]) . PHP_EOL;
 
 echo "Total # of auditable logs: " . count($logRowSet) . PHP_EOL;
 
