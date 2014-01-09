@@ -99,9 +99,13 @@ class Log extends DZend_Model
         return $this->_objDb->fetchAll($where);
     }
 
-    public function findAuditableLog()
+    public function findAuditableLog($finalDate = null)
     {
         $where = ' created > \'2013-12-16\' AND log_action_id != 4 and user_id != 1';
+        if (null !== $finalDate) {
+            $where .= " AND created <= '$finalDate 23:59:59'";
+        }
+
         return $this->_objDb->fetchAll($where);
     }
 }
