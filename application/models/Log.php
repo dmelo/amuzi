@@ -103,7 +103,7 @@ class Log extends DZend_Model
     {
         $where = ' created > \'2013-12-16\' AND log_action_id != 4 and user_id != 1';
         if (null !== $finalDate) {
-            $where .= " AND created <= '$finalDate 23:59:59'";
+            $where = " date(created) = '$finalDate' AND log_action_id != 4 and user_id != 1";
         }
 
         return $this->_objDb->fetchAll($where);

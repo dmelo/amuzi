@@ -90,10 +90,11 @@ if (array_key_exists(1, $argv) && '--complete' === $argv[1]) {
         list($objCount, $userCount, $userSet) = processLog($logRowSet);
         $r = array();
         foreach ($userCount as $searchMode => $set) {
-            $aux = $objCount[$searchMode] / count($set);
+            $aux = count($set) > 0 ? $objCount[$searchMode] / count($set) : 0;
             $r[] = $aux;
         }
-        echo "comp: $date -- "  . ($r[1] / $r[0]) . ' -- total: ' . count($logRowSet) . PHP_EOL;
+        $ratio = $r[0] > 0 ? $r[1] / $r[0] : $r[1];
+        echo "comp: $date -- "  . $ratio . ' -- total: ' . count($logRowSet) . PHP_EOL;
 
 
     } while ($date != date('Y-m-d'));
