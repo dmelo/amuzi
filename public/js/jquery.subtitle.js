@@ -44,11 +44,15 @@
             return "#"+c()+c()+c();
         },
         subtitleInit: function(sTop, sLeft) {
-            var ul = $('<ul class="subtitle"></ul>');
-            if(typeof sTop !== 'undefined')
+            var ul = $('<ul class="subtitle"><h4>Artists:</h4></ul>');
+            if(typeof sTop !== 'undefined') {
                 ul.css('top', sTop);
-            if(typeof sLeft !== 'undefined')
+            }
+
+            if(typeof sLeft !== 'undefined') {
                 ul.css('left', sLeft);
+            }
+
             ul.css('display', 'none');
             $(this).html(ul);
             subtitles = [];
