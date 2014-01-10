@@ -40,7 +40,7 @@ class FeedbackController extends DZend_Controller_Action
             if ($ret instanceof Zend_Db_Statement_Exception) {
                 $message = array('Error: ' . $ret->getMessage(), 'error');
             } else {
-                $message = array('Feedback send. Thank you!', 'success');
+                $message = array('Feedback sent. Thank you!', 'success');
             }
             $this->view->message = $message;
         }
