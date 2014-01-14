@@ -184,4 +184,13 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             )
         );
     }
+
+    public function _initLocale()
+    {
+        $this->bootstrap('path');
+
+        // Incomplete translations won't be displayed to the user.
+        $locale = new Zend_Locale('en_US');
+        Zend_Registry::set('locale', $locale);
+    }
 }
