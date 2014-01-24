@@ -1,8 +1,8 @@
 <?php
 
 return array(
-    'Settings' => 'Settings',
-    "Feedback" => "Feedback",
+    'Settings' => 'Configuración',
+    "Feedback" => "Respuesta-revisión",
     "Login" => "Conectar",
     "Docs" => "Documentos",
     'Help' => 'Ayudas',
@@ -15,7 +15,7 @@ return array(
     'Artist' => 'Artista',
     'details' => 'detalles',
     'Album not found' => 'Disco no encontrado',
-    'Assess Quality' => 'Assess Quality',
+    'Assess Quality' => 'Evaluar calidad',
     'Download' => 'Bajar',
     'Watch' => 'Ver',
     'Share' => 'Compartir',
@@ -41,5 +41,5 @@ return array(
     'Click on the icons to switch window' => 'Pulse en los iconos para cambiar de venta',
     'Or use right and left the arrow keys' => 'O utilice teclas flechas derecha y izquierda',
     'Welcome' => 'Bienvenido',
-    'Welcome to Amuzi. Here you can search and organize your music. Enjoy!' => 'Bienvenido a AMUZI. Aquñi tñu puedes buscar y organizar tu música. ¡Pásatelo en grande!',
+    'Welcome to Amuzi. Here you can search and organize your music. Enjoy!' => 'Bienvenido a AMUZI. Aquí puedes buscar y organizar tu música. ¡Pásatelo en grande!',
 );
