@@ -9,7 +9,8 @@ Working in Mallorca Spain for do a better language world
 
 return array(
     'Settings' => 'Configuración',
-    "Feedback" => "Respuesta-revisión",
+    // "Feedback" => "Respuesta-revisión",
+    "Feedback" => "Comentarios",
     "Login" => "Conectar",
     "Docs" => "Documentos",
     'Help' => 'Ayudas',
