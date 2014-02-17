@@ -65,6 +65,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
             $js = array(
                 'ie-compatibility.js',
                 'jquery.js',
+                'jquery.i18n.js',
+                'i18n-dict.js',
                 'jquery.url.js',
                 'stacktrace.js',
                 'facebook-connect.js',
@@ -188,9 +190,17 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
     public function _initLocale()
     {
         $this->bootstrap('path');
-
-        // Incomplete translations won't be displayed to the user.
-        $locale = new Zend_Locale('en_US');
+        $this->bootstrap('logger');
+        $this->bootstrap('db');
+        $auth = Zend_Auth::getInstance();
+        $lang = 'en_US';
+        if ($auth->hasIdentity()) {
+            $userModel = new User();
+            $userRow = $userModel->findByEmail($auth->getIdentity());
+            $lang = $userRow->lang;
+        }
+        
+        $locale = new Zend_Locale($lang);
         Zend_Registry::set('locale', $locale);
     }
 }

@@ -121,6 +121,17 @@
 <? endif; ?>
 
         <?= $this->headScript(); ?>
+ 
+<? 
+
+try {
+    $locale = Zend_Registry::get('locale');
+} catch (Zend_Exception $e) {
+}
+
+if (isset($locale)): ?>
+    <div id="locale" class="invisible"><?= $locale; ?></div>
+<? endif; ?>
 
     </body>
 

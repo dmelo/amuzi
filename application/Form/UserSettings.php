@@ -58,6 +58,22 @@ class Form_UserSettings extends DZend_Form
 
         $this->addElement($element);
 
+        $element = new Zend_Form_Element_Select(
+            'lang', array(
+                'label' => 'Language',
+                'required' => 'true'
+            )
+        );
+
+        $element->addMultiOptions(
+            array(
+                'en_US' => 'English',
+                'pt_BR' => 'Portuguese (incomplete)',
+                'es'    => 'Spanish (incomplete)'
+            )
+        );
+        $this->addElement($element);
+
         $this->addSubmit($this->_t('Save'));
 
         $element = new Zend_Form_Element_Button('cancel');

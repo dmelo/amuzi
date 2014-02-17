@@ -33,28 +33,34 @@ class User extends DZend_Model
     public function __construct()
     {
         parent::__construct();
-        $this->_translate = Zend_Registry::get('translate');
+        try {
+            $this->_translate = Zend_Registry::get('translate');
+        } catch (Zend_Exception $e) {
+        }
     }
 
     public function getSettings()
     {
         $ret = array();
-        $user = $this->_userDb->findCurrent();
-        $ret['name'] = $user->name;
-        $ret['email'] = $user->email;
-        $ret['privacy'] = $user->privacy;
-        $ret['view'] = $user->view;
+        $userRow = $this->_userDb->findCurrent();
+        $ret = array(
+            'name' => $userRow->name,
+            'email' => $userRow->email,
+            'privacy' => $userRow->privacy,
+            'view' => $userRow->view,
+            'lang' => $userRow->lang,
+        );
 
         return $ret;
     }
 
     public function setSettings($params)
     {
-        $user = $this->_userDb->findCurrent();
-        $user->name = $params['name'];
-        $user->privacy = $params['privacy'];
+        $userRow = $this->_userDb->findCurrent();
+        $userRow->name = $params['name'];
+        $userRow->privacy = $params['privacy'];
         // User is switching view type.
-        if ($user->view !== $params['view']) {
+        if ($userRow->view !== $params['view']) {
             $this->_logModel->insert(
                 $params['windowId'],
                 'change_view',
@@ -64,8 +70,18 @@ class User extends DZend_Model
             );
 
         }
-        $user->view = $params['view'];
-        $user->save();
+        $userRow->view = $params['view'];
+        $userRow->lang = $params['lang'];
+        $userRow->save();
+
+        $session = DZend_Session_Namespace::get('session');
+        $session->user = $userRow;
+        DZend_Session_Namespace::close();
+
+        $session = DZend_Session_Namespace::get('session');
+        $this->_logger->debug("KKKKKKKKKKK  lang: " . $userRow->lang);
+        $this->_logger->debug("KKKKKKKKKKK  lang: " . $session->user->lang);
+        DZend_Session_Namespace::close();
     }
 
     public function getView()

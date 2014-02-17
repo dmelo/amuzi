@@ -8,4 +8,5 @@ source update1.sql;
 source update2.sql;
 source update3.sql;
 source update4.sql;
+source update5.sql;
 source populate.sql;
