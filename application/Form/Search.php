@@ -39,7 +39,7 @@ class Form_Search extends DZend_Form
         }
 
         $element = new Zend_Form_Element_Submit('submit');
-        $element->setLabel('Search');
+        $element->setLabel($this->_t('Search'));
         $element->setAttrib('class', 'search btn');
         $this->addElement($element);
 

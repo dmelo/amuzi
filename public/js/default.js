@@ -51,7 +51,7 @@
             name: window.myPlaylist.name
         }, function (data) {
         }).error(function (data) {
-            $.bootstrapMessageAuto('Error saving playlist.', 'error');
+            $.bootstrapMessageAuto($.i18n._('Error saving playlist.'), 'error');
         });
     }
 
@@ -1033,6 +1033,11 @@
 
         $('#facebook-connect').click(function(e) {
             $.bootstrapMessage('Make sure your browser is not blocking Facebook\'s POP-UP!', 'warning');
+        });
+
+        // Settings titles of menu items
+        $('.navbar .nav li a').each(function(index) {
+            $(this).attr('title', $(this).html());
         });
     });
 }(jQuery, undefined));

@@ -44,15 +44,15 @@ class Form_UserSettings extends DZend_Form
 
         $element = new Zend_Form_Element_Select(
             'view', array(
-                'label' => 'View',
+                'label' => $this->_t('View'),
                 'required' => true
             )
         );
 
         $element->addMultiOptions(
             array(
-                'default' => 'Classic View',
-                'incboard' => 'IncBoard'
+                'default' => $this->_t('Classic View'),
+                'incboard' => $this->_t('IncBoard')
             )
         );
 
@@ -60,16 +60,16 @@ class Form_UserSettings extends DZend_Form
 
         $element = new Zend_Form_Element_Select(
             'lang', array(
-                'label' => 'Language',
+                'label' => $this->_t('Language'),
                 'required' => 'true'
             )
         );
 
         $element->addMultiOptions(
             array(
-                'en_US' => 'English',
-                'pt_BR' => 'Portuguese (incomplete)',
-                'es'    => 'Spanish (incomplete)'
+                'en_US' => $this->_t('English'),
+                'pt_BR' => $this->_t('Portuguese (incomplete)'),
+                'es'    => $this->_t('Spanish (incomplete)')
             )
         );
         $this->addElement($element);
