@@ -4,6 +4,8 @@
         if (1 === $('#locale').length) {
             var file = '/locale.php?lang=' + $('#locale').html();
 
+            console.log('I18N-DICT ' + file);
+
             $.ajax({
                 data: {},
                 type: "POST",

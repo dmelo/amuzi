@@ -85,7 +85,7 @@
                 $.loadPlaylist(parseInt(data[0], 10), {isAlbum: data[1]});
             }
         }, 'json').error(function(data) {
-            $.bootstrapMessageAuto('Coundn\'t load next album/playlist', 'error');
+            $.bootstrapMessageAuto($.i18n._('Couldn\'t load next album/playlist'), 'error');
         });
     };
 
@@ -181,7 +181,7 @@
             }
             $.bootstrapMessageAuto(data[0], data[1]);
         }, 'json').error(function (e) {
-            $.bootstrapMessageAuto('Error removing ' + controller, 'error');
+            $.bootstrapMessageAuto($.i18n._('Error removing ' + controller), 'error');
         });
     }
 
@@ -243,7 +243,7 @@
                     $.bootstrapMessageAuto(data[0], data[1]);
                 }
             }, 'json').error(function (e) {
-                $.bootstrapMessageAuto('Error saving settings', 'error');
+                $.bootstrapMessageAuto($.i18n._('Error saving settings'), 'error');
             });
         }
     }
@@ -273,7 +273,7 @@
                     $.bootstrapMessageAuto(data[0], data[1]);
                 }
             }, 'json').error(function (e) {
-                $.bootstrapMessageAuto('Error saving settings', 'error');
+                $.bootstrapMessageAuto($.i18n._('Error saving settings'), 'error');
             });
         }
     }
@@ -340,7 +340,7 @@
             });
         }).error(function (data) {
             $.bootstrapMessageAuto(
-                'Error loading your album list, please try again later', 'error'
+                $.i18n._('Error loading your album list, please try again later'), 'error'
             );
         });
     }
@@ -355,7 +355,9 @@
                 loadPlaylistSet();
             },
             error: function (data) {
-                $.bootstrapMessageAuto('Error saving. Something went wrong', 'error');
+                $.bootstrapMessageAuto(
+                    $.i18n._('Error saving. Something went wrong.'), 'error'
+                );
                 $('#load-modal-wrapper').modal('hide');
             }
         });
@@ -402,7 +404,9 @@
                 $.bootstrapMessageAuto(data[0], data[1]);
                 $($.modalWrapper).modal('hide');
             }, 'json').error(function (e) {
-                $.bootstrapMessageAuto('Error registering vote', 'error');
+                $.bootstrapMessageAuto(
+                    $.i18n._('Error registering vote'), 'error'
+                );
                 $($.modalWrapper).modal('hide');
             });
         });
@@ -527,13 +531,13 @@
             }
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto(
-                'Error adding track. Please, try again', 'error'
+                $.i18n._('Error adding track. Please, try again.'), 'error'
             );
         });
     };
 
     $.addAlbum = function(albumId, playNow) {
-        var messageId = $.bootstrapMessage('Adding album...', 'info');
+        var messageId = $.bootstrapMessage($.i18n._('Adding album...'), 'info');
         $.get('/album/add', {
             albumId: albumId,
             windowId: window.windowId,
@@ -554,7 +558,7 @@
             }
         }, 'json').error(function (e) {
             $.bootstrapMessageAuto(
-                'Error adding your album. Please, try again.', 'error'
+                $.i18n._('Error adding your album. Please, try again.'), 'error'
             );
         });
     };
@@ -589,7 +593,7 @@
     function prepareShareFacebook() {
         $('.share-facebook').live('click', function (e) {
             e.preventDefault();
-            window.open($(this).attr('href'), 'Share on Facebook', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
+            window.open($(this).attr('href'), $.i18n._('Share on Facebook'), 'toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
         });
     }
 
@@ -698,7 +702,7 @@
 
     function acError(e) {
         $.bootstrapMessageAuto(
-            'Error loaging suggestions. Please, try reloading your browser,',
+            $.i18n._('Error loading suggestions. Please, try reloading your browser.'),
             'error'
         );
     }
@@ -1032,7 +1036,10 @@
         });
 
         $('#facebook-connect').click(function(e) {
-            $.bootstrapMessage('Make sure your browser is not blocking Facebook\'s POP-UP!', 'warning');
+            $.bootstrapMessage(
+                $.i18n._('Make sure your browser is not blocking Facebook\'s POP-UP!'),
+                'warning'
+            );
         });
 
         // Settings titles of menu items

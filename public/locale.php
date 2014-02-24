@@ -9,3 +9,4 @@ if (file_exists($file)) {
         $data = array();
 }
 
+echo json_encode($data);
