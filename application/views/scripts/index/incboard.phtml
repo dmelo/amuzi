@@ -1,6 +1,7 @@
-<div class="slidegroup">
+<div class="slidegroup swiper-container">
+    <div class="swiper-wrapper">
 
-    <div class="slide" id="slide-search">
+    <div class="slide swiper-slide" id="slide-search">
         <div class="mozaic"></div>
         <div class="container">
             <?= $this->form; ?>
@@ -11,6 +12,7 @@
     </div>
 
     <?= $this->render('index/slide-music-manager.phtml'); ?>
+    </div>
 
 </div>
 

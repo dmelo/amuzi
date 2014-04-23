@@ -3,7 +3,7 @@ body {
 }
 
 #content {
-    margin-top: 50px;
+    margin-top: 41px;
 }
 
 #amazingly-free {
@@ -23,6 +23,10 @@ body {
 
 .container {
     text-align: center;
+}
+
+#slide-search .container {
+    margin-top: 85px;
 }
 
 .container.regular {
@@ -62,7 +66,6 @@ dd {
     right: 1px;
     left: 100%;
     margin-left: -482px;
-    top: -88px;
 }
 
 #jp_container_1.lonely {
@@ -606,3 +609,6 @@ text-align: center;
     100% {background:transparent}
 }
 
+.swiper-container {
+    height: 100%;
+}

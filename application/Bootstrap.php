@@ -87,7 +87,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'commands.js',
                 'jquery.bootstrapMessage.js',
                 'jquery.bootstrapLoadModal.js',
-                'bootstrap-slide.js',
+                'idangerous.swiper.js',
                 'cssrule.js',
                 'default.js',
                 'mozaic.js',
@@ -131,7 +131,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'default.css',
                 'incboard.css',
                 'jquery.subtitle.css',
-                'bootstrap-slide.css',
+                'idangerous.swiper.css',
                 'mozaic.css'
             );
         } else {

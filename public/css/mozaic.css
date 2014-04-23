@@ -1,8 +1,5 @@
 .mozaic {
-    float: left;
-    position: absolute;
-    top: -88px;
-    left: 0px;
+    position: fixed;
 }
 
 .mozaic .music-square {

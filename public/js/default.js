@@ -961,8 +961,6 @@
 
         $.resizeEditPlaylist();
 
-        $.slideInit();
-
         $('.music-manager .playlist-square .play').live('click', function (e) {
             e.preventDefault();
             var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
@@ -1046,5 +1044,17 @@
         $('.navbar .nav li a').each(function(index) {
             $(this).attr('title', $(this).html());
         });
+
+        $('.swiper-container').height($(window).height() - $('.navbar').height() - $('footer').height());
+        $('.mozaic').width($(window).width());
+
+        window.swiper = $('.swiper-container').swiper({
+            mode: 'horizontal',
+            loop: false,
+        });
+
+
+        window.swiper.enableKeyboardControl();
+
     });
 }(jQuery, undefined));
