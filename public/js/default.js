@@ -719,6 +719,36 @@
         }
     }
 
+    function swiperButtons() {
+        var next = window.swiper.swipeNext,
+            prev = window.swiper.swipePrev;
+
+        window.swiper.swipeNext = function() {
+            next();
+            console.log('next');
+            $('#screen-search').addClass('dark').removeClass('light');
+            $('#screen-music').addClass('light').removeClass('dark');
+        };
+
+        window.swiper.swipePrev = function() {
+            prev();
+            console.log('prev');
+            $('#screen-music').addClass('dark').removeClass('light');
+            $('#screen-search').addClass('light').removeClass('dark');
+
+        };
+
+
+        $('#screen-music').click(function(e) {
+            window.swiper.swipeNext();
+        });
+
+        $('#screen-search').click(function(e) {
+            window.swiper.swipePrev();
+        });
+
+    }
+
     $(document).ready(function () {
         var ac,
             message,
@@ -1055,6 +1085,7 @@
 
 
         window.swiper.enableKeyboardControl();
+        swiperButtons();
 
     });
 }(jQuery, undefined));

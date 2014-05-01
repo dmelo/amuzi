@@ -612,3 +612,41 @@ text-align: center;
 .swiper-container {
     height: 100%;
 }
+
+/** Swiper icons **/
+
+.screen {
+    float: right;
+}
+
+.screen {
+    margin-top: 5px;
+    height: 30px;
+    width: 45px;
+    background-image: url(/img/slide-icons.png);
+}
+
+#screen-music.light {
+    background-position: 45px 30px;
+}
+
+#screen-music.dark {
+    background-position: 45px 0px;
+}
+
+#screen-search.light {
+    background-position: 0px 0px;
+}
+
+#screen-search.dark {
+    background-position: 0px 30px;
+}
+
+.screen:hover {
+    cursor: pointer;
+}
+
+.screens {
+    margin-left:50px;
+}
+
