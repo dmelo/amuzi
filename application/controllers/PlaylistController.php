@@ -147,7 +147,8 @@ class PlaylistController extends DZend_Controller_Action
                     'add_track',
                     null,
                     $trackRow->id,
-                    'true' === $this->_request->getPost('isMozaic') ? 'mozaic' : null,
+                    'true' === $this->_request->getPost('isMozaic') ?
+                    'mozaic' : null,
                     $this->_request->getPost('searchId'),
                     $this->_request->getPost('rfDepth')
                 );
@@ -211,10 +212,6 @@ class PlaylistController extends DZend_Controller_Action
         }
 
         $this->view->message = $message;
-    }
-
-    protected function _aaa($a) {
-        return $a ? 'true' : 'false';
     }
 
     /**
@@ -336,7 +333,7 @@ class PlaylistController extends DZend_Controller_Action
             $row = $this->_playlistModel->create(
                 $name, $public ? 'public' : 'private'
             );
-            if($row) {
+            if ($row) {
                 $this->view->message = array(
                     $this->view->t('Playlist created'),
                     'success',

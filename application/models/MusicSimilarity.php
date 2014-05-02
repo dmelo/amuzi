@@ -178,7 +178,9 @@ class MusicSimilarity extends DZend_Model
 
 
         $c->stop();
-        $this->_logger->debug('MusicSimilarity::_enhanceMatrix time: ' . $c->get());
+        $this->_logger->debug(
+            'MusicSimilarity::_enhanceMatrix time: ' . $c->get()
+        );
 
         return $ret;
     }
@@ -244,12 +246,17 @@ class MusicSimilarity extends DZend_Model
                 }
             }
         } else {
-            $this->_logger->err("There is a similarity matrix that have $rows rows and $cols cols.");
+            $this->_logger->err(
+                "There is a similarity matrix that have $rows rows and "
+                . "$cols cols."
+            );
         }
 
         $this->_logModel->insertSparsity($zeros, $zerosSquared, $total);
         $c->stop();
-        $this->_logger->debug('MusicSimilarity::_logSparsity time: ' . $c->get());
+        $this->_logger->debug(
+            'MusicSimilarity::_logSparsity time: ' . $c->get()
+        );
     }
 
     /**
@@ -332,7 +339,10 @@ class MusicSimilarity extends DZend_Model
         if ($rows > 0) {
             $cols /= $rows;
         }
-        $this->_logger->debug("MusicSimilarity::_applyListTranslationToMatrix A0 rows $rows. cols $cols");
+        $this->_logger->debug(
+            "MusicSimilarity::_applyListTranslationToMatrix A0 rows"
+            . " $rows. cols $cols"
+        );
 
         $amtList = array();
         foreach ($similarityMatrix as $id => $cols) {
@@ -401,7 +411,10 @@ class MusicSimilarity extends DZend_Model
         if ($rows > 0) {
             $cols /= $rows;
         }
-        $this->_logger->debug("MusicSimilarity::_applyListTranslationToMatrix A0 rows $rows. cols $cols");
+        $this->_logger->debug(
+            "MusicSimilarity::_applyListTranslationToMatrix A0 rows"
+            . " $rows. cols $cols"
+        );
 
 
         return $similarityMatrix;
@@ -592,7 +605,9 @@ class MusicSimilarity extends DZend_Model
             );
 
             $this->_logSparsity($similarityMatrixResponse[0]);
-            $similarityMatrixResponse[0] = $this->_enhanceMatrix($similarityMatrixResponse[0]);
+            $similarityMatrixResponse[0] = $this->_enhanceMatrix(
+                $similarityMatrixResponse[0]
+            );
 
             $similarityMatrixResponse[0] = $this->_similarityToDissimilarity(
                 $similarityMatrixResponse[0]

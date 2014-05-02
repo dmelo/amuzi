@@ -99,7 +99,8 @@ class Youtube extends DZend_Model
         }
 
         $this->_logger->debug(
-            'Youtube::search q: ' . $q . '. result: ' . print_r($resultSet, true)
+            'Youtube::search q: ' . $q . '. result: '
+            . print_r($resultSet, true)
         );
 
         return $resultSet;

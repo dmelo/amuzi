@@ -93,7 +93,8 @@ class Log extends DZend_Model
         if (is_int($logActionId)) {
             $where .= ' and log_action_id = ' . $logActionId;
         } elseif (is_array($logActionId)) {
-            $where .= ' and log_action_id in ( ' . implode(', ', $logActionId) . ')';
+            $where .= ' and log_action_id in ( '
+                . implode(', ', $logActionId) . ')';
         }
 
         return $this->_objDb->fetchAll($where);
@@ -101,9 +102,11 @@ class Log extends DZend_Model
 
     public function findAuditableLog($finalDate = null)
     {
-        $where = ' created > \'2013-12-16\' AND log_action_id != 4 and user_id != 1';
+        $where = ' created > \'2013-12-16\' AND '
+            . 'log_action_id != 4 and user_id != 1';
         if (null !== $finalDate) {
-            $where = " date(created) = '$finalDate' AND log_action_id != 4 and user_id != 1";
+            $where = " date(created) = '$finalDate' AND "
+            . "log_action_id != 4 and user_id != 1";
         }
 
         return $this->_objDb->fetchAll($where);

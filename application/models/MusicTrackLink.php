@@ -53,7 +53,12 @@ class MusicTrackLink extends DZend_Model
                 try {
                     throw new Zend_Exception('ee');
                 } catch (Zend_Exception $e) {
-                    $this->_logger->err("MusicTrackLink::bond ($artistMusicTitleId, $trackId, $bondName) didn't find artistMusicTitleRow with id == $artistMusicTitleId --> " . $e->getTraceAsString());
+                    $this->_logger->err(
+                        "MusicTrackLink::bond ($artistMusicTitleId, $trackId,"
+                        . " $bondName) didn't find artistMusicTitleRow with id"
+                        . " == $artistMusicTitleId --> "
+                        . $e->getTraceAsString()
+                    );
                 }
             }
             $artistRow = $this->_artistDb->findRowById(
@@ -86,7 +91,7 @@ class MusicTrackLink extends DZend_Model
 
                 // If the current bond has higher priority than the new bond,
                 // then don't do the new bond
-                if($currentBondRow->priority > $bondRow->priority) {
+                if ($currentBondRow->priority > $bondRow->priority) {
                     return null;
                 } else {
                     $currentMusicTrackLinkRow->delete();

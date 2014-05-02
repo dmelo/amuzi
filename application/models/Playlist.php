@@ -95,7 +95,8 @@ class Playlist extends DZend_Model
         $playlistRow = $this->_playlistDb->findRowById($playlistId);
 
         // Prevent from accessing a playlist which he doesn't have access.
-        if (null !== $playlistRow && $playlistRow->userId != $user->id && $playlistRow->privacy != 'public') {
+        if (null !== $playlistRow && $playlistRow->userId != $user->id
+            && $playlistRow->privacy != 'public') {
             $playlistRow = null;
         }
 

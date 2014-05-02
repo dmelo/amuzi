@@ -155,7 +155,8 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
             if (!array_key_exists($row->id, $similarities)
                 || !array_key_exists(
                     $artistMusicTitleId, $similarities[$row->id]
-                ) || $row->similarity != $similarities[$row->id][$artistMusicTitleId]
+                ) || $row->similarity
+                    != $similarities[$row->id][$artistMusicTitleId]
                 ) {
                 $this->insert(
                     array(

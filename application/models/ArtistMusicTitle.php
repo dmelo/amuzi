@@ -92,7 +92,8 @@ class ArtistMusicTitle extends DZend_Model
             $artist = strtolower($row->artist);
             $musicTitle = strtolower($row->musicTitle);
 
-            if (!array_key_exists($artist, $map) || !array_key_exists($musicTitle, $map[$artist])) {
+            if (!array_key_exists($artist, $map)
+                || !array_key_exists($musicTitle, $map[$artist])) {
                 $row->id = $this->insert($row->artist, $row->musicTitle);
             } else {
                 $row->id = $map[$artist][$musicTitle];

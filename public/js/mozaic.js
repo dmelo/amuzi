@@ -2,10 +2,11 @@ function calculateMusicSquareSize() {
     var musicSquareWidth;
     for (var i = 1; (musicSquareWidth = $('html').width() / i) > 300; i++);
 
-    musicSquareWidth--;
 
     $('.music-square:not(.incboard-cell), .music-square:not(.incboard-cell) .cover img').css('width', musicSquareWidth);
     $('.music-square:not(.incboard-cell), .music-square:not(.incboard-cell) .cover img').css('height', musicSquareWidth);
+    $('.swiper-container').height($(window).height() - $('footer').height() - $('.navbar-fixed-top').height());
+    $('.mozaic').width($(window).width());
 }
 
 $(document).ready(function() {
