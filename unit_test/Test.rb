@@ -113,13 +113,8 @@ class Player < Base
         shuffleOn = @browser.element(:class => 'jp-shuffle')
 
         clickScreen("music")
-        if repeatOff.visible?
-            repeatOff.click
-        end
-
-        if shuffleOff.visible?
-            shuffleOff.click
-        end
+        playlistRepeat(false)
+        playlistShuffle(false)
 
         refresh
         clickScreen("music")
@@ -127,8 +122,9 @@ class Player < Base
         assert repeatOn.visible?
         assert shuffleOn.visible?
 
-        repeatOn.click
-        shuffleOn.click
+        playlistRepeat(true)
+        playlistShuffle(true)
+
 
         refresh
         clickScreen("music")

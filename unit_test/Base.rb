@@ -77,16 +77,19 @@ class Base < Test::Unit::TestCase
     def clickScreen(screen)
         slide = ''
         if "search" == screen
-            slide = 'next'
+            slide = 0
         else
-            slide = 'prev'
+            slide = 1
         end
 
         id = "screen-" + screen
-        waitId = 'slide-' + slide
         @browser.div(:id => id).click
         Watir::Wait.until {
-            1 == @browser.execute_script("return $('." + waitId + ".active').length")
+            slide == @browser.execute_script("return window.swiper.activeIndex")
+        }
+
+        Watir::Wait.until {
+            false == @browser.execute_script("return window.swiper.lock")
         }
     end
 
@@ -95,7 +98,8 @@ class Base < Test::Unit::TestCase
             4 == @browser.execute_script("return $('#jquery_jplayer_1').data('jPlayer').status.readyState")
         }
         assert @browser.elements(:class => 'playlist-row').length >= 1
-        assert 'undefined' != @browser.execute_script('return window.myPlaylist.id');
+        assert 'undefined' != @browser.execute_script('return typeof window.myPlaylist.id');
+        assert 'undefined' != @browser.execute_script('return typeof window.myPlaylist.name');
     end
 
     def refresh
@@ -124,4 +128,37 @@ class Base < Test::Unit::TestCase
             @browser.element(:class => 'ui-autocomplete').elements(:class, 'album').length == 6
         }
     end
+
+    def playlistShuffle(on)
+       if on
+           button = @browser.element(:class => 'jp-shuffle')
+       else
+           button = @browser.element(:class => 'jp-shuffle-off')
+       end 
+
+       if button.visible?
+           button.click
+       end
+
+       Watir::Wait.until {
+            @browser.execute_script("return window.myPlaylist.shuffledLock") == false
+       }
+    end
+
+    def playlistRepeat(on)
+       if on
+           button = @browser.element(:class => 'jp-repeat')
+       else
+           button = @browser.element(:class => 'jp-repeat-off')
+       end 
+
+       if button.visible?
+           button.click
+       end
+
+       Watir::Wait.until {
+            @browser.execute_script("return window.myPlaylist.loopLock") == false
+       }
+    end
+
 end

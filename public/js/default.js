@@ -235,6 +235,7 @@
         uri += '/setrepeat';
 
         if (isLoggedIn()) {
+            window.myPlaylist.loopLock = true;
             $.post(uri, {
                 id: window.myPlaylist.id,
                 repeat: repeat
@@ -242,8 +243,10 @@
                 if ('error' === data[1]) {
                     $.bootstrapMessageAuto(data[0], data[1]);
                 }
+                window.myPlaylist.loopLock = false;
             }, 'json').error(function (e) {
                 $.bootstrapMessageAuto($.i18n._('Error saving settings'), 'error');
+                window.myPlaylist.loopLock = false;
             });
         }
     }
@@ -265,6 +268,7 @@
         uri += '/setshuffle';
 
         if (isLoggedIn()) {
+            window.myPlaylist.shuffledLock = true;
             $.post(uri, {
                 id: window.myPlaylist.id,
                 shuffle: shuffle
@@ -272,8 +276,10 @@
                 if ('error' === data[1]) {
                     $.bootstrapMessageAuto(data[0], data[1]);
                 }
+                window.myPlaylist.shuffledLock = false;
             }, 'json').error(function (e) {
                 $.bootstrapMessageAuto($.i18n._('Error saving settings'), 'error');
+                window.myPlaylist.shuffledLock = false;
             });
         }
     }
@@ -371,6 +377,11 @@
     function opacityNone(element) {
         element.addClass('opacity-none');
         element.removeClass('opacity-full');
+    }
+
+    function handleOfflineAutocompleteChoice(e, ui) {
+        window.location.pathname = '/' + ui.item.type + '/' + ui.item.artist
+            + ('album' === ui.item.type ? '/' + ui.item.musicTitle : '');
     }
 
     function handleAutocompleteChoice(e, ui) {
@@ -723,20 +734,28 @@
         var next = window.swiper.swipeNext,
             prev = window.swiper.swipePrev;
 
+        window.swiper.lock = false;
+
         window.swiper.swipeNext = function() {
             next();
-            console.log('next');
             $('#screen-search').addClass('dark').removeClass('light');
             $('#screen-music').addClass('light').removeClass('dark');
         };
 
         window.swiper.swipePrev = function() {
             prev();
-            console.log('prev');
             $('#screen-music').addClass('dark').removeClass('light');
             $('#screen-search').addClass('light').removeClass('dark');
 
         };
+
+        window.swiper.addCallback('SlideChangeStart', function() {
+            window.swiper.lock = true;
+        });
+            
+        window.swiper.addCallback('SlideChangeEnd', function() {
+            window.swiper.lock = false;
+        });
 
 
         $('#screen-music').click(function(e) {
@@ -886,6 +905,9 @@
             }, callbackAutocomplete, 'json').error(acError);
         };
 
+        acOption.select = handleOfflineAutocompleteChoice;
+        acOption.change = handleOfflineAutocompleteChoice;
+
         $('form.navbar-search input.search-query').catcomplete(acOption);
 
         if ($('#status-message').length > 0) {
@@ -917,6 +939,8 @@
                 }
             }
         });
+        window.myPlaylist.shuffledLock = false;
+        window.myPlaylist.loopLock = false;
 
         applyOverPlaylist();
         applyRepeatTriggers();

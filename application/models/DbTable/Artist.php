@@ -31,11 +31,18 @@ class DbTable_Artist extends DZend_Db_Table
             $data['name'] = substr($data['name'], 0, 62);
         }
 
-        // TODO: implement cache
-        // if (($id = $this->_hscache->load(md5($data['name']))) === false) {
+        try {
             $id = $this->insertCachedWithoutException($data);
-        //     $this->_hscache->save($id, md5($data['name']));
-        // }
+        } catch (Zend_Db_Statement_Exception $e) {
+            $row = $this->findRowByName($data['name']);
+            if (null !== $row) {
+                $row->cover = $data['cover'];
+                $row->save();
+                $id = $row->id;
+            } else {
+                throw $e;
+            }
+        }
 
         return $id;
     }
