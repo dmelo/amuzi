@@ -950,6 +950,7 @@
         $(window).resize(function (e) {
             applyOverPlaylist();
             applyOverResultDiv();
+            $.resizeEditPlaylist();
         });
 
         //$('.loadModal').bootstrapLoadModal();

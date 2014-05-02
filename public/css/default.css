@@ -66,6 +66,8 @@ dd {
     right: 1px;
     left: 100%;
     margin-left: -482px;
+    top: 0px;
+    margin-top: 0px;
 }
 
 #jp_container_1.lonely {
@@ -413,7 +415,7 @@ dd {
 }
 
 .music-manager-group {
-    position: fixed;
+    position: relative;
     max-height: 100%;
     width: 100%;
 }
