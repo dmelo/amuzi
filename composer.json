@@ -1,0 +1,15 @@
+{
+    "name": "dmelo/amuzi",
+    "description": "An open source mashup that combines information from different sources and allow you to search, organize and listen to music",
+    "type": "application",
+    "homepage": "http://amuzi.me",
+    "require": {
+        "php": ">=5.4.0",
+        "zendframework/zendframework1": ">=1.12.0",
+        "dmelo/dzend": "dev-master",
+        "easybib/form-decorator": ">=0.4.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=3.7.0"
+    }
+}

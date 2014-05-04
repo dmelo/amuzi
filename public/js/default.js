@@ -122,26 +122,19 @@
             $.post(uri, options, function (data) {
                 if (null !== data) {
                     $('.jp-title').css('display', 'block');
-                    $("#jquery_jplayer_1").data("jPlayer").status.paused = true;
+                    // $("#jquery_jplayer_1").data("jPlayer").status.paused = true;
+                    window.myPlaylist.pause();
                     window.myPlaylist.id = data.id;
                     window.myPlaylist.name = data.name;
                     window.myPlaylist.type = data.type;
                     setInterfaceShuffle(data.shuffle, opt.playNow);
-                    console.log(data.repeat);
-                    console.log(1 == parseInt(data.repeat, 10));
-                    console.log(data.repeat);
-                    if (1 === parseInt(data.repeat, 10)) {
-                        $('#jquery_jplayer_1').data('jPlayer').repeat();
-                    } else {
-                        $('#jquery_jplayer_1').data('jPlayer').repeatOff();
-                    }
+                    $('#jquery_jplayer_1').data('jPlayer')._loop(1 === parseInt(data.repeat, 10));
 
                     $.each(data.trackList, function (i, v) {
                         if ('url' in v) {
                             window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
                         }
                     });
-                    window.myPlaylist.newCurrent = data.currentTrack;
                     applyOverPlaylist();
 
                     if (!opt.isAlbum && 'number' === typeof options.id) {
@@ -149,15 +142,21 @@
                         $('.playlist-square[playlistid=' + options.id + ']').addClass('current-playlist');
                     }
 
+                    var index = 0;
                     if ('undefined' !== typeof opt && 'playLast' in opt && opt.playLast) {
-                        window.myPlaylist.setCurrent(-1);
-                    }
-
-                    if (opt.playNow) {
-                        window.myPlaylist.play();
+                        index = -1;;
                     } else {
-                        window.myPlaylist.pause();
+                        index = parseInt(data.currentTrack, 10);
                     }
+                   setTimeout(function() { 
+                        window.myPlaylist.setCurrent(index);
+                        console.log('setCurrent ' + index);
+                        if (opt.playNow) {
+                            window.myPlaylist.play();
+                        } else {
+                            window.myPlaylist.pause();
+                        }
+                   }, 1000);
                 }
             }, 'json').complete(function () {
                 loadingPlaylistMessage = null;
@@ -197,18 +196,20 @@
     }
 
     function callbackPlay(current) {
-        /*
-        $.post('/playlist/setcurrent', {
-            name: window.myPlaylist.name,
-            current: current
-        }, function (data) {
-            if ('error' === data[1]) {
-                $.bootstrapMessageAuto(data[0], data[1]);
-            }
-        }, 'json').error(function (e) {
-            // TODO: fix the setcurrent.
-        });
-        */
+        console.log('callbackPlay');
+        if ('playlist' === window.myPlaylist.type) {
+            $.post('/playlist/setcurrent', {
+                name: window.myPlaylist.name,
+                current: current
+            }, function (data) {
+                if ('error' === data[1]) {
+                    $.bootstrapMessageAuto(data[0], data[1]);
+                }
+            }, 'json').error(function (e) {
+                // TODO: fix the setcurrent.
+            });
+        } else { // album
+        }
     }
 
     function applyOverPlaylist() {
@@ -929,7 +930,12 @@
             repeat: function(e) {
                 console.log(e);
             }
-        }, [], {supplied: 'flv', swfPath: "/obj/", free: true, callbackPlay: callbackPlay});
+        }, [], {
+            supplied: 'flv',
+            swfPath: "/obj/",
+            free: true,
+            callbackPlay: callbackPlay,
+        });
 
         $(jplayerCss + ' ul:last').sortable({
             update: function () {

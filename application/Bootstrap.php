@@ -57,7 +57,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
         $view->headTitle('Amuzi');
         $view->addHelperPath('../application/views/helpers', 'View_Helper');
         $view->addHelperPath(
-            '../library/DZend/View/Helper', 'DZend_View_Helper'
+            '../vendor/dmelo/dzend/library/DZend/View/Helper', 'DZend_View_Helper'
         );
         $view->addScriptPath('../application/views/scripts');
 

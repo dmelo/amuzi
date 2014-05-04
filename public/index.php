@@ -21,6 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require '../vendor/autoload.php';
 require_once '../scripts/env.php';
 
 /** Zend_Application */
