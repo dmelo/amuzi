@@ -132,7 +132,9 @@
 
                     $.each(data.trackList, function (i, v) {
                         if ('url' in v) {
-                            window.myPlaylist.add({title: v.title, flv: v.url, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id}, false);
+                            var obj = {title: v.title, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id};
+                            obj.m4v = v.url;
+                            window.myPlaylist.add(obj, false);
                         }
                     });
                     applyOverPlaylist();
@@ -534,7 +536,8 @@
             } else if ('success' === data[1]) {
                 if ('playlist' == window.myPlaylist.type) {
                     var v = data[2],
-                        pOpt = {title: v.title, flv: v.url, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                        pOpt = {title: v.title, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
+                        pOpt.m4v = v.url;
                     window.myPlaylist.add(pOpt, playNow);
                 } else if ('album' === window.myPlaylist.type && playNow) {
                     $.loadPlaylist(undefined, {playLast: true, forcePlaylist: true, playNow: playNow});
@@ -931,7 +934,7 @@
                 console.log(e);
             }
         }, [], {
-            supplied: 'flv',
+            supplied: 'm4v',
             swfPath: "/obj/",
             free: true,
             callbackPlay: callbackPlay,
@@ -1015,8 +1018,8 @@
 
         $('#jquery_jplayer_1').bind($.jPlayer.event.error, function () {
             console.log('MUSIC ERROR');
-            if (myPlaylist.original.length !== 0) {
-                window.myPlaylist.next();
+            if (myPlaylist.original.length > 1) {
+                // window.myPlaylist.next();
             }
         });
 

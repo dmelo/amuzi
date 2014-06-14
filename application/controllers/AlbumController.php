@@ -106,12 +106,15 @@ class AlbumController extends DZend_Controller_Action
             || ($id = $this->_getUserRow()->currentAlbumId) !== null) {
             $albumRow = $this->_albumModel->findRowById($id);
             $userRow = $this->_getUserRow();
+            $flashInstalled = $this->_request->getPost('flashInstalled');
             if (null !== $userRow) {
                 $userRow->currentAlbumId = $albumRow->id;
                 $userRow->save();
             }
 
-            $this->view->output = $albumRow->export();
+            $this->view->output = $albumRow->export(
+                $flashInstalled ? 'flv' : 'mp4'
+            );
         }
     }
 

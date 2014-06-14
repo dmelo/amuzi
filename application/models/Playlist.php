@@ -76,6 +76,7 @@ class Playlist extends DZend_Model
      * export Exports the playlist from the database to the jplaylist's format.
      *
      * @param mixed $name Playlist's name.
+     * @param string $ext Extension of the tracks (mp3, mp4, flv..). Default is flv.
      * @return array List of tracks on jplaylist's format.
      */
     public function export($id)

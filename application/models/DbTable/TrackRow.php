@@ -23,6 +23,8 @@
  */
 class DbTable_TrackRow extends DZend_Db_Table_Row
 {
+    protected $_ext = 'm4v';
+
     public function getArray()
     {
         $columns = array(
@@ -49,14 +51,14 @@ class DbTable_TrackRow extends DZend_Db_Table_Row
     public function __get($name)
     {
         $domain = Zend_Registry::get('domain');
-        $extensionList = array('mp3', 'flv');
+        $extensionList = array('mp3', 'm4v');
         if (in_array($name, $extensionList) || 'url' === $name) {
             $url = $domain . '/api/' . $this->duration
                 . '/' . $this->fid . '/' . urlencode($this->title);
         }
 
         if ('url' === $name) {
-            return $url . '.flv';
+            return "$url.$this->_ext";
         } elseif (in_array($name, $extensionList)) {
             return $url . '.' . $name;
         } elseif ('youtubeUrl' === $name) {

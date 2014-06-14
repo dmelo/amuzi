@@ -106,6 +106,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'jquery.url.js',
                 'all-p1.js',
                 'all-p2.js',
+                'flash_detect.js',
                 'default.js',
                 'mozaic.js',
                 'incboard-cell.js',
