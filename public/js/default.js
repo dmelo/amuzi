@@ -1019,7 +1019,7 @@
         $('#jquery_jplayer_1').bind($.jPlayer.event.error, function () {
             console.log('MUSIC ERROR');
             if (myPlaylist.original.length > 1) {
-                // window.myPlaylist.next();
+                window.myPlaylist.next();
             }
         });
 
