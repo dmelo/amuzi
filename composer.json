@@ -8,7 +8,8 @@
         "zendframework/zendframework1": ">=1.12.0",
         "dmelo/dzend": "dev-master",
         "easybib/form-decorator": ">=0.4.2",
-        "dmelo/you2better": ">=1.0.3"
+        "dmelo/you2better": ">=1.0.3",
+        "dmelo/zend-module-login": ">=1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7.0"

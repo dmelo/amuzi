@@ -1,6 +1,3 @@
-[submodule "public/api"]
-	path = public/api
-    url = https://github.com/dmelo/you2better.git
 [submodule "library/LightningPackerHelper"]
 	path = library/LightningPackerHelper
 	url = https://github.com/dmelo/LightningPackerHelper.git
@@ -10,9 +7,6 @@
 [submodule "library/amuzi_search"]
 	path = library/amuzi_search
 	url = https://github.com/dmelo/amuzi_search.git
-[submodule "application/modules/Auth"]
-	path = application/modules/Auth
-	url = https://github.com/dmelo/zend-module-login.git
 [submodule "external/bootstrap-helpers"]
 	path = external/bootstrap-helpers
 	url = https://github.com/dmelo/bootstrap-helpers.git
