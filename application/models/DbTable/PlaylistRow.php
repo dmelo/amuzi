@@ -97,13 +97,13 @@ class DbTable_PlaylistRow extends DZend_Db_Table_Row
         );
     }
 
-    public function getTrackListAsArray($ext)
+    public function getTrackListAsArray()
     {
         $list = $this->_playlistHasTrackDb->findByPlaylistId($this->id);
         $ret = array();
         foreach ($list as $item) {
             $ret[] = array_merge(
-                $this->_trackDb->findRowById($item->trackId)->getArray($ext),
+                $this->_trackDb->findRowById($item->trackId)->getArray(),
                 array('artist_music_title_id' => $item->artistMusicTitleId)
             );
         }

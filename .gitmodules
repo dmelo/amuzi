@@ -1,9 +1,6 @@
 [submodule "library/LightningPackerHelper"]
 	path = library/LightningPackerHelper
 	url = https://github.com/dmelo/LightningPackerHelper.git
-[submodule "external/jPlayer"]
-	path = external/jPlayer
-	url = git://github.com/happyworm/jPlayer.git
 [submodule "library/amuzi_search"]
 	path = library/amuzi_search
 	url = https://github.com/dmelo/amuzi_search.git

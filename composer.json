@@ -9,7 +9,8 @@
         "dmelo/dzend": "dev-master",
         "easybib/form-decorator": ">=0.4.2",
         "dmelo/you2better": ">=1.0.3",
-        "dmelo/zend-module-login": ">=1.0.0"
+        "dmelo/zend-module-login": ">=1.0.0",
+        "happyworm/jplayer": ">=2.6.3"
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7.0"
@@ -28,6 +29,18 @@
                     "url": "https://github.com/rg3/youtube-dl.git",
                     "type": "git",
                     "reference": "2014.06.19"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "happyworm/jplayer",
+                "version": "2.6.3",
+                "source": {
+                    "url": "https://github.com/happyworm/jPlayer.git",
+                    "type": "git",
+                    "reference": "2.6.3"
                 }
             }
         }
