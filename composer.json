@@ -35,6 +35,19 @@
         {
             "type": "package",
             "package": {
+                "name": "rg3/youtube-dl",
+                "version": "2014.07.11.3",
+                "source": {
+                    "url": "https://github.com/rg3/youtube-dl.git",
+                    "type": "git",
+                    "reference": "2014.07.11.3"
+                }
+            }
+        },
+
+        {
+            "type": "package",
+            "package": {
                 "name": "happyworm/jplayer",
                 "version": "2.6.3",
                 "source": {
