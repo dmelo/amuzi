@@ -10,6 +10,7 @@
         "easybib/form-decorator": ">=0.4.2",
         "dmelo/you2better": ">=1.0.3",
         "dmelo/zend-module-login": ">=1.0.0",
+        "dmelo/file-rotator": ">=1.0.0",
         "happyworm/jplayer": ">=2.6.3"
     },
     "require-dev": {
@@ -44,7 +45,18 @@
                 }
             }
         },
-
+        {
+            "type": "package",
+            "package": {
+                "name": "dmelo/file-rotator",
+                "version": "1.0.0",
+                "source": {
+                    "url": "https://github.com/dmelo/file-rotator",
+                    "type": "git",
+                    "reference": "1.0.0"
+                }
+            }
+        },
         {
             "type": "package",
             "package": {
