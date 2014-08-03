@@ -23,6 +23,7 @@
 
 $start = microtime(true);
 
+require '../vendor/autoload.php';
 require_once '../scripts/env.php';
 require_once 'Zend/Config/Ini.php';
 
