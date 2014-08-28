@@ -779,9 +779,11 @@
 
         if (isLoggedIn()) {
             verifyView();
+            /*
             if ($('.search-inner').length > 0) {
                 $('.search-loggedoff').remove();
             }
+            */
         }
 
         // For debugging purposes only.
@@ -1118,8 +1120,10 @@
         });
 
 
-        window.swiper.enableKeyboardControl();
-        swiperButtons();
+        if ('undefined' !== typeof window.swiper.enableKeyboardControl) {
+            window.swiper.enableKeyboardControl();
+            swiperButtons();
+        }
 
     });
 }(jQuery, undefined));

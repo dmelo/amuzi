@@ -2,8 +2,11 @@ body {
     overflow: hidden;
 }
 
+.navbar {
+    margin-bottom: -0px;
+}
+
 #content {
-    margin-top: 41px;
 }
 
 #amazingly-free {
@@ -224,10 +227,6 @@ dd#submit-element {
     width: 100%;
 }
 
-#wrapper {
-    margin-bottom: 37px;
-}
-
 .modal-body table {
     width: 100%;
 }
@@ -267,10 +266,6 @@ ul.ui-autocomplete li {
     -moz-transition: background 300ms ease-in 0ms;
     -o-transition: background 300ms ease-in 0ms;
     transition: background 300ms ease-in 0ms;
-}
-
-ul.ui-autocomplete li.album {
-    background-color: #ccc;
 }
 
 ul.ui-autocomplete li small {
@@ -315,8 +310,9 @@ ul.ui-autocomplete {
 }
 
 ul.ui-autocomplete-logout {
-    top: 41px !important;
+    top: 51px !important;
     width: 366px !important;
+    padding-left: 0 !important;
 }
 
 ul.ui-autocomplete-login {
