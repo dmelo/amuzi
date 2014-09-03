@@ -684,14 +684,7 @@
     }
 
     function openAutocomplete() {
-        var left = $('.ui-autocomplete').position().left;
-        $('.ui-autocomplete').css('left', (left + 15) + 'px');
-
-        if (0 === $('#userId').length) {
-            $('.ui-autocomplete').addClass('ui-autocomplete-logout');
-        } else {
-            $('.ui-autocomplete').addClass('ui-autocomplete-login');
-        }
+        $('.ui-autocomplete').addClass(0 === $('#userId').length ? 'ui-autocomplete-logout' : 'ui-autocomplete-login');
     }
 
     function nothing() {
@@ -901,20 +894,22 @@
             open: openAutocomplete
         };
 
-        $('.form-search #q').catcomplete(acOption);
+        if ($('#userId').length > 0) {
+            $('#q').catcomplete(acOption);
+        } else {
+            acOption.source = function (request, response) {
+                globalResponse = response;
+                $.get('/autocomplete.php', {
+                    logout: true,
+                    q: request.term,
+                }, callbackAutocomplete, 'json').error(acError);
+            };
 
-        acOption.source = function (request, response) {
-            globalResponse = response;
-            $.get('/autocomplete.php', {
-                logout: true,
-                q: request.term,
-            }, callbackAutocomplete, 'json').error(acError);
-        };
+            acOption.select = handleOfflineAutocompleteChoice;
+            acOption.change = handleOfflineAutocompleteChoice;
 
-        acOption.select = handleOfflineAutocompleteChoice;
-        acOption.change = handleOfflineAutocompleteChoice;
-
-        $('form.navbar-search input.search-query').catcomplete(acOption);
+            $('#q').catcomplete(acOption);
+        }
 
         if ($('#status-message').length > 0) {
             message = $('#status-message p').html();
@@ -970,20 +965,6 @@
         // For some reason, i can't call loadPlaylist right the way, it must
         // wait for some initialization stuff.
         setTimeout($.initAmuzi, 1500);
-
-        if (isLoggedIn()) {
-            $('form.navbar-search').css('display', 'none');
-            $('.loginRequired').css('display', 'block');
-            $('.loginRequired').fadeTo('slow', 1.0, function () {
-                $(this).css('filter', 'alpha (opacity = 100)');
-            });
-        } else if ('/' !== window.location.pathname) {
-            $('.logoffRequired').css('display', 'block');
-            $('.logoffRequired').fadeTo('slow', 1.0, function () {
-                $(this).css('filter', 'alpha (opacity = 100)');
-            });
-
-        }
 
         $('#toc').tableOfContents(null, {startLevel: 2});
 

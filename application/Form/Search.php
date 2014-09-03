@@ -27,26 +27,22 @@ class Form_Search extends DZend_Form
 
     public function init()
     {
-        $this->setAttrib('class', 'search form-search search-inner');
-        $element = new Zend_Form_Element_Text('q');
+        $this->setAttrib('class', 'navbar-search search navbar-form navbar-left');
+        $element = new DZend_Form_Element_Search('q');
         $element->setRequired();
         $element->setAttrib('placeholder', $this->_t($this->_placeholder));
-        $element->setAttrib('class', 'search search-query span4');
+        $element->setAttrib('class', 'search-query form-control');
         $this->addElement($element);
 
         foreach (array('artist', 'musicTitle', 'type') as $item) {
             $this->addElement(new Zend_Form_Element_Hidden($item));
         }
 
-        $element = new Zend_Form_Element_Submit('submit');
-        $element->setLabel($this->_t('Search'));
-        $element->setAttrib('class', 'search btn');
-        $this->addElement($element);
-
         $this->setAction('/api/searchsimilar');
         $this->setAttrib('id', 'search');
         $this->_useBootstrap = false;
 
+        /*
         $this->setDecorators(
             array(
                 'FormElements',
@@ -57,5 +53,6 @@ class Form_Search extends DZend_Form
                 'Form'
             )
         );
+        */
     }
 }

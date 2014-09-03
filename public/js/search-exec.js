@@ -328,7 +328,7 @@
                             searchMusic([obj], 1);
                             incrementSimilar(obj);
                         } else { // search in a way that many music can be retrieved.
-                            $('.form-search #q').data('catcomplete').close();
+                            $('#q').data('catcomplete').close();
                             searchMulti($('#q').val());
                         }
                     } else {

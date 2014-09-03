@@ -76,7 +76,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'jplayer.playlist.js',
                 'jplayer.playlist.ext.js',
                 'themeswitcher.js',
-                'jquery-ui-1.9.2.custom.js',
+                'jquery-ui.js',
                 'jquery.progressbar.js',
                 'jquery.placeholder.min.js',
                 'jquery.form.js',

@@ -11,6 +11,7 @@
         "dmelo/you2better": ">=1.0.3",
         "dmelo/zend-module-login": ">=1.0.0",
         "dmelo/file-rotator": ">=1.0.0",
+        "dmelo/amuzi_search": ">=1.0.0",
         "happyworm/jplayer": ">=2.6.3",
         "twbs/bootstrap": ">=3.2.0"
     },
@@ -61,6 +62,18 @@
         {
             "type": "package",
             "package": {
+                "name": "dmelo/amuzi_search",
+                "version": "1.0.0",
+                "source": {
+                    "url": "https://github.com/dmelo/amuzi_search",
+                    "type": "git",
+                    "reference": "1.0.0"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "dmelo/file-rotator",
                 "version": "1.0.0",
                 "source": {
@@ -70,6 +83,7 @@
                 }
             }
         },
+
         {
             "type": "package",
             "package": {
