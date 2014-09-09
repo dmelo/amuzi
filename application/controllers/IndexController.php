@@ -25,7 +25,7 @@ class IndexController extends DZend_Controller_Action
 {
     protected function _prepareSearch()
     {
-        $this->view->form = new Form_Search();
+        $this->view->searchForm = new Form_Search();
         $this->view->user = $this->_getUserRow();
     }
 
@@ -37,7 +37,7 @@ class IndexController extends DZend_Controller_Action
     public function incboardAction()
     {
         $this->_prepareSearch();
-        $this->view->form->setAttrib('id', 'incboard-search');
+        $this->view->searchForm->setAttrib('id', 'incboard-search');
     }
 
     /**

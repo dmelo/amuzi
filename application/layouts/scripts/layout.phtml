@@ -55,16 +55,8 @@
 
         <!-- Search -->
         <div class="collapse navbar-collapse">
-            <?= isset($this->form) ? $this->form : ''; ?>
-            <!--
-            <form class="navbar-search search navbar-form navbar-left" action="/" method="get" role="search">
-                <input type="search" class="search-query" name="q" id="q" class="form-control"/>
-                <input type="hidden" name="artist" id="artist"/>
-                <input type="hidden" name="musicTitle" id="musicTitle"/>
-                <input type="hidden" name="type" id="type"/>
-            </form>
-            -->
-            <ul class="nav navbar-nav navbar-right">
+            <?= isset($this->searchForm) ? $this->searchForm : new Form_Search(); ?>
+                <ul class="nav navbar-nav <?= User::isLoggerIn() ? "navbar-right" : ''; ?>">
                 <?php if (!User::isLoggerIn()): ?>
                     <li id="login-button-menu"><a href="/"><?= $this->t("Login"); ?></a></li>
                 <?php else: ?>
@@ -87,9 +79,11 @@
 </nav>
 
 <!-- Github badge -->
-  <div class="ribbon">
+<!--
+<div class="ribbon">
     <a href="https://github.com/dmelo/amuzi" target="_blank">Fork me on GitHub</a>
-  </div>
+</div>
+-->
 
 <div class="alert visibility" data-alert="true">
     <a href="#" class="close">&times;</a>

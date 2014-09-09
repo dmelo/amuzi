@@ -388,7 +388,7 @@
     }
 
     function handleAutocompleteChoice(e, ui) {
-        if (0 === $('#userId').length || (ui.item !== null && ui.item.value !== latestSearch)) {
+        if (ui.item !== null && ui.item.value !== latestSearch) {
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);

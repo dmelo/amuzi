@@ -19,7 +19,7 @@ body {
 
 @media only screen and (min-width: 1200px) {
     #q {
-        width: 305px;
+        width: 299px;
     }
 }
 
@@ -261,6 +261,7 @@ ul.ui-autocomplete {
 
     position: absolute !important;
     width: 305px !important;
+    padding-left: 10px;
 }
 
 ul.ui-autocomplete li {
@@ -496,6 +497,11 @@ text-align: center;
     width: 220px;
     float: left;
     padding:15px;
+    padding: 0px 20px 20px 0px;
+}
+
+.embed-image img {
+    width: 200px;
 }
 
 #describing-top {
@@ -638,4 +644,3 @@ text-align: center;
 .screens {
     margin-left:50px;
 }
-

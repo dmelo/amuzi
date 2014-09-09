@@ -119,7 +119,7 @@
     display: none;
 }
 
-.item-square {
+.item-square, .item-square img {
     max-width: 120px;
     text-align: center;
 }
