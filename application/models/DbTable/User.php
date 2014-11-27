@@ -57,4 +57,9 @@ class DbTable_User extends DZend_Db_Table
     {
         return $this->_getUserRow();
     }
+
+    public function getAll()
+    {
+        return $this->_db->fetchAll();
+    }
 }

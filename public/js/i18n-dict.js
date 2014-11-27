@@ -8,7 +8,7 @@
 
             $.ajax({
                 data: {},
-                type: "POST",
+                type: "GET",
                 url: file,
                 timeout: 20000,
                 contentType: "application/json;charset=UTF-8",

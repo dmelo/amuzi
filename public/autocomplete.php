@@ -139,9 +139,9 @@ function getResult($q, $port, $limit = 5)
         $resultList = "0\n" === $str ? array() : explode("\n", $str);
         foreach ($resultList as $result) {
             if (strlen($result) > 0) {
-                list($artistName, $name) = explode('A', $result);
-                $artistName = ucfirst($artistName);
-                $name = ucfirst($name);
+                $aux = explode('A', $result);
+                $artistName = ucfirst($aux[0]);
+                $name = isset($aux[1]) ? ucfirst($aux[1]) : '';
                 if ($port > 3680) {
                     $aux = $artistName;
                     $artistName = $name;
@@ -168,7 +168,7 @@ function fillImages($sub, $type)
 {
     try {
         $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-        if (null === $pdo) {
+        if (null !== $config) {
             $params = $config->resources->db->params;
             $dsn = 'mysql:dbname=' . $params->dbname  . ';host=' . $params->host;
             $user = $params->username;
@@ -191,7 +191,7 @@ function fillImages($sub, $type)
                 } else {
                     $query .= ' OR ';
                 }
-                $query .= '(artist.name = "' . $r['artist'] . '" AND album.name = "' . $r['musicTitle'] . '")';
+                $query .= '(artist.name = ' . $pdo->quote($r['artist']) . ' AND album.name = ' . $pdo->quote($r['musicTitle']) . ')';
             }
         } elseif ('track_db' === $type) {
             $query = 'select artist_music_title.id as id, artist.name as artist, music_title.name as musicTitle from artist_music_title join artist on artist_music_title.artist_id = artist.id join music_title on artist_music_title.music_title_id = music_title.id where ';
@@ -203,7 +203,7 @@ function fillImages($sub, $type)
                     $query .= ' OR ';
                 }
 
-                $query .= '(artist.name = "' . $r['artist'] . '" AND music_title.name = "' . $r['musicTitle'] . '")';
+                $query .= '(artist.name = ' . $pdo->quote($r['artist']) . ' AND music_title.name = ' . $pdo->quote($r['musicTitle']) . ')';
             }
         }
 
@@ -289,7 +289,7 @@ if (preg_match($r, $q) || strlen($q) < 3) {
                     $aux = array_merge($aux, getResult($entry, $port));
                 }
             }
-            if (in_array($port, array(3672, 3682))) {
+            if (in_array($port, array(3672, 3682)) && !empty($aux)) {
                 $aux = fillImages($aux, 'album_db');
             }
             foreach ($aux as $newResult) {
