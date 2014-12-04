@@ -265,14 +265,14 @@
                 searchMusic(similarList, 10);
             });
 
-            $('#result #close-results').live('click', function(e) {
+            $('#result #close-results').on('click', function(e) {
                 e.preventDefault();
                 search.clean();
             });
 
         }
 
-        $('.incboard-cell').live('searchsimilar', function(e) {
+        $('.incboard-cell').on('searchsimilar', function(e) {
             var ele = $(this);
             setTimeout(function () {
                 searchSimilar(ele);
@@ -281,7 +281,7 @@
 
         window.search = search;
 
-        $('.music-square, .album-square').live({mouseenter: function () {
+        $('.music-square, .album-square').on({mouseenter: function () {
             $(this).find('.description, .play, .addplaylist').css('display', 'block');
             $(this).find('.overlay').css('display', 'none');
         }, mouseleave: function () {
@@ -289,7 +289,7 @@
             $(this).find('.overlay').css('display', 'block');
         }});
 
-        $('.music-large').live({mouseenter: function () {
+        $('.music-large').on({mouseenter: function () {
             $(this).find('.play, .addplaylist').css('display', 'block');
             $(this).find('.overlay').css('display', 'none');
         }, mouseleave: function () {

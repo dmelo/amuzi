@@ -402,17 +402,17 @@
     }
 
     function preparePlaylistActions() {
-        $('.jp-playlist ul li div').live('mouseover', function (e) {
+        $('.jp-playlist ul li div').on('mouseover', function (e) {
             $(this).find('.jp-free-media').css('opacity', '1.0').css('-moz-opacity', '1.0').css('filter', 'alpha(opacity=100)');
         });
 
-        $('.jp-playlist ul li div').live('mouseleave', function (e) {
+        $('.jp-playlist ul li div').on('mouseleave', function (e) {
             $(this).find('.jp-free-media').css('opacity', '0.0').css('-moz-opacity', '0.0').css('filter', 'alpha(opacity=0)');
         });
     }
 
     function prepareMusicTrackVote() {
-        $('.vote').live('click', function (e) {
+        $('.vote').on('click', function (e) {
             e.preventDefault();
             $.get($(this).attr('href'), function (data) {
                 $.bootstrapMessageAuto(data[0], data[1]);
@@ -582,7 +582,7 @@
     }
 
     function prepareNewTracks() {
-        $('.jp-playlist .new').live('hover', function (e) {
+        $('.jp-playlist .new').on('hover', function (e) {
             $(this).removeClass('new');
         });
     }
@@ -606,7 +606,7 @@
     };
 
     function prepareShareFacebook() {
-        $('.share-facebook').live('click', function (e) {
+        $('.share-facebook').on('click', function (e) {
             e.preventDefault();
             window.open($(this).attr('href'), $.i18n._('Share on Facebook'), 'toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
         });
@@ -808,18 +808,18 @@
         // topbar menu
         $('.topbar').dropdown();
 
-        $('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist').live('click', function (e) {
+        $('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist').on('click', function (e) {
             e.preventDefault();
             addElement($(this).parent(), false);
         });
 
-        $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description').live('click', function (e) {
+        $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description').on('click', function (e) {
             e.preventDefault();
             $('.modal .close').trigger('click');
             addElement($(this).parent(), true);
         });
 
-        $('.music-large, .incboard-cell').live('click', function(e) {
+        $('.music-large, .incboard-cell').on('click', function(e) {
             e.preventDefault();
             var ele = $(e.target.parentNode.parentNode);
             if (!ele.hasClass('play')  && !ele.hasClass('addplaylist')) {
@@ -827,7 +827,7 @@
             }
         });
 
-        $('.object-playlist .cover').live('click', function(e) {
+        $('.object-playlist .cover').on('click', function(e) {
             if ($.isLoggedIn()) {
                 e.preventDefault();
                 $(this).parent().find('.play').trigger('click');
@@ -836,12 +836,12 @@
             }
         });
 
-        $('.youtube-link, .download').live('click', function (e) {
+        $('.youtube-link, .download').on('click', function (e) {
             e.stopPropagation();
             window.myPlaylist.pause();
         });
 
-        $('.youtube-link').live('click', function (e) {
+        $('.youtube-link').on('click', function (e) {
             e.preventDefault();
             $.bootstrapLoadModalDisplay(
                 'Youtube',
@@ -1008,7 +1008,7 @@
 
         $.resizeEditPlaylist();
 
-        $('.music-manager .playlist-square .play').live('click', function (e) {
+        $('.music-manager .playlist-square .play').on('click', function (e) {
             e.preventDefault();
             var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
             $.loadPlaylist(parseInt($(this).parent().attr(type), 10), {
@@ -1017,7 +1017,7 @@
             });
         });
 
-        $('.music-manager .playlist-square .remove').live('click', function (e) {
+        $('.music-manager .playlist-square .remove').on('click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure?')) {
                 var name = $(this).parent().find('.name').html(),

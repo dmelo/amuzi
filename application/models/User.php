@@ -210,4 +210,13 @@ class User extends DZend_Model
 
         return true;
     }
+
+    public function isLoggedIn()
+    {
+        $session = DZend_Session_Namespace::get('session');
+        $ret = isset($session->user);
+        DZend_Session_Namespace::close();
+
+        return $ret;
+    }
 }

@@ -13,7 +13,8 @@
         "dmelo/file-rotator": ">=1.0.0",
         "dmelo/amuzi_search": ">=1.0.0",
         "happyworm/jplayer": ">=2.6.3",
-        "twbs/bootstrap": ">=3.2.0"
+        "twbs/bootstrap": ">=3.2.0",
+        "components/jquery": ">=1.11.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7.0"

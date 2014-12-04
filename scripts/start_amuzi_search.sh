@@ -19,8 +19,8 @@ do
     do
         if ! [ '_r.txt' = $SUFFIX -a 'artist' = $TYPE ]
         then
-            FILE="../../../public/data/artist_$TYPE$SUFFIX"
-            DATAPATH=library/amuzi_search/env_$TYPE$SUFFIX-d/
+            FILE="../../../../public/data/artist_$TYPE$SUFFIX"
+            DATAPATH=vendor/dmelo/amuzi_search/env_$TYPE$SUFFIX-d/
             mkdir -p $DATAPATH/data
             cd $DATAPATH
             pwd

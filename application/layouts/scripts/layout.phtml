@@ -56,8 +56,8 @@
         <!-- Search -->
         <div class="collapse navbar-collapse">
             <?= isset($this->searchForm) ? $this->searchForm : new Form_Search(); ?>
-                <ul class="nav navbar-nav <?= User::isLoggerIn() ? "navbar-right" : ''; ?>">
-                <?php if (!User::isLoggerIn()): ?>
+                <ul class="nav navbar-nav <?= User::isLoggedIn() ? "navbar-right" : ''; ?>">
+                <?php if (!User::isLoggedIn()): ?>
                     <li id="login-button-menu"><a href="/"><?= $this->t("Login"); ?></a></li>
                 <?php else: ?>
                     <li><a href="/user" class="loadModal" id="userSettings">Settings</a></li>
@@ -67,7 +67,7 @@
                 <li><a href="/index/help" class="loadModal" ><?= $this->t('Help'); ?></a></li>
                 <li><a href="/index/about" class="loadModal" ><?= $this->t('About'); ?></a></li>
 
-                <?php if (User::isLoggerIn()): ?>
+                <?php if (User::isLoggedIn()): ?>
                     <li><div class="screens"><div class="screen dark" id="screen-music">&nbsp;</div><div class="screen light" id="screen-search">&nbsp;</div></div></li>
                     <li><a id="userEmail" class="loginRequired" href="#"></a></li>
                     <li><a class="loginRequired" href="/Auth/index/logout"><?= $this->t('Logout'); ?></a></li>
