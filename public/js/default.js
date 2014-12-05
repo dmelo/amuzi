@@ -334,7 +334,7 @@
             $('.music-manager#playlists .stripe').html(data);
             $.resizeEditPlaylist();
             $('div[playlistid]').each(function(i, item) {
-                $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'hover'});
+                $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'mouseover'});
             });
         }).error(function (data) {
             $.resizeEditPlaylist();
@@ -345,7 +345,7 @@
         $.get('/album/list', function(data) {
             $('.music-manager#albums .stripe').html(data);
             $('div[albumid]').each(function(i, item) {
-                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover', placement: 'right', selector: '#slide-music-manager'});
+                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'mouseover', placement: 'right', selector: '#slide-music-manager'});
             });
         }).error(function (data) {
             $.bootstrapMessageAuto(
@@ -402,17 +402,17 @@
     }
 
     function preparePlaylistActions() {
-        $('.jp-playlist ul li div').on('mouseover', function (e) {
+        $('body').delegate('.jp-playlist ul li div', 'mouseover', function (e) {
             $(this).find('.jp-free-media').css('opacity', '1.0').css('-moz-opacity', '1.0').css('filter', 'alpha(opacity=100)');
         });
 
-        $('.jp-playlist ul li div').on('mouseleave', function (e) {
+        $('body').delegate('.jp-playlist ul li div', 'mouseleave', function (e) {
             $(this).find('.jp-free-media').css('opacity', '0.0').css('-moz-opacity', '0.0').css('filter', 'alpha(opacity=0)');
         });
     }
 
     function prepareMusicTrackVote() {
-        $('.vote').on('click', function (e) {
+        $('body').delegate('.vote', 'click', function (e) {
             e.preventDefault();
             $.get($(this).attr('href'), function (data) {
                 $.bootstrapMessageAuto(data[0], data[1]);
@@ -582,7 +582,7 @@
     }
 
     function prepareNewTracks() {
-        $('.jp-playlist .new').on('hover', function (e) {
+        $('body').delegate('.jp-playlist .new', 'mouseover', function (e) {
             $(this).removeClass('new');
         });
     }
@@ -606,7 +606,7 @@
     };
 
     function prepareShareFacebook() {
-        $('.share-facebook').on('click', function (e) {
+        $('body').delegate('.share-facebook', 'click', function (e) {
             e.preventDefault();
             window.open($(this).attr('href'), $.i18n._('Share on Facebook'), 'toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
         });
@@ -808,18 +808,18 @@
         // topbar menu
         $('.topbar').dropdown();
 
-        $('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist').on('click', function (e) {
+        $('body').delegate('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist', 'click', function (e) {
             e.preventDefault();
             addElement($(this).parent(), false);
         });
 
-        $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description').on('click', function (e) {
+        $('body').delegate('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description', 'click', function (e) {
             e.preventDefault();
             $('.modal .close').trigger('click');
             addElement($(this).parent(), true);
         });
 
-        $('.music-large, .incboard-cell').on('click', function(e) {
+        $('body').delegate('.music-large, .incboard-cell', 'click', function(e) {
             e.preventDefault();
             var ele = $(e.target.parentNode.parentNode);
             if (!ele.hasClass('play')  && !ele.hasClass('addplaylist')) {
@@ -827,7 +827,7 @@
             }
         });
 
-        $('.object-playlist .cover').on('click', function(e) {
+        $('body').delegate('.object-playlist .cover', 'click', function(e) {
             if ($.isLoggedIn()) {
                 e.preventDefault();
                 $(this).parent().find('.play').trigger('click');
@@ -836,12 +836,12 @@
             }
         });
 
-        $('.youtube-link, .download').on('click', function (e) {
+        $('body').delegate('.youtube-link, .download', 'click', function (e) {
             e.stopPropagation();
             window.myPlaylist.pause();
         });
 
-        $('.youtube-link').on('click', function (e) {
+        $('body').delegate('.youtube-link', 'click', function (e) {
             e.preventDefault();
             $.bootstrapLoadModalDisplay(
                 'Youtube',
@@ -1008,7 +1008,7 @@
 
         $.resizeEditPlaylist();
 
-        $('.music-manager .playlist-square .play').on('click', function (e) {
+        $('body').delegate('.music-manager .playlist-square .play', 'click', function (e) {
             e.preventDefault();
             var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
             $.loadPlaylist(parseInt($(this).parent().attr(type), 10), {
@@ -1017,7 +1017,7 @@
             });
         });
 
-        $('.music-manager .playlist-square .remove').on('click', function (e) {
+        $('body').delegate('.music-manager .playlist-square .remove', 'click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure?')) {
                 var name = $(this).parent().find('.name').html(),
@@ -1047,11 +1047,11 @@
                 $.loadPlaylist(parseInt($('#load-playlist').html(), 10), {isAlbum: $('#load-playlist').attr('isAlbum')});
             }
 
-            $(document).on('hover', '#jp_container_1.lonely', function() {
+            $('body').delegate('#jp_container_1.lonely', 'mouseover', function() {
                 $('#jp_container_1 .jp-playlist').css('display', 'block');
             });
 
-            $(document).on('mouseleave', '#jp_container_1.lonely', function() {
+            $('body').delegate('#jp_container_1.lonely', 'mouseleave', function() {
                 $('#jp_container_1 .jp-playlist').css('display', 'none');
             });
 
@@ -1063,10 +1063,10 @@
         });
 
         $('.intro-video a img').popover({
-            'trigger': 'hover'
+            'trigger': 'mouseover'
         });
 
-        $(document).on('hover', '.item-square', function(e) {
+        $(document).delegate('.item-square', 'mouseover', function(e) {
             $(this).find('.name').css('opacity', '1.0');
             if ($(this).parent().parent().hasClass('music-manager')) {
                 $(this).find('.remove').css('display', 'block');
@@ -1074,7 +1074,7 @@
             $(this).find('.info').css('display', 'block');
         });
 
-        $(document).on('mouseleave', '.item-square', function(e) {
+        $(document).delegate('.item-square', 'mouseleave', function(e) {
             $(this).find('.name').css('opacity', '0.0');
             $(this).find('.remove').css('display', 'none');
             $(this).find('.info').css('display', 'none');
