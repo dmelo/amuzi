@@ -267,7 +267,9 @@ $logout = array_key_exists('logout', $_GET) && 'true' === $_GET['logout'];
 logDebug("logout: " . print_r($logout, true), $q);
 
 $r = '/^ *$/';
-if (preg_match($r, $q) || strlen($q) < 3) {
+$ret = array();
+if (preg_match($r, $q) || strlen($q) < 2) {
+    echo json_encode($ret);
     return 0;
 } else {
     logDebug('start', $q);
@@ -275,7 +277,6 @@ if (preg_match($r, $q) || strlen($q) < 3) {
     $limit = 5;
     $dbLink = null;
 
-    $ret = array();
     $types = $logout ?
         array('artist', 'album'):
         array('album', 'track');
