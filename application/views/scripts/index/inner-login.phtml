@@ -40,24 +40,32 @@
     <div class="intro-video"><a href="/index/introvideo"><img data-content="Assista ao vídeo do projeto" class="img-circle" src="/img/big_play.svg" type="image/svg+xml" alt="Play"/></a></div>
 <? endif; ?>
 
-    <div class="controls controls-row">
-        <div class="span6">
+    <div class="row">
+        <div class="col-sm-6">
             <a href="#" id="facebook-connect"><img src="/img/facebook_connect.png" alt="Connect using Facebook"/></a>
         </div>
-        <div class="span5">
+        <div class="col-sm-6">
             <?= $this->form; ?>
-            <?= $this->fbForm; ?>
-            <div class="span2">
+        </div>
+
+    </div> <!-- row -->
+
+    <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+            <div class="col-sm-6">
                 <?= $this->a('/Auth/index/forgotpassword', $this->t('Forgot password')); ?>
             </div>
-            <div class="span1">|</div>
-            <div class="span1">
+            <div class="col-sm-6">
                 <?= $this->a('/Auth/index/register', $this->t('Register')); ?>
             </div>
         </div>
-
     </div>
 
-
-
+    <div class="row row-lg-height">
+        <div class="col-sm-12">
+            <p>This is an open source project. All the code is available on
+                <a href="https://github.com/dmelo/amuzi" target="_blank">GitHub</a>.</p>
+        </div>
+    </div>
 </div>

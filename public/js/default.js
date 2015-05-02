@@ -334,7 +334,7 @@
             $('.music-manager#playlists .stripe').html(data);
             $.resizeEditPlaylist();
             $('div[playlistid]').each(function(i, item) {
-                $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'hover'});
+                $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'mouseover'});
             });
         }).error(function (data) {
             $.resizeEditPlaylist();
@@ -345,7 +345,7 @@
         $.get('/album/list', function(data) {
             $('.music-manager#albums .stripe').html(data);
             $('div[albumid]').each(function(i, item) {
-                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'hover', placement: 'right', selector: '#slide-music-manager'});
+                $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'mouseover', placement: 'right', selector: '#slide-music-manager'});
             });
         }).error(function (data) {
             $.bootstrapMessageAuto(
@@ -388,7 +388,7 @@
     }
 
     function handleAutocompleteChoice(e, ui) {
-        if (0 === $('#userId').length || (ui.item !== null && ui.item.value !== latestSearch)) {
+        if (ui.item !== null && ui.item.value !== latestSearch) {
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
@@ -402,17 +402,17 @@
     }
 
     function preparePlaylistActions() {
-        $('.jp-playlist ul li div').live('mouseover', function (e) {
+        $('body').delegate('.jp-playlist ul li div', 'mouseover', function (e) {
             $(this).find('.jp-free-media').css('opacity', '1.0').css('-moz-opacity', '1.0').css('filter', 'alpha(opacity=100)');
         });
 
-        $('.jp-playlist ul li div').live('mouseleave', function (e) {
+        $('body').delegate('.jp-playlist ul li div', 'mouseleave', function (e) {
             $(this).find('.jp-free-media').css('opacity', '0.0').css('-moz-opacity', '0.0').css('filter', 'alpha(opacity=0)');
         });
     }
 
     function prepareMusicTrackVote() {
-        $('.vote').live('click', function (e) {
+        $('body').delegate('.vote', 'click', function (e) {
             e.preventDefault();
             $.get($(this).attr('href'), function (data) {
                 $.bootstrapMessageAuto(data[0], data[1]);
@@ -582,7 +582,7 @@
     }
 
     function prepareNewTracks() {
-        $('.jp-playlist .new').live('hover', function (e) {
+        $('body').delegate('.jp-playlist .new', 'mouseover', function (e) {
             $(this).removeClass('new');
         });
     }
@@ -606,7 +606,7 @@
     };
 
     function prepareShareFacebook() {
-        $('.share-facebook').live('click', function (e) {
+        $('body').delegate('.share-facebook', 'click', function (e) {
             e.preventDefault();
             window.open($(this).attr('href'), $.i18n._('Share on Facebook'), 'toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=700,height=433');
         });
@@ -684,14 +684,7 @@
     }
 
     function openAutocomplete() {
-        var left = $('.ui-autocomplete').position().left;
-        $('.ui-autocomplete').css('left', (left + 15) + 'px');
-
-        if (0 === $('#userId').length) {
-            $('.ui-autocomplete').addClass('ui-autocomplete-logout');
-        } else {
-            $('.ui-autocomplete').addClass('ui-autocomplete-login');
-        }
+        $('.ui-autocomplete').addClass(0 === $('#userId').length ? 'ui-autocomplete-logout' : 'ui-autocomplete-login');
     }
 
     function nothing() {
@@ -779,9 +772,11 @@
 
         if (isLoggedIn()) {
             verifyView();
+            /*
             if ($('.search-inner').length > 0) {
                 $('.search-loggedoff').remove();
             }
+            */
         }
 
         // For debugging purposes only.
@@ -813,18 +808,18 @@
         // topbar menu
         $('.topbar').dropdown();
 
-        $('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist').live('click', function (e) {
+        $('body').delegate('.music-large .addplaylist, .music-square .addplaylist, .album-square .addplaylist', 'click', function (e) {
             e.preventDefault();
             addElement($(this).parent(), false);
         });
 
-        $('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description').live('click', function (e) {
+        $('body').delegate('.music-large .play, .music-square .play, .album-square .play, .similarity-list .object-playlist .play, .music-square .description', 'click', function (e) {
             e.preventDefault();
             $('.modal .close').trigger('click');
             addElement($(this).parent(), true);
         });
 
-        $('.music-large, .incboard-cell').live('click', function(e) {
+        $('body').delegate('.music-large, .incboard-cell', 'click', function(e) {
             e.preventDefault();
             var ele = $(e.target.parentNode.parentNode);
             if (!ele.hasClass('play')  && !ele.hasClass('addplaylist')) {
@@ -832,7 +827,7 @@
             }
         });
 
-        $('.object-playlist .cover').live('click', function(e) {
+        $('body').delegate('.object-playlist .cover', 'click', function(e) {
             if ($.isLoggedIn()) {
                 e.preventDefault();
                 $(this).parent().find('.play').trigger('click');
@@ -841,12 +836,12 @@
             }
         });
 
-        $('.youtube-link, .download').live('click', function (e) {
+        $('body').delegate('.youtube-link, .download', 'click', function (e) {
             e.stopPropagation();
             window.myPlaylist.pause();
         });
 
-        $('.youtube-link').live('click', function (e) {
+        $('body').delegate('.youtube-link', 'click', function (e) {
             e.preventDefault();
             $.bootstrapLoadModalDisplay(
                 'Youtube',
@@ -899,20 +894,22 @@
             open: openAutocomplete
         };
 
-        $('.form-search #q').catcomplete(acOption);
+        if ($('#userId').length > 0) {
+            $('#q').catcomplete(acOption);
+        } else {
+            acOption.source = function (request, response) {
+                globalResponse = response;
+                $.get('/autocomplete.php', {
+                    logout: true,
+                    q: request.term,
+                }, callbackAutocomplete, 'json').error(acError);
+            };
 
-        acOption.source = function (request, response) {
-            globalResponse = response;
-            $.get('/autocomplete.php', {
-                logout: true,
-                q: request.term,
-            }, callbackAutocomplete, 'json').error(acError);
-        };
+            acOption.select = handleOfflineAutocompleteChoice;
+            acOption.change = handleOfflineAutocompleteChoice;
 
-        acOption.select = handleOfflineAutocompleteChoice;
-        acOption.change = handleOfflineAutocompleteChoice;
-
-        $('form.navbar-search input.search-query').catcomplete(acOption);
+            $('#q').catcomplete(acOption);
+        }
 
         if ($('#status-message').length > 0) {
             message = $('#status-message p').html();
@@ -969,20 +966,6 @@
         // wait for some initialization stuff.
         setTimeout($.initAmuzi, 1500);
 
-        if (isLoggedIn()) {
-            $('form.navbar-search').css('display', 'none');
-            $('.loginRequired').css('display', 'block');
-            $('.loginRequired').fadeTo('slow', 1.0, function () {
-                $(this).css('filter', 'alpha (opacity = 100)');
-            });
-        } else if ('/' !== window.location.pathname) {
-            $('.logoffRequired').css('display', 'block');
-            $('.logoffRequired').fadeTo('slow', 1.0, function () {
-                $(this).css('filter', 'alpha (opacity = 100)');
-            });
-
-        }
-
         $('#toc').tableOfContents(null, {startLevel: 2});
 
         preparePlaylistActions();
@@ -1025,7 +1008,7 @@
 
         $.resizeEditPlaylist();
 
-        $('.music-manager .playlist-square .play').live('click', function (e) {
+        $('body').delegate('.music-manager .playlist-square .play', 'click', function (e) {
             e.preventDefault();
             var type = $(this).parent().attr('albumid') ? 'albumid' : 'playlistid';
             $.loadPlaylist(parseInt($(this).parent().attr(type), 10), {
@@ -1034,7 +1017,7 @@
             });
         });
 
-        $('.music-manager .playlist-square .remove').live('click', function (e) {
+        $('body').delegate('.music-manager .playlist-square .remove', 'click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure?')) {
                 var name = $(this).parent().find('.name').html(),
@@ -1064,11 +1047,11 @@
                 $.loadPlaylist(parseInt($('#load-playlist').html(), 10), {isAlbum: $('#load-playlist').attr('isAlbum')});
             }
 
-            $(document).on('hover', '#jp_container_1.lonely', function() {
+            $('body').delegate('#jp_container_1.lonely', 'mouseover', function() {
                 $('#jp_container_1 .jp-playlist').css('display', 'block');
             });
 
-            $(document).on('mouseleave', '#jp_container_1.lonely', function() {
+            $('body').delegate('#jp_container_1.lonely', 'mouseleave', function() {
                 $('#jp_container_1 .jp-playlist').css('display', 'none');
             });
 
@@ -1080,10 +1063,10 @@
         });
 
         $('.intro-video a img').popover({
-            'trigger': 'hover'
+            'trigger': 'mouseover'
         });
 
-        $(document).on('hover', '.item-square', function(e) {
+        $(document).delegate('.item-square', 'mouseover', function(e) {
             $(this).find('.name').css('opacity', '1.0');
             if ($(this).parent().parent().hasClass('music-manager')) {
                 $(this).find('.remove').css('display', 'block');
@@ -1091,7 +1074,7 @@
             $(this).find('.info').css('display', 'block');
         });
 
-        $(document).on('mouseleave', '.item-square', function(e) {
+        $(document).delegate('.item-square', 'mouseleave', function(e) {
             $(this).find('.name').css('opacity', '0.0');
             $(this).find('.remove').css('display', 'none');
             $(this).find('.info').css('display', 'none');
@@ -1118,8 +1101,10 @@
         });
 
 
-        window.swiper.enableKeyboardControl();
-        swiperButtons();
+        if ('undefined' !== typeof window.swiper.enableKeyboardControl) {
+            window.swiper.enableKeyboardControl();
+            swiperButtons();
+        }
 
     });
 }(jQuery, undefined));

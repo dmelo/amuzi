@@ -1,11 +1,13 @@
-<?= $this->doctype(); ?><html>
+<?= $this->doctype(); ?>
+<html>
     <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <?= $this->headTitle(); ?>
         <?= $this->headMeta(); ?>
         <?= $this->headLink(); ?>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <meta name="description" content="AMUZI - Free online music" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     </head>
 
@@ -39,42 +41,49 @@
     }(document));
 </script>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="brand" href="/">Amuzi</a>
-            <ul class="nav">
-                <form class="navbar-search search pull-left search-loggedoff" action="/" method="get">
-                    <li>
-                        <input type="text" class="search-query span5" placeholder="Search" name="q" id="q" />
-                        <input type="hidden" name="artist" id="artist" />
-                        <input type="hidden" name="musicTitle" id="musicTitle" />
-                        <input type="hidden" name="type" id="type" />
-                    </li>
-                </form>
-            </ul>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <!-- Brand -->
+        <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            <a class="navbar-brand" href="/">AMUZI</a>
+        </div>
 
-            <div class="pull-right">
-                <ul class="nav">
-                    <li class="loginRequired"><a href="/user" class="loadModal loginRequired" id="userSettings"><?= $this->t('Settings'); ?></a></li>
-                    <li class="loginRequired"><a href="/feedback" class="loadModal loginRequired" id="feedback"><?= $this->t("Feedback"); ?></a></li>
-                    <li class="logoffRequired" id="login-button-menu"><a href="/"><?= $this->t("Login"); ?></a></li>
-                    <li><a href="/docs" target="_blank"><?= $this->t("Docs"); ?></a></li>
-                    <li><a href="/index/help" class="loadModal" ><?= $this->t('Help'); ?></a></li>
-                    <li><a href="/index/about" class="loadModal" ><?= $this->t('About'); ?></a></li>
-                    <li class="loginRequired"><div class="screens"><div class="screen dark" id="screen-music">&nbsp;</div><div class="screen light" id="screen-search">&nbsp;</div></div></li>
-                    <li class="loginRequired"><a id="userEmail" class="loginRequired" href="#"></a></li>
-                    <li class="loginRequired"><a class="loginRequired" href="/Auth/index/logout"><?= $this->t('Logout'); ?></a></li>
-                </ul>
-            </div>
+        <!-- Search -->
+        <div class="collapse navbar-collapse">
+            <?= isset($this->searchForm) ? $this->searchForm : new Form_Search(); ?>
+                <ul class="nav navbar-nav <?= User::isLoggedIn() ? "navbar-right" : ''; ?>">
+                <?php if (!User::isLoggedIn()): ?>
+                    <li id="login-button-menu"><a href="/"><?= $this->t("Login"); ?></a></li>
+                <?php else: ?>
+                    <li><a href="/user" class="loadModal" id="userSettings">Settings</a></li>
+                    <li><a href="/feedback" class="loadModal" id="feedback">Feedback</a></li>
+                <?php endif; ?>
+                <li><a href="/docs" target="_blank"><?= $this->t("Docs"); ?></a></li>
+                <li><a href="/index/help" class="loadModal" ><?= $this->t('Help'); ?></a></li>
+                <li><a href="/index/about" class="loadModal" ><?= $this->t('About'); ?></a></li>
+
+                <?php if (User::isLoggedIn()): ?>
+                    <li><div class="screens"><div class="screen dark" id="screen-music">&nbsp;</div><div class="screen light" id="screen-search">&nbsp;</div></div></li>
+                    <li><a id="userEmail" class="loginRequired" href="#"></a></li>
+                    <li><a class="loginRequired" href="/Auth/index/logout"><?= $this->t('Logout'); ?></a></li>
+                <?php endif; ?>
+
+            </ul>
         </div>
     </div>
-</div>
+</nav>
 
 <!-- Github badge -->
-  <div class="ribbon">
+<!--
+<div class="ribbon">
     <a href="https://github.com/dmelo/amuzi" target="_blank">Fork me on GitHub</a>
-  </div>
+</div>
+-->
 
 <div class="alert visibility" data-alert="true">
     <a href="#" class="close">&times;</a>
@@ -93,6 +102,7 @@
     <section id="content">
         <?= $this->layout()->content; ?>
     </section>
+
 
 </div>
 

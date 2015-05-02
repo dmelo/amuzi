@@ -62,7 +62,7 @@ do
             echo "$SELECT" | mysql -u $DB_USER -h $DB_HOST -p$DB_PASS $DB_NAME > ${FILE}.tmp
             tail -n +2 ${FILE}.tmp > ${FILE}
             rm ${FILE}.tmp
-            DATA_PATH="library/amuzi_search/env_${TYPE}_db${SUFFIX}-d"
+            DATA_PATH="vendor/dmelo/amuzi_search/env_${TYPE}_db${SUFFIX}-d"
             mkdir -p $DATA_PATH/data
             cd $DATA_PATH
 

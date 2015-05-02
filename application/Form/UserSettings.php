@@ -85,6 +85,8 @@ class Form_UserSettings extends DZend_Form
 
         $this->setAction('/user/index');
         $this->setAttrib('id', 'usersettings');
+        $this->setAttrib('class', 'form-horizontal');
 
+        EasyBib_Form_Decorator::setFormDecorator($this, EasyBib_Form_Decorator::BOOTSTRAP, 'submit', 'cancel', true);
     }
 }

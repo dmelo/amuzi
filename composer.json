@@ -7,11 +7,14 @@
         "php": ">=5.4.0",
         "zendframework/zendframework1": ">=1.12.0",
         "dmelo/dzend": "dev-master",
-        "easybib/form-decorator": ">=0.4.2",
+        "peterslivka/form-decorator": "3.0.0",
         "dmelo/you2better": ">=1.0.3",
         "dmelo/zend-module-login": ">=1.0.0",
         "dmelo/file-rotator": ">=1.0.0",
-        "happyworm/jplayer": ">=2.6.3"
+        "dmelo/amuzi_search": ">=1.0.0",
+        "happyworm/jplayer": ">=2.6.3",
+        "twbs/bootstrap": ">=3.2.0",
+        "components/jquery": ">=1.11.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7.0"
@@ -20,6 +23,18 @@
         {
             "type": "vcs",
             "url": "https://github.com/dmelo/you2better.git"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "peterslivka/form-decorator",
+                "version": "3.0.0",
+                "source": {
+                    "url": "https://github.com/peterslivka/EasyBib_Form_Decorator",
+                    "type": "git",
+                    "reference": "bootstrap3"
+                }
+            }
         },
         {
             "type": "package",
@@ -48,6 +63,18 @@
         {
             "type": "package",
             "package": {
+                "name": "dmelo/amuzi_search",
+                "version": "1.0.0",
+                "source": {
+                    "url": "https://github.com/dmelo/amuzi_search",
+                    "type": "git",
+                    "reference": "1.0.0"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "dmelo/file-rotator",
                 "version": "1.0.0",
                 "source": {
@@ -57,6 +84,7 @@
                 }
             }
         },
+
         {
             "type": "package",
             "package": {

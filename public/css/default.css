@@ -2,8 +2,11 @@ body {
     overflow: hidden;
 }
 
+.navbar {
+    margin-bottom: 0px;
+}
+
 #content {
-    margin-top: 41px;
 }
 
 #amazingly-free {
@@ -12,6 +15,12 @@ body {
 
 .italic {
     font-style: italic;
+}
+
+@media only screen and (min-width: 1200px) {
+    #q {
+        width: 299px;
+    }
 }
 
 #logo {
@@ -101,6 +110,10 @@ form.search {
     text-align: center;
 }
 
+.navbar-search .zend_form {
+    margin-bottom: 0;
+}
+
 form.search input.search {
     margin-top: 4px;
 }
@@ -182,12 +195,6 @@ dd#submit-element {
     color: black;
 }
 
-.loginRequired, .logoffRequired {
-    opacity: 0;
-    filter: alpha (opacity = 0);
-    display: none;
-}
-
 .invisible {
     display: none;
 }
@@ -210,11 +217,6 @@ dd#submit-element {
 }
 
 
-#load-modal-wrapper {
-    max-height: 640px;
-    overflow: auto;
-}
-
 .big-modal {
     width: 592px;
     margin-left: -296px;
@@ -222,10 +224,6 @@ dd#submit-element {
 
 #playlistsettings-result {
     width: 100%;
-}
-
-#wrapper {
-    margin-bottom: 37px;
 }
 
 .modal-body table {
@@ -260,6 +258,10 @@ ul.ui-autocomplete {
     border: 0px;
 
     z-index: 30 !important;
+
+    position: absolute !important;
+    width: 305px !important;
+    padding-left: 10px;
 }
 
 ul.ui-autocomplete li {
@@ -267,10 +269,6 @@ ul.ui-autocomplete li {
     -moz-transition: background 300ms ease-in 0ms;
     -o-transition: background 300ms ease-in 0ms;
     transition: background 300ms ease-in 0ms;
-}
-
-ul.ui-autocomplete li.album {
-    background-color: #ccc;
 }
 
 ul.ui-autocomplete li small {
@@ -308,20 +306,6 @@ ul.ui-autocomplete li a img {
 ul.ui-autocomplete li .cover {
     width: 50px;
     height: 50px;
-}
-
-ul.ui-autocomplete {
-    position: absolute !important;
-}
-
-ul.ui-autocomplete-logout {
-    top: 41px !important;
-    width: 366px !important;
-}
-
-ul.ui-autocomplete-login {
-    top: 162px !important;
-    width: 300px !important;
 }
 
 .share-link {
@@ -505,10 +489,19 @@ text-align: center;
     max-height: 560px;
 }
 
+.modal-header {
+    border-bottom: 0px;
+}
+
 .embed-image {
     width: 220px;
     float: left;
     padding:15px;
+    padding: 0px 20px 20px 0px;
+}
+
+.embed-image img {
+    width: 200px;
 }
 
 #describing-top {
@@ -585,14 +578,14 @@ text-align: center;
 @keyframes loginblink
 {
     0% {background:transparent}
-    50% {background:#660}
+    50% {background:#ccf}
     100% {background:transparent}
 }
 
 @-moz-keyframes loginblink
 {
     0% {background:transparent}
-    50% {background:#660}
+    50% {background:#ccf}
     100% {background:transparent}
 
 }
@@ -600,14 +593,14 @@ text-align: center;
 @-webkit-keyframes loginblink
 {
     0% {background:transparent}
-    50% {background:#660}
+    50% {background:#ccf}
     100% {background:transparent}
 }
 
 @-o-keyframes loginblink
 {
     0% {background:transparent}
-    50% {background:#660}
+    50% {background:#ccf}
     100% {background:transparent}
 }
 
@@ -629,19 +622,19 @@ text-align: center;
 }
 
 #screen-music.light {
-    background-position: 45px 30px;
+    background-position: 45px 34px;
 }
 
 #screen-music.dark {
-    background-position: 45px 0px;
+    background-position: 45px 4px;
 }
 
 #screen-search.light {
-    background-position: 0px 0px;
+    background-position: 0px 4px;
 }
 
 #screen-search.dark {
-    background-position: 0px 30px;
+    background-position: 0px 34px;
 }
 
 .screen:hover {
@@ -651,4 +644,3 @@ text-align: center;
 .screens {
     margin-left:50px;
 }
-

@@ -37,7 +37,7 @@ class Form_Feedback extends DZend_Form
         $element = new Zend_Form_Element_Textarea('comment');
         $element->setRequired();
         $element->setAttrib('rows', 9);
-        $element->setAttrib('cols', 80);
+        $element->setLabel($this->_t('Comment'));
         $this->addElement($element);
 
         $element = new Zend_Form_Element_Submit('submit');
