@@ -133,7 +133,7 @@
                     $.each(data.trackList, function (i, v) {
                         if ('url' in v) {
                             var obj = {title: v.title, free: true, id: v.id, artist_music_title_id: v.artist_music_title_id};
-                            obj.m4v = v.url;
+                            obj.m4a = v.url;
                             window.myPlaylist.add(obj, false);
                         }
                     });
@@ -537,7 +537,7 @@
                 if ('playlist' == window.myPlaylist.type) {
                     var v = data[2],
                         pOpt = {title: v.title, free: true, id: v.id, trackId: v.trackId, artist_music_title_id: v.artistMusicTitleId, attrClass: "new", callback: playlistRollBottom}; // TODO: verify this.
-                        pOpt.m4v = v.url;
+                        pOpt.m4a = v.url;
                     window.myPlaylist.add(pOpt, playNow);
                 } else if ('album' === window.myPlaylist.type && playNow) {
                     $.loadPlaylist(undefined, {playLast: true, forcePlaylist: true, playNow: playNow});
@@ -931,9 +931,12 @@
                 console.log(e);
             }
         }, [], {
-            supplied: 'm4v',
+            supplied: 'm4a',
             swfPath: "/obj/",
             free: true,
+            consoleAlerts: true,
+            errorAlerts: true,
+            warningHint: true,
             callbackPlay: callbackPlay,
         });
 

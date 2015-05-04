@@ -85,8 +85,9 @@ class View_Helper_JPlayer extends View_Helper_T
                 </div>
                 <div class="jp-controls-holder">
                     <ul class="jp-controls">';
-        foreach ($controls as $class)
+        foreach ($controls as $class) {
             echo $this->_li($class);
+        }
 
         echo '
                     </ul>

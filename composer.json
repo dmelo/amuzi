@@ -12,7 +12,7 @@
         "dmelo/zend-module-login": ">=1.0.0",
         "dmelo/file-rotator": ">=1.0.0",
         "dmelo/amuzi_search": ">=1.0.0",
-        "happyworm/jplayer": ">=2.6.3",
+        "happyworm/jPlayer": ">=2.9.2",
         "twbs/bootstrap": ">=3.2.0",
         "components/jquery": ">=1.11.0"
     },
@@ -81,19 +81,6 @@
                     "url": "https://github.com/dmelo/file-rotator",
                     "type": "git",
                     "reference": "1.0.0"
-                }
-            }
-        },
-
-        {
-            "type": "package",
-            "package": {
-                "name": "happyworm/jplayer",
-                "version": "2.6.3",
-                "source": {
-                    "url": "https://github.com/happyworm/jPlayer.git",
-                    "type": "git",
-                    "reference": "2.6.3"
                 }
             }
         }

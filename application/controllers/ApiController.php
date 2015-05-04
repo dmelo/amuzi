@@ -249,7 +249,7 @@ class ApiController extends DZend_Controller_Action
         $this->view->trackTitle = $trackRow->title;
         $this->view->trackId = $trackId;
         $this->view->artistMusicTitleId = $artistMusicTitleId;
-        $this->view->m4v = $trackRow->m4v;
+        $this->view->m4a = $trackRow->m4a;
         $this->view->youtubeUrl = $trackRow->youtubeUrl;
         $this->view->facebookUrl = $trackRow->facebookUrl;
         $this->view->shareUrl = $trackRow->shareUrl;
