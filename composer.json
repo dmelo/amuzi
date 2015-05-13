@@ -14,6 +14,7 @@
         "dmelo/amuzi_search": ">=1.0.0",
         "happyworm/jPlayer": ">=2.9.2",
         "twbs/bootstrap": ">=3.2.0",
+        "rg3/youtube-dl": ">=2014.06.19",
         "components/jquery": ">=1.11.0"
     },
     "require-dev": {
