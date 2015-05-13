@@ -1,4 +1,4 @@
-43 */2 * * * cd /mnt/sdf/proj/amuzi/ ; ./scripts/gongo.sh 80 300 && ./vendor/dmelo/file-rotator/file-rotator.sh -d vendor/dmelo/you2better/cache/ -l 13086234 >> public/tmp/file-rotator.log 
+43 */2 * * * cd /mnt/sdf/proj/amuzi/ ; ./scripts/gongo.sh 80 300 && ./vendor/dmelo/file-rotator/file-rotator.sh -d vendor/dmelo/you2better/cache/ -l 10737418240 >> public/tmp/file-rotator.log 
 */6 * * * * /bin/date >> /var/tmp/task_consumer.log ; cd /mnt/sdf/proj/amuzi/scripts ; ./gongo.sh 80 300 && /usr/bin/time /usr/bin/nice -n18 /usr/bin/php task_consumer_search_similar.php >> /var/tmp/task_consumer.log
 */7 * * * * /bin/date >> /var/tmp/task_consumer.log ; cd /mnt/sdf/proj/amuzi/scripts ; ./gongo.sh 80 300 && /usr/bin/time /usr/bin/nice -n18 /usr/bin/php task_consumer_search_string.php >> /var/tmp/task_consumer.log
 */10 * * * * cd /mnt/sdf/proj/amuzi/ ; ./scripts/gongo.sh 80 300 && /usr/bin/nice -n18 ./scripts/optimize_flv.sh >> /var/log/amuzi_optimize_flv.log

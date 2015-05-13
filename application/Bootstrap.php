@@ -193,6 +193,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
     {
         $this->bootstrap('path');
         $this->bootstrap('logger');
+        $this->bootstrap('config');
         $this->bootstrap('db');
         $this->bootstrap('config');
         $this->bootstrap('bootstrap');
