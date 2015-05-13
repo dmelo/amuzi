@@ -15,3 +15,5 @@ public/css/all.css
 public/js/all-*.js
 vendor/
 composer.lock
+log/*
+!log/README
