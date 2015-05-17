@@ -1,0 +1,10 @@
+{
+    "name": "incboardjs",
+    "version": "1.0.0",
+    "description": "Implementation of IncBoard",
+    "dependencies": {
+        "jquery": ">=2.0.0",
+        "jplayer": ">=2.9.2",
+        "incboardjs": "git@github.com:dmelo/incboardjs.git"
+    }
+}

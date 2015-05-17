@@ -4,9 +4,6 @@
 [submodule "external/bootstrap-helpers"]
 	path = external/bootstrap-helpers
 	url = https://github.com/dmelo/bootstrap-helpers.git
-[submodule "external/incboardjs"]
-	path = external/incboardjs
-	url = https://github.com/dmelo/incboardjs.git
 [submodule "external/jquery-i18n"]
 	path = external/jquery-i18n
 	url = https://github.com/recurser/jquery-i18n.git

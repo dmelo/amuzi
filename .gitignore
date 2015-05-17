@@ -17,3 +17,5 @@ vendor/
 composer.lock
 log/*
 !log/README
+bower_components/
+npm-debug.log

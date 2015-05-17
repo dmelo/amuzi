@@ -1,1 +1,1 @@
-../../vendor/happyworm/jplayer/dist/add-on/jplayer.playlist.js
+../../bower_components/jplayer/dist/add-on/jplayer.playlist.js
