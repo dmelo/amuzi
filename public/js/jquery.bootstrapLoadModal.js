@@ -1,1 +1,1 @@
-../../external/bootstrap-helpers/js/jquery.bootstrapLoadModal.js
+../../bower_components/bootstrap-helper/js/jquery.bootstrapLoadModal.js

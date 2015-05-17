@@ -1,1 +1,1 @@
-../../external/bootstrap-helpers/js/jquery.bootstrapMessage.js
+../../bower_components/bootstrap-helper/js/jquery.bootstrapMessage.js

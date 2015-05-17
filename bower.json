@@ -1,10 +1,11 @@
 {
-    "name": "incboardjs",
+    "name": "amuzi",
     "version": "1.0.0",
     "description": "Implementation of IncBoard",
     "dependencies": {
         "jquery": ">=2.0.0",
         "jplayer": ">=2.9.2",
-        "incboardjs": "git@github.com:dmelo/incboardjs.git"
+        "incboardjs": "git@github.com:dmelo/incboardjs.git",
+        "bootstrap-helper": "git@github.com:dmelo/bootstrap-helpers.git"
     }
 }

@@ -1,1 +1,1 @@
-../../external/incboardjs/src/js/incboard.js
+../../bower_components/incboardjs/src/js/incboard.js
