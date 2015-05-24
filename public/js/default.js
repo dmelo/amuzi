@@ -449,21 +449,7 @@
         window.location.pathname = window.location.pathname;
     };
 
-    function refreshViewThumbnail() {
-        var src = '';
-        if ('default' === $('#view').val()) {
-            src = '/img/thumb_classic.png';
-        } else if ('incboard' === $('#view').val()) {
-            src = '/img/thumb_incboard.png';
-        }
-
-        $('.side-view-thumb img').attr('src', src);
-    }
-
     $.rendered_userSettings = function () {
-        $('#view').parent().append('<div class="side-view-thumb"><img src=""/></div>');
-        refreshViewThumbnail();
-        $('#view').change(refreshViewThumbnail);
         $('#windowId').val(window.windowId);
     };
 

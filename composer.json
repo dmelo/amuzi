@@ -3,11 +3,11 @@
     "description": "An open source mashup that combines information from different sources and allow you to search, organize and listen to music",
     "type": "application",
     "homepage": "http://amuzi.me",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
         "zendframework/zendframework1": ">=1.12.0",
         "dmelo/dzend": "dev-master",
-        "peterslivka/form-decorator": "3.0.0",
         "dmelo/you2better": ">=1.0.3",
         "dmelo/zend-module-login": ">=1.0.0",
         "dmelo/file-rotator": ">=1.0.0",
@@ -22,18 +22,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/dmelo/you2better.git"
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "peterslivka/form-decorator",
-                "version": "3.0.0",
-                "source": {
-                    "url": "https://github.com/peterslivka/EasyBib_Form_Decorator",
-                    "type": "git",
-                    "reference": "bootstrap3"
-                }
-            }
         },
         {
             "type": "package",

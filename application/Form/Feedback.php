@@ -40,13 +40,7 @@ class Form_Feedback extends DZend_Form
         $element->setLabel($this->_t('Comment'));
         $this->addElement($element);
 
-        $element = new Zend_Form_Element_Submit('submit');
-        $element->setLabel($this->_t('Send'));
-        $this->addElement($element);
-
-        $element = new Zend_Form_Element_Button('cancel');
-        $element->setLabel($this->_t('Cancel'));
-        $this->addElement($element);
+        $this->addSubmitAndCancel('Save', 'Cancel');
 
         $this->setMethod('post');
         $this->setAction('/feedback/index');

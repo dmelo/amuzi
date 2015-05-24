@@ -58,7 +58,7 @@ table img {
 }
 
 dt {
-    display: none;
+    /* display: none; */
 }
 
 dl {
@@ -120,6 +120,10 @@ form.search input.search {
 
 form.search input[type=submit] {
     height: 30px !important;
+}
+
+dt#q-label {
+    height: 0;
 }
 
 .wrapper {
@@ -395,7 +399,7 @@ ul.ui-autocomplete li .cover {
 }
 
 dd {
-    margin-left: 0px;
+    /* margin-left: 0px; */
 }
 
 .music-manager-group {
@@ -643,4 +647,8 @@ text-align: center;
 
 .screens {
     margin-left:50px;
+}
+
+.navbar-brand {
+    font-size: 19px;
 }

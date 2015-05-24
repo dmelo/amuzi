@@ -74,19 +74,17 @@ class Form_UserSettings extends DZend_Form
         );
         $this->addElement($element);
 
-        $this->addSubmit($this->_t('Save'));
+        $this->addSubmitAndCancel('Save', 'Cancel');
 
-        $element = new Zend_Form_Element_Button('cancel');
-        $element->setLabel($this->_t('Cancel'));
-        $this->addElement($element);
 
         $element = new Zend_Form_Element_Hidden('windowId');
         $this->addElement($element);
 
         $this->setAction('/user/index');
         $this->setAttrib('id', 'usersettings');
-        $this->setAttrib('class', 'form-horizontal');
 
-        EasyBib_Form_Decorator::setFormDecorator($this, EasyBib_Form_Decorator::BOOTSTRAP, 'submit', 'cancel', true);
+
+
+        // EasyBib_Form_Decorator::setFormDecorator($this, EasyBib_Form_Decorator::BOOTSTRAP, 'submit', 'cancel', true);
     }
 }
