@@ -615,14 +615,11 @@ text-align: center;
 /** Swiper icons **/
 
 .screen {
-    float: right;
-}
-
-.screen {
     margin-top: 5px;
     height: 30px;
     width: 45px;
     background-image: url(/img/slide-icons.png);
+    float: right;
 }
 
 #screen-music.light {
@@ -643,10 +640,6 @@ text-align: center;
 
 .screen:hover {
     cursor: pointer;
-}
-
-.screens {
-    margin-left:50px;
 }
 
 .navbar-brand {

@@ -56,24 +56,39 @@
         <!-- Search -->
         <div class="collapse navbar-collapse">
             <?= isset($this->searchForm) ? $this->searchForm : new Form_Search(); ?>
-                <ul class="nav navbar-nav <?= User::isLoggedIn() ? "navbar-right" : ''; ?>">
+                <ul class="nav navbar-nav">
                 <?php if (!User::isLoggedIn()): ?>
                     <li id="login-button-menu"><a href="/"><?= $this->t("Login"); ?></a></li>
-                <?php else: ?>
-                    <li><a href="/user" class="loadModal" id="userSettings">Settings</a></li>
-                    <li><a href="/feedback" class="loadModal" id="feedback">Feedback</a></li>
                 <?php endif; ?>
-                <li><a href="/docs" target="_blank"><?= $this->t("Docs"); ?></a></li>
-                <li><a href="/index/help" class="loadModal" ><?= $this->t('Help'); ?></a></li>
-                <li><a href="/index/about" class="loadModal" ><?= $this->t('About'); ?></a></li>
 
                 <?php if (User::isLoggedIn()): ?>
                     <li><div class="screens"><div class="screen dark" id="screen-music">&nbsp;</div><div class="screen light" id="screen-search">&nbsp;</div></div></li>
-                    <li><a id="userEmail" class="loginRequired" href="#"></a></li>
-                    <li><a class="loginRequired" href="/Auth/index/logout"><?= $this->t('Logout'); ?></a></li>
                 <?php endif; ?>
 
-            </ul>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+                            <span class="glyphicon glyphicon-cog"></span>
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                        <?php if (User::isLoggedIn()): ?>
+                            <li><a href="/user" class="loadModal" id="userSettings">Settings</a></li>
+                            <li><a href="/feedback" class="loadModal" id="feedback">Feedback</a></li>
+                        <?php endif; ?>
+                            <li><a href="/docs" target="_blank"><?= $this->t("Docs"); ?></a></li>
+                            <li><a href="/index/help" class="loadModal" ><?= $this->t('Help'); ?></a></li>
+                            <li><a href="/index/about" class="loadModal" ><?= $this->t('About'); ?></a></li>
+                        <?php if (User::isLoggedIn()): ?>
+                            <li><a id="userEmail" class="loginRequired" href="#"></a></li>
+                            <li><a class="loginRequired" href="/Auth/index/logout"><?= $this->t('Logout'); ?></a></li>
+                        <?php endif; ?>
+
+                        </ul>
+                    </li>
+
+
+                </ul>
         </div>
     </div>
 </nav>

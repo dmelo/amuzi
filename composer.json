@@ -12,7 +12,6 @@
         "dmelo/zend-module-login": ">=1.0.0",
         "dmelo/file-rotator": ">=1.0.0",
         "dmelo/amuzi_search": ">=1.0.0",
-        "twbs/bootstrap": ">=3.2.0",
         "rg3/youtube-dl": ">=2014.06.19"
     },
     "require-dev": {
