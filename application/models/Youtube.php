@@ -23,7 +23,7 @@
  */
 class Youtube extends DZend_Model
 {
-    private $_baseUrl = 'https://gdata.youtube.com/feeds/api/videos?';
+    private $_baseUrl = 'https://www.googleapis.com/youtube/v3/search?';
     private $_cache;
 
     public function __construct()
@@ -34,62 +34,54 @@ class Youtube extends DZend_Model
 
     public function search($q, $limit = 9, $offset = 1, $complement = array())
     {
-        $args = array(
-                'q=' . urlencode($q),
-                'max-results=' . (int) $limit,
-                'start-index=' . (int) $offset
-                );
+        $optParams = array(
+            'q' => $q,
+            'maxResults' => (int) $limit,
+        );
 
-        $key = sha1('Youtube::search' . implode(',', $args));
 
-        if (($xml = $this->_cache->load($key)) === false) {
-            $url = $this->_baseUrl . implode('&', $args);
-            $this->_logger->debug("Youtube::search - url: $url");
-            $xml = file_get_contents($url);
-            $xml = str_replace(
-                array('<media:', '</media:'), array('<mediaa', '</mediaa'), $xml
+        $key = sha1('Youtube::searchV3' . implode(',', $optParams));
+
+        if (($json = $this->_cache->load($key)) === false) {
+            $this->_logger->debug(
+                "Youtube::search cache miss - " . print_r($optParams, true)
             );
-            $this->_cache->save($xml, $key);
+            $config = Zend_Registry::get('config');
+            $client = new Google_Client();
+            $client->setApplicationName($config->youtube->name);
+            $client->setDeveloperKey($config->youtube->key);
+
+            $server = new Google_Service_YouTube($client);
+            try {
+                $results = $server->search->listSearch(
+                    'id,snippet', $optParams
+                );
+            } catch (Exception $e) {
+                $this->_logger->debug(
+                    'Error searching on youtube: ' . $e->getMessage() . PHP_EOL
+                    . $e->getTraceAsString()
+                );
+            }
+
+            $json = json_encode($results->toSimpleObject()) . PHP_EOL;
+            $this->_logger->debug('Youtube::search json: ' . $json);
+
+            $this->_cache->save($json, $key);
         } else {
             $this->_logger->debug(
-                "Youtube::search cache hit - url: " . implode('&', $args)
+                "Youtube::search cache hit - " . print_r($optParams, true)
             );
         }
 
-        $xmlDoc = new DOMDocument();
-
-        $xmlDoc->loadXML($xml);
         $resultSet = array();
-        foreach ($xmlDoc->getElementsByTagName('entry') as $node) {
-            $filter = '/http:\/\/gdata.youtube.com\/.*\//';
-            foreach ($node->getElementsByTagName('id') as $id)
-                $entry['id'] = preg_replace(
-                    $filter, '', $id->nodeValue
-                );
-            foreach ($node->getElementsByTagName('title') as $title)
-                $entry['title'] = $title->nodeValue;
-            // filtering
-            $entry['title'] = str_replace(
-                array('"', '\'', '/'),
-                array('', '', ''),
-                strip_tags($entry['title'])
-            );
-
-            foreach ($node->getElementsByTagName('content') as $content)
-                $entry['content'] = $content->nodeValue;
-
-            foreach ($node->getElementsByTagName('mediaathumbnail') as $cover)
-                $entry['cover'] = $cover->getAttribute('url');
-
-            $mediaContentList = $node->getElementsByTagName('mediaacontent');
-            foreach ($mediaContentList as $mediaContent)
-                $entry['duration'] = $mediaContent->getAttribute('duration');
-
-            if (!array_key_exists('duration', $entry))
-                continue;
-
-            $entry['fid'] = $entry['id'];
-
+        $obj = json_decode($json);
+        foreach ($obj->items as $item) {
+            $entry = array();
+            $entry['fid'] = $item->id->videoId;
+            $entry['title'] = $item->snippet->title;
+            $entry['cover'] = $item->snippet->thumbnails->default->url;
+            $entry['duration'] = -1;
+            
             if (!empty($complement)) {
                 $entry['artist'] = $complement['artist'];
                 $entry['musicTitle'] = $complement['musicTitle'];
