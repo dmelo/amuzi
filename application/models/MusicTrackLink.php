@@ -208,7 +208,6 @@ class MusicTrackLink extends DZend_Model
     {
         $c = new DZend_Chronometer();
         $c->start();
-
         $cacheKey = $this->_getCacheKey($artist, $musicTitle);
         $ret = null;
 
@@ -233,6 +232,7 @@ class MusicTrackLink extends DZend_Model
         }
         $c->stop();
         $this->_logger->debug('MusicTrackLink::getTrack time ' . $c->get());
+
 
         return $ret;
     }

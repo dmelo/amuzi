@@ -76,6 +76,9 @@ class Youtube extends DZend_Model
         $resultSet = array();
         $obj = json_decode($json);
         foreach ($obj->items as $item) {
+            if (!isset($item->id->videoId)) {
+                continue;
+            }
             $entry = array();
             $entry['fid'] = $item->id->videoId;
             $entry['title'] = $item->snippet->title;
