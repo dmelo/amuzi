@@ -645,3 +645,7 @@ text-align: center;
 .navbar-brand {
     font-size: 19px;
 }
+
+label.radio {
+    margin-left: 25px;
+}
