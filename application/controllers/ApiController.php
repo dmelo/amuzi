@@ -316,4 +316,31 @@ class ApiController extends DZend_Controller_Action
 
         $this->view->output = $ret;
     }
+
+    public function updatecoveralbumAction()
+    {
+        $name = $this->_request->getParam('name');
+        $artist = $this->_request->getParam('artist');
+        $this->_logger->debug("ApiController::updatecoveralbum name: $name; artist: $artist");
+        $this->view->output = false;
+        $list = $this->_lastfmModel->searchAlbum($name, 100);
+
+        $this->_logger->debug("ApiController::updatecoveralbum " . count($list) . " possibilities");
+        foreach ($list as $item) {
+            if (
+                0 === strcmp(strtoupper($item['name']), strtoupper($name))
+                && 0 === strcmp(strtoupper($item['artist']), strtoupper($artist))
+            ) {
+                $this->_logger->debug("ApiController::updatecoveralbum match found!!");
+                $albumRow = $this->_albumModel->findRowByNameAndArtist($name, $artist);
+                if (null !== $albumRow) {
+                    $albumRow->cover = $item['cover'];
+                    $albumRow->save();
+                    $this->_logger->debug("ApiController::updatecoveralbum cover updated!!");
+                } else {
+                    $this->_logger->debug("ApiController::updatecoveralbum db row not found!!");
+                }
+            }
+        }
+    }
 }

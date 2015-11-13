@@ -223,11 +223,11 @@ class Lastfm extends DZend_Model
         $list = $this->_exploreDOM($xmlAlbum, '_processResponseSearch', $limit);
         $ret = array();
         foreach ($list as $item) {
-            $ret[] = new AutocompleteEntry(
-                $item->artist,
-                $item->musicTitle,
-                $item->cover,
-                'album'
+            $ret[] = array(
+                'artist' => $item->artist,
+                'name' => $item->musicTitle,
+                'cover' => $item->cover,
+                'type' => 'album'
             );
         }
 

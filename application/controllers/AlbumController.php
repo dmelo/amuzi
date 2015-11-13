@@ -38,7 +38,7 @@ class AlbumController extends DZend_Controller_Action
     {
         parent::init();
         $this->_jsonify = true;
-        $this->_loginRequired = true;
+        $this->_loginRequired = false;
         $this->_messageFail = array(
             $this->view->t('Failed saving setting'),
             'error'
