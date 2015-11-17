@@ -1060,13 +1060,12 @@
             if ($(this).parent().parent().hasClass('music-manager')) {
                 $(this).find('.remove').css('display', 'block');
             }
-            $(this).find('.info').css('display', 'block');
+            $(this).find('.info, .play').css('display', 'block');
         });
 
         $(document).delegate('.item-square', 'mouseleave', function(e) {
             $(this).find('.name').css('opacity', '0.0');
-            $(this).find('.remove').css('display', 'none');
-            $(this).find('.info').css('display', 'none');
+            $(this).find('.remove, .play, .info').css('display', 'none');
         });
 
         $('#facebook-connect').click(function(e) {

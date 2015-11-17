@@ -165,6 +165,7 @@
     left: 50%;
     margin-left: -15px;
     position: absolute;
+    display: none;
 }
 
 .item-square .button.info {
@@ -179,6 +180,7 @@
 
 .item-square .button img:hover {
     opacity: 1.0;
+    display: block;
 }
 
 .item-square .button.remove img {
