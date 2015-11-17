@@ -336,6 +336,7 @@
             $('div[playlistid]').each(function(i, item) {
                 $(item).popover({html:true, content: $(item).find('.playlist-info').html(), trigger: 'mouseover'});
             });
+            $.resizeCollections();
         }).error(function (data) {
             $.resizeEditPlaylist();
         });
@@ -347,6 +348,7 @@
             $('div[albumid]').each(function(i, item) {
                 $(item).popover({html:true, content: $(item).find('.album-info').html(), trigger: 'mouseover', placement: 'right', selector: '#slide-music-manager'});
             });
+            $.resizeCollections();
         }).error(function (data) {
             $.bootstrapMessageAuto(
                 $.i18n._('Error loading your album list, please try again later'), 'error'
@@ -578,7 +580,30 @@
             $('#edit-playlist').css('height', $(window).height() - $('.stripe').first().height() - 170);
             $('.music-manager-content').height($(window).height() - $('.music-manager-content').offset().top - $('.footer').height());
         }
+
     };
+
+    $.resizeCollections = function() {
+        var collectionSet = [
+            {name: 'playlistid', width: 120, height: 90},
+            {name: 'albumid', width: 160, height: 160}
+        ];
+        for (var i in collectionSet) {
+            var collection = $(
+                    '.playlist-square[' + collectionSet[i].name + '],' +
+                    '.playlist-square[' + collectionSet[i].name + '] .cover,' +
+                    '.playlist-square[' + collectionSet[i].name + '] .cover img'
+                ),
+                stripeWidth = collection.first().parent().width(),
+                numElements = Math.ceil(stripeWidth / collectionSet[i].width),
+                cellWidth = stripeWidth / numElements,
+                cellHeight = (cellWidth * collectionSet[i].height) / collectionSet[i].width;
+
+            collection.css('width', cellWidth);
+            collection.css('height', cellHeight);
+            console.log(collection, stripeWidth, numElements, cellWidth, cellHeight);
+        }
+    }
 
     $.isSearchFormValid = function () {
         var artist = $('#artist').val(),
@@ -649,6 +674,7 @@
         var attr = isPlaylist ? 'playlistid' : 'albumid';
         $('.playlist-square[' + attr + '=' + id + ']').remove();
         $.resizeEditPlaylist();
+        $.resizeCollections();
     }
 
     function ping() {
@@ -946,6 +972,7 @@
             applyOverPlaylist();
             applyOverResultDiv();
             $.resizeEditPlaylist();
+            $.resizeCollections();
         });
 
         //$('.loadModal').bootstrapLoadModal();

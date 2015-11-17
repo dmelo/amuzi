@@ -189,9 +189,9 @@
 }
 
 .item-square .button.remove {
-    top: -10px;
+    top: -4px;
     left: 100%;
-    margin-left: -10px;
+    margin-left: -15px;
     width: 15px;
     position: absolute;
     display: none;
@@ -213,7 +213,6 @@
 .createPlaylist .loadModal {
     width: 64px;
     height: 64px;
-    margin-top: 50%;
     top: -32px;
 }
 
