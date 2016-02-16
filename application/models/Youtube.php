@@ -56,6 +56,10 @@ class Youtube extends DZend_Model
                 $results = $server->search->listSearch(
                     'id,snippet', $optParams
                 );
+                $json = json_encode($results->toSimpleObject()) . PHP_EOL;
+                $this->_logger->debug('Youtube::search json: ' . $json);
+
+                $this->_cache->save($json, $key);
             } catch (Exception $e) {
                 $this->_logger->debug(
                     'Error searching on youtube: ' . $e->getMessage() . PHP_EOL
@@ -63,10 +67,6 @@ class Youtube extends DZend_Model
                 );
             }
 
-            $json = json_encode($results->toSimpleObject()) . PHP_EOL;
-            $this->_logger->debug('Youtube::search json: ' . $json);
-
-            $this->_cache->save($json, $key);
         } else {
             $this->_logger->debug(
                 "Youtube::search cache hit - " . print_r($optParams, true)
