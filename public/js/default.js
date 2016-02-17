@@ -29,8 +29,8 @@
     var jplayerCss,
         jPlaylistTop = null,
         repeat,
-        current,
         latestSearch,
+        current,
         popup,
         loadingPlaylistMessage = null,
         globalResponse;
@@ -403,6 +403,9 @@
         }
     }
 
+
+
+
     function preparePlaylistActions() {
         $('body').delegate('.jp-playlist ul li div', 'mouseover', function (e) {
             $(this).find('.jp-free-media').css('opacity', '1.0').css('-moz-opacity', '1.0').css('filter', 'alpha(opacity=100)');
@@ -695,38 +698,6 @@
         $.bootstrapLoadModalDisplay('Introdução', '<iframe width="720" height="540" src="http://www.youtube.com/embed/UGl-sSa5ibI?autoplay=1" frameborder="0" allowfullscreen></iframe>', 'modal-wide');
     }
 
-    function openAutocomplete() {
-        $('.ui-autocomplete').addClass(0 === $('#userId').length ? 'ui-autocomplete-logout' : 'ui-autocomplete-login');
-    }
-
-    function nothing() {
-    }
-
-    var callbackAutocomplete = function(data) {
-        var end = new Date(),
-            count = 0,
-            a = null !== data ? $.map(data, function (row) {
-            return {
-                data: row,
-                label: '<div class="cover"><img src="' + ('' === row.cover ? '/img/album.png' : row.cover )+ '"/></div> <div class="description"><span>' + row.name + '</span></div>',
-                category: row.type,
-                value: row.name,
-                artist: row.artist,
-                musicTitle: row.musicTitle,
-                type: row.type
-            };
-        }, 'json') : [];
-
-        globalResponse(a);
-    };
-
-    function acError(e) {
-        $.bootstrapMessageAuto(
-            $.i18n._('Error loading suggestions. Please, try reloading your browser.'),
-            'error'
-        );
-    }
-
     function addElement(ele, playNow) {
         if (ele.hasClass('incboard-cell')) {
             ele.trigger('searchsimilar');
@@ -777,6 +748,7 @@
 
     }
 
+
     $(document).ready(function () {
         var ac,
             message,
@@ -790,6 +762,15 @@
             }
             */
         }
+
+        var acOptions = {};
+        if (isLoggedIn()) { // if user is logged in
+            acOptions.callback = handleAutocompleteChoice;
+        } else { // if user is not logged in
+            acOptions.callback = handleOfflineAutocompleteChoice;
+        }
+
+
 
         // For debugging purposes only.
         window.throwMany = function(n) {
@@ -862,8 +843,6 @@
             );
         });
 
-        // placeholder on the search input.
-        $('#q').placeholder();
         // autocomplete the search input from last.fm.
         $.ui.autocomplete.prototype._renderItem = function (ul, row) {
             var a = $('<li></li>')
@@ -875,53 +854,6 @@
         };
 
 
-        $.widget( "custom.catcomplete", $.ui.autocomplete, {
-            _renderMenu: function( ul, items ) {
-                var that = this,
-                    currentCategory = "";
-                $.each( items, function( index, item ) {
-                    if ( item.category != currentCategory ) {
-                        var t = item.category.charAt(0).toUpperCase() + item.category.slice(1) + 's';
-                        ul.append( "<li class='ui-autocomplete-category " + item.category + "'>" + t + "</li>" );
-                        currentCategory = item.category;
-                    }
-                    that._renderItemData( ul, item );
-                });
-            }
-        });
-
-        var acOption = {
-            source: function (request, response) {
-                globalResponse = response;
-                $.get('/autocomplete.php', {
-                    q: request.term,
-                }, callbackAutocomplete, 'json').error(acError);
-            }, messages: {
-                noResults: '',
-                results: function() {}
-            }, change: handleAutocompleteChoice,
-            select: handleAutocompleteChoice,
-            focus: nothing,
-            close: nothing,
-            open: openAutocomplete
-        };
-
-        if ($('#userId').length > 0) {
-            $('#q').catcomplete(acOption);
-        } else {
-            acOption.source = function (request, response) {
-                globalResponse = response;
-                $.get('/autocomplete.php', {
-                    logout: true,
-                    q: request.term,
-                }, callbackAutocomplete, 'json').error(acError);
-            };
-
-            acOption.select = handleOfflineAutocompleteChoice;
-            acOption.change = handleOfflineAutocompleteChoice;
-
-            $('#q').catcomplete(acOption);
-        }
 
         if ($('#status-message').length > 0) {
             message = $('#status-message p').html();
@@ -1120,6 +1052,8 @@
             window.swiper.enableKeyboardControl();
             swiperButtons();
         }
+
+        $('#q').lfmComplete(acOptions);
 
     });
 }(jQuery, undefined));

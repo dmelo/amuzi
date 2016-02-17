@@ -191,6 +191,9 @@
     // TODO: implement searchId.
     // TODO: try to transform it into searchMusic(data, data.length)
     function searchMulti(q) {
+        console.log("searchMulti BEGIN");
+        console.log(q);
+        console.log("searchMulti END");
         var searchId = globalSearchId;
         $.get('/autocomplete.php', {
             q: q
