@@ -385,8 +385,8 @@
     }
 
     function handleOfflineAutocompleteChoice(e, ui) {
-        window.location.pathname = '/' + ui.item.type + '/' + ui.item.artist
-            + ('album' === ui.item.type ? '/' + ui.item.musicTitle : '');
+        window.location.pathname = '/' + ui.item.category + '/' + ui.item.artist +
+            ('album' === ui.item.category ? '/' + ui.item.musicTitle : '');
     }
 
     function handleAutocompleteChoice(e, ui) {
@@ -394,7 +394,7 @@
             $('#q').val(ui.item.value);
             $('#artist').val(ui.item.artist);
             $('#musicTitle').val(ui.item.musicTitle);
-            $('#type').val(ui.item.type);
+            $('#type').val(ui.item.category);
             $('form.search').submit();
             latestSearch = ui.item.value;
             if ('function' === typeof (window.tutorialCloseSearch)) {
@@ -766,9 +766,14 @@
         var acOptions = {};
         if (isLoggedIn()) { // if user is logged in
             acOptions.callback = handleAutocompleteChoice;
+            acOptions.modules = ['album', 'track'];
         } else { // if user is not logged in
             acOptions.callback = handleOfflineAutocompleteChoice;
+            acOptions.modules = ['artist', 'album'];
         }
+        acOptions.apiKey = 'a603101296f5b0e49086f7951dcede4f';
+
+        $('#q').lfmComplete(acOptions);
 
 
 
@@ -842,17 +847,6 @@
                 'big-modal'
             );
         });
-
-        // autocomplete the search input from last.fm.
-        $.ui.autocomplete.prototype._renderItem = function (ul, row) {
-            var a = $('<li></li>')
-                .data('item.autocomplete', row)
-                .append('<a>' + row.label + '</a>')
-                .appendTo(ul)
-                .addClass(row.type);
-            return a;
-        };
-
 
 
         if ($('#status-message').length > 0) {
@@ -1053,7 +1047,6 @@
             swiperButtons();
         }
 
-        $('#q').lfmComplete(acOptions);
 
     });
 }(jQuery, undefined));

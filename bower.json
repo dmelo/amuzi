@@ -7,6 +7,7 @@
     "jplayer": ">=2.9.2",
     "incboardjs": "https://github.com/dmelo/incboardjs.git",
     "bootstrap-helper": "https://github.com/dmelo/bootstrap-helpers.git",
-    "bootstrap": "~3.3.4"
+    "bootstrap": "^3.3.6",
+    "lastfm-autocomplete": "*"
   }
 }

@@ -89,7 +89,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'jquery.bootstrapLoadModal.js',
                 'idangerous.swiper.js',
                 'cssrule.js',
-                'autocomplete.js',
+                'lastfm-autocomplete.js',
                 'default.js',
                 'mozaic.js',
                 'incboard-cell.js',
@@ -108,7 +108,7 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'all-p1.js',
                 'all-p2.js',
                 'flash_detect.js',
-                'autocomplete.js',
+                'lastfm-autocomplete.js',
                 'default.js',
                 'mozaic.js',
                 'incboard-cell.js',
@@ -135,7 +135,8 @@ class Bootstrap extends DZend_Application_Bootstrap_Bootstrap
                 'incboard.css',
                 'jquery.subtitle.css',
                 'idangerous.swiper.css',
-                'mozaic.css'
+                'mozaic.css',
+                'lastfm-autocomplete.css'
             );
         } else {
             $css = array(
