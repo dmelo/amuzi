@@ -188,51 +188,6 @@
         }
     }
 
-    // TODO: implement searchId.
-    // TODO: try to transform it into searchMusic(data, data.length)
-    function searchMulti(q) {
-        console.log("searchMulti BEGIN");
-        console.log(q);
-        console.log("searchMulti END");
-        var searchId = globalSearchId;
-        $.get('/autocomplete.php', {
-            q: q
-        }, function(data) {
-            if (searchId === globalSearchId) {
-                if (0 === data.length) {
-                    $.bootstrapMessageAuto('No results found', 'info');
-                } else {
-                    $.post('/api/similaritymatrix', {
-                        list: data
-                    }, function (matrix) {
-                        if (searchId === globalSearchId) {
-                            var idList = [];
-                            for (var id in matrix) {
-                                var o = {
-                                    objId: id,
-                                    type: id > 0 ? 'track' : 'album'
-                                };
-                                idList.push(o);
-                            }
-                            search.similarity = matrix;
-                            searchMusic(idList, idList.length);
-                        } else {
-                            console.log("searchId: " + searchId + ".globalSearchId: " + globalSearchId);
-                        }
-                    }, 'json').error(function (e) {
-                        console.log("Could not load similarity information");
-                    });
-                }
-            } else {
-                console.log("searchId: " + searchId + ".globalSearchId: " + globalSearchId);
-            }
-        }, 'json').error(function (data) {
-            $.bootstrapMessageAuto(
-                'Error loading music. Please, try again', 'error'
-            );
-        });
-    }
-
     function loadSimilarMusic(data, num, callback) {
         $.bootstrapMessageOff();
         var total = 0;
@@ -333,9 +288,9 @@
                         if ($.isSearchFormValid()) {
                             searchMusic([obj], 1);
                             incrementSimilar(obj);
-                        } else { // search in a way that many music can be retrieved.
+                        } else { // search in a way that 
                             $('#q').data('catcomplete').close();
-                            searchMulti($('#q').val());
+                            $.bootstrapMessageAuto('No match', 'error');
                         }
                     } else {
                         console.log('BEFORE SUBMIT LOGGEDOUT');
