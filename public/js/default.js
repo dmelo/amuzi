@@ -628,7 +628,7 @@
 
     function prepareShortcuts() {
         $(document).keyup(function (e) {
-            if (false === $('input[type=text], textarea').is(':focus')) {
+            if (false === $('input[type=text], textarea, input[type=search]').is(':focus')) {
                 var code = e.keyCode;
                 switch (code) {
                 case 32:
