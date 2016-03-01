@@ -11,7 +11,6 @@
         "dmelo/you2better": ">=1.0.3",
         "dmelo/zend-module-login": ">=1.0.0",
         "dmelo/file-rotator": ">=1.0.0",
-        "dmelo/amuzi_search": ">=1.0.0",
         "rg3/youtube-dl": ">=2014.06.19",
         "google/apiclient": "1.1.4"
     },
