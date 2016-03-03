@@ -1,6 +1,3 @@
 [submodule "library/LightningPackerHelper"]
 	path = library/LightningPackerHelper
 	url = https://github.com/dmelo/LightningPackerHelper.git
-[submodule "external/jquery-i18n"]
-	path = external/jquery-i18n
-	url = https://github.com/recurser/jquery-i18n.git

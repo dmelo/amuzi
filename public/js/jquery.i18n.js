@@ -1,1 +1,1 @@
-../../external/jquery-i18n/jquery.i18n.js
+../../bower_components/jquery-i18n/jquery.i18n.js
