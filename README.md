@@ -3,6 +3,21 @@ Amuzi
 
 Access at [Amuzi.net](http://amuzi.net).
 
+Configuration
+-------------
+
+All configuration must be placed on `application/configs/application.ini`. After
+cloning, the following aspects must be evaluated:
+
+- internal config
+- database
+- Last.fm API credentials
+- Youtube API credentials
+- Facebook API credentials
+
+There is a configuration file template on
+`application/configs/application.ini.template`.
+
 Copyright
 ---------
 

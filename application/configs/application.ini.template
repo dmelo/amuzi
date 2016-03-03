@@ -1,11 +1,14 @@
 [production]
+
+; Internal config
 phpSettings.display_startup_errors = 0
 phpSettings.display_errors = 0
-includePaths.library = APPLICATION_PATH "/../library"
+includePaths.library = APPLICATION_PATH "/../vendor"
 bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
 bootstrap.class = "Bootstrap"
 resources.frontController.controllerDirectory = APPLICATION_PATH "/controllers"
 resources.frontController.modelDirectory = APPLICATION_PATH "/models"
+resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 resources.frontController.params.displayExceptions = 0
 
 autoloaderNamespaces[] = "DZend_"
@@ -15,33 +18,43 @@ resources.frontController.plugins.Login = 'App_Plugin_Login'
 
 resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
 
-resources.db.adapter = 'pdo_mysql'
-resources.db.params.host = '127.0.0.1'
-resources.db.params.username = 'youbetter'
-resources.db.params.password = 'XXXXXXXXX'
-resources.db.params.dbname = 'youbetter'
+salt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+logger_output_file = APPLICATION_PATH'/../public/tmp/log.txt'
 
+; Database
+resources.db.adapter = 'pdo_mysql'
+resources.db.params.host = 'localhost'
+resources.db.params.username = 'XXXXXXXXX'
+resources.db.params.password = 'XXXXXXXXX'
+resources.db.params.dbname = 'XXXXXXXXX'
+resources.db.params.charset = 'utf8'
+
+; Last.fm
 lastfm.key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 lastfm.secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-salt = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+; Youtube
+youtube.name = 'XXXXXXXX'
+youtube.key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
+;facebook.id = 'XXXXXXXXXXXXXXX'
+;facebook.secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+
+; Facebook
+facebook.id = 'XXXXXXXXXXXXXXX'
+facebook.secret = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+
 [staging : production]
 
 [testing : production]
+
 phpSettings.display_startup_errors = 1
 phpSettings.display_errors = 1
 resources.frontController.params.displayExceptions = 1
-
-resources.db.adapter = 'pdo_mysql'
-resources.db.params.host = 'localhost'
-resources.db.params.username = 'amuzitest'
-resources.db.params.password = 'amuzitest'
-resources.db.params.dbname = 'amuzitest'
-
 
 [development : production]
+
 phpSettings.display_startup_errors = 1
 phpSettings.display_errors = 1
 resources.frontController.params.displayExceptions = 1
+
