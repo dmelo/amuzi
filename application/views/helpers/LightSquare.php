@@ -26,13 +26,12 @@ class View_Helper_LightSquare extends View_Helper_T
 {
     public function lightSquare($href, $name, $img, $isAjax = false)
     {
-        return '<div class="item-square playlist-square object-playlist" >'
-            . '<div class="cover"><a href="' . $href . '" '
-            . ($isAjax ? 'class="loadModal" ' : '') . '><img alt="'
-            . htmlspecialchars($name) . '" src="' . $img
-            . '"/></a></div>' . '<div class="name">'
-            . ucfirst(htmlspecialchars($name))
-            . '</div>'
-            . '</div>';
+        return '<div class="item-square playlist-square object-playlist" >' .
+            '<div class="cover"><a href="' . $href . '" ' .
+            ($isAjax ? 'class="loadModal" ' : '') . '><img alt="' .
+            htmlspecialchars($name) . '" src="' . $img . '"/></a></div>' .
+            '<a href="' . $href . '" '. ($isAjax ? 'target="_blank"' : '') .
+            '><div class="name">' . ucfirst(htmlspecialchars($name)) .
+            '</div></a>' . '</div>';
     }
 }
