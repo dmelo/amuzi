@@ -9,6 +9,7 @@
     "bootstrap-helper": "https://github.com/dmelo/bootstrap-helpers.git",
     "bootstrap": "^3.3.6",
     "lastfm-autocomplete": "*",
-    "jquery-i18n": "^1.1.1"
+    "jquery-i18n": "^1.1.1",
+    "Swiper": "swiper#^3.3.1"
   }
 }
