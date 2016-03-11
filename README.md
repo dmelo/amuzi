@@ -1,7 +1,7 @@
 Amuzi
 =====
 
-Access at [Amuzi.net](http://amuzi.net).
+Access at [Amuzi.me](http://amuzi.me).
 
 Configuration
 -------------
