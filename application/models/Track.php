@@ -40,7 +40,7 @@ class Track extends DZend_Model
      * @param mixed $data
      * @return DbTable_TrackRow Returns the inserted row.
      */
-    public function insert($data)
+    public function insert(array $data)
     {
         return $this->_trackDb->insert($data);
     }

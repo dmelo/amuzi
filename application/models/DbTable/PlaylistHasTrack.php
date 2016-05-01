@@ -23,7 +23,7 @@
  */
 class DbTable_PlaylistHasTrack extends DZend_Db_Table
 {
-    public function insert($data)
+    public function insert(array $data)
     {
         $row = $this->findRowByPlaylistIdAndSort(
             $data['playlist_id'],

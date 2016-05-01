@@ -23,7 +23,7 @@
  */
 class DbTable_Album extends DZend_Db_Table
 {
-    public function insert($data)
+    public function insert(array $data)
     {
         // TODO: trim name and cover.
         if (array_key_exists('name', $data)) {

@@ -25,7 +25,7 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
 {
     protected $_allowRequestCache = true;
 
-    public function insert($data)
+    public function insert(array $data)
     {
         Zend_Registry::get('logger')->debug(
             "DbTable_MusicSimilarity::insert " . print_r($data, true)

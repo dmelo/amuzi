@@ -23,7 +23,7 @@
  */
 class DbTable_Track extends DZend_Db_Table
 {
-    public function insert($data)
+    public function insert(array $data)
     {
         // filtering fields.
         $data['title'] = str_replace(
