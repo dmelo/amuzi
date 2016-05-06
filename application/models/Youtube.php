@@ -75,22 +75,24 @@ class Youtube extends DZend_Model
 
         $resultSet = array();
         $obj = json_decode($json);
-        foreach ($obj->items as $item) {
-            if (!isset($item->id->videoId)) {
-                continue;
-            }
-            $entry = array();
-            $entry['fid'] = $item->id->videoId;
-            $entry['title'] = $item->snippet->title;
-            $entry['cover'] = $item->snippet->thumbnails->default->url;
-            $entry['duration'] = -1;
-            
-            if (!empty($complement)) {
-                $entry['artist'] = $complement['artist'];
-                $entry['musicTitle'] = $complement['musicTitle'];
-            }
+        if (isset($obj->items)) {
+            foreach ($obj->items as $item) {
+                if (!isset($item->id->videoId)) {
+                    continue;
+                }
+                $entry = array();
+                $entry['fid'] = $item->id->videoId;
+                $entry['title'] = $item->snippet->title;
+                $entry['cover'] = $item->snippet->thumbnails->default->url;
+                $entry['duration'] = -1;
 
-            $resultSet[] = new YoutubeEntry($entry);
+                if (!empty($complement)) {
+                    $entry['artist'] = $complement['artist'];
+                    $entry['musicTitle'] = $complement['musicTitle'];
+                }
+
+                $resultSet[] = new YoutubeEntry($entry);
+            }
         }
 
         $this->_logger->debug(
