@@ -775,7 +775,7 @@ class MusicSimilarity extends DZend_Model
         $rowSet = count($rowSet) > 0 ?
             $this->_artistMusicTitleModel->insertMulti($rowSet) : array();
         $rowSet = count($rowSet) > 0 ?
-            $this->_objDb->insertMulti($artistMusicTitleId, $rowSet) : array();
+            $this->_objDb->insertMultipleRows($artistMusicTitleId, $rowSet) : array();
 
         $c2->stop();
 
@@ -850,8 +850,8 @@ class MusicSimilarity extends DZend_Model
         return array($artistMusicTitleIdList, $translationList);
     }
 
-    public function insertMulti($artistMusicTitleId, $rowSet)
+    public function insertMultipleRows($artistMusicTitleId, $rowSet)
     {
-        return $this->_objDb->insertMulti($artistMusicTitleId, $rowSet);
+        return $this->_objDb->insertMultipleRows($artistMusicTitleId, $rowSet);
     }
 }

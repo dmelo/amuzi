@@ -117,7 +117,7 @@ class DbTable_MusicSimilarity extends DZend_Db_Table
         return $ret;
     }
 
-    public function insertMulti($artistMusicTitleId, array $rowSet)
+    public function insertMultipleRows($artistMusicTitleId, array $rowSet)
     {
         $where = '';
         $first = true;

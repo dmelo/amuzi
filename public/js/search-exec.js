@@ -239,7 +239,7 @@
 
         window.search = search;
 
-        var selector = '.music-square, .album-square';
+        var selector = '.music-square, .album-square, .music-large';
         $('body').delegate(selector, 'mouseenter', function () {
             $(this).find('.description, .play, .addplaylist').css('display', 'block');
             $(this).find('.overlay').css('display', 'none');
