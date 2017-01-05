@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Implementation of IncBoard",
   "dependencies": {
-    "jquery": ">=2.0.0",
+    "jquery": "^2.2.1",
     "jplayer": ">=2.9.2",
     "incboardjs": "incboard#*",
     "bootstrap-helper": "https://github.com/dmelo/bootstrap-helpers.git",
